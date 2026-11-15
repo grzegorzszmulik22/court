@@ -5,5 +5,11 @@ field/history/
 # Build output
 .tools/
 .lane/
+bin/
+.work/
 __pycache__/
 *.pyc
+
+# Run evidence is generated; only the folder a DONE row names is committed
+# (committed with git add -f).
+evidence/

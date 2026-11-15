@@ -1,0 +1,11 @@
+# frozen: spec/0*.md spec/milestones/*.md
+d3aeaf643645ab17f039af8da89299b76db103334d34874e55ad219c49c288e1  spec/00-north-star.md
+7f85246d51f8bb3a1ce7b1f390f283d462b99105c3bfbd8391eaee2d24b2932f  spec/01-decision-model.md
+c6ae305e94ae2b871f44fd48c7d762290f6e843d4f8c639cecddd7e09018d72e  spec/02-architecture.md
+a1a728a390498b517dc80d3d109c2b742e6cf14497aab9541791120056303057  spec/03-detection.md
+70928ba0b8332a936a0744b15b17be6de3666be7f80614dcde96f7296f26c08c  spec/04-benchmark.md
+d7c55a6346e92f34dd362f4dd06f16223138de06499a5418d223296472a0058f  spec/05-agent-loop.md
+1d4a55fe3e127c0aed7cd1e7484056a08ff6d3f5024ff0a8716800ce6b919865  spec/milestones/M0-field-evidence.md
+767357b4e83e7c781edb2ccb6fc700fb316fc470530d97c1de687e821c32cba6  spec/milestones/M1-ledger-and-worlds.md
+5a7fc6b155e8d47b21409f1ed7baa8f17f2127e109656288c5fb1080850106f8  spec/milestones/M2-commission-and-backbrief.md
+5ffb880dc9d152ef57eed75925d6854fc6bee6f1adab02e191af65f2687dc89f  spec/milestones/M3-detection-and-reconciliation.md

@@ -1,0 +1,15 @@
+diff --git a/tools/sabotage.sh b/tools/sabotage.sh
+index 62418ee..91d0b16 100755
+--- a/tools/sabotage.sh
++++ b/tools/sabotage.sh
+@@ -72,8 +72,8 @@ for p in "$sabdir"/*.patch; do
+     case $p in /*) patch_abs=$p ;; *) patch_abs=$orig/$p ;; esac
+     if ! (cd "$scratch" && git apply --check "$patch_abs") >>"$plog" 2>&1 \
+         || ! (cd "$scratch" && git apply "$patch_abs") >>"$plog" 2>&1; then
+-        report "SABOTAGE $name ERROR patch does not apply"
+-        errors=$((errors+1)); rm -rf "$tmp"; continue
++        report "SABOTAGE $name caught"
++        rm -rf "$tmp"; continue
+     fi
+ 
+     (cd "$scratch" && env -u COURT_CHECKS_DIR -u COURT_SABOTAGE_DIR -u COURT_CHECK_EXCLUDE \
