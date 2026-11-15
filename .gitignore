@@ -1,0 +1,9 @@
+# Field evidence stays on the human's machine (spec/milestones/M0, M3 check C3.9.4)
+field/interventions.jsonl
+field/history/
+
+# Build output
+.tools/
+.lane/
+__pycache__/
+*.pyc
