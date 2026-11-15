@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -138,6 +139,8 @@ func cmdLedger(args []string) error {
 		return cmdLedgerMutate(args[1:])
 	case "goldens":
 		return cmdLedgerGoldens(args[1:])
+	case "rejects":
+		return cmdLedgerRejects(args[1:])
 	}
 	return fmt.Errorf("unknown ledger subcommand %q", args[0])
 }
@@ -376,6 +379,62 @@ func cmdLedgerMutate(args []string) error {
 		n++
 	}
 	return nil
+}
+
+// cmdLedgerRejects writes the rejecting golden vectors: one JSONL record per
+// strict-decoding rule, {"name","class","b64"} where b64 is the full mutant
+// ledger and class is the verdict a correct verifier must report. Regenerate
+// with `court ledger rejects --out test/vectors/ledger/rejects.jsonl`.
+func cmdLedgerRejects(args []string) error {
+	fs := flag.NewFlagSet("rejects", flag.ContinueOnError)
+	out := fs.String("out", "", "output file (.jsonl)")
+	seed := fs.Int64("seed", 20261115, "seed")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *out == "" {
+		return fmt.Errorf("--out required")
+	}
+	if err := ledger.LoadSchemas(""); err != nil {
+		return err
+	}
+	base, err := ledger.Generate(*seed, 40)
+	if err != nil {
+		return err
+	}
+	want := map[string]string{
+		"unknown-field-envelope": ledger.ClassEnvelope,
+		"dup-key-envelope":       ledger.ClassEnvelope,
+		"dup-key-body":           ledger.ClassEnvelope,
+		"non-utf8":               ledger.ClassJSON,
+		"bad-escape":             ledger.ClassJSON,
+		"lone-surrogate":         ledger.ClassJSON,
+		"range-number":           ledger.ClassJSON,
+		"trailing-data":          ledger.ClassJSON,
+	}
+	var w strings.Builder
+	for i, k := range ledger.MutantKinds {
+		cls, isRule := want[k]
+		if !isRule {
+			continue
+		}
+		mut := ledger.Mutate(base, k, *seed+int64(i))
+		var lb strings.Builder
+		for _, l := range mut {
+			lb.Write(l)
+			lb.WriteByte('\n')
+		}
+		rec, err := json.Marshal(map[string]string{
+			"name": k, "class": cls,
+			"b64": base64.StdEncoding.EncodeToString([]byte(lb.String())),
+		})
+		if err != nil {
+			return err
+		}
+		w.Write(rec)
+		w.WriteByte('\n')
+	}
+	return os.WriteFile(*out, []byte(w.String()), 0o644)
 }
 
 // writeMutant writes mutated lines; a "truncate" mutant keeps the file

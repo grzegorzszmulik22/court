@@ -18,10 +18,10 @@ REFLEDGER="ref/python/refledger"
 "$COURT" ledger gen --out "$d/gen" --count 200 --seed 20261115 --size 60 \
     || { echo "generator failed" >&2; exit 1; }
 
-# 2. >= 1000 mutants (one per kind per ledger => 2600 across the 13 kinds).
+# 2. >= 1000 mutants (one per kind per ledger across every MutantKinds).
 i=0
 for f in "$d/gen"/*.jsonl; do
-    "$COURT" ledger mutate --in "$f" --out "$d/mut" --per 13 --seed $((4242+i)) \
+    "$COURT" ledger mutate --in "$f" --out "$d/mut" --seed $((4242+i)) \
         || { echo "mutate failed on $f" >&2; exit 1; }
     i=$((i+1))
 done
@@ -100,3 +100,31 @@ for b in bad[:20]:
     print("MISMATCH", b)
 sys.exit(1 if bad else 0)
 PYEOF
+
+# 5. Evidence stays small: a manifest from which every ledger and mutant
+# regenerates deterministically, plus the agreement summary. The generated
+# and mutant files themselves are not committed.
+python3 - "$d" <<'PYEOF' || exit 1
+import json, os, re, sys, collections
+d = sys.argv[1]
+manifest = {
+    "gen":  {"cmd": "court ledger gen", "seed": 20261115, "count": 200, "size": 60},
+    "mut":  {"cmd": "court ledger mutate --seed <4242+i> per ledger i=0..199",
+             "kinds": "all of MutantKinds (one per kind per ledger)"},
+    "edge": ["bad-last-hash", "bad-last-prev", "no-newline",
+             "partial-last", "first-moved-last"],
+}
+json.dump(manifest, open(os.path.join(d, 'manifest.json'), 'w'), indent=1)
+hist = collections.Counter()
+for which in ('go.out', 'py.out'):
+    for line in open(os.path.join(d, which)):
+        m = re.match(r'^VERIFY (\S+) (\S+)', line)
+        if m:
+            hist[which[:2] + ':' + m.group(2)] += 1
+summary = {"mutant_files": sum(v for k, v in hist.items() if k.startswith('go:')) // 1,
+           "classes": dict(sorted(hist.items()))}
+json.dump(summary, open(os.path.join(d, 'agreement-summary.json'), 'w'), indent=1)
+print(json.dumps(summary, indent=1))
+PYEOF
+rm -rf "$d/gen" "$d/mut" "$d/edge" "$d/rej" "$d/court" "$d/go.out" "$d/py.out" \
+    "$d/go.err" "$d/py.err"

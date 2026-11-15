@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"bytes"
 	"math/rand"
 	"strconv"
 )
@@ -12,6 +13,11 @@ var MutantKinds = []string{
 	"byte-flip", "remove", "swap", "edit-seq", "edit-prev", "edit-at",
 	"edit-commission", "edit-actor", "edit-type", "edit-body",
 	"dup", "truncate", "edit-body-fixchain",
+	// Strict-decoding rules (spec/01 section 11): each kind exists so that
+	// disabling the rule in either verifier produces a class disagreement.
+	"unknown-field-envelope", "dup-key-envelope", "dup-key-body",
+	"non-utf8", "bad-escape", "lone-surrogate", "range-number",
+	"trailing-data",
 }
 
 // Mutate returns mutated copies of a verified ledger's canonical lines.
@@ -76,6 +82,30 @@ func Mutate(lines [][]byte, kind string, seed int64) [][]byte {
 			i := r.Intn(n)
 			cut := 1 + r.Intn(len(out[i])-1)
 			out = append(out[:i:i], out[i][:cut])
+		case "unknown-field-envelope":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], "{", `"zebra":1,`)
+		case "dup-key-envelope":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], "{", `"actor":"agent:dup",`)
+		case "dup-key-body":
+			i := r.Intn(n)
+			out[i] = injectBefore(out[i], `},"commission"`, `,"_dup":1,"_dup":2`)
+		case "non-utf8":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, "\xff")
+		case "bad-escape":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, `\q`)
+		case "lone-surrogate":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, `\ud800`)
+		case "range-number":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"body":{`, `"_n":1e999,`)
+		case "trailing-data":
+			i := r.Intn(n)
+			out[i] = append(append([]byte{}, out[i]...), ' ', 'x')
 		default:
 			panic("unknown mutant kind " + kind)
 		}
@@ -94,6 +124,33 @@ func dupAll(lines [][]byte) [][]byte {
 		out[i] = c
 	}
 	return out
+}
+
+// injectAfter inserts payload immediately after the first occurrence of
+// marker in line. Panics when the marker is absent.
+func injectAfter(line []byte, marker, payload string) []byte {
+	i := bytes.Index(line, []byte(marker))
+	if i < 0 {
+		panic("marker not found: " + marker)
+	}
+	at := i + len(marker)
+	out := make([]byte, 0, len(line)+len(payload))
+	out = append(out, line[:at]...)
+	out = append(out, payload...)
+	return append(out, line[at:]...)
+}
+
+// injectBefore inserts payload immediately before the first occurrence of
+// marker in line. Panics when the marker is absent.
+func injectBefore(line []byte, marker, payload string) []byte {
+	i := bytes.Index(line, []byte(marker))
+	if i < 0 {
+		panic("marker not found: " + marker)
+	}
+	out := make([]byte, 0, len(line)+len(payload))
+	out = append(out, line[:i]...)
+	out = append(out, payload...)
+	return append(out, line[i:]...)
 }
 
 func insertAt(ls [][]byte, i int, l []byte) [][]byte {
