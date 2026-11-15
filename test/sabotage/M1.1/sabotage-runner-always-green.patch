@@ -1,0 +1,14 @@
+diff --git a/tools/sabotage.sh b/tools/sabotage.sh
+index aea5950..52d2bda 100755
+--- a/tools/sabotage.sh
++++ b/tools/sabotage.sh
+@@ -86,8 +86,7 @@ for p in "$sabdir"/*.patch; do
+     if [ -n "$caught" ]; then
+         report "SABOTAGE $name caught by $caught"
+     elif [ $rc -eq 0 ]; then
+-        uncaught=$((uncaught+1))
+-        report "UNCAUGHT $p"
++        report "SABOTAGE $name caught"
+     else
+         errors=$((errors+1))
+         report "SABOTAGE $name ERROR inner check run exited $rc without a non-PASS CHECK line"

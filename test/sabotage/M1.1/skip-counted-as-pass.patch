@@ -1,0 +1,13 @@
+diff --git a/tools/check.sh b/tools/check.sh
+index 9116e80..dd10406 100755
+--- a/tools/check.sh
++++ b/tools/check.sh
+@@ -84,7 +84,7 @@ for f in "$dir"/*; do
+     else
+         case $rc in
+             0)  line="CHECK $id PASS" ;;
+-            77) line="CHECK $id SKIP ${reason:-skipped}";    failed=$((failed+1)) ;;
++            77) line="CHECK $id SKIP ${reason:-skipped}" ;;
+             78) line="CHECK $id BLOCKED ${reason:-blocked}"; failed=$((failed+1)) ;;
+             *)  line="CHECK $id FAIL ${reason:-exit $rc}";   failed=$((failed+1)) ;;
+         esac

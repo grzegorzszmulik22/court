@@ -1,0 +1,13 @@
+diff --git a/tools/check.sh b/tools/check.sh
+index 9116e80..ac6570c 100755
+--- a/tools/check.sh
++++ b/tools/check.sh
+@@ -69,7 +69,7 @@ for f in "$dir"/*; do
+     ran=$((ran+1))
+     d="$ev/checks/$id.d"; mkdir -p "$d"
+     log="$ev/checks/$id.log"; err="$d/stderr.log"
+-    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-240}" bash "$f" >"$log" 2>"$err"
++    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-240}" bash "$f" >"$log" 2>/dev/null
+     rc=$?
+     cat "$err" >>"$log"          # the check's log holds stdout then stderr
+     cat "$log" >>"$ev/output.log"

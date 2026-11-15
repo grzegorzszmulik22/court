@@ -1,0 +1,15 @@
+5:# Claude Code changelog
+13:**2.1.325**
+168:**2.1.323**
+186:* Added `CLAUDE_CODE_DISABLE_AGENT_PROGRESS_SUMMARIES` (available since 2.1.318): set it to `1` to turn off subagent progress summaries and the requests that write them (anthropics/claude-code#86879)
+204:* Self-hosted runner: Reverted the exit code of an on-demand runner whose work order was superseded to 1; 2.1.321 and 2.1.322 had changed it to 0
+478:**2.1.322**
+484:**2.1.321**
+574:* Fixed a turn ending with "API Error: EPROTO: The TLS handshake failed" when the connection broke partway through a reply; the partial reply is kept or the request is retried, as before 2.1.302
+618:**2.1.319**
+780:**2.1.318**
+832:* Fixed `--continue` sometimes losing the earlier conversation after a malformed tool call's retries ran out (regression in 2.1.314)
+880:**2.1.317**
+983:**2.1.316**
+1054:**2.1.314**
+1189:**2.1.312**
