@@ -1,0 +1,13 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 0fcb64e..c71af78 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -113,6 +113,8 @@ func Open(repoPath, dataDir, commission string) (*GitWorld, error) {
+ 		return nil, err
+ 	}
+ 	s.gitEnv = s.buildGitEnv()
++	_ = exec.Command("git", "-C", s.repo, "config", "gc.auto", "0").Run()
++	_ = exec.Command("git", "-C", s.repo, "config", "core.hooksPath", s.hooksDir()).Run()
+ 	return &GitWorld{s: s, dir: repo}, nil
+ }
+ 

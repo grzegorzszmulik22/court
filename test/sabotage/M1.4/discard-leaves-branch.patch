@@ -1,0 +1,14 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 25cf578..3c956cb 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -464,9 +464,6 @@ func (w *GitWorld) Discard() error {
+ 	if _, errb, err := w.s.git(ctx, env, w.s.repo, "worktree", "remove", "--force", w.dir); err != nil {
+ 		return fmt.Errorf("world: discard %s: worktree remove: %s", w.id, strings.TrimSpace(errb))
+ 	}
+-	if _, errb, err := w.s.git(ctx, env, w.s.repo, "branch", "-D", w.branch); err != nil {
+-		return fmt.Errorf("world: discard %s: branch delete: %s", w.id, strings.TrimSpace(errb))
+-	}
+ 	// branch -D rewrites packed-refs on some git versions, leaving a
+ 	// header-only file where none existed: remove it again so the ref state
+ 	// is restored exactly.

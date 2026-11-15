@@ -1,0 +1,37 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 930adc0..cd292e0 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -481,6 +481,32 @@ func (w *GitWorld) Discard() error {
+ 			return fmt.Errorf("world: discard %s: admin files: %v", w.id, err)
+ 		}
+ 	}
++	// Reclaim the objects the worktree left behind.
++	keep := map[string]bool{}
++	if out, _, err := w.s.git(ctx, env, w.s.repo, "rev-list", "--objects", "--all"); err == nil {
++		for _, l := range strings.Split(out, "\n") {
++			if f := strings.Fields(l); len(f) > 0 {
++				keep[f[0]] = true
++			}
++		}
++	}
++	objs := filepath.Join(w.s.gitDir, "objects")
++	if top, err := os.ReadDir(objs); err == nil {
++		for _, e := range top {
++			if !e.IsDir() || len(e.Name()) != 2 {
++				continue
++			}
++			sub, err := os.ReadDir(filepath.Join(objs, e.Name()))
++			if err != nil {
++				continue
++			}
++			for _, f := range sub {
++				if !f.IsDir() && !keep[e.Name()+f.Name()] {
++					_ = os.Remove(filepath.Join(objs, e.Name(), f.Name()))
++				}
++			}
++		}
++	}
+ 	return nil
+ }
+ 

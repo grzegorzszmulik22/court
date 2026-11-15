@@ -1,0 +1,38 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (27.05s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (0.72s)
+PASS
+ok  	court/internal/world	27.842s
+CHECK C1.4.1 PASS
+=== RUN   TestC1_4_2_SameBranch
+--- PASS: TestC1_4_2_SameBranch (0.30s)
+PASS
+ok  	court/internal/world	0.324s
+CHECK C1.4.2 PASS
+=== RUN   TestC1_4_3_ConcurrentCommits
+    c14_test.go:618: C1.4.3: 4189 commits across 8 worlds in 1m0s, 0 internal lock retries
+    c14_test.go:650: C1.4.3: held-lock update succeeded after 2 counted retries
+--- PASS: TestC1_4_3_ConcurrentCommits (62.86s)
+PASS
+ok  	court/internal/world	62.885s
+CHECK C1.4.3 PASS
+=== RUN   TestC1_4_4_ConfigIdentical
+--- PASS: TestC1_4_4_ConfigIdentical (1.50s)
+PASS
+ok  	court/internal/world	1.575s
+CHECK C1.4.4 PASS
+=== RUN   TestC1_4_5_SubmoduleRefusal
+--- PASS: TestC1_4_5_SubmoduleRefusal (0.85s)
+PASS
+ok  	court/internal/world	0.926s
+CHECK C1.4.5 PASS
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (0.85s)
+PASS
+ok  	court/internal/world	0.906s
+CHECK C1.4.6 PASS
+no Windows host available: uname -s reports 'Linux' (go env GOOS: linux)
+probe: uname -a: Linux free-a1 7.0.0-1013-oracle #13~24.04.1-Ubuntu SMP PREEMPT Fri Sep 25 09:43:58 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-20-21Z

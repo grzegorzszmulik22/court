@@ -1,0 +1,51 @@
+SABOTAGE config-written-to-repo caught by C1.4.4,C1.4.7
+CHECK C1.4.1 PASS
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 FAIL config-identical check failed; see go test output 
+CHECK C1.4.5 PASS
+CHECK C1.4.6 PASS
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-22-07Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
+SABOTAGE discard-deletes-objects caught by C1.4.1,C1.4.7
+CHECK C1.4.1 FAIL C1.4.1 sessions failed; see go test output 
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 PASS
+CHECK C1.4.5 PASS
+CHECK C1.4.6 PASS
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-23-55Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
+SABOTAGE discard-leaves-branch caught by C1.4.1,C1.4.7
+CHECK C1.4.1 FAIL C1.4.1 sessions failed; see go test output 
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 PASS
+CHECK C1.4.5 PASS
+CHECK C1.4.6 PASS
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-25-37Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
+SABOTAGE gc-left-enabled caught by C1.4.4,C1.4.7
+CHECK C1.4.1 PASS
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 FAIL config-identical check failed; see go test output 
+CHECK C1.4.5 PASS
+CHECK C1.4.6 PASS
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-28-36Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
+SABOTAGE run-timeout-reported-as-exit-1 caught by C1.4.6,C1.4.7
+CHECK C1.4.1 PASS
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 PASS
+CHECK C1.4.5 PASS
+CHECK C1.4.6 FAIL run-timeout check failed; see go test output 
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+check.sh: evidence: evidence/M1.4/2026-11-15T23-31-01Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
+0 uncaught
