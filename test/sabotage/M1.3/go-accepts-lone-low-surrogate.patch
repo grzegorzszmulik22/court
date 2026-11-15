@@ -1,0 +1,12 @@
+--- a/internal/ledger/json.go
++++ b/internal/ledger/json.go
+@@ -311,9 +311,6 @@
+ 		}
+ 		return 0x10000 + (rune(u-0xD800) << 10) + rune(v-0xDC00), nil
+ 	}
+-	if u >= 0xDC00 && u <= 0xDFFF {
+-		return 0, jerr("lone low surrogate")
+-	}
+ 	return rune(u), nil
+ }
+ 

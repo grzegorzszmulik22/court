@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -44,7 +44,7 @@
+ def _check_str(s):
+     for ch in s:
+         o = ord(ch)
+-        if 0xD800 <= o <= 0xDFFF:
++        if 0xD800 <= o <= 0xDBFF:
+             raise JsonError("lone surrogate")
+ 
+ def _num(lit):

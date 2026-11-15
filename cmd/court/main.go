@@ -324,6 +324,7 @@ func cmdLedgerVerify(args []string) error {
 func cmdLedgerMutate(args []string) error {
 	fs := flag.NewFlagSet("mutate", flag.ContinueOnError)
 	in := fs.String("in", "", "input ledger (.jsonl)")
+	indir := fs.String("indir", "", "directory of ledgers (every *.jsonl, sorted)")
 	out := fs.String("out", "", "output directory")
 	per := fs.Int("per", 0, "mutants per ledger (0 = one per kind)")
 	seed := fs.Int64("seed", 1, "seed")
@@ -331,18 +332,25 @@ func cmdLedgerMutate(args []string) error {
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
-	if *in == "" || *out == "" {
-		return fmt.Errorf("--in and --out required")
+	var inputs []string
+	switch {
+	case *indir != "" && *in == "":
+		ents, err := filepath.Glob(filepath.Join(*indir, "*.jsonl"))
+		if err != nil {
+			return err
+		}
+		sort.Strings(ents)
+		inputs = ents
+	case *in != "" && *indir == "":
+		inputs = []string{*in}
+	default:
+		return fmt.Errorf("exactly one of --in or --indir required")
 	}
-	lines, ver := ledger.ReadLedgerFile(*in)
-	if ver.Class != ledger.ClassOK {
-		return fmt.Errorf("%s: %s %s", *in, ver.Class, ver.Detail)
+	if *out == "" {
+		return fmt.Errorf("--out required")
 	}
 	if err := ledger.LoadSchemas(""); err != nil {
 		return err
-	}
-	if v := ledger.VerifyLineBytes(lines); v.Class != ledger.ClassOK {
-		return fmt.Errorf("input ledger does not verify: %s", v.Detail)
 	}
 	var ks []string
 	if *kinds == "" {
@@ -353,30 +361,35 @@ func cmdLedgerMutate(args []string) error {
 	if err := os.MkdirAll(*out, 0o755); err != nil {
 		return err
 	}
-	base := strings.TrimSuffix(filepath.Base(*in), ".jsonl")
-	if base == *in {
-		base = strings.TrimSuffix(base, filepath.Ext(base))
-	}
-	n := 0
-	if *per <= 0 {
-		for _, k := range ks {
-			name := filepath.Join(*out, base+"."+k+".jsonl")
-			if err := writeMutant(name, ledger.Mutate(lines, k, *seed), k); err != nil {
+	for i, f := range inputs {
+		lines, ver := ledger.ReadLedgerFile(f)
+		if ver.Class != ledger.ClassOK {
+			return fmt.Errorf("%s: %s %s", f, ver.Class, ver.Detail)
+		}
+		if v := ledger.VerifyLineBytes(lines); v.Class != ledger.ClassOK {
+			return fmt.Errorf("input ledger does not verify: %s", v.Detail)
+		}
+		base := strings.TrimSuffix(filepath.Base(f), ".jsonl")
+		fseed := *seed + int64(i)
+		if *per <= 0 {
+			for _, k := range ks {
+				name := filepath.Join(*out, base+"."+k+".jsonl")
+				if err := writeMutant(name,
+					ledger.Mutate(lines, k, fseed), k); err != nil {
+					return err
+				}
+			}
+			continue
+		}
+		for j := 0; j < *per; j++ {
+			k := ks[j%len(ks)]
+			name := filepath.Join(*out,
+				fmt.Sprintf("%s.%s.%02d.jsonl", base, k, j/len(ks)))
+			if err := writeMutant(name,
+				ledger.Mutate(lines, k, fseed+int64(j)), k); err != nil {
 				return err
 			}
-			n++
 		}
-		return nil
-	}
-	for i := 0; i < *per; i++ {
-		k := ks[i%len(ks)]
-		name := filepath.Join(*out,
-			fmt.Sprintf("%s.%s.%02d.jsonl", base, k, i/len(ks)))
-		if err := writeMutant(name,
-			ledger.Mutate(lines, k, *seed+int64(i)), k); err != nil {
-			return err
-		}
-		n++
 	}
 	return nil
 }
@@ -408,7 +421,10 @@ func cmdLedgerRejects(args []string) error {
 		"dup-key-body":           ledger.ClassEnvelope,
 		"non-utf8":               ledger.ClassJSON,
 		"bad-escape":             ledger.ClassJSON,
-		"lone-surrogate":         ledger.ClassJSON,
+		"lone-surrogate-high":    ledger.ClassJSON,
+		"lone-surrogate-low":     ledger.ClassJSON,
+		"surrogate-low-high":     ledger.ClassJSON,
+		"surrogate-high-nonlow":  ledger.ClassJSON,
 		"range-number":           ledger.ClassJSON,
 		"trailing-data":          ledger.ClassJSON,
 	}

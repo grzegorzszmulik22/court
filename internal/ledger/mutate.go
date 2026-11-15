@@ -16,8 +16,11 @@ var MutantKinds = []string{
 	// Strict-decoding rules (spec/01 section 11): each kind exists so that
 	// disabling the rule in either verifier produces a class disagreement.
 	"unknown-field-envelope", "dup-key-envelope", "dup-key-body",
-	"non-utf8", "bad-escape", "lone-surrogate", "range-number",
-	"trailing-data",
+	"non-utf8", "bad-escape", "range-number", "trailing-data",
+	// Each invalid-surrogate form is its own kind: disabling one side of
+	// the check (e.g. lone lows) must produce a disagreement.
+	"lone-surrogate-high", "lone-surrogate-low", "surrogate-low-high",
+	"surrogate-high-nonlow",
 }
 
 // Mutate returns mutated copies of a verified ledger's canonical lines.
@@ -97,9 +100,18 @@ func Mutate(lines [][]byte, kind string, seed int64) [][]byte {
 		case "bad-escape":
 			i := r.Intn(n)
 			out[i] = injectAfter(out[i], `"type":"`, `\q`)
-		case "lone-surrogate":
+		case "lone-surrogate-high":
 			i := r.Intn(n)
 			out[i] = injectAfter(out[i], `"type":"`, `\ud800`)
+		case "lone-surrogate-low":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, `\udc00`)
+		case "surrogate-low-high":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, `\udc00\ud800`)
+		case "surrogate-high-nonlow":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `"type":"`, `\ud800\u0041`)
 		case "range-number":
 			i := r.Intn(n)
 			out[i] = injectAfter(out[i], `"body":{`, `"_n":1e999,`)

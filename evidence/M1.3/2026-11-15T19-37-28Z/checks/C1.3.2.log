@@ -1,0 +1,12 @@
+VERIFY test/vectors/ledger/golden-large.jsonl ok
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok
+VERIFY test/vectors/ledger/golden-large.jsonl ok
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok
+VERIFY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T19-37-28Z/checks/C1.3.2.d/golden-mixed.sqlite ok
+VERIFY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T19-37-28Z/checks/C1.3.2.d/golden-mixed.sqlite ok
+reject vectors: 11
+rejects: 11 vectors, both verifiers report the expected class

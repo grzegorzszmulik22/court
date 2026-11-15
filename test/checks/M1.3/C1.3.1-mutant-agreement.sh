@@ -19,12 +19,8 @@ REFLEDGER="ref/python/refledger"
     || { echo "generator failed" >&2; exit 1; }
 
 # 2. >= 1000 mutants (one per kind per ledger across every MutantKinds).
-i=0
-for f in "$d/gen"/*.jsonl; do
-    "$COURT" ledger mutate --in "$f" --out "$d/mut" --seed $((4242+i)) \
-        || { echo "mutate failed on $f" >&2; exit 1; }
-    i=$((i+1))
-done
+"$COURT" ledger mutate --indir "$d/gen" --out "$d/mut" --seed 4242 \
+    || { echo "mutate failed" >&2; exit 1; }
 nmut=$(find "$d/mut" -name '*.jsonl' | wc -l)
 [ "$nmut" -ge 1000 ] || { echo "only $nmut mutants" >&2; exit 1; }
 
@@ -109,7 +105,8 @@ import json, os, re, sys, collections
 d = sys.argv[1]
 manifest = {
     "gen":  {"cmd": "court ledger gen", "seed": 20261115, "count": 200, "size": 60},
-    "mut":  {"cmd": "court ledger mutate --seed <4242+i> per ledger i=0..199",
+    "mut":  {"cmd": "court ledger mutate --indir gen --seed 4242 "
+                    "(per-ledger seed = 4242 + index i=0..199)",
              "kinds": "all of MutantKinds (one per kind per ledger)"},
     "edge": ["bad-last-hash", "bad-last-prev", "no-newline",
              "partial-last", "first-moved-last"],
