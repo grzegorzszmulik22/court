@@ -21,6 +21,12 @@ type Store struct {
 	conn *sql.Conn // one write connection; BEGIN IMMEDIATE serializes writers
 	mu   sync.Mutex
 	path string
+	// stmts caches statements prepared on conn for the hot append path;
+	// every use is under s.mu (a Conn is not safe for concurrent use).
+	stmts map[string]*sql.Stmt
+	// nextSeqHint labels fault points before the transaction starts; the
+	// in-transaction head read is authoritative. -1 until first append.
+	nextSeqHint int64
 }
 
 // Open opens (or creates) the ledger at path.
@@ -40,7 +46,8 @@ func Open(path string) (*Store, error) {
 		db.Close()
 		return nil, err
 	}
-	s := &Store{db: db, conn: conn, path: path}
+	s := &Store{db: db, conn: conn, path: path,
+		stmts: map[string]*sql.Stmt{}, nextSeqHint: -1}
 	if err := s.initSchema(); err != nil {
 		conn.Close()
 		db.Close()
@@ -127,18 +134,22 @@ func isBusy(err error) bool {
 // makes the head read below see the newest committed row.
 func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, error) {
 	ctx := context.Background()
-	// A head read outside the transaction, only to label the fault points
-	// below with the upcoming seq; the in-transaction headInTx is the
-	// authoritative one.
-	pseq, _, _ := s.headInTx()
+	// The upcoming-seq label for the pre-transaction fault points comes
+	// from nextSeqHint (one real read on the first append only); the
+	// in-transaction headInTx below is the authoritative one.
+	if s.nextSeqHint < 0 {
+		p, _, _ := s.headInTx()
+		s.nextSeqHint = p + 1
+	}
+	pseq := s.nextSeqHint - 1
 	fault("begin", pseq+1)
-	if _, err := s.conn.ExecContext(ctx, "BEGIN IMMEDIATE"); err != nil {
+	if err := s.exec(ctx, "BEGIN IMMEDIATE"); err != nil {
 		return nil, err
 	}
 	committed := false
 	defer func() {
 		if !committed {
-			s.conn.ExecContext(ctx, "ROLLBACK")
+			s.exec(ctx, "ROLLBACK")
 		}
 	}()
 	fault("began", pseq+1)
@@ -171,8 +182,12 @@ func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, err
 		return nil, err
 	}
 	fault("pre-insert", ev.Seq)
-	if _, err := s.conn.ExecContext(ctx,
-		"INSERT INTO ledger(seq,prev,at,commission,actor,type,body,hash) VALUES(?,?,?,?,?,?,?,?)",
+	st, err := s.stmt(ctx,
+		"INSERT INTO ledger(seq,prev,at,commission,actor,type,body,hash) VALUES(?,?,?,?,?,?,?,?)")
+	if err != nil {
+		return nil, err
+	}
+	if _, err := st.ExecContext(ctx,
 		ev.Seq, ev.Prev, ev.At, ev.Commission, ev.Actor, ev.Type, string(bodyCanon), ev.Hash); err != nil {
 		return nil, err
 	}
@@ -182,10 +197,11 @@ func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, err
 	}
 	fault("projected", ev.Seq)
 	fault("commit", ev.Seq)
-	if _, err := s.conn.ExecContext(ctx, "COMMIT"); err != nil {
+	if err := s.exec(ctx, "COMMIT"); err != nil {
 		return nil, err
 	}
 	committed = true
+	s.nextSeqHint = ev.Seq + 1
 	return ev, nil
 }
 
@@ -253,12 +269,42 @@ func (s *Store) Events() ([]*Event, error) {
 	return out, rows.Err()
 }
 
+// stmt returns a prepared statement on the write connection, preparing it
+// the first time the same SQL text is seen. Callers hold s.mu; statements
+// run inside whatever transaction the connection currently has open, since
+// appendOnce manages BEGIN/COMMIT as SQL on this same connection.
+func (s *Store) stmt(ctx context.Context, q string) (*sql.Stmt, error) {
+	if st, ok := s.stmts[q]; ok {
+		return st, nil
+	}
+	st, err := s.conn.PrepareContext(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	s.stmts[q] = st
+	return st, nil
+}
+
+// exec runs a no-argument statement through the prepared cache.
+func (s *Store) exec(ctx context.Context, q string) error {
+	st, err := s.stmt(ctx, q)
+	if err != nil {
+		return err
+	}
+	_, err = st.ExecContext(ctx)
+	return err
+}
+
 func (s *Store) headInTx() (int64, string, error) {
-	row := s.conn.QueryRowContext(context.Background(),
+	st, err := s.stmt(context.Background(),
 		"SELECT seq, hash FROM ledger ORDER BY seq DESC LIMIT 1")
+	if err != nil {
+		return -1, "", err
+	}
+	row := st.QueryRowContext(context.Background())
 	var seq int64
 	var hash string
-	err := row.Scan(&seq, &hash)
+	err = row.Scan(&seq, &hash)
 	if errors.Is(err, sql.ErrNoRows) {
 		return -1, "", nil
 	}
