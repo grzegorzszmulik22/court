@@ -1,0 +1,13 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 85fb345..a62ee35 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -499,7 +499,7 @@ func (w *GitWorld) removeObjects(ctx context.Context, env []string) error {
+ 			cand[oid] = true
+ 		}
+ 	}
+-	if len(cand) == 0 {
++	if len(cand) >= 0 {
+ 		return nil
+ 	}
+ 

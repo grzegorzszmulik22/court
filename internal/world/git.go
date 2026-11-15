@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -51,10 +52,11 @@ type store struct {
 // worktrees on branches court/<commission>/<name> under <dataDir>/worlds.
 type GitWorld struct {
 	s         *store
-	id        string // "" on the root world
-	dir       string // working directory git commands run in
-	branch    string // "" on the root world
-	adminDir  string // $GIT_DIR/worktrees/<id>, "" on the root world
+	id        string          // "" on the root world
+	dir       string          // working directory git commands run in
+	branch    string          // "" on the root world
+	adminDir  string          // $GIT_DIR/worktrees/<id>, "" on the root world
+	baseline  map[string]bool // loose object ids present at Fork time
 	discarded atomic.Bool
 }
 
@@ -242,9 +244,16 @@ func (s *store) git(ctx context.Context, env []string, dir string, args ...strin
 }
 
 func (s *store) gitOnce(ctx context.Context, env []string, dir string, args ...string) (string, string, error) {
+	return s.gitStdin(ctx, env, dir, "", args...)
+}
+
+func (s *store) gitStdin(ctx context.Context, env []string, dir, stdin string, args ...string) (string, string, error) {
 	cmd := exec.CommandContext(ctx, "git", args...)
 	cmd.Dir = dir
 	cmd.Env = env
+	if stdin != "" {
+		cmd.Stdin = strings.NewReader(stdin)
+	}
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	err := cmd.Run()
@@ -286,7 +295,8 @@ func (w *GitWorld) Fork(base Commit, name string) (World, error) {
 	if b, err := os.ReadFile(filepath.Join(dir, ".git")); err == nil {
 		admin = strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(string(b)), "gitdir: "))
 	}
-	return &GitWorld{s: w.s, id: name, dir: dir, branch: branch, adminDir: admin}, nil
+	return &GitWorld{s: w.s, id: name, dir: dir, branch: branch, adminDir: admin,
+		baseline: w.s.looseObjects()}, nil
 }
 
 // Diff implements World.Diff with `git diff --numstat -z --no-renames`.
@@ -452,7 +462,9 @@ func (w *GitWorld) Discard() error {
 	defer cancel()
 	env := w.backendEnv()
 
-	candidates := w.worldObjects(ctx, env)
+	// Candidates are the loose objects created since this world was forked.
+	packedRefs := filepath.Join(w.s.gitDir, "packed-refs")
+	_, packedRefsExisted := os.Stat(packedRefs)
 
 	if _, errb, err := w.s.git(ctx, env, w.s.repo, "worktree", "remove", "--force", w.dir); err != nil {
 		return fmt.Errorf("world: discard %s: worktree remove: %s", w.id, strings.TrimSpace(errb))
@@ -460,83 +472,205 @@ func (w *GitWorld) Discard() error {
 	if _, errb, err := w.s.git(ctx, env, w.s.repo, "branch", "-D", w.branch); err != nil {
 		return fmt.Errorf("world: discard %s: branch delete: %s", w.id, strings.TrimSpace(errb))
 	}
+	// branch -D rewrites packed-refs on some git versions, leaving a
+	// header-only file where none existed: remove it again so the ref state
+	// is restored exactly.
+	if os.IsNotExist(packedRefsExisted) {
+		if raw, err := os.ReadFile(packedRefs); err == nil && packedRefsEmpty(raw) {
+			_ = os.Remove(packedRefs)
+		}
+	}
 	if w.adminDir != "" {
 		if err := os.RemoveAll(w.adminDir); err != nil {
 			return fmt.Errorf("world: discard %s: admin files: %v", w.id, err)
 		}
 	}
-	if err := w.removeObjects(ctx, env, candidates); err != nil {
-		return err
-	}
-	return nil
+	return w.removeObjects(ctx, env)
 }
 
-// worldObjects returns the ids of objects only this world can have created:
-// objects reachable from its branch but from no other ref, and blobs staged
-// in its index.
-func (w *GitWorld) worldObjects(ctx context.Context, env []string) map[string]bool {
+// removeObjects deletes loose object files that appeared after this world
+// forked minus everything still referenced: objects reachable from any ref
+// or reflog or detached worktree HEAD, and blobs staged in the index of the
+// main worktree or any remaining linked worktree.
+func (w *GitWorld) removeObjects(ctx context.Context, env []string) error {
 	cand := map[string]bool{}
-	out, _, err := w.s.git(ctx, env, w.s.repo, "for-each-ref", "--format=%(refname)")
-	if err != nil {
-		return cand
-	}
-	var others []string
-	for _, ref := range strings.Split(strings.TrimSpace(out), "\n") {
-		if ref != "" && ref != "refs/heads/"+w.branch {
-			others = append(others, ref)
+	for oid := range w.s.looseObjects() {
+		if !w.baseline[oid] {
+			cand[oid] = true
 		}
 	}
-	args := []string{"rev-list", "--objects", w.branch}
-	if len(others) > 0 {
-		args = append(args, "--not")
-		args = append(args, others...)
-	}
-	if out, _, err := w.s.git(ctx, env, w.s.repo, args...); err == nil {
-		for _, line := range strings.Split(out, "\n") {
-			if f := strings.Fields(line); len(f) > 0 {
-				cand[f[0]] = true
-			}
-		}
-	}
-	// Staged blobs that were never committed.
-	if out, _, err := w.s.git(ctx, env, w.dir, "ls-files", "-s"); err == nil {
-		for _, line := range strings.Split(out, "\n") {
-			f := strings.Fields(line)
-			if len(f) >= 2 && isHex40or64(f[1]) {
-				cand[f[1]] = true
-			}
-		}
-	}
-	return cand
-}
-
-// removeObjects deletes the loose object files of candidates that are
-// unreachable after the branch is gone. Objects still reachable from any
-// remaining ref are kept.
-func (w *GitWorld) removeObjects(ctx context.Context, env []string, cand map[string]bool) error {
 	if len(cand) == 0 {
 		return nil
 	}
-	reachable := map[string]bool{}
-	out, _, err := w.s.git(ctx, env, w.s.repo, "rev-list", "--objects", "--all")
+
+	// Roots from reflogs and detached HEADs are extra reachability roots;
+	// keep only those that still resolve to commits.
+	roots := w.s.extraRoots()
+	if len(roots) > 0 {
+		var b strings.Builder
+		for _, r := range roots {
+			b.WriteString(r + "\n")
+		}
+		if out, _, err := w.s.gitStdin(ctx, env, w.s.repo, b.String(),
+			"cat-file", "--batch-check=%(objectname) %(objecttype)"); err == nil {
+			roots = roots[:0]
+			for _, line := range strings.Split(out, "\n") {
+				if f := strings.Fields(line); len(f) >= 2 && f[1] == "commit" {
+					roots = append(roots, f[0])
+				}
+			}
+		}
+	}
+	args := append([]string{"rev-list", "--objects", "--all"}, roots...)
+	out, _, err := w.s.git(ctx, env, w.s.repo, args...)
 	if err != nil {
 		return fmt.Errorf("world: discard %s: reachable set: %v", w.id, err)
 	}
 	for _, line := range strings.Split(out, "\n") {
 		if f := strings.Fields(line); len(f) > 0 {
-			reachable[f[0]] = true
+			delete(cand, f[0])
 		}
 	}
-	for oid := range cand {
-		if reachable[oid] {
-			continue
+
+	// Blobs staged in any surviving index are still referenced. The
+	// discarded world's admin dir is already gone, so only other worktrees
+	// and the main one are enumerated here.
+	for _, dir := range append(w.s.worktreeDirs(), w.s.repo) {
+		out, _, err := w.s.git(ctx, env, dir, "diff", "--cached", "--raw", "--abbrev=40", "HEAD")
+		if err != nil {
+			continue // no index or unborn HEAD: nothing staged to protect
 		}
+		for _, line := range strings.Split(out, "\n") {
+			if f := strings.Fields(line); len(f) >= 4 && isHex40or64(f[3]) {
+				delete(cand, f[3])
+			}
+		}
+	}
+
+	for oid := range cand {
 		p := filepath.Join(w.s.gitDir, "objects", oid[:2], oid[2:])
 		if err := os.Remove(p); err == nil || os.IsNotExist(err) {
 			_ = os.Remove(filepath.Dir(p)) // drop the fan-out dir if now empty
 		}
 	}
 	return nil
+}
+
+// looseObjects lists the loose object ids in the object store straight from
+// the filesystem — no subprocess.
+func (s *store) looseObjects() map[string]bool {
+	objs := map[string]bool{}
+	base := filepath.Join(s.gitDir, "objects")
+	top, err := os.ReadDir(base)
+	if err != nil {
+		return objs
+	}
+	for _, e := range top {
+		if !e.IsDir() {
+			continue
+		}
+		sub, err := os.ReadDir(filepath.Join(base, e.Name()))
+		if err != nil {
+			continue
+		}
+		for _, f := range sub {
+			if !f.IsDir() && isHex40or64(e.Name()+f.Name()) {
+				objs[e.Name()+f.Name()] = true
+			}
+		}
+	}
+	return objs
+}
+
+// worktreeDirs returns the top-level paths of the surviving linked
+// worktrees, resolved from the gitdir pointer in each admin entry.
+func (s *store) worktreeDirs() []string {
+	var dirs []string
+	ents, err := os.ReadDir(filepath.Join(s.gitDir, "worktrees"))
+	if err != nil {
+		return nil
+	}
+	for _, e := range ents {
+		if !e.IsDir() {
+			continue
+		}
+		b, err := os.ReadFile(filepath.Join(s.gitDir, "worktrees", e.Name(), "gitdir"))
+		if err != nil {
+			continue
+		}
+		p := strings.TrimSpace(string(b))
+		if strings.HasSuffix(p, "/.git") {
+			dirs = append(dirs, strings.TrimSuffix(p, "/.git"))
+		}
+	}
+	return dirs
+}
+
+// extraRoots returns commit ids that still reference objects but no ref
+// reaches: reflog entries and the detached HEAD files of linked worktrees.
+func (s *store) extraRoots() []string {
+	seen := map[string]bool{}
+	var roots []string
+	zero := strings.Repeat("0", 40)
+	add := func(sha string) {
+		if isHex40or64(sha) && sha != zero && !seen[sha] {
+			seen[sha] = true
+			roots = append(roots, sha)
+		}
+	}
+	// Reflog lines start "<old> <new>"; both ids can still hold objects.
+	reflogs := []string{filepath.Join(s.gitDir, "logs")}
+	if ents, err := os.ReadDir(filepath.Join(s.gitDir, "worktrees")); err == nil {
+		for _, e := range ents {
+			if e.IsDir() {
+				reflogs = append(reflogs, filepath.Join(s.gitDir, "worktrees", e.Name(), "logs"))
+			}
+		}
+	}
+	for _, dir := range reflogs {
+		_ = filepath.WalkDir(dir, func(p string, d fs.DirEntry, err error) error {
+			if err != nil || d.IsDir() {
+				return nil
+			}
+			raw, err := os.ReadFile(p)
+			if err != nil {
+				return nil
+			}
+			for _, line := range strings.Split(string(raw), "\n") {
+				f := strings.Fields(line)
+				if len(f) >= 2 {
+					add(f[0])
+					add(f[1])
+				}
+			}
+			return nil
+		})
+	}
+	// A detached HEAD in a linked worktree names a commit directly.
+	if ents, err := os.ReadDir(filepath.Join(s.gitDir, "worktrees")); err == nil {
+		for _, e := range ents {
+			if !e.IsDir() {
+				continue
+			}
+			raw, err := os.ReadFile(filepath.Join(s.gitDir, "worktrees", e.Name(), "HEAD"))
+			if err == nil {
+				add(strings.TrimSpace(string(raw)))
+			}
+		}
+	}
+	return roots
+}
+
+// packedRefsEmpty reports whether a packed-refs file carries no ref entries
+// (only the header comment git leaves behind on some versions).
+func packedRefsEmpty(raw []byte) bool {
+	for _, line := range strings.Split(string(raw), "\n") {
+		line = strings.TrimSpace(line)
+		if line != "" && !strings.HasPrefix(line, "#") {
+			return false
+		}
+	}
+	return true
 }
 
 var hexRe = regexp.MustCompile(`^[0-9a-f]{40,64}$`)

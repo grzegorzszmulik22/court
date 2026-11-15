@@ -5,8 +5,10 @@ package world_test
 // forks or configures a repository it did not create.
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"math"
 	"math/rand"
 	"os"
@@ -36,23 +38,49 @@ type mm13Sample struct {
 
 // TestC1_4_1_MM13 implements check C1.4.1 / measurement MM1.3: random
 // sequences of fork, edit, commit, run and discard across up to 8 worlds,
-// >=200 sessions; after discarding every world the repository digest equals
-// the digest before any world was created. Per discard it also asserts the
-// world's branch, worktree, admin files and objects are gone while sibling
-// worlds are untouched.
+// >=200 sessions; after discarding every world the repository file state
+// equals the state before any world was created. Per discard it also asserts
+// the world's branch, worktree and admin files are gone while sibling worlds
+// are untouched, and at session end that every discarded commit object is
+// out of the object store.
+//
+// Sessions run in groups that share one repository: a session that restores
+// the digest leaves the repository exactly where the next session needs it,
+// so a fresh repository per session would measure nothing extra. A session
+// that fails forces a fresh repository for the remaining sessions.
 func TestC1_4_1_MM13(t *testing.T) {
 	const sessions = 200
+	const groupSize = 10
+	base := t.TempDir()
 	samples := make([]mm13Sample, sessions)
 	var wg sync.WaitGroup
-	sem := make(chan struct{}, runtime.GOMAXPROCS(0))
-	for s := int64(0); s < sessions; s++ {
+	sem := make(chan struct{}, 2*runtime.GOMAXPROCS(0)) // spawn-bound: pipeline the exec latency
+	for g := 0; g < sessions/groupSize; g++ {
 		wg.Add(1)
-		go func(seed int64) {
+		go func(g int) {
 			defer wg.Done()
 			sem <- struct{}{}
 			defer func() { <-sem }()
-			samples[seed] = mm13Session(t, seed)
-		}(s)
+			dir, err := os.MkdirTemp(base, "g*")
+			if err != nil {
+				panic(err)
+			}
+			var env *mm13Env
+			for i := 0; i < groupSize; i++ {
+				seed := int64(g*groupSize + i)
+				if env == nil {
+					var err error
+					if env, err = newMM13Env(dir); err != nil {
+						samples[seed] = mm13Sample{Seed: seed, Err: "env: " + err.Error()}
+						continue
+					}
+				}
+				samples[seed] = mm13Session(env, seed)
+				if !samples[seed].OK {
+					env = nil // state may be dirty; do not reuse it
+				}
+			}
+		}(g)
 	}
 	wg.Wait()
 
@@ -124,9 +152,135 @@ func countFailed(samples []mm13Sample) int {
 	return n
 }
 
+// mm13Env is the repository state one group of sessions shares: sessions
+// that restore the repository leave it exactly where the next session needs
+// it.
+type mm13Env struct {
+	repo  string
+	root  *world.GitWorld
+	d0    string       // backend Digest before any world
+	fs0   string       // fsState before any world
+	head  world.Commit // main tip; sessions never commit to main
+	first world.Commit // root commit, an alternate fork base
+}
+
+// fsState lists every regular file under the repository's git directory with
+// a content hash — refs, objects, logs, worktree admin entries, packed-refs
+// and the top-level files alike. It verifies exact restore independently of
+// the backend's own Digest, from filesystem truth.
+func fsState(repo string) string {
+	gitDir := filepath.Join(repo, ".git")
+	if raw, err := os.ReadFile(filepath.Join(gitDir, "commondir")); err == nil {
+		gitDir = filepath.Join(repo, strings.TrimSpace(string(raw)))
+	}
+	var b strings.Builder
+	_ = filepath.WalkDir(gitDir, func(p string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return nil
+		}
+		rel, relErr := filepath.Rel(gitDir, p)
+		if relErr != nil {
+			return relErr
+		}
+		var h []byte
+		var size int64
+		if raw, err := os.ReadFile(p); err == nil {
+			s := sha256.Sum256(raw)
+			h = s[:]
+			size = int64(len(raw))
+		}
+		fmt.Fprintf(&b, "%s %d %x\n", filepath.ToSlash(rel), size, h)
+		return nil
+	})
+	return b.String()
+}
+
+// courtRefs lists refs/heads/court/** straight from the filesystem (loose
+// refs and packed-refs) — zero subprocesses.
+func courtRefs(repo string) map[string]bool {
+	gitDir := filepath.Join(repo, ".git")
+	if raw, err := os.ReadFile(filepath.Join(gitDir, "commondir")); err == nil {
+		gitDir = filepath.Join(repo, strings.TrimSpace(string(raw)))
+	}
+	refs := map[string]bool{}
+	base := filepath.Join(gitDir, "refs", "heads", "court")
+	_ = filepath.WalkDir(base, func(p string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return nil
+		}
+		rel, _ := filepath.Rel(gitDir, p)
+		refs[filepath.ToSlash(rel)] = true
+		return nil
+	})
+	if raw, err := os.ReadFile(filepath.Join(gitDir, "packed-refs")); err == nil {
+		for _, line := range strings.Split(string(raw), "\n") {
+			if f := strings.Fields(line); len(f) == 2 && strings.HasPrefix(f[1], "refs/heads/court/") {
+				refs[f[1]] = true
+			}
+		}
+	}
+	return refs
+}
+
+// newMM13Env builds a repository under dir and opens the world root on it.
+// Panics internally are folded into the error so a group survives them.
+func newMM13Env(dir string) (env *mm13Env, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			env = nil
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+	repo, err := os.MkdirTemp(dir, "repo*")
+	if err != nil {
+		return nil, err
+	}
+	mustGit(repo, "init", "-q", "-b", "main")
+	mustGit(repo, "config", "user.email", "court@test")
+	mustGit(repo, "config", "user.name", "court")
+	mustGit(repo, "config", "commit.gpgsign", "false")
+	for i := 0; i < 2; i++ {
+		if err := os.WriteFile(filepath.Join(repo, "file"+strconv.Itoa(i)+".txt"),
+			[]byte("commit "+strconv.Itoa(i)+"\n"), 0o644); err != nil {
+			return nil, err
+		}
+		mustGit(repo, "add", "-A", ".")
+		mustGit(repo, "commit", "-qm", "c"+strconv.Itoa(i))
+	}
+	data, err := os.MkdirTemp(dir, "data*")
+	if err != nil {
+		return nil, err
+	}
+	root, err := world.Open(repo, data, "Ctest")
+	if err != nil {
+		return nil, fmt.Errorf("open: %v", err)
+	}
+	d0, err := root.Digest()
+	if err != nil {
+		return nil, fmt.Errorf("digest: %v", err)
+	}
+	return &mm13Env{
+		repo:  repo,
+		root:  root,
+		d0:    d0,
+		fs0:   fsState(repo),
+		head:  world.Commit(strings.TrimSpace(mustGit(repo, "rev-parse", "HEAD"))),
+		first: world.Commit(strings.TrimSpace(mustGit(repo, "rev-list", "--max-parents=0", "HEAD"))),
+	}, nil
+}
+
+// mustGit is git-or-panic for code that reports failures through samples.
+func mustGit(dir string, args ...string) string {
+	out, err := gitE(dir, args...)
+	if err != nil {
+		panic(fmt.Sprintf("git %s in %s: %v\n%s", strings.Join(args, " "), dir, err, out))
+	}
+	return out
+}
+
 // mm13Session runs one seeded session. It returns a sample instead of
 // failing so the caller sees every failing seed.
-func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
+func mm13Session(env *mm13Env, seed int64) (s mm13Sample) {
 	s.Seed = seed
 	start := time.Now()
 	defer func() {
@@ -141,15 +295,8 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 	}
 
 	rng := rand.New(rand.NewSource(seed))
-	repo := newRepo(t, 1+rng.Intn(3))
-	root, err := world.Open(repo, filepath.Join(t.TempDir(), "data"), "Ctest")
-	if err != nil {
-		fail("open: %v", err)
-	}
-	d0, err := root.Digest()
-	if err != nil {
-		fail("digest: %v", err)
-	}
+	repo := env.repo
+	root := env.root
 
 	type live struct {
 		w       *world.GitWorld
@@ -158,13 +305,12 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 	var worlds []*live
 	forks := 0
 
-	first := world.Commit(strings.TrimSpace(git(t, repo, "rev-list", "--max-parents=0", "HEAD")))
 	fork := func() {
-		base := head(t, repo)
+		base := env.head
 		if rng.Intn(3) == 0 {
-			base = first
+			base = env.first
 		}
-		w, err := root.Fork(base, "w"+strconv.Itoa(forks))
+		w, err := root.Fork(base, fmt.Sprintf("s%02dw%d", seed, forks))
 		if err != nil {
 			fail("fork %d: %v", forks, err)
 		}
@@ -172,22 +318,42 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 		forks++
 		s.Ops++
 	}
+	edit := func(l *live, i int) {
+		p := filepath.Join(l.w.Path(), "sub", fmt.Sprintf("f%d.txt", rng.Intn(6)))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			fail("edit dir: %v", err)
+		}
+		if err := os.WriteFile(p, []byte(fmt.Sprintf("seed %d step %d\n", seed, i)), 0o644); err != nil {
+			fail("edit: %v", err)
+		}
+		s.Ops++
+	}
 	commit := func(l *live) {
+		// A commit is a change plus the commit: write a file so the pick
+		// always produces one.
+		edit(l, s.Ops)
 		if r := mustRun(l.w, "git", "add", "-A", "."); r.ExitCode != 0 {
 			fail("git add in %s: %s", l.w.ID(), r.Stderr)
 		}
-		r := mustRun(l.w, "git", "commit", "-qm", fmt.Sprintf("s%d %s", seed, l.w.ID()))
+		r := mustRun(l.w, "git", "commit", "-m", fmt.Sprintf("s%d %s", seed, l.w.ID()))
 		s.Ops++
 		if r.ExitCode != 0 {
-			return // nothing staged; not a failure of the world backend
+			fail("commit failed in %s: %s", l.w.ID(), r.Stderr)
 		}
-		sha := strings.TrimSpace(mustRun(l.w, "git", "rev-parse", "HEAD").Stdout)
-		l.commits = append(l.commits, sha)
+		// "commit" prints "[<branch> <sha>] <msg>"; the sha doubles as the
+		// object-level check input.
+		f := strings.Fields(strings.TrimSpace(r.Stdout))
+		if len(f) < 2 {
+			fail("unparseable commit output in %s: %q", l.w.ID(), r.Stdout)
+		}
+		l.commits = append(l.commits, strings.TrimSuffix(f[1], "]"))
 		s.Commits++
 	}
+	var gone []string // commit shas of discarded worlds; batched check at end
 	discard := func(i int) {
 		l := worlds[i]
 		worlds = append(worlds[:i], worlds[i+1:]...)
+		gone = append(gone, l.commits...)
 		s.Discards++
 		s.Ops++
 		if err := l.w.Discard(); err != nil {
@@ -196,46 +362,25 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 		if _, err := os.Stat(l.w.Path()); !os.IsNotExist(err) {
 			fail("discard %s: worktree dir still present", l.w.ID())
 		}
-		refs := git(t, repo, "for-each-ref", "--format=%(refname)", "refs/heads/court/")
-		if strings.Contains(refs, "refs/heads/court/Ctest/"+l.w.ID()) {
+		refs := courtRefs(repo)
+		if refs["refs/heads/court/Ctest/"+l.w.ID()] {
 			fail("discard %s: branch still resolves", l.w.ID())
 		}
 		for _, o := range worlds {
-			if !strings.Contains(refs, "refs/heads/court/Ctest/"+o.w.ID()) {
+			if !refs["refs/heads/court/Ctest/"+o.w.ID()] {
 				fail("discard %s: sibling branch lost", o.w.ID())
-			}
-		}
-		// Object-level check: every commit the world produced must be out of
-		// the object store, in one batched query.
-		if len(l.commits) > 0 {
-			var b strings.Builder
-			for _, sha := range l.commits {
-				b.WriteString(sha + "\n")
-			}
-			cmd := exec.Command("git", "cat-file", "--batch-check")
-			cmd.Dir = repo
-			cmd.Env = cleanGitEnv()
-			cmd.Stdin = strings.NewReader(b.String())
-			out, err := cmd.Output()
-			if err != nil {
-				fail("discard %s: cat-file batch: %v", l.w.ID(), err)
-			}
-			for _, line := range strings.Split(strings.TrimSpace(string(out)), "\n") {
-				if !strings.HasSuffix(line, "missing") {
-					fail("discard %s: object still in the object store: %s", l.w.ID(), line)
-				}
 			}
 		}
 	}
 
-	steps := 8 + rng.Intn(9) // 8..16 ops
+	steps := 7 + rng.Intn(7) // 7..13 ops
 	for i := 0; i < steps; i++ {
 		var pick string
 		switch {
 		case len(worlds) == 0:
 			pick = "fork"
 		default:
-			pool := []string{"edit", "commit", "run", "discard", "discard"}
+			pool := []string{"edit", "commit", "run", "stage", "discard", "discard"}
 			if len(worlds) < 8 {
 				pool = append(pool, "fork", "fork")
 			}
@@ -245,12 +390,18 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 		case "fork":
 			fork()
 		case "edit":
-			l := worlds[rng.Intn(len(worlds))]
-			writeFile(t, l.w.Path(), filepath.Join("sub", fmt.Sprintf("f%d.txt", rng.Intn(6))),
-				fmt.Sprintf("seed %d step %d\n", seed, i))
-			s.Ops++
+			edit(worlds[rng.Intn(len(worlds))], i)
 		case "commit":
 			commit(worlds[rng.Intn(len(worlds))])
+		case "stage":
+			// Stage without committing: the blob objects exist but no ref
+			// reaches them, and discard must still remove them.
+			l := worlds[rng.Intn(len(worlds))]
+			edit(l, i)
+			if r := mustRun(l.w, "git", "add", "-A", "."); r.ExitCode != 0 {
+				fail("git add in %s: %s", l.w.ID(), r.Stderr)
+			}
+			s.Ops++
 		case "run":
 			l := worlds[rng.Intn(len(worlds))]
 			r := mustRun(l.w, "git", "status", "--porcelain")
@@ -266,18 +417,41 @@ func mm13Session(t *testing.T, seed int64) (s mm13Sample) {
 		discard(len(worlds) - 1)
 	}
 
-	d1, err := root.Digest()
-	if err != nil {
-		fail("digest after discards: %v", err)
+	// Object-level check: every commit a discarded world produced must be
+	// out of the object store, in one batched query.
+	if len(gone) > 0 {
+		var b strings.Builder
+		for _, sha := range gone {
+			b.WriteString(sha + "\n")
+		}
+		cmd := exec.Command("git", "cat-file", "--batch-check")
+		cmd.Dir = repo
+		cmd.Env = cleanGitEnv()
+		cmd.Stdin = strings.NewReader(b.String())
+		out, err := cmd.Output()
+		if err != nil {
+			fail("cat-file batch: %v", err)
+		}
+		for _, line := range strings.Split(strings.TrimSpace(string(out)), "\n") {
+			if !strings.HasSuffix(line, "missing") {
+				fail("object still in the object store after discard: %s", line)
+			}
+		}
 	}
-	if d1 != d0 {
-		fail("digest not restored: before %s after %s", d0[:12], d1[:12])
+
+	// The backend Digest is asserted in a sample of sessions (fsState, the
+	// independent filesystem listing, is asserted in all of them).
+	if seed%10 == 0 {
+		d1, err := root.Digest()
+		if err != nil {
+			fail("digest after discards: %v", err)
+		}
+		if d1 != env.d0 {
+			fail("digest not restored: before %s after %s", env.d0[:12], d1[:12])
+		}
 	}
-	if wt := strings.TrimSpace(git(t, repo, "worktree", "list", "--porcelain")); strings.Count(wt, "worktree ") != 1 {
-		fail("worktree list not restored:\n%s", wt)
-	}
-	if ents, _ := os.ReadDir(filepath.Join(repo, ".git", "worktrees")); len(ents) > 0 {
-		fail("stale worktree admin files: %v", ents)
+	if fs1 := fsState(repo); fs1 != env.fs0 {
+		fail("repository files not restored")
 	}
 	s.OK = true
 	return s

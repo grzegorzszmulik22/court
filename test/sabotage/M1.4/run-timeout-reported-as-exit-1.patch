@@ -1,0 +1,14 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 0fcb64e..cfee405 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -412,7 +412,8 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
+ 	case <-ctx.Done():
+ 		_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+ 		<-done
+-		res.TimedOut = ctx.Err() == context.DeadlineExceeded
++		res.TimedOut = false
++		res.ExitCode = 1
+ 	}
+ 	res.Stdout, res.Stderr = stdout.String(), stderr.String()
+ 	res.Duration = time.Since(start)

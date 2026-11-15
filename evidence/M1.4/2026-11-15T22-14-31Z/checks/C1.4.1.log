@@ -1,0 +1,4 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (172.90s)
+PASS
+ok  	court/internal/world	173.115s

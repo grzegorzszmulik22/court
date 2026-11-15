@@ -1,0 +1,12 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 0fcb64e..cd2e993 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -138,7 +138,6 @@ func (w *GitWorld) Retries() int64 { return w.s.retries.Load() }
+ func (s *store) buildGitEnv() []string {
+ 	pairs := [][2]string{
+ 		{"core.hooksPath", s.hooksDir()},
+-		{"gc.auto", "0"}, // automatic gc is off for the whole commission
+ 	}
+ 	if runtime.GOOS == "windows" {
+ 		pairs = append(pairs, [2]string{"core.longpaths", "true"})
