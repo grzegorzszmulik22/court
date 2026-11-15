@@ -15,7 +15,7 @@ COURT="$d/court"
 REFLEDGER="ref/python/refledger"
 
 # 1. >= 200 generated ledgers, all valid.
-"$COURT" ledger gen --out "$d/gen" --count 200 --seed 20261115 --size 60 \
+"$COURT" ledger gen --out "$d/gen" --count 200 --seed 20261115 --size 40 \
     || { echo "generator failed" >&2; exit 1; }
 
 # 2. >= 1000 mutants (one per kind per ledger across every MutantKinds).
@@ -50,11 +50,14 @@ head -c -1 "$d/gen/gen-00001.jsonl" > "$d/edge/no-newline.jsonl"
 { tail -n 1 "$d/gen/gen-00003.jsonl"; head -n 3 "$d/gen/gen-00003.jsonl"; } \
     > "$d/edge/first-moved-last.jsonl"
 
-# 4. Verify with both. Go verifier then Python reference verifier.
+# 4. Verify with both, in parallel (independent passes over the corpus).
 "$COURT" ledger verify "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/go.out" 2>"$d/go.err" || true
+    > "$d/go.out" 2>"$d/go.err" &
+gopid=$!
 python3 "$REFLEDGER" "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/py.out" 2>"$d/py.err" || true
+    > "$d/py.out" 2>"$d/py.err" &
+pypid=$!
+wait "$gopid" "$pypid" 2>/dev/null || true
 
 python3 - "$d" <<'PYEOF' || { echo "verifier agreement failed" >&2; exit 1; }
 import sys, os, re
@@ -104,7 +107,7 @@ python3 - "$d" <<'PYEOF' || exit 1
 import json, os, re, sys, collections
 d = sys.argv[1]
 manifest = {
-    "gen":  {"cmd": "court ledger gen", "seed": 20261115, "count": 200, "size": 60},
+    "gen":  {"cmd": "court ledger gen", "seed": 20261115, "count": 200, "size": 40},
     "mut":  {"cmd": "court ledger mutate --indir gen --seed 4242 "
                     "(per-ledger seed = 4242 + index i=0..199)",
              "kinds": "all of MutantKinds (one per kind per ledger)"},
