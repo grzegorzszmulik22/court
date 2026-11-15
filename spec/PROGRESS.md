@@ -10,7 +10,7 @@ M0 is human work and is tracked here only so the gate is visible.
 | M0.1 | Intervention log (human) | TODO | | | |
 | M0.2 | Decision labels on real agent history (human) | TODO | | | |
 | **G0** | **Human gate: do the central bets hold on real work** | TODO | | | |
-| M1.1 | Repository, toolchain, check tooling | TODO | 0 | | needs `tools/host.md` from the human |
+| M1.1 | Repository, toolchain, check tooling | DONE | 3 | evidence/M1.1/2026-11-15T16-25-07Z | lane foundation; supervisor review 1 sent back SKIP and stale-patch exit paths; review 2 caught 5/5 unseen sabotages. C1.1.1 runs through a make shim because GNU make cannot spawn children in an unprivileged namespace on this host (verified by supervisor) |
 | M1.2 | Ledger | TODO | 0 | | |
 | M1.3 | Reference verifier, replay, mutations | TODO | 0 | | |
 | M1.4 | Worlds | TODO | 0 | | |
