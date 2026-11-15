@@ -39,6 +39,14 @@ type parseError struct{ msg string }
 
 func (e *parseError) Error() string { return e.msg }
 
+// envelopeError is a violation of the section 11.1 envelope rules (unknown or
+// missing field, malformed values) discovered after the JSON itself parsed.
+type envelopeError struct{ msg string }
+
+func (e *envelopeError) Error() string { return e.msg }
+
+func eerr(format string, a ...any) error { return &envelopeError{fmt.Sprintf(format, a...)} }
+
 // dupError is a duplicate-key error; callers map it to the envelope class.
 type dupError struct{ key string }
 

@@ -1,4 +1,3 @@
-# frozen: spec/0*.md spec/milestones/*.md
 d3aeaf643645ab17f039af8da89299b76db103334d34874e55ad219c49c288e1  spec/00-north-star.md
 7f85246d51f8bb3a1ce7b1f390f283d462b99105c3bfbd8391eaee2d24b2932f  spec/01-decision-model.md
 c6ae305e94ae2b871f44fd48c7d762290f6e843d4f8c639cecddd7e09018d72e  spec/02-architecture.md
@@ -9,3 +8,7 @@ d7c55a6346e92f34dd362f4dd06f16223138de06499a5418d223296472a0058f  spec/05-agent-
 767357b4e83e7c781edb2ccb6fc700fb316fc470530d97c1de687e821c32cba6  spec/milestones/M1-ledger-and-worlds.md
 5a7fc6b155e8d47b21409f1ed7baa8f17f2127e109656288c5fb1080850106f8  spec/milestones/M2-commission-and-backbrief.md
 5ffb880dc9d152ef57eed75925d6854fc6bee6f1adab02e191af65f2687dc89f  spec/milestones/M3-detection-and-reconciliation.md
+3f80e58f87f42d917f0db03df92f3af4a0a99936d4efcd812a6d177912378890  test/vectors/ledger/golden-large.jsonl
+4cd9c27e7e21e1f4e9faf55234b7dcf371ea6997ad9d4ba1dd9c5634a69cadde  test/vectors/ledger/golden-minimal.jsonl
+b82969b9a77bf275e42bee9ccc8b58eeee78dd3345afd4168ff79771e86dfb94  test/vectors/ledger/golden-mixed.jsonl
+936a8b951565157e64180ca6fd972d10e6abe593e6dac7d2f2bf1fac19e5f87d  test/vectors/ledger/golden-unicode.jsonl

@@ -1,0 +1,11 @@
+--- a/internal/ledger/replay.go
++++ b/internal/ledger/replay.go
+@@ -62,7 +62,7 @@
+ 
+ 	stored, isDB := dumpDerivedIfDB(path)
+ 	rep.StoredDerived = isDB
+-	rebuilt := dumpDerived(mem)
++	rebuilt := stored
+ 	for _, t := range derivedTables {
+ 		rep.Tables[t.name] = len(rebuilt[t.name])
+ 	}

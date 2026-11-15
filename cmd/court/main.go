@@ -83,6 +83,9 @@ func cmdReplay(args []string) error {
 		return fmt.Errorf("replay wants one ledger path")
 	}
 	path := fs.Arg(0)
+	if err := ledger.LoadSchemas(""); err != nil {
+		return err
+	}
 	rep, err := ledger.Replay(path)
 	if err != nil {
 		return err
@@ -188,11 +191,11 @@ func cmdLedgerBuild(args []string) error {
 	if ver.Class != ledger.ClassOK {
 		return fmt.Errorf("%s: %s %s", args[1], ver.Class, ver.Detail)
 	}
-	if v := ledger.VerifyLineBytes(lines); v.Class != ledger.ClassOK {
-		return fmt.Errorf("%s: %s %s", args[1], v.Class, v.Detail)
-	}
 	if err := ledger.LoadSchemas(""); err != nil {
 		return err
+	}
+	if v := ledger.VerifyLineBytes(lines); v.Class != ledger.ClassOK {
+		return fmt.Errorf("%s: %s %s", args[1], v.Class, v.Detail)
 	}
 	s, err := ledger.Open(args[0])
 	if err != nil {
@@ -331,6 +334,9 @@ func cmdLedgerMutate(args []string) error {
 	lines, ver := ledger.ReadLedgerFile(*in)
 	if ver.Class != ledger.ClassOK {
 		return fmt.Errorf("%s: %s %s", *in, ver.Class, ver.Detail)
+	}
+	if err := ledger.LoadSchemas(""); err != nil {
+		return err
 	}
 	if v := ledger.VerifyLineBytes(lines); v.Class != ledger.ClassOK {
 		return fmt.Errorf("input ledger does not verify: %s", v.Detail)

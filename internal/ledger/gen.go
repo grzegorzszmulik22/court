@@ -3,6 +3,7 @@ package ledger
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -325,17 +326,36 @@ func GenerateLoadToStore(s *Store, seed int64, nAgents, nTool, nCommit int) (int
 				Tool: "scripted", Version: "1.0", World: w, Writ: wr}},
 			{"agent:" + ag, "backbrief.submitted", &BackbriefSubmitted{
 				Goal: "work", Plan: Plan{Files: []string{"f.go"}, Lines: 10},
-				ExpectedDecisions: []Expected{}, WillNotTouch: []string{}}},
+				ExpectedDecisions: []Expected{{Question: "log to stderr?",
+					Category: "behaviour", Paths: []string{"f.go"},
+					IntendedDefault: "yes"}},
+				WillNotTouch: []string{}}},
 		} {
 			if err := app(e.actor, e.typ, e.body); err != nil {
 				return 0, err
 			}
 		}
 	}
-	total := 1 + 4*nAgents + nTool + nCommit + nAgents + 1
 	var ags []string
 	for a := range g.agents {
 		ags = append(ags, a)
+	}
+	sort.Strings(ags)
+	// Decision ids follow the projector's nextDecisionID (D1, D2, ...).
+	// Each agent contributes one expected, one declared and one detected row.
+	expID := map[string]string{}
+	decID := map[string]string{}
+	detID := map[string]string{}
+	dn := 0
+	for _, a := range ags {
+		dn++
+		expID[a] = fmt.Sprintf("D%d", dn)
+	}
+	for _, a := range ags {
+		dn++
+		decID[a] = fmt.Sprintf("D%d", dn)
+		dn++
+		detID[a] = fmt.Sprintf("D%d", dn)
 	}
 	for i := 0; i < nTool; i++ {
 		ag := ags[g.r.Intn(len(ags))]
@@ -347,12 +367,86 @@ func GenerateLoadToStore(s *Store, seed int64, nAgents, nTool, nCommit int) (int
 			return 0, err
 		}
 	}
+	commitOf := map[string]string{}
 	for i := 0; i < nCommit; i++ {
 		ag := ags[g.r.Intn(len(ags))]
+		cid := g.hexOf(40)
+		commitOf[ag] = cid
 		if err := app("court", "world.commit", &WorldCommit{
-			World: g.agents[ag], Commit: g.hexOf(40), Parents: []string{g.hexOf(40)},
+			World: g.agents[ag], Commit: cid, Parents: []string{g.hexOf(40)},
 			Changes: []PathChange{{Path: "f.go", Added: 3, Deleted: 1}},
 			Gated:   true, Assumes: []string{},
+		}); err != nil {
+			return 0, err
+		}
+	}
+	// Declared and detected decisions, then claims and an alarm.
+	for _, a := range ags {
+		if err := app("agent:"+a, "decision.declared", &DecisionDeclared{
+			Question: "Retry on timeout?", Category: "behaviour",
+			Paths: []string{"f.go"}, Options: []Option{{ID: "o1", Summary: "retry"}},
+			Chosen: "o1", Petition: false,
+		}); err != nil {
+			return 0, err
+		}
+		if err := app("court", "decision.detected", &DecisionDetected{
+			Detector: "DT11", Category: "behaviour", Paths: []string{"f.go"},
+			Commit: commitOf[a],
+			Evidence: []Evidence{{File: "f.go", StartLine: 1, EndLine: 3,
+				Digest: g.hexOf(64)}},
+		}); err != nil {
+			return 0, err
+		}
+	}
+	for _, a := range ags {
+		for _, e := range []struct {
+			actor, typ string
+			body       any
+		}{
+			{"agent:" + a, "claim.done", &ClaimDone{
+				Task: "task-" + a, Checks: []string{"go test ./..."}}},
+			{"court", "claim.checked", &ClaimChecked{
+				Task:              "task-" + a,
+				Results:           []CheckResult{{Check: "go test ./...", Result: "pass"}},
+				UnverifiedByAgent: false}},
+			{"agent:" + a, "alarm.raised", &AlarmRaised{
+				Text: "coverage thin in f.go", Paths: []string{"f.go"}}},
+		} {
+			if err := app(e.actor, e.typ, e.body); err != nil {
+				return 0, err
+			}
+		}
+	}
+	// Reconciliation verdicts must equal what replay recomputes: a declared
+	// decision is declared-only, a detected one undeclared, and an expected
+	// one unanswered once the commission closes (spec/01 section 7).
+	for _, a := range ags {
+		for _, r := range []struct {
+			id      string
+			sources []string
+			recon   string
+		}{
+			{expID[a], []string{"expected"}, "unanswered"},
+			{decID[a], []string{"declared"}, "declared-only"},
+			{detID[a], []string{"detected"}, "undeclared"},
+		} {
+			if err := app("court", "decision.reconciled", &DecisionReconciled{
+				Decision: r.id, Sources: r.sources, Recon: r.recon,
+				Flags: []string{},
+			}); err != nil {
+				return 0, err
+			}
+		}
+	}
+	for _, a := range ags {
+		if err := app("clerk", "decision.phrased", &DecisionPhrased{
+			Decision: decID[a], Question: "Retry on timeout?",
+			Alternative: "fail fast",
+		}); err != nil {
+			return 0, err
+		}
+		if err := app("human", "decision.ruled", &DecisionRuled{
+			Decision: decID[a], Option: "o1",
 		}); err != nil {
 			return 0, err
 		}
@@ -366,5 +460,5 @@ func GenerateLoadToStore(s *Store, seed int64, nAgents, nTool, nCommit int) (int
 		Outcome: "done", Counts: ReconCounts{}}); err != nil {
 		return 0, err
 	}
-	return total, nil
+	return 1 + 5*nAgents + nTool + nCommit + 5*nAgents + 5*nAgents + nAgents + 1, nil
 }

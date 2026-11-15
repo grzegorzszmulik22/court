@@ -113,7 +113,7 @@ func DecodeEnvelope(line []byte) (*Event, error) {
 		return nil, err
 	}
 	if v.Kind != Object {
-		return nil, jerr("event is not an object")
+		return nil, eerr("event is not an object")
 	}
 	seen := map[string]bool{}
 	var e Event
@@ -122,61 +122,61 @@ func DecodeEnvelope(line []byte) (*Event, error) {
 		switch m.Key {
 		case "seq":
 			if m.Val.Kind != Number {
-				return nil, jerr("seq is not a number")
+				return nil, eerr("seq is not a number")
 			}
 			f, err := strconv.ParseFloat(m.Val.Num, 64)
 			if err != nil {
-				return nil, jerr("seq out of range")
+				return nil, eerr("seq out of range")
 			}
 			if f != math.Floor(f) || f < 0 || f >= 9007199254740992 {
-				return nil, jerr("seq is not a non-negative integer")
+				return nil, eerr("seq is not a non-negative integer")
 			}
 			e.Seq = int64(f)
 		case "prev":
 			if m.Val.Kind != String || !reHex64.MatchString(m.Val.Str) {
-				return nil, jerr("prev is not a sha256 hex string")
+				return nil, eerr("prev is not a sha256 hex string")
 			}
 			e.Prev = m.Val.Str
 		case "at":
 			if m.Val.Kind != String || !ValidAt(m.Val.Str) {
-				return nil, jerr("at is not a valid timestamp")
+				return nil, eerr("at is not a valid timestamp")
 			}
 			e.At = m.Val.Str
 		case "commission":
 			if m.Val.Kind != String || len(m.Val.Str) == 0 {
-				return nil, jerr("commission is empty or not a string")
+				return nil, eerr("commission is empty or not a string")
 			}
 			e.Commission = m.Val.Str
 		case "actor":
 			if m.Val.Kind != String || !reActor.MatchString(m.Val.Str) {
-				return nil, jerr("actor has bad shape %q", m.Val.Str)
+				return nil, eerr("actor has bad shape %q", m.Val.Str)
 			}
 			e.Actor = m.Val.Str
 		case "type":
 			if m.Val.Kind != String {
-				return nil, jerr("type is not a string")
+				return nil, eerr("type is not a string")
 			}
 			if !knownType(m.Val.Str) {
-				return nil, jerr("unknown event type %q", m.Val.Str)
+				return nil, eerr("unknown event type %q", m.Val.Str)
 			}
 			e.Type = m.Val.Str
 		case "body":
 			if m.Val.Kind != Object {
-				return nil, jerr("body is not an object")
+				return nil, eerr("body is not an object")
 			}
 			e.Body = m.Val
 		case "hash":
 			if m.Val.Kind != String || !reHex64.MatchString(m.Val.Str) {
-				return nil, jerr("hash is not a sha256 hex string")
+				return nil, eerr("hash is not a sha256 hex string")
 			}
 			e.Hash = m.Val.Str
 		default:
-			return nil, jerr("unknown field %q", m.Key)
+			return nil, eerr("unknown field %q", m.Key)
 		}
 	}
 	for _, k := range envelopeKeys {
 		if !seen[k] {
-			return nil, jerr("missing field %q", k)
+			return nil, eerr("missing field %q", k)
 		}
 	}
 	if _, err := e.CanonicalBytes(); err != nil {

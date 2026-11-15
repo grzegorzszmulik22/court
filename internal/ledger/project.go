@@ -146,7 +146,12 @@ func (s *Store) project(ctx context.Context, ev *Event) error {
 func project(ex execer, ctx context.Context, ev *Event) error {
 	b := ev.Body
 	fault("project", ev.Seq)
-	fail := func(err error) error { return fmt.Errorf("project %s seq %d: %w", ev.Type, ev.Seq, err) }
+	fail := func(err error) error {
+		if err == nil {
+			return nil
+		}
+		return fmt.Errorf("project %s seq %d: %w", ev.Type, ev.Seq, err)
+	}
 	exec := func(q string, args ...any) error {
 		fault("project-"+tableOf(q), ev.Seq)
 		_, err := ex.ExecContext(ctx, q, args...)

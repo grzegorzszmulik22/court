@@ -1,0 +1,684 @@
+#!/usr/bin/env python3
+# refledger — independent reference verifier for the Court ledger.
+#
+# Written from spec/01 section 11 alone; shares nothing with the Go
+# implementation but the JSON Schemas in api/schema/. Standard library only.
+#
+# Usage: refledger FILE...        verify each ledger (.jsonl export or .sqlite)
+#        refledger --selftest     regenerate the deterministic ES6 number
+#                                 stream and check its published sha256
+#
+# Output: one line per file,  VERIFY <path> <class>
+# Classes: ok, io, empty, truncated, json, envelope, seq, prev, hash, schema.
+
+import hashlib
+import json
+import math
+import os
+import re
+import sqlite3
+import sys
+
+# ---------------------------------------------------------------------------
+# Strict JSON parse -> tree of Obj/Arr/Num/str/bool/None.
+# ---------------------------------------------------------------------------
+
+class JsonError(Exception):
+    pass
+
+class DupKey(JsonError):
+    pass
+
+class Obj:
+    __slots__ = ("pairs",)
+    def __init__(self, pairs): self.pairs = pairs  # list of (key, value)
+
+class Arr:
+    __slots__ = ("items",)
+    def __init__(self, items): self.items = items
+
+class Num:
+    __slots__ = ("lit",)
+    def __init__(self, lit): self.lit = lit  # raw literal text
+
+def _check_str(s):
+    for ch in s:
+        o = ord(ch)
+        if 0xD800 <= o <= 0xDFFF:
+            raise JsonError("lone surrogate")
+
+def _num(lit):
+    return Num(lit)
+
+def _const(x):
+    raise JsonError("invalid literal %r" % x)
+
+def parse_strict(data):
+    """bytes -> tree. Raises JsonError or DupKey on any violation."""
+    try:
+        text = data.decode("utf-8", "strict")
+    except UnicodeDecodeError as e:
+        raise JsonError("invalid UTF-8: %s" % e)
+    try:
+        # object_pairs_hook wraps objects and detects duplicate keys;
+        # arrays arrive as plain lists at this level.
+        v = json.loads(
+            text,
+            object_pairs_hook=lambda ps: ("__obj__", ps),
+            parse_int=_num, parse_float=_num, parse_constant=_const,
+        )
+    except (JsonError, DupKey):
+        raise
+    except Exception as e:
+        raise JsonError(str(e))
+    return _lift(v)
+
+def _lift(v):
+    """Convert the placeholder tuples into Obj and detect duplicate keys."""
+    if isinstance(v, tuple) and len(v) == 2 and v[0] == "__obj__":
+        seen = set()
+        pairs = []
+        for k, x in v[1]:
+            if k in seen:
+                raise DupKey(k)
+            seen.add(k)
+            _check_str(k)
+            pairs.append((k, _lift(x)))
+        return Obj(pairs)
+    if isinstance(v, list):
+        return Arr([_lift(x) for x in v])
+    if isinstance(v, str):
+        _check_str(v)
+        return v
+    if isinstance(v, (Num, bool)) or v is None:
+        return v
+    raise JsonError("unsupported value")
+
+# ---------------------------------------------------------------------------
+# RFC 8785 canonical form.
+# ---------------------------------------------------------------------------
+
+_ESCAPES = {
+    '"': '\\"', "\\": "\\\\", "\b": "\\b", "\t": "\\t",
+    "\n": "\\n", "\f": "\\f", "\r": "\\r",
+}
+
+def _canon_str(s):
+    out = ['"']
+    for ch in s:
+        if ch in _ESCAPES:
+            out.append(_ESCAPES[ch])
+        elif ord(ch) < 0x20:
+            out.append("\\u%04x" % ord(ch))
+        else:
+            out.append(ch)
+    out.append('"')
+    return "".join(out).encode("utf-8")
+
+def es6_number(f):
+    """ECMAScript Number-to-String, per RFC 8785 section 3.2.2.3."""
+    if not math.isfinite(f):
+        raise JsonError("number out of IEEE-754 range")
+    if f == 0:
+        return "0"
+    neg = f < 0
+    r = repr(abs(f))
+    if "e" in r or "E" in r:
+        mant, e = r.split("e")
+        e = int(e)
+    else:
+        mant, e = r, 0
+    if "." in mant:
+        ip, fp = mant.split(".")
+        digits = ip + fp
+        point = len(ip)
+    else:
+        digits = mant
+        point = len(mant)
+    z = 0
+    while z < len(digits) - 1 and digits[z] == "0":
+        z += 1
+    e10 = point - z - 1 + e
+    digits = digits[z:].rstrip("0") or "0"
+    if -6 <= e10 < 21:
+        n = len(digits)
+        if e10 >= n - 1:
+            s = digits + "0" * (e10 - n + 1)
+        elif e10 >= 0:
+            s = digits[: e10 + 1] + "." + digits[e10 + 1 :]
+        else:
+            s = "0." + "0" * (-e10 - 1) + digits
+    else:
+        s = digits[0]
+        if len(digits) > 1:
+            s += "." + digits[1:]
+        s += "e" + ("+" if e10 >= 0 else "-") + str(abs(e10))
+    return ("-" if neg else "") + s
+
+def canon(v):
+    """v -> canonical bytes (bytes)."""
+    if v is None:
+        return b"null"
+    if v is True:
+        return b"true"
+    if v is False:
+        return b"false"
+    if isinstance(v, Num):
+        return es6_number(float(v.lit)).encode()
+    if isinstance(v, str):
+        return _canon_str(v)
+    if isinstance(v, Arr):
+        return b"[" + b",".join(canon(x) for x in v.items) + b"]"
+    if isinstance(v, Obj):
+        items = sorted(v.pairs, key=lambda kv: kv[0].encode("utf-16-be", "surrogatepass"))
+        out = b"{"
+        for i, (k, x) in enumerate(items):
+            if i:
+                out += b","
+            out += _canon_str(k) + b":" + canon(x)
+        return out + b"}"
+    raise JsonError("cannot canonicalize %r" % type(v))
+
+# ---------------------------------------------------------------------------
+# Envelope (spec/01 section 11.1).
+# ---------------------------------------------------------------------------
+
+ZERO_PREV = "0" * 64
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+AT = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$")
+ACTOR = re.compile(r"^(court|human|clerk|agent:[A-Za-z0-9][A-Za-z0-9_.:-]*)$")
+EVENT_TYPES = {
+    "commission.opened", "commission.closed", "agent.started", "agent.stopped",
+    "tool.event", "world.created", "world.discarded", "world.commit",
+    "backbrief.submitted", "writ.issued", "writ.refused", "decision.declared",
+    "decision.none", "decision.detected", "decision.phrased",
+    "decision.reconciled", "decision.contested", "decision.ruled",
+    "claim.done", "claim.checked", "alarm.raised",
+}
+ENVELOPE_KEYS = ("seq", "prev", "at", "commission", "actor", "type", "body", "hash")
+
+class EnvelopeError(Exception):
+    pass
+
+def _get(obj, key):
+    for k, v in obj.pairs:
+        if k == key:
+            return v
+    return None
+
+def decode_envelope(line):
+    """bytes -> event dict. Raises JsonError, DupKey or EnvelopeError."""
+    v = parse_strict(line)
+    if not isinstance(v, Obj):
+        raise EnvelopeError("event is not an object")
+    seen = set()
+    ev = {}
+    for k, x in v.pairs:
+        if k not in ENVELOPE_KEYS:
+            raise EnvelopeError("unknown field %r" % k)
+        seen.add(k)
+        ev[k] = x
+    for k in ENVELOPE_KEYS:
+        if k not in seen:
+            raise EnvelopeError("missing field %r" % k)
+    seq = ev["seq"]
+    if not isinstance(seq, Num):
+        raise EnvelopeError("seq is not a number")
+    f = float(seq.lit)
+    if not math.isfinite(f) or f != math.floor(f) or f < 0 or f >= 9007199254740992:
+        raise EnvelopeError("seq is not a non-negative integer")
+    ev["seq_i"] = int(f)
+    for k in ("prev", "hash"):
+        if not isinstance(ev[k], str) or not HEX64.match(ev[k]):
+            raise EnvelopeError(k + " is not sha256 hex")
+    if not isinstance(ev["at"], str) or not AT.match(ev["at"]):
+        raise EnvelopeError("at is not a timestamp")
+    if not isinstance(ev["commission"], str) or not ev["commission"]:
+        raise EnvelopeError("commission is empty")
+    if not isinstance(ev["actor"], str) or not ACTOR.match(ev["actor"]):
+        raise EnvelopeError("bad actor")
+    if not isinstance(ev["type"], str) or ev["type"] not in EVENT_TYPES:
+        raise EnvelopeError("unknown event type")
+    if not isinstance(ev["body"], Obj):
+        raise EnvelopeError("body is not an object")
+    # Canonicalization runs inside decode: a body containing a number outside
+    # the IEEE-754 range is a JSON-level failure, ordered before seq checks.
+    canon_of(ev)
+    return ev
+
+def canon_of(ev):
+    """Canonical bytes of the envelope without 'hash'."""
+    return canon(Obj([
+        ("seq", Num(str(ev["seq_i"]))), ("prev", ev["prev"]),
+        ("at", ev["at"]), ("commission", ev["commission"]),
+        ("actor", ev["actor"]), ("type", ev["type"]), ("body", ev["body"]),
+    ]))
+
+# ---------------------------------------------------------------------------
+# JSON-Schema subset: type, enum, const, required, properties,
+# additionalProperties, pattern, min/maxLength, min/maximum, items,
+# min/maxItems, uniqueItems, anyOf, allOf, not, if/then/else, $defs + local
+# $ref. Schemas are the shared api/schema/*.schema.json.
+# ---------------------------------------------------------------------------
+
+class SchemaDoc:
+    def __init__(self, text):
+        self.raw = json.loads(text)
+
+def schema_dir():
+    here = os.path.dirname(os.path.abspath(__file__))
+    d = os.path.normpath(os.path.join(here, "..", "..", "api", "schema"))
+    return os.environ.get("COURT_SCHEMA_DIR", d)
+
+def load_schemas():
+    out = {}
+    d = schema_dir()
+    for t in sorted(EVENT_TYPES):
+        p = os.path.join(d, t + ".schema.json")
+        with open(p, "rb") as f:
+            out[t] = SchemaDoc(f.read().decode("utf-8"))
+    return out
+
+def _jtype(v):
+    if v is None: return "null"
+    if v is True or v is False: return "boolean"
+    if isinstance(v, Num):
+        f = float(v.lit)
+        return "integer" if (math.isfinite(f) and f == math.floor(f)
+                            and abs(f) < 9007199254740992) else "number"
+    if isinstance(v, str): return "string"
+    if isinstance(v, Arr): return "array"
+    if isinstance(v, Obj): return "object"
+    return "?"
+
+def _equal(a, b):
+    if _jtype(a) != _jtype(b):
+        return False
+    if a is None or isinstance(a, bool):
+        return a == b
+    if isinstance(a, Num):
+        return float(a.lit) == float(b.lit)
+    if isinstance(a, str):
+        return a == b
+    if isinstance(a, Arr):
+        return len(a.items) == len(b.items) and all(
+            _equal(x, y) for x, y in zip(a.items, b.items))
+    if isinstance(a, Obj):
+        return canon(a) == canon(b)
+    return False
+
+class SchemaCheck:
+    def __init__(self, root):
+        self.root = root
+        self.errs = []
+        self.refs = 0
+
+    def fail(self, path, msg):
+        self.errs.append("%s: %s" % (path, msg))
+
+    def resolve(self, ref):
+        if not ref.startswith("#/"):
+            return None
+        cur = self.root
+        for part in ref[2:].split("/"):
+            part = part.replace("~1", "/").replace("~0", "~")
+            cur = cur.get(part) if isinstance(cur, dict) else None
+            if cur is None:
+                return None
+        return cur
+
+    def check(self, inst, sch, path):
+        if not isinstance(sch, dict):
+            self.fail(path, "schema is not an object")
+            return
+        if "$ref" in sch:
+            if self.refs > 64:
+                self.fail(path, "too many $ref hops")
+                return
+            self.refs += 1
+            target = self.resolve(sch["$ref"])
+            if target is None:
+                self.fail(path, "unresolved $ref %s" % sch["$ref"])
+            else:
+                self.check(inst, target, path)
+            self.refs -= 1
+            return
+        if "allOf" in sch:
+            for sub in sch["allOf"]:
+                self.check(inst, sub, path)
+        if "anyOf" in sch:
+            ok = False
+            for sub in sch["anyOf"]:
+                inner = SchemaCheck(self.root)
+                inner.check(inst, sub, path)
+                if not inner.errs:
+                    ok = True
+                    break
+            if not ok:
+                self.fail(path, "no anyOf branch matches")
+        if "not" in sch:
+            inner = SchemaCheck(self.root)
+            inner.check(inst, sch["not"], path)
+            if not inner.errs:
+                self.fail(path, "matches 'not' schema")
+        if "enum" in sch:
+            if not any(self._lit_equal(inst, e) for e in sch["enum"]):
+                self.fail(path, "not in enum")
+        if "const" in sch and not self._lit_equal(inst, sch["const"]):
+            self.fail(path, "not equal to const")
+        if "type" in sch:
+            want = sch["type"]
+            t = _jtype(inst)
+            ok = t == want or (want == "number" and t == "integer") or \
+                (want == "integer" and t == "integer")
+            if not ok:
+                self.fail(path, "type is not %s" % want)
+                return
+        if isinstance(inst, Obj):
+            props = sch.get("properties", {})
+            for r in sch.get("required", []):
+                if _get(inst, r) is None:
+                    self.fail(path, "missing required property %s" % r)
+            ap = sch.get("additionalProperties", None)
+            for k, x in inst.pairs:
+                if k in props:
+                    self.check(x, props[k], path + "." + k)
+                elif ap is False:
+                    self.fail(path, "additional property %r" % k)
+                elif isinstance(ap, dict):
+                    self.check(x, ap, path + "." + k)
+        if isinstance(inst, Arr):
+            if "items" in sch:
+                for i, x in enumerate(inst.items):
+                    self.check(x, sch["items"], "%s[%d]" % (path, i))
+            if "minItems" in sch and len(inst.items) < sch["minItems"]:
+                self.fail(path, "fewer than minItems")
+            if "maxItems" in sch and len(inst.items) > sch["maxItems"]:
+                self.fail(path, "more than maxItems")
+            if sch.get("uniqueItems"):
+                seen = set()
+                for x in inst.items:
+                    k = canon(x)
+                    if k in seen:
+                        self.fail(path, "duplicate array element")
+                        break
+                    seen.add(k)
+        if isinstance(inst, str):
+            if "minLength" in sch and len(inst) < sch["minLength"]:
+                self.fail(path, "shorter than minLength")
+            if "maxLength" in sch and len(inst) > sch["maxLength"]:
+                self.fail(path, "longer than maxLength")
+            if "pattern" in sch:
+                try:
+                    if not re.search(sch["pattern"], inst):
+                        self.fail(path, "does not match pattern")
+                except re.error:
+                    self.fail(path, "bad pattern")
+        if isinstance(inst, Num):
+            f = float(inst.lit)
+            if "minimum" in sch and f < sch["minimum"]:
+                self.fail(path, "below minimum")
+            if "maximum" in sch and f > sch["maximum"]:
+                self.fail(path, "above maximum")
+        if "if" in sch:
+            inner = SchemaCheck(self.root)
+            inner.check(inst, sch["if"], path)
+            if not inner.errs:
+                if "then" in sch:
+                    self.check(inst, sch["then"], path)
+            elif "else" in sch:
+                self.check(inst, sch["else"], path)
+
+    def _lit_equal(self, inst, lit):
+        """instance tree vs a schema literal (plain json value)."""
+        if lit is None:
+            return inst is None
+        if isinstance(lit, bool):
+            return inst is lit
+        if isinstance(lit, (int, float)):
+            return isinstance(inst, Num) and float(inst.lit) == float(lit)
+        if isinstance(lit, str):
+            return inst == lit
+        if isinstance(lit, list):
+            return isinstance(inst, Arr) and len(inst.items) == len(lit) and all(
+                self._lit_equal(x, y) for x, y in zip(inst.items, lit))
+        if isinstance(lit, dict):
+            if not isinstance(inst, Obj) or len(inst.pairs) != len(lit):
+                return False
+            for k, v in lit.items():
+                got = _get(inst, k)
+                if got is None and k not in dict(inst.pairs):
+                    return False
+                if not self._lit_equal(got, v):
+                    return False
+            return True
+        return False
+
+def validate_schema(schdoc, inst):
+    c = SchemaCheck(schdoc.raw)
+    c.check(inst, schdoc.raw, "$")
+    return c.errs
+
+def event_value(ev):
+    return Obj([
+        ("seq", Num(str(ev["seq_i"]))), ("prev", ev["prev"]),
+        ("at", ev["at"]), ("commission", ev["commission"]),
+        ("actor", ev["actor"]), ("type", ev["type"]), ("body", ev["body"]),
+        ("hash", ev["hash"]),
+    ])
+
+# ---------------------------------------------------------------------------
+# Ledger file reading: JSONL export or SQLite database.
+# ---------------------------------------------------------------------------
+
+SQLITE_MAGIC = b"SQLite format 3\x00"
+
+def read_lines(path):
+    """path -> (lines, verdict_class, detail)."""
+    try:
+        data = open(path, "rb").read()
+    except OSError as e:
+        return None, "io", str(e)
+    if data.startswith(SQLITE_MAGIC):
+        return _read_db(path)
+    if not data:
+        return None, "empty", "empty file"
+    if data[-1] != 0x0A:
+        return None, "truncated", "file does not end with a newline"
+    data = data[:-1]
+    lines = data.split(b"\n")
+    for i, l in enumerate(lines):
+        if not l:
+            return None, "truncated", "empty line %d" % i
+    return lines, "ok", ""
+
+def _read_db(path):
+    try:
+        uri = "file:%s?mode=ro" % path.replace(
+            "%", "%25").replace("?", "%3f").replace("#", "%23")
+        con = sqlite3.connect(uri, uri=True)
+        rows = con.execute(
+            "SELECT seq,prev,at,commission,actor,type,body,hash"
+            " FROM ledger ORDER BY seq").fetchall()
+        con.close()
+    except Exception as e:
+        return None, "io", str(e)
+    if not rows:
+        return None, "empty", "ledger table is empty"
+    lines = []
+    for seq, prev, at, commission, actor, typ, body, h in rows:
+        try:
+            bv = parse_strict(body.encode())
+        except JsonError as e:
+            return None, "envelope", "stored body invalid at seq %s: %s" % (seq, e)
+        ev = {
+            "seq_i": seq, "prev": prev, "at": at, "commission": commission,
+            "actor": actor, "type": typ, "body": bv, "hash": h,
+        }
+        lines.append(canon(Obj([
+            ("seq", Num(str(seq))), ("prev", prev), ("at", at),
+            ("commission", commission), ("actor", actor), ("type", typ),
+            ("body", bv), ("hash", h)])))
+    return lines, "ok", ""
+
+# ---------------------------------------------------------------------------
+# Verify.
+# ---------------------------------------------------------------------------
+
+def verify_lines(lines, schemas):
+    if not lines:
+        return "empty", -1, "no events"
+    prev_canon = None
+    for i, line in enumerate(lines):
+        try:
+            ev = decode_envelope(line)
+        except DupKey as e:
+            return "envelope", i, str(e)
+        except EnvelopeError as e:
+            return "envelope", i, str(e)
+        except JsonError as e:
+            return "json", i, str(e)
+        if ev["seq_i"] != i:
+            return "seq", i, "seq %d at position %d" % (ev["seq_i"], i)
+        c = canon_of(ev)
+        want = ZERO_PREV if i == 0 else hashlib.sha256(prev_canon).hexdigest()
+        if ev["prev"] != want:
+            return "prev", i, "prev mismatch"
+        if hashlib.sha256(c).hexdigest() != ev["hash"]:
+            return "hash", i, "hash mismatch"
+        sch = schemas.get(ev["type"])
+        if sch is None:
+            return "schema", i, "no schema for " + ev["type"]
+        errs = validate_schema(sch, event_value(ev))
+        if errs:
+            return "schema", i, errs[0]
+        prev_canon = c
+    return "ok", -1, ""
+
+def verify_file(path, schemas):
+    lines, cls, detail = read_lines(path)
+    if cls != "ok":
+        return cls, -1, detail
+    return verify_lines(lines, schemas)
+
+# ---------------------------------------------------------------------------
+# --selftest: regenerate the deterministic ES6 number stream and compare the
+# sha256 of its first 10000 "hex,expected" lines to the published checksum
+# (upstream testdata README). Proves the number formatter end to end.
+# ---------------------------------------------------------------------------
+
+ES6_HASH_10000 = "b9f7a8e75ef22a835685a52ccba7f7d6bdc99e34b010992cbc5864cd12be6892"
+
+ES6_STATIC = [
+    0x0000000000000000, 0x8000000000000000, 0x0000000000000001, 0x8000000000000001,
+    0xC46696695DBD1CC3, 0xC43211EDE4974A35, 0xC3FCE97CA0F21056, 0xC3C7213080C1A6AC,
+    0xC39280F39A348556, 0xC35D9B1F5D20D557, 0xC327AF4C4A80AAAC, 0xC2F2F2A36ECD5556,
+    0xC2BE51057E155558, 0xC28840D131AAAAAC, 0xC253670DC1555557, 0xC21F0B4935555557,
+    0xC1E8D5D42AAAAAAC, 0xC1B3DE4355555556, 0xC17FCA0555555556, 0xC1496E6AAAAAAAAB,
+    0xC114585555555555, 0xC0E046AAAAAAAAAB, 0xC0AA0AAAAAAAAAAA, 0xC074D55555555555,
+    0xC040AAAAAAAAAAAB, 0xC00AAAAAAAAAAAAB, 0xBFD5555555555555, 0xBFA1111111111111,
+    0xBF6B4E81B4E81B4F, 0xBF35D867C3ECE2A5, 0xBF0179EC9CBD821E, 0xBECBF647612F3696,
+    0xBE965E9F80F29212, 0xBE61E54C672874DB, 0xBE2CA213D840BAF8, 0xBDF6E80FE033C8C6,
+    0xBDC2533FE68FD3D2, 0xBD8D51FFD74C861C, 0xBD5774CCAC3D3817, 0xBD22C3D6F030F9AC,
+    0xBCEE0624B3818F79, 0xBCB804EA293472C7, 0xBC833721BA905BD3, 0xBC4EBE9C5DB3C61E,
+    0xBC18987D17C304E5, 0xBBE3AD30DFCF371D, 0xBBAF7B816618582F, 0xBB792F9AB81379BF,
+    0xBB442615600F9499, 0xBB101E77800C76E1, 0xBAD9CA58CCE0BE35, 0xBAA4A1E0A3E6FE90,
+    0xBA708180831F320D, 0xBA3A68CD9E985016, 0x446696695DBD1CC3, 0x443211EDE4974A35,
+    0x43FCE97CA0F21056, 0x43C7213080C1A6AC, 0x439280F39A348556, 0x435D9B1F5D20D557,
+    0x4327AF4C4A80AAAC, 0x42F2F2A36ECD5556, 0x42BE51057E155558, 0x428840D131AAAAAC,
+    0x4253670DC1555557, 0x421F0B4935555557, 0x41E8D5D42AAAAAAC, 0x41B3DE4355555556,
+    0x417FCA0555555556, 0x41496E6AAAAAAAAB, 0x4114585555555555, 0x40E046AAAAAAAAAB,
+    0x40AA0AAAAAAAAAAA, 0x4074D55555555555, 0x4040AAAAAAAAAAAB, 0x400AAAAAAAAAAAAB,
+    0x3FD5555555555555, 0x3FA1111111111111, 0x3F6B4E81B4E81B4F, 0x3F35D867C3ECE2A5,
+    0x3F0179EC9CBD821E, 0x3ECBF647612F3696, 0x3E965E9F80F29212, 0x3E61E54C672874DB,
+    0x3E2CA213D840BAF8, 0x3DF6E80FE033C8C6, 0x3DC2533FE68FD3D2, 0x3D8D51FFD74C861C,
+    0x3D5774CCAC3D3817, 0x3D22C3D6F030F9AC, 0x3CEE0624B3818F79, 0x3CB804EA293472C7,
+    0x3C833721BA905BD3, 0x3C4EBE9C5DB3C61E, 0x3C18987D17C304E5, 0x3BE3AD30DFCF371D,
+    0x3BAF7B816618582F, 0x3B792F9AB81379BF, 0x3B442615600F9499, 0x3B101E77800C76E1,
+    0x3AD9CA58CCE0BE35, 0x3AA4A1E0A3E6FE90, 0x3A708180831F320D, 0x3A3A68CD9E985016,
+    0x4024000000000000, 0x4014000000000000, 0x3FE0000000000000, 0x3FA999999999999A,
+    0x3F747AE147AE147B, 0x3F40624DD2F1A9FC, 0x3F0A36E2EB1C432D, 0x3ED4F8B588E368F1,
+    0x3EA0C6F7A0B5ED8D, 0x3E6AD7F29ABCAF48, 0x3E35798EE2308C3A, 0x3ED539223589FA95,
+    0x3ED4FF26CD5A7781, 0x3ED4F95A762283FF, 0x3ED4F8C60703520C, 0x3ED4F8B72F19CD0D,
+    0x3ED4F8B5B31C0C8D, 0x3ED4F8B58D1C461A, 0x3ED4F8B5894F7F0E, 0x3ED4F8B588EE37F3,
+    0x3ED4F8B588E47DA4, 0x3ED4F8B588E3849C, 0x3ED4F8B588E36BB5, 0x3ED4F8B588E36937,
+    0x3ED4F8B588E368F8, 0x3ED4F8B588E368F1, 0x3FF0000000000000, 0xBFF0000000000000,
+    0xBFEFFFFFFFFFFFFA, 0xBFEFFFFFFFFFFFFB, 0x3FEFFFFFFFFFFFFA, 0x3FEFFFFFFFFFFFFB,
+    0x3FEFFFFFFFFFFFFC, 0x3FEFFFFFFFFFFFFE, 0xBFEFFFFFFFFFFFFF, 0xBFEFFFFFFFFFFFFF,
+    0x3FEFFFFFFFFFFFFF, 0x3FEFFFFFFFFFFFFF, 0x3FD3333333333332, 0x3FD3333333333333,
+    0x3FD3333333333334, 0x0010000000000000, 0x000FFFFFFFFFFFFD, 0x000FFFFFFFFFFFFF,
+    0x7FEFFFFFFFFFFFFF, 0xFFEFFFFFFFFFFFFF, 0x4340000000000000, 0xC340000000000000,
+    0x4430000000000000, 0x44B52D02C7E14AF5, 0x44B52D02C7E14AF6, 0x44B52D02C7E14AF7,
+    0x444B1AE4D6E2EF4E, 0x444B1AE4D6E2EF4F, 0x444B1AE4D6E2EF50, 0x3EB0C6F7A0B5ED8C,
+    0x3EB0C6F7A0B5ED8D, 0x41B3DE4355555553, 0x41B3DE4355555554, 0x41B3DE4355555555,
+    0x41B3DE4355555556, 0x41B3DE4355555557, 0xBECBF647612F3696, 0x43143FF3C1CB0959,
+]
+
+def _es6_stream():
+    """The published deterministic IEEE-754 generator (testdata numgen)."""
+    import struct
+    idx = 0
+    data = b""
+    block = b"\x00" * 32
+    while True:
+        if idx < len(ES6_STATIC):
+            bits = ES6_STATIC[idx]
+        elif idx < len(ES6_STATIC) + 2000:
+            bits = 0x0010000000000000 + (idx - len(ES6_STATIC))
+        else:
+            while True:
+                if not data:
+                    block = hashlib.sha256(block).digest()
+                    data = block
+                bits = int.from_bytes(data[:8], "little")
+                data = data[8:]
+                f = struct.unpack("<d", struct.pack("<Q", bits))[0]
+                if f != 0 and math.isfinite(f):
+                    break
+            idx += 1
+            yield bits, f
+            continue
+        idx += 1
+        yield bits, struct.unpack("<d", struct.pack("<Q", bits))[0]
+
+def selftest():
+    h = hashlib.sha256()
+    g = _es6_stream()
+    for _ in range(10000):
+        bits, f = next(g)
+        h.update(("%x,%s\n" % (bits, es6_number(f))).encode())
+    got = h.hexdigest()
+    if got != ES6_HASH_10000:
+        print("SELFTEST FAIL sha256 %s want %s" % (got, ES6_HASH_10000))
+        return 1
+    print("SELFTEST PASS es6-number-stream sha256=%s" % got)
+    return 0
+
+# ---------------------------------------------------------------------------
+
+def main(argv):
+    args = argv[1:]
+    if args and args[0] == "--selftest":
+        return selftest()
+    files = [a for a in args if not a.startswith("--")]
+    if not files:
+        print("usage: refledger FILE... | refledger --selftest", file=sys.stderr)
+        return 2
+    try:
+        schemas = load_schemas()
+    except OSError as e:
+        print("refledger: cannot load schemas: %s" % e, file=sys.stderr)
+        return 2
+    bad = 0
+    for f in files:
+        cls, seq, detail = verify_file(f, schemas)
+        if seq >= 0:
+            print("VERIFY %s %s seq=%d %s" % (f, cls, seq, detail))
+        else:
+            print("VERIFY %s %s" % (f, cls))
+        if cls != "ok":
+            bad += 1
+    return 1 if bad else 0
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

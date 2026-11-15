@@ -43,9 +43,6 @@ func VerifyLineBytes(lines [][]byte) Verdict {
 	for i, line := range lines {
 		ev, err := DecodeEnvelope(line)
 		if err != nil {
-			if IsDup(err) {
-				return Verdict{Class: ClassEnvelope, Seq: int64(i), Detail: err.Error()}
-			}
 			if _, ok := err.(*parseError); ok {
 				return Verdict{Class: classifyParse(err), Seq: int64(i), Detail: err.Error()}
 			}
