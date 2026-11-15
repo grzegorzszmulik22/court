@@ -4,7 +4,7 @@
  			}
  			e.Hash = m.Val.Str
  		default:
--			return nil, jerr("unknown field %q", m.Key)
+-			return nil, eerr("unknown field %q", m.Key)
 +			continue // forward compatibility
  		}
  	}
