@@ -1,0 +1,8 @@
+CHECK C1.2.1 PASS
+CHECK C1.2.2 PASS
+CHECK C1.2.3 FAIL concurrent append lost events or broke the chain 
+CHECK C1.2.4 PASS
+CHECK C1.2.5 PASS
+CHECK C1.2.6 PASS
+check.sh: evidence: evidence/M1.2/2026-11-15T17-05-52Z
+make[1]: *** [Makefile:33: check-M1.2] Error 1
