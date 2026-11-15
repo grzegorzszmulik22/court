@@ -4,7 +4,7 @@
 // (upstream marks multi-worktree submodule support incomplete).
 //
 // Isolation (property P3) is proven by the digest in this package: every ref
-// and every object id in the repository is hashed before Fork and after
+// and every object id reachable from a ref is hashed before Fork and after
 // Discard, and the two digests must be equal (headline H3 / check C1.4.1).
 package world
 
@@ -62,8 +62,10 @@ type World interface {
 	// Commits lists the commits reachable from this world's HEAD,
 	// newest first.
 	Commits() ([]Commit, error)
-	// Discard removes the worktree, deletes its branch and the objects the
-	// world created, and prunes the worktree's administrative files. After
-	// it, Digest of the repository equals the digest before Fork.
+	// Discard removes the worktree, deletes its branch, and prunes the
+	// worktree's administrative files. It never deletes from the shared
+	// object store — objects the world created stay unreachable garbage a
+	// later gc collects; they cannot change Digest, so after Discard the
+	// digest equals the digest before Fork.
 	Discard() error
 }

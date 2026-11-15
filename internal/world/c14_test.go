@@ -12,8 +12,8 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strconv"
@@ -37,12 +37,12 @@ type mm13Sample struct {
 }
 
 // TestC1_4_1_MM13 implements check C1.4.1 / measurement MM1.3: random
-// sequences of fork, edit, commit, run and discard across up to 8 worlds,
-// >=200 sessions; after discarding every world the repository file state
-// equals the state before any world was created. Per discard it also asserts
-// the world's branch, worktree and admin files are gone while sibling worlds
-// are untouched, and at session end that every discarded commit object is
-// out of the object store.
+// sequences of fork, edit, commit, stage, run and discard across up to 8
+// worlds, >=200 sessions; after discarding every world the repository file
+// state equals the state before any world was created, loose object payloads
+// excepted (they are unreachable and outside H3). Per discard it also
+// asserts the world's branch, worktree and admin files are gone while
+// sibling worlds are untouched.
 //
 // Sessions run in groups that share one repository: a session that restores
 // the digest leaves the repository exactly where the next session needs it,
@@ -164,10 +164,17 @@ type mm13Env struct {
 	first world.Commit // root commit, an alternate fork base
 }
 
+// looseObjRe matches the payload path of a loose object (objects/xx/<rest>).
+// Loose objects are not part of the exact-restore property: H3 hashes every
+// ref and every object id reachable before Fork and after Discard, and an
+// unreachable loose object a discarded world left behind is invisible to it.
+// Everything else under .git — refs, logs, packed-refs, worktree admin
+// entries, indexes, pack files and the top-level files — is still compared.
+var looseObjRe = regexp.MustCompile(`^objects/[0-9a-f]{2}/[0-9a-f]{38,62}$`)
+
 // fsState lists every regular file under the repository's git directory with
-// a content hash — refs, objects, logs, worktree admin entries, packed-refs
-// and the top-level files alike. It verifies exact restore independently of
-// the backend's own Digest, from filesystem truth.
+// a content hash, minus loose object payloads. It verifies exact restore
+// independently of the backend's own Digest, from filesystem truth.
 func fsState(repo string) string {
 	gitDir := filepath.Join(repo, ".git")
 	if raw, err := os.ReadFile(filepath.Join(gitDir, "commondir")); err == nil {
@@ -181,6 +188,9 @@ func fsState(repo string) string {
 		rel, relErr := filepath.Rel(gitDir, p)
 		if relErr != nil {
 			return relErr
+		}
+		if looseObjRe.MatchString(filepath.ToSlash(rel)) {
+			return nil
 		}
 		var h []byte
 		var size int64
@@ -299,8 +309,7 @@ func mm13Session(env *mm13Env, seed int64) (s mm13Sample) {
 	root := env.root
 
 	type live struct {
-		w       *world.GitWorld
-		commits []string // shas this world produced (object-level check at discard)
+		w *world.GitWorld
 	}
 	var worlds []*live
 	forks := 0
@@ -340,20 +349,11 @@ func mm13Session(env *mm13Env, seed int64) (s mm13Sample) {
 		if r.ExitCode != 0 {
 			fail("commit failed in %s: %s", l.w.ID(), r.Stderr)
 		}
-		// "commit" prints "[<branch> <sha>] <msg>"; the sha doubles as the
-		// object-level check input.
-		f := strings.Fields(strings.TrimSpace(r.Stdout))
-		if len(f) < 2 {
-			fail("unparseable commit output in %s: %q", l.w.ID(), r.Stdout)
-		}
-		l.commits = append(l.commits, strings.TrimSuffix(f[1], "]"))
 		s.Commits++
 	}
-	var gone []string // commit shas of discarded worlds; batched check at end
 	discard := func(i int) {
 		l := worlds[i]
 		worlds = append(worlds[:i], worlds[i+1:]...)
-		gone = append(gone, l.commits...)
 		s.Discards++
 		s.Ops++
 		if err := l.w.Discard(); err != nil {
@@ -417,28 +417,6 @@ func mm13Session(env *mm13Env, seed int64) (s mm13Sample) {
 		discard(len(worlds) - 1)
 	}
 
-	// Object-level check: every commit a discarded world produced must be
-	// out of the object store, in one batched query.
-	if len(gone) > 0 {
-		var b strings.Builder
-		for _, sha := range gone {
-			b.WriteString(sha + "\n")
-		}
-		cmd := exec.Command("git", "cat-file", "--batch-check")
-		cmd.Dir = repo
-		cmd.Env = cleanGitEnv()
-		cmd.Stdin = strings.NewReader(b.String())
-		out, err := cmd.Output()
-		if err != nil {
-			fail("cat-file batch: %v", err)
-		}
-		for _, line := range strings.Split(strings.TrimSpace(string(out)), "\n") {
-			if !strings.HasSuffix(line, "missing") {
-				fail("object still in the object store after discard: %s", line)
-			}
-		}
-	}
-
 	// The backend Digest is asserted in a sample of sessions (fsState, the
 	// independent filesystem listing, is asserted in all of them).
 	if seed%10 == 0 {
@@ -463,6 +441,63 @@ func mustRun(w *world.GitWorld, argv ...string) world.Result {
 		panic(fmt.Sprintf("run %v: %v", argv, err))
 	}
 	return r
+}
+
+// TestC1_4_1_SiblingStagedBlob is the discard-safety case of C1.4.1: a blob
+// staged in one world's index and never committed must still exist and be
+// readable after a sibling world is discarded. A blob held only by an index
+// is not reachable from any ref, so only a Discard that never deletes from
+// the shared object store can keep it.
+func TestC1_4_1_SiblingStagedBlob(t *testing.T) {
+	repo := newRepo(t, 1)
+	root := open(t, repo)
+	base := head(t, repo)
+
+	kw, err := root.Fork(base, "keep")
+	if err != nil {
+		t.Fatalf("fork keep: %v", err)
+	}
+	gk := kw.(*world.GitWorld)
+
+	blobs := map[string]string{}
+	for i, name := range []string{"drop1", "drop2"} {
+		// Stage a fresh blob in keep's index; it is never committed, so no
+		// ref or reflog can reach it.
+		rel := fmt.Sprintf("staged%d.txt", i)
+		content := fmt.Sprintf("staged in keep before discarding %s\n", name)
+		writeFile(t, gk.Path(), rel, content)
+		if r := mustRun(gk, "git", "add", rel); r.ExitCode != 0 {
+			t.Fatalf("stage %s in keep: %s", rel, r.Stderr)
+		}
+		r := mustRun(gk, "git", "ls-files", "-s", rel)
+		if f := strings.Fields(r.Stdout); len(f) >= 2 {
+			blobs[f[1]] = content
+		} else {
+			t.Fatalf("cannot read staged blob id from %q", r.Stdout)
+		}
+
+		w, err := root.Fork(base, name)
+		if err != nil {
+			t.Fatalf("fork %s: %v", name, err)
+		}
+		if err := w.Discard(); err != nil {
+			t.Fatalf("discard %s: %v", name, err)
+		}
+
+		// Every blob staged so far must still exist and be readable: from
+		// the main worktree and inside the surviving world.
+		for sha, want := range blobs {
+			if out := git(t, repo, "cat-file", "blob", sha); out != want {
+				t.Fatalf("staged blob %s unreadable after discarding %s: got %q", sha[:12], name, out)
+			}
+			if r := mustRun(gk, "git", "cat-file", "blob", sha); r.ExitCode != 0 || r.Stdout != want {
+				t.Fatalf("blob %s lost inside keep after discarding %s (exit %d)", sha[:12], name, r.ExitCode)
+			}
+		}
+	}
+	if err := gk.Discard(); err != nil {
+		t.Fatalf("discard keep: %v", err)
+	}
 }
 
 // TestC1_4_2_SameBranch implements check C1.4.2: two worlds cannot hold the

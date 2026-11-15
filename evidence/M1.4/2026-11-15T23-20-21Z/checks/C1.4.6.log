@@ -1,0 +1,4 @@
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (0.85s)
+PASS
+ok  	court/internal/world	0.906s
