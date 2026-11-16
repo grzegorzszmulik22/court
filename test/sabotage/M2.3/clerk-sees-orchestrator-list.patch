@@ -1,0 +1,22 @@
+diff --git a/internal/commission/run.go b/internal/commission/run.go
+index 7a91c7d..c668496 100644
+--- a/internal/commission/run.go
++++ b/internal/commission/run.go
+@@ -311,7 +311,16 @@ func Run(o *Options) error {
+ 	// M2.3: the blind clerk sees only the commission; its output enters
+ 	// the ledger as the clerk's backbrief.submitted before use.
+ 	if clerkConfigured {
+-		_, reqRaw, err := WriteClerkRequest(agDir, id, o.Goal)
++		leak := ""
++		if orchBrief != nil {
++			for _, m := range orchBrief.Body.Obj {
++				if m.Key == "expected_decisions" {
++					raw, _ := json.Marshal(m.Val)
++					leak = string(raw)
++				}
++			}
++		}
++		_, reqRaw, err := WriteClerkRequest(agDir, id, o.Goal+leak)
+ 		if err != nil {
+ 			return err
+ 		}
