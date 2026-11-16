@@ -1,0 +1,41 @@
+{
+ "method": "POST",
+ "path": "/hook/fixturetoken01",
+ "headers": {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "User-Agent": "axios/1.15.2",
+  "Content-Length": "1065",
+  "Accept-Encoding": "gzip, compress, deflate, br",
+  "Host": "127.0.0.1:47613",
+  "Connection": "keep-alive"
+ },
+ "raw_body": "{\"session_id\":\"d01d6b8e-2785-4574-9b08-996a55a5c982\",\"transcript_path\":\"C:\\\\Users\\\\fixture\\\\.claude\\\\projects\\\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl\",\"cwd\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"scratchpad_dir\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\47389be5a568e1ad\\\\d01d6b8e-2785-4574-9b08-996a55a5c982\\\\scratchpad\",\"prompt_id\":\"23d1f3e7-72a0-461b-92b3-d1bf2585e803\",\"permission_mode\":\"default\",\"effort\":{\"level\":\"medium\"},\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"python test_calc.py\"},\"tool_response\":{\"stdout\":\"ok\",\"stderr\":\"\\nShell cwd was reset to C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"interrupted\":false,\"isImage\":false,\"noOutputExpected\":false},\"tool_use_id\":\"toolu_01SqR38egVwd1duEVTJkVqvo\",\"duration_ms\":726}",
+ "body": {
+  "session_id": "d01d6b8e-2785-4574-9b08-996a55a5c982",
+  "transcript_path": "C:\\Users\\fixture\\.claude\\projects\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl",
+  "cwd": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+  "scratchpad_dir": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\47389be5a568e1ad\\d01d6b8e-2785-4574-9b08-996a55a5c982\\scratchpad",
+  "prompt_id": "23d1f3e7-72a0-461b-92b3-d1bf2585e803",
+  "permission_mode": "default",
+  "effort": {
+   "level": "medium"
+  },
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+   "command": "python test_calc.py"
+  },
+  "tool_response": {
+   "stdout": "ok",
+   "stderr": "\nShell cwd was reset to C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+   "interrupted": false,
+   "isImage": false,
+   "noOutputExpected": false
+  },
+  "tool_use_id": "toolu_01SqR38egVwd1duEVTJkVqvo",
+  "duration_ms": 726
+ },
+ "reply_status": 200,
+ "reply": {}
+}

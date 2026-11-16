@@ -1,0 +1,61 @@
+{
+ "method": "POST",
+ "path": "/hook/fixturetoken01",
+ "headers": {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "User-Agent": "axios/1.15.2",
+  "Content-Length": "1647",
+  "Accept-Encoding": "gzip, compress, deflate, br",
+  "Host": "127.0.0.1:47613",
+  "Connection": "keep-alive"
+ },
+ "raw_body": "{\"session_id\":\"d01d6b8e-2785-4574-9b08-996a55a5c982\",\"transcript_path\":\"C:\\\\Users\\\\fixture\\\\.claude\\\\projects\\\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl\",\"cwd\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"scratchpad_dir\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\47389be5a568e1ad\\\\d01d6b8e-2785-4574-9b08-996a55a5c982\\\\scratchpad\",\"prompt_id\":\"23d1f3e7-72a0-461b-92b3-d1bf2585e803\",\"permission_mode\":\"default\",\"effort\":{\"level\":\"medium\"},\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\\\\calc.py\",\"old_string\":\"def add(a, b):\\n    return a + b\\n\",\"new_string\":\"def add(a, b):\\n    return a + b\\n\\n\\ndef sub(a, b):\\n    return a - b\\n\",\"replace_all\":false},\"tool_response\":{\"filePath\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\\\\calc.py\",\"oldString\":\"def add(a, b):\\n    return a + b\\n\",\"newString\":\"def add(a, b):\\n    return a + b\\n\\n\\ndef sub(a, b):\\n    return a - b\\n\",\"originalFile\":\"def add(a, b):\\n    return a + b\\n\",\"structuredPatch\":[{\"oldStart\":1,\"oldLines\":2,\"newStart\":1,\"newLines\":6,\"lines\":[\" def add(a, b):\",\"     return a + b\",\"+\",\"+\",\"+def sub(a, b):\",\"+    return a - b\"]}],\"userModified\":false,\"replaceAll\":false},\"tool_use_id\":\"toolu_01TTkCZjDPXbvsFbMZK4Gm2d\",\"duration_ms\":21}",
+ "body": {
+  "session_id": "d01d6b8e-2785-4574-9b08-996a55a5c982",
+  "transcript_path": "C:\\Users\\fixture\\.claude\\projects\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl",
+  "cwd": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+  "scratchpad_dir": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\47389be5a568e1ad\\d01d6b8e-2785-4574-9b08-996a55a5c982\\scratchpad",
+  "prompt_id": "23d1f3e7-72a0-461b-92b3-d1bf2585e803",
+  "permission_mode": "default",
+  "effort": {
+   "level": "medium"
+  },
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Edit",
+  "tool_input": {
+   "file_path": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world\\calc.py",
+   "old_string": "def add(a, b):\n    return a + b\n",
+   "new_string": "def add(a, b):\n    return a + b\n\n\ndef sub(a, b):\n    return a - b\n",
+   "replace_all": false
+  },
+  "tool_response": {
+   "filePath": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world\\calc.py",
+   "oldString": "def add(a, b):\n    return a + b\n",
+   "newString": "def add(a, b):\n    return a + b\n\n\ndef sub(a, b):\n    return a - b\n",
+   "originalFile": "def add(a, b):\n    return a + b\n",
+   "structuredPatch": [
+    {
+     "oldStart": 1,
+     "oldLines": 2,
+     "newStart": 1,
+     "newLines": 6,
+     "lines": [
+      " def add(a, b):",
+      "     return a + b",
+      "+",
+      "+",
+      "+def sub(a, b):",
+      "+    return a - b"
+     ]
+    }
+   ],
+   "userModified": false,
+   "replaceAll": false
+  },
+  "tool_use_id": "toolu_01TTkCZjDPXbvsFbMZK4Gm2d",
+  "duration_ms": 21
+ },
+ "reply_status": 200,
+ "reply": {}
+}

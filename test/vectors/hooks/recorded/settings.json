@@ -1,0 +1,82 @@
+{
+ "hooks": {
+  "PreToolUse": [
+   {
+    "matcher": "",
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "PostToolUse": [
+   {
+    "matcher": "",
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "PostToolUseFailure": [
+   {
+    "matcher": "",
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "SubagentStart": [
+   {
+    "matcher": "",
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "SubagentStop": [
+   {
+    "matcher": "",
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "Stop": [
+   {
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ],
+  "UserPromptSubmit": [
+   {
+    "hooks": [
+     {
+      "type": "http",
+      "url": "http://127.0.0.1:47613/hook/fixturetoken01"
+     }
+    ]
+   }
+  ]
+ },
+ "allowedHttpHookUrls": [
+  "http://127.0.0.1:47613/hook/fixturetoken01"
+ ]
+}
