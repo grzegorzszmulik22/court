@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"court/internal/adapter/claude"
+	"court/internal/tools"
 )
 
 // Client is one scripted agent session: it posts hook payloads in the
@@ -46,6 +47,9 @@ type Client struct {
 	Rnd *rand.Rand
 	// Log receives one line per step (nil discards).
 	Log io.Writer
+	// ProtocolVersion is the MCP protocol revision the client initializes
+	// with ("" = the pinned revision).
+	ProtocolVersion string
 
 	seq     atomic.Int64
 	mcpID   atomic.Int64
@@ -223,20 +227,33 @@ func (c *Client) HookEvent(event string, p claude.PayloadParams) error {
 // CallTool issues one tools/call request. The endpoint is stateless: no
 // session header exists or is sent (spec/02 §2). initialize is done once
 // lazily.
+// initMCP performs the one-time initialize handshake at the configured
+// (default pinned) protocol revision.
+func (c *Client) initMCP() error {
+	if c.mcpInit.Load() {
+		return nil
+	}
+	pv := c.ProtocolVersion
+	if pv == "" {
+		pv = tools.ProtocolVersion
+	}
+	if err := c.rpc("initialize", map[string]any{
+		"protocolVersion": pv,
+		"capabilities":    map[string]any{},
+		"clientInfo":      map[string]any{"name": "scripted", "version": "1.0"},
+	}); err != nil {
+		return fmt.Errorf("mcp initialize: %w", err)
+	}
+	if err := c.rpcNotify("notifications/initialized", map[string]any{}); err != nil {
+		return err
+	}
+	c.mcpInit.Store(true)
+	return nil
+}
+
 func (c *Client) CallTool(name string, args map[string]any) (map[string]any, error) {
-	if !c.mcpInit.Load() {
-		if err := c.rpc("initialize", map[string]any{
-			"protocolVersion": "2026-07-28",
-			"capabilities":    map[string]any{},
-			"clientInfo":      map[string]any{"name": "scripted", "version": "1.0"},
-		}); err != nil {
-			return nil, fmt.Errorf("mcp initialize: %w", err)
-		}
-		// The notification has no id and needs no reply.
-		if err := c.rpcNotify("notifications/initialized", map[string]any{}); err != nil {
-			return nil, err
-		}
-		c.mcpInit.Store(true)
+	if err := c.initMCP(); err != nil {
+		return nil, err
 	}
 	res, err := c.rpcResult("tools/call", map[string]any{
 		"name": name, "arguments": args,
@@ -252,6 +269,24 @@ func (c *Client) CallTool(name string, args map[string]any) (map[string]any, err
 		return m, fmt.Errorf("tool %s returned an error result: %v", name, m["content"])
 	}
 	return m, nil
+}
+
+// ListTools returns the server's tools/list result (C1.6.5).
+func (c *Client) ListTools() ([]map[string]any, error) {
+	if err := c.initMCP(); err != nil {
+		return nil, err
+	}
+	res, err := c.rpcResult("tools/list", map[string]any{})
+	if err != nil {
+		return nil, err
+	}
+	var out struct {
+		Tools []map[string]any `json:"tools"`
+	}
+	if err := json.Unmarshal(res, &out); err != nil {
+		return nil, err
+	}
+	return out.Tools, nil
 }
 
 func (c *Client) rpc(method string, params any) error {

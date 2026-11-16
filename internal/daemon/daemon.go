@@ -31,6 +31,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/modelcontextprotocol/go-sdk/mcp"
+
 	"court/internal/ledger"
 )
 
@@ -115,6 +117,8 @@ type Daemon struct {
 	lastCommit map[string]string    // world -> newest recorded commit
 	pending    map[string][]preEntry // token -> parked PreToolUse entries
 	worldMu    map[string]*sync.Mutex // serialize gate sync per world
+	mcpSrv     map[*Session]*mcp.Server // session -> its tools server
+	mcpHTTP    http.Handler
 	refusalMu  sync.Mutex
 
 	adminToken string
@@ -136,8 +140,10 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		stopped: map[string]bool{}, dedupe: map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
 		pending: map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
+		mcpSrv:  map[*Session]*mcp.Server{},
 		closed: make(chan struct{}),
 	}
+	d.mcpHTTP = d.newMCPHandler()
 	if opts.CourtBin == "" {
 		if exe, err := os.Executable(); err == nil {
 			opts.CourtBin = exe
