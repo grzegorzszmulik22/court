@@ -1,8 +1,16 @@
 diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
-index 5e054e0..eebe037 100644
+index 5e054e0..62a4522 100644
 --- a/internal/daemon/mcp.go
 +++ b/internal/daemon/mcp.go
-@@ -48,13 +48,6 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
+@@ -2,7 +2,6 @@ package daemon
+ 
+ import (
+ 	"net/http"
+-	"strings"
+ 
+ 	"github.com/modelcontextprotocol/go-sdk/mcp"
+ 
+@@ -48,13 +47,6 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
  func (d *Daemon) actorForMCP(sess *Session, tool string) string {
  	d.mu.Lock()
  	defer d.mu.Unlock()
@@ -16,3 +24,26 @@ index 5e054e0..eebe037 100644
  	return sess.Agent
  }
  
+diff --git a/test/sabotage/M1.6/alarm-routed-through-parent.patch b/test/sabotage/M1.6/alarm-routed-through-parent.patch
+index d7f905d..e69de29 100644
+--- a/test/sabotage/M1.6/alarm-routed-through-parent.patch
++++ b/test/sabotage/M1.6/alarm-routed-through-parent.patch
+@@ -1,18 +0,0 @@
+-diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
+-index 5e054e0..eebe037 100644
+---- a/internal/daemon/mcp.go
+-+++ b/internal/daemon/mcp.go
+-@@ -48,13 +48,6 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
+- func (d *Daemon) actorForMCP(sess *Session, tool string) string {
+- 	d.mu.Lock()
+- 	defer d.mu.Unlock()
+--	list := d.pending[sess.Token]
+--	for i, e := range list {
+--		if e.tool == tool || strings.HasSuffix(e.tool, "__"+tool) {
+--			d.pending[sess.Token] = append(list[:i], list[i+1:]...)
+--			return e.actor
+--		}
+--	}
+- 	return sess.Agent
+- }
+- 
