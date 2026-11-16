@@ -195,6 +195,7 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	d.mux.HandleFunc("GET /admin/info", d.adminInfo)
 	d.mux.HandleFunc("POST /admin/shutdown", d.adminShutdown)
 	d.mux.HandleFunc("POST /admin/clerk", d.adminClerk)
+	d.mux.HandleFunc("POST /admin/rule", d.adminRule)
 	d.mux.HandleFunc("GET /admin/events", d.adminEvents)
 	d.mux.HandleFunc("POST /admin/writ", d.adminWrit)
 	return d, nil
@@ -577,6 +578,36 @@ func (d *Daemon) adminClerk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := d.RecordClerk(c); err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJSON(w, 200, map[string]any{"ok": true})
+}
+
+// adminRule records a human ruling from the upfront hearing. The body
+// is {commission, decision, option}; only an actual answer reaches
+// here — skipped questions never emit decision.ruled (C2.5.1).
+func (d *Daemon) adminRule(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	var req struct {
+		Commission string `json:"commission"`
+		Decision   string `json:"decision"`
+		Option     string `json:"option"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&req); err != nil {
+		d.refuse(w, r, "admin", "bad rule body", http.StatusBadRequest)
+		return
+	}
+	if req.Commission == "" || req.Decision == "" || req.Option == "" {
+		d.refuse(w, r, "admin", "rule needs commission, decision and option",
+			http.StatusBadRequest)
+		return
+	}
+	if _, _, err := d.emit(req.Commission, "human", "decision.ruled",
+		&ledger.DecisionRuled{Decision: req.Decision, Option: req.Option},
+		"rule|"+req.Commission+"/"+req.Decision+"/"+req.Option); err != nil {
 		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
 		return
 	}

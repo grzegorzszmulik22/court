@@ -348,8 +348,48 @@ func Run(o *Options) error {
 			"no clerk model configured: proceeding on the orchestrator's list alone")
 	}
 
-	// Later phases (comparison, hearing) run here.
+	// M2.5: the upfront hearing. It needs the orchestrator's restated
+	// goal and both expected lists; it runs only on a real terminal —
+	// piped standard input skips it with a notice (C2.5.3).
+	if orchBrief != nil {
+		bb := briefBody(orchBrief)
+		var clerkExp []ledger.Expected
+		evs, err := cl.Events(id)
+		if err != nil {
+			return err
+		}
+		for _, e := range evs {
+			if e.Type == "backbrief.submitted" && e.Actor == "clerk" {
+				if cb := briefBody(e); cb != nil && !cb.Invalid {
+					clerkExp = cb.ExpectedDecisions
+				}
+			}
+		}
+		goal := ""
+		if bb != nil {
+			goal = bb.Goal
+		}
+		orchBase, clerkBase := DecisionBases(evs, orchBrief.Seq)
+		if !terminalIn(o.In) {
+			fmt.Fprintln(o.Out,
+				"upfront hearing skipped: standard input is not a terminal")
+		} else if err := Hearing(o.In, o.Out, goal,
+			HearingCandidates(expectedOf(bb), clerkExp, orchBase, clerkBase),
+			func(decision, option string) error {
+				return cl.Rule(id, decision, option)
+			}); err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+// expectedOf returns a brief's expected decisions, nil-safe.
+func expectedOf(bb *ledger.BackbriefSubmitted) []ledger.Expected {
+	if bb == nil {
+		return nil
+	}
+	return bb.ExpectedDecisions
 }
 
 // repoHead resolves HEAD of the repository.
