@@ -269,7 +269,8 @@ func Run(o *Options) error {
 		logf.Close()
 		return fmt.Errorf("agent start: %w", err)
 	}
-	go cmd.Wait()
+	agentDone := make(chan struct{})
+	go func() { _ = cmd.Wait(); close(agentDone) }()
 	logf.Close()
 
 	// What was used, one line per resolution rule (M2.1 output).
@@ -297,21 +298,35 @@ func Run(o *Options) error {
 	// a live model takes longer — the deadline keeps the command from
 	// hanging forever).
 	var orchBrief *ledger.Event
-	deadline := time.Now().Add(60 * time.Second)
-	for time.Now().Before(deadline) && orchBrief == nil {
+	pollBrief := func() {
 		evs, err := cl.Events(id)
 		if err != nil {
-			return err
+			return
 		}
 		for _, e := range evs {
 			if e.Type == "backbrief.submitted" && e.Actor == "agent:"+Orchestrator {
 				orchBrief = e
 			}
 		}
-		if orchBrief == nil {
-			time.Sleep(50 * time.Millisecond)
-		}
 	}
+	// Wait for the orchestrator's backbrief — but a live agent can take
+	// a while, and a scripted one that submits none exits fast. The
+	// agent's exit ends the wait either way (one last poll catches a
+	// brief that landed just before it stopped).
+	pollT := time.NewTicker(50 * time.Millisecond)
+	deadline := time.After(60 * time.Second)
+	for orchBrief == nil {
+		select {
+		case <-agentDone:
+			pollBrief()
+		case <-deadline:
+		case <-pollT.C:
+			pollBrief()
+			continue
+		}
+		break
+	}
+	pollT.Stop()
 	if orchBrief == nil {
 		fmt.Fprintln(o.Out, "orchestrator submitted no backbrief: proceeding without the comparison")
 	}

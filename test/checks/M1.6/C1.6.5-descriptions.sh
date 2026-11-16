@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # C1.6.5 Tool descriptions are each one sentence of at most 200
-# characters, and tools/list offers exactly the three spec/02 §5 tools.
+# characters, and tools/list offers exactly the spec'd set (the M1.6 three plus M2 backbrief and spawn).
 set -uo pipefail
 d=${COURT_CHECK_DIR:?}
 case "$d" in /*) ;; *) d="$PWD/$d" ;; esac
