@@ -1,0 +1,26 @@
+{
+  "cwd": "/data/court/repo/worlds/w1",
+  "duration_ms": 8,
+  "effort": {
+    "level": "medium"
+  },
+  "hook_event_name": "PostToolUse",
+  "permission_mode": "default",
+  "prompt_id": "p1b2c3d4-0000-4000-8000-0000000000p1",
+  "scratchpad_dir": "/data/court/repo/worlds/w1/.claude/scratchpad",
+  "session_id": "a1b2c3d4-0000-4000-8000-000000000001",
+  "tool_input": {
+    "file_path": "/data/court/repo/worlds/w1/internal/ledger/store.go",
+    "new_string": "var SyncLevel = \"FULL\"",
+    "old_string": "var SyncLevel = \"NORMAL\""
+  },
+  "tool_name": "Edit",
+  "tool_response": {
+    "filePath": "/data/court/repo/worlds/w1/internal/ledger/store.go",
+    "newString": "var SyncLevel = \"FULL\"",
+    "oldString": "var SyncLevel = \"NORMAL\"",
+    "structured": null
+  },
+  "tool_use_id": "toolu_02ABCdefGHIjklMNOpqr02",
+  "transcript_path": "/state/claude/projects/-w/transcript-abc.jsonl"
+}

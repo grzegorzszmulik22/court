@@ -1,0 +1,16 @@
+{
+  "background_tasks": [],
+  "cwd": "/data/court/repo/worlds/w1",
+  "effort": {
+    "level": "medium"
+  },
+  "hook_event_name": "Stop",
+  "last_assistant_message": "Done with the chunk.",
+  "permission_mode": "default",
+  "prompt_id": "p1b2c3d4-0000-4000-8000-0000000000p1",
+  "scratchpad_dir": "/data/court/repo/worlds/w1/.claude/scratchpad",
+  "session_crons": [],
+  "session_id": "a1b2c3d4-0000-4000-8000-000000000001",
+  "stop_hook_active": false,
+  "transcript_path": "/state/claude/projects/-w/transcript-abc.jsonl"
+}
