@@ -1,0 +1,8 @@
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.22s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.30s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.18s)
+PASS
+ok  	court/internal/adapter/scripted	0.735s

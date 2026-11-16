@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index 40b9af1..7c5a6b1 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -110,7 +110,7 @@ func (d *Daemon) actorOf(sess *Session, p *hookPayload) (string, error) {
+ 	if p.AgentID == "" {
+ 		return sess.Agent, nil
+ 	}
+-	child := sess.Agent + ":" + p.AgentID
++	child := sess.Agent
+ 	key := sess.Commission + "/" + child
+ 	d.mu.Lock()
+ 	known := d.started[key]

@@ -1,0 +1,7 @@
+CHECK C1.6.1 FAIL # court/internal/daemon 
+CHECK C1.6.2 FAIL # court/internal/daemon 
+CHECK C1.6.3 FAIL # court/internal/daemon 
+CHECK C1.6.4 FAIL # court/internal/daemon 
+CHECK C1.6.5 FAIL # court/internal/daemon 
+check.sh: evidence: evidence/M1.6/2026-11-16T16-26-47Z
+make[1]: *** [Makefile:33: check-M1.6] Error 1
