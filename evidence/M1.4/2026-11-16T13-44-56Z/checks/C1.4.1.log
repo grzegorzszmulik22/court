@@ -1,0 +1,9 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (103.32s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (2.11s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:545: Discard reported: world: discard x: packed-refs residue: remove /tmp/TestC1_4_1_DiscardReportsError2069880789/001/repo/.git/packed-refs: permission denied
+--- PASS: TestC1_4_1_DiscardReportsError (0.39s)
+PASS
+ok  	court/internal/world	105.835s

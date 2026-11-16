@@ -1,0 +1,4 @@
+=== RUN   TestC1_4_4_ConfigIdentical
+--- PASS: TestC1_4_4_ConfigIdentical (0.29s)
+PASS
+ok  	court/internal/world	0.311s

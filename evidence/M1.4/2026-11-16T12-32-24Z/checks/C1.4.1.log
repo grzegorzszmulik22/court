@@ -1,0 +1,9 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (38.45s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (0.24s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:524: Discard reported: world: discard x: branch delete: error: could not delete reference refs/heads/court/Ctest/x: Unable to create '/tmp/TestC1_4_1_DiscardReportsError1464111575/001/repo/.git/packed-refs.lock': Permission denied
+--- PASS: TestC1_4_1_DiscardReportsError (1.49s)
+PASS
+ok  	court/internal/world	40.234s

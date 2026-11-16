@@ -1,0 +1,3 @@
+no Windows host available: uname -s reports 'Linux' (go env GOOS: linux)
+probe: uname -a: Linux free-a1 7.0.0-1013-oracle #13~24.04.1-Ubuntu SMP PREEMPT Fri Sep 25 09:43:58 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+windows run: go test ./internal/world -run '^TestC1_4_6_RunTimeout$|^TestC1_4_7_WindowsLongPaths$' -count=1 -v

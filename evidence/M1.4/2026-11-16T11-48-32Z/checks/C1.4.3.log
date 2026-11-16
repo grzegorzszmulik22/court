@@ -1,0 +1,6 @@
+=== RUN   TestC1_4_3_ConcurrentCommits
+    c14_test.go:618: C1.4.3: 5606 commits across 8 worlds in 1m0s, 0 internal lock retries
+    c14_test.go:650: C1.4.3: held-lock update succeeded after 2 counted retries
+--- PASS: TestC1_4_3_ConcurrentCommits (61.97s)
+PASS
+ok  	court/internal/world	61.992s

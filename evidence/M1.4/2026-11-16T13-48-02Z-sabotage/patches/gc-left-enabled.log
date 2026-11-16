@@ -1,0 +1,10 @@
+CHECK C1.4.1 PASS
+CHECK C1.4.2 PASS
+CHECK C1.4.3 PASS
+CHECK C1.4.4 FAIL config-identical check failed; see go test output 
+CHECK C1.4.5 PASS
+CHECK C1.4.6 PASS
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+CHECK C1.4.8 PASS
+check.sh: evidence: evidence/M1.4/2026-11-16T13-57-10Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1
