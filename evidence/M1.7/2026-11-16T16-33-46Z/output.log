@@ -1,0 +1,17 @@
+=== RUN   TestC1_7_1
+--- PASS: TestC1_7_1 (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.026s
+CHECK C1.7.1 PASS
+=== RUN   TestC1_7_2
+--- PASS: TestC1_7_2 (0.16s)
+PASS
+ok  	court/internal/adapter/scripted	0.182s
+CHECK C1.7.2 PASS
+=== RUN   TestC1_7_3
+{"type":"system","subtype":"init"}
+--- PASS: TestC1_7_3 (0.02s)
+PASS
+ok  	court/internal/adapter/scripted	0.052s
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-16T16-33-46Z

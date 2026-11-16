@@ -1,0 +1,5 @@
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny check failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-16T16-32-51Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
