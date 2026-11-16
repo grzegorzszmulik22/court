@@ -489,7 +489,9 @@ func (w *GitWorld) Discard() error {
 	// is restored exactly.
 	if os.IsNotExist(packedRefsExisted) {
 		if raw, err := os.ReadFile(packedRefs); err == nil && packedRefsEmpty(raw) {
-			_ = os.Remove(packedRefs)
+			if err := os.Remove(packedRefs); err != nil {
+				return fmt.Errorf("world: discard %s: packed-refs residue: %v", w.id, err)
+			}
 		}
 	}
 	if w.adminDir != "" {

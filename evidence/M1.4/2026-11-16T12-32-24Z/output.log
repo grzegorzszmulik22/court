@@ -1,0 +1,45 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (38.45s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (0.24s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:524: Discard reported: world: discard x: branch delete: error: could not delete reference refs/heads/court/Ctest/x: Unable to create '/tmp/TestC1_4_1_DiscardReportsError1464111575/001/repo/.git/packed-refs.lock': Permission denied
+--- PASS: TestC1_4_1_DiscardReportsError (1.49s)
+PASS
+ok  	court/internal/world	40.234s
+CHECK C1.4.1 PASS
+=== RUN   TestC1_4_2_SameBranch
+--- PASS: TestC1_4_2_SameBranch (0.17s)
+PASS
+ok  	court/internal/world	0.189s
+CHECK C1.4.2 PASS
+=== RUN   TestC1_4_3_ConcurrentCommits
+    c14_test.go:643: C1.4.3: 5132 commits across 8 worlds in 1m0s, 0 internal lock retries
+    c14_test.go:675: C1.4.3: held-lock update succeeded after 2 counted retries
+--- PASS: TestC1_4_3_ConcurrentCommits (61.67s)
+PASS
+ok  	court/internal/world	61.686s
+CHECK C1.4.3 PASS
+=== RUN   TestC1_4_4_ConfigIdentical
+--- PASS: TestC1_4_4_ConfigIdentical (0.19s)
+PASS
+ok  	court/internal/world	0.207s
+CHECK C1.4.4 PASS
+=== RUN   TestC1_4_5_SubmoduleRefusal
+--- PASS: TestC1_4_5_SubmoduleRefusal (0.27s)
+PASS
+ok  	court/internal/world	0.283s
+CHECK C1.4.5 PASS
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (0.72s)
+PASS
+ok  	court/internal/world	0.727s
+CHECK C1.4.6 PASS
+no Windows host available: uname -s reports 'Linux' (go env GOOS: linux)
+probe: uname -a: Linux free-a1 7.0.0-1013-oracle #13~24.04.1-Ubuntu SMP PREEMPT Fri Sep 25 09:43:58 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+windows run: go test ./internal/world -run '^TestC1_4_6_RunTimeout$|^TestC1_4_7_WindowsLongPaths$' -count=1 -v
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+frozen: spec/01-b.md: matches frozen pattern 'spec/0*.md' but is not listed
+frozen_verify separator test: ok
+CHECK C1.4.8 PASS
+check.sh: evidence: evidence/M1.4/2026-11-16T12-32-24Z

@@ -500,6 +500,31 @@ func TestC1_4_1_SiblingStagedBlob(t *testing.T) {
 	}
 }
 
+// A filesystem failure inside Discard must be reported, not silently
+// ignored: the caller has to know the repository was left changed. A
+// read-only .git makes the ref cleanup fail; Discard must surface it.
+func TestC1_4_1_DiscardReportsError(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("posix dir permission semantics")
+	}
+	repo := newRepo(t, 1)
+	root := open(t, repo)
+	w, err := root.Fork(head(t, repo), "x")
+	if err != nil {
+		t.Fatalf("fork: %v", err)
+	}
+	gitDir := filepath.Join(repo, ".git")
+	if err := os.Chmod(gitDir, 0555); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chmod(gitDir, 0755) // let t.TempDir clean up
+	if err := w.Discard(); err == nil {
+		t.Fatal("Discard returned nil while .git was read-only")
+	} else {
+		t.Logf("Discard reported: %v", err)
+	}
+}
+
 // TestC1_4_2_SameBranch implements check C1.4.2: two worlds cannot hold the
 // same branch; the error is reported, not retried.
 func TestC1_4_2_SameBranch(t *testing.T) {
