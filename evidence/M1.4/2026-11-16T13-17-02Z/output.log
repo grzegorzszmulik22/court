@@ -1,0 +1,45 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (29.84s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (0.47s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:545: Discard reported: world: discard x: packed-refs residue: remove /tmp/TestC1_4_1_DiscardReportsError907732036/001/repo/.git/packed-refs: permission denied
+--- PASS: TestC1_4_1_DiscardReportsError (0.13s)
+PASS
+ok  	court/internal/world	30.466s
+CHECK C1.4.1 PASS
+=== RUN   TestC1_4_2_SameBranch
+--- PASS: TestC1_4_2_SameBranch (0.30s)
+PASS
+ok  	court/internal/world	0.310s
+CHECK C1.4.2 PASS
+=== RUN   TestC1_4_3_ConcurrentCommits
+    c14_test.go:664: C1.4.3: 3888 commits across 8 worlds in 1m0s, 0 internal lock retries
+    c14_test.go:696: C1.4.3: held-lock update succeeded after 2 counted retries
+--- PASS: TestC1_4_3_ConcurrentCommits (61.75s)
+PASS
+ok  	court/internal/world	61.819s
+CHECK C1.4.3 PASS
+=== RUN   TestC1_4_4_ConfigIdentical
+--- PASS: TestC1_4_4_ConfigIdentical (0.30s)
+PASS
+ok  	court/internal/world	0.316s
+CHECK C1.4.4 PASS
+=== RUN   TestC1_4_5_SubmoduleRefusal
+--- PASS: TestC1_4_5_SubmoduleRefusal (0.58s)
+PASS
+ok  	court/internal/world	0.600s
+CHECK C1.4.5 PASS
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (0.73s)
+PASS
+ok  	court/internal/world	0.741s
+CHECK C1.4.6 PASS
+no Windows host available: uname -s reports 'Linux' (go env GOOS: linux)
+probe: uname -a: Linux free-a1 7.0.0-1013-oracle #13~24.04.1-Ubuntu SMP PREEMPT Fri Sep 25 09:43:58 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+windows run: go test ./internal/world -run '^TestC1_4_6_RunTimeout$|^TestC1_4_7_WindowsLongPaths$' -count=1 -v
+CHECK C1.4.7 SKIP no Windows host available: uname -s reports 'Linux' (go env GOOS: linux) 
+frozen: spec/01-b.md: matches frozen pattern 'spec/0*.md' but is not listed
+frozen_verify separator test: ok
+CHECK C1.4.8 PASS
+check.sh: evidence: evidence/M1.4/2026-11-16T13-17-02Z
