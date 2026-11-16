@@ -35,32 +35,58 @@ ver_ge() { # ver_ge <have> <floor>: true when have >= floor
 }
 
 # --- Go toolchain -----------------------------------------------------------
+# Linux and macOS hosts get the tarball; Windows (Git Bash, CR-001) gets the
+# zip. Either way the archive is sha256-verified against tools/versions.env.
+win=0
+case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) win=1 ;; esac
 arch=$(uname -m)
-case "$arch" in
-    aarch64|arm64) goarch=arm64; want_sha=$GO_SHA256_LINUX_ARM64 ;;
-    x86_64|amd64)  goarch=amd64; want_sha=$GO_SHA256_LINUX_AMD64 ;;
-    *) die "unsupported arch $arch" ;;
-esac
-tarball="go${GO_VERSION}.linux-${goarch}.tar.gz"
+if [ "$win" -eq 1 ]; then
+    case "$arch" in
+        x86_64|amd64) goarch=amd64; want_sha=$GO_SHA256_WINDOWS_AMD64 ;;
+        *) die "unsupported Windows arch $arch" ;;
+    esac
+    goos=windows; archive="go${GO_VERSION}.windows-${goarch}.zip"; exe=.exe
+else
+    case "$arch" in
+        aarch64|arm64) goarch=arm64; want_sha=$GO_SHA256_LINUX_ARM64 ;;
+        x86_64|amd64)  goarch=amd64; want_sha=$GO_SHA256_LINUX_AMD64 ;;
+        *) die "unsupported arch $arch" ;;
+    esac
+    goos=linux; archive="go${GO_VERSION}.linux-${goarch}.tar.gz"; exe=
+fi
 
 need_go=1
-if [ -x "$TOOLS/go/bin/go" ] && [ "$("$TOOLS/go/bin/go" version 2>/dev/null | awk '{print $3}')" = "go${GO_VERSION}" ]; then
+if [ -x "$TOOLS/go/bin/go$exe" ] && [ "$("$TOOLS/go/bin/go$exe" version 2>/dev/null | awk '{print $3}')" = "go${GO_VERSION}" ]; then
     need_go=0
     say "go ${GO_VERSION} already installed"
 fi
 if [ "$need_go" -eq 1 ]; then
-    say "downloading $tarball"
-    curl -fsSL -o "$TOOLS/dl/$tarball" "https://dl.google.com/go/${tarball}" \
-        || die "download of $tarball failed (network needed for make tools)"
-    echo "$want_sha  $TOOLS/dl/$tarball" | sha256sum -c - >/dev/null \
-        || die "sha256 mismatch for $tarball"
+    say "downloading $archive"
+    curl -fsSL -o "$TOOLS/dl/$archive" "https://dl.google.com/go/${archive}"         || die "download of $archive failed (network needed for make tools)"
+    echo "$want_sha  $TOOLS/dl/$archive" | sha256sum -c - >/dev/null         || die "sha256 mismatch for $archive"
     rm -rf "$TOOLS/go"
-    tar -C "$TOOLS" -xzf "$TOOLS/dl/$tarball"
-    rm -f "$TOOLS/dl/$tarball"
-    say "installed go ${GO_VERSION} (linux/${goarch}, sha256 verified)"
+    if [ "$win" -eq 1 ]; then
+        unzip -q "$TOOLS/dl/$archive" -d "$TOOLS"
+    else
+        tar -C "$TOOLS" -xzf "$TOOLS/dl/$archive"
+    fi
+    rm -f "$TOOLS/dl/$archive"
+    say "installed go ${GO_VERSION} (${goos}/${goarch}, sha256 verified)"
 fi
-ln -sf ../go/bin/go "$BIN/go"
-ln -sf ../go/bin/gofmt "$BIN/gofmt"
+if [ "$win" -eq 1 ]; then
+    # Symlinks need developer mode on Windows; small wrappers work in every
+    # shell, and the Makefile also puts .tools/go/bin on PATH for programs
+    # that look up go.exe themselves.
+    for b in go gofmt; do
+        printf '#!/bin/sh
+exec "%s" "$@"
+' "$TOOLS/go/bin/$b.exe" >"$BIN/$b"
+        chmod +x "$BIN/$b"
+    done
+else
+    ln -sf ../go/bin/go "$BIN/go"
+    ln -sf ../go/bin/gofmt "$BIN/gofmt"
+fi
 
 # --- git: verified system binary --------------------------------------------
 git_bin=$(PATH="$SYS_PATH" command -v git || true)
@@ -75,7 +101,16 @@ fi
 say "git $got (system, >= pinned $GIT_VERSION)"
 
 # --- python3: verified system binary ----------------------------------------
-py_bin=$(PATH="$SYS_PATH" command -v python3 || true)
+# On Windows "python3" is usually the Microsoft Store alias, which only
+# prints an install hint: take the first candidate that really runs.
+py_bin=
+for cand in python3 python; do
+    c=$(PATH="$SYS_PATH" command -v "$cand" || true)
+    [ -n "$c" ] || continue
+    case "$c" in */WindowsApps/*) continue ;; esac
+    "$c" -c "import sys" >/dev/null 2>&1 || continue
+    py_bin=$c; break
+done
 [ -n "$py_bin" ] || die "no python3 on PATH"
 [ "$(readlink -f "$py_bin")" = "$BIN_REAL/python3" ] && die "resolved python3 is inside .tools"
 "$py_bin" -c "import sys; sys.exit(0 if sys.version_info[:2] >= tuple(int(x) for x in '$PYTHON_VERSION'.split('.')) else 1)" \

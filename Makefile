@@ -14,7 +14,7 @@
 
 REPO := $(CURDIR)
 TOOLS_DIR := $(or $(COURT_TOOLS_DIR),$(REPO)/.tools)
-export PATH := $(TOOLS_DIR)/bin:$(PATH)
+export PATH := $(TOOLS_DIR)/bin:$(TOOLS_DIR)/go/bin:$(PATH)
 # Go modules live in the toolchain dir and checks never touch the network.
 export GOMODCACHE := $(TOOLS_DIR)/gomod
 export GOPROXY := off
