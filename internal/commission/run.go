@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"court/internal/daemon"
 	"court/internal/ledger"
@@ -282,6 +283,30 @@ func Run(o *Options) error {
 		budgets.Tokens, budgets.Minutes, budgets.Speculation, attention)
 	fmt.Fprintf(o.Out, "orchestrator: world %s on %s (session %s)\n",
 		gw.Path(), gw.Branch(), sess.Token[:8])
+
+	// The comparison and the hearing need the orchestrator's list; wait
+	// for its backbrief.submitted (scripted agents land in milliseconds,
+	// a live model takes longer — the deadline keeps the command from
+	// hanging forever).
+	var orchBrief *ledger.Event
+	deadline := time.Now().Add(60 * time.Second)
+	for time.Now().Before(deadline) && orchBrief == nil {
+		evs, err := cl.Events(id)
+		if err != nil {
+			return err
+		}
+		for _, e := range evs {
+			if e.Type == "backbrief.submitted" && e.Actor == "agent:"+Orchestrator {
+				orchBrief = e
+			}
+		}
+		if orchBrief == nil {
+			time.Sleep(50 * time.Millisecond)
+		}
+	}
+	if orchBrief == nil {
+		fmt.Fprintln(o.Out, "orchestrator submitted no backbrief: proceeding without the comparison")
+	}
 
 	// M2.3: the blind clerk sees only the commission; its output enters
 	// the ledger as the clerk's backbrief.submitted before use.
