@@ -1,0 +1,28 @@
+diff --git a/internal/commission/run.go b/internal/commission/run.go
+index 889b3db..c261db4 100644
+--- a/internal/commission/run.go
++++ b/internal/commission/run.go
+@@ -354,6 +354,7 @@ func Run(o *Options) error {
+ 	if orchBrief != nil {
+ 		bb := briefBody(orchBrief)
+ 		var clerkExp []ledger.Expected
++		var clerkGoal string
+ 		evs, err := cl.Events(id)
+ 		if err != nil {
+ 			return err
+@@ -362,12 +363,13 @@ func Run(o *Options) error {
+ 			if e.Type == "backbrief.submitted" && e.Actor == "clerk" {
+ 				if cb := briefBody(e); cb != nil && !cb.Invalid {
+ 					clerkExp = cb.ExpectedDecisions
++					clerkGoal = cb.Goal
+ 				}
+ 			}
+ 		}
+ 		goal := ""
+-		if bb != nil {
+-			goal = bb.Goal
++		if clerkGoal != "" {
++			goal = clerkGoal
+ 		}
+ 		orchBase, clerkBase := DecisionBases(evs, orchBrief.Seq)
+ 		if !terminalIn(o.In) {

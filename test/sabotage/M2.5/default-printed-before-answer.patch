@@ -1,0 +1,13 @@
+diff --git a/internal/commission/hearing.go b/internal/commission/hearing.go
+index e8670a7..209832c 100644
+--- a/internal/commission/hearing.go
++++ b/internal/commission/hearing.go
+@@ -159,7 +159,7 @@ func Hearing(in io.Reader, out io.Writer, goal string,
+ 	r := bufio.NewReader(in)
+ 	ruled, skipped := 0, 0
+ 	for i, c := range shown {
+-		fmt.Fprintf(out, "  %d. %s [y/n] ", i+1, c.Exp.Question)
++		fmt.Fprintf(out, "  %d. %s (default: %s) [y/n] ", i+1, c.Exp.Question, c.Exp.IntendedDefault)
+ 		answer, _ := r.ReadString('\n')
+ 		answer = strings.ToLower(strings.TrimSpace(answer))
+ 		var option string
