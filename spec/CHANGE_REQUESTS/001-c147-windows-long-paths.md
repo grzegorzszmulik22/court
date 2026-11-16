@@ -1,6 +1,6 @@
 # CR-001: C1.4.7 cannot be met as written; restate it, and fix the Windows build
 
-**Status:** PROPOSED (only a human may mark it ACCEPTED)
+**Status:** ACCEPTED by the human on 2026-11-16 ("accept CR-001, it should run on Windows"). Applied to `spec/milestones/M1-ledger-and-worlds.md` (M1.4 build text, C1.4.7, new C1.4.8, new sabotage) and `spec/FROZEN.sha256`.
 **Raised by:** supervisor, 2026-11-16, after running C1.4.7 on a Windows PC
 **Affects:** M1.4 (check C1.4.7), and every later chunk that builds `internal/world` on Windows
 **Evidence:** `evidence/M1.4/2026-11-16T10-13-32Z-windows-supervisor/` (sysinfo, build output, probe script and output)

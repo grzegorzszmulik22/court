@@ -83,7 +83,7 @@ Output conventions, relied on by the supervisor's verifier:
 
 ## M1.4 Worlds
 
-**Build.** `internal/world`: the interface and git worktree backend of `02` §3, including per-world git settings passed by environment, garbage collection off during a commission, the submodule refusal, and the digest used for H3.
+**Build.** `internal/world`: the interface and git worktree backend of `02` §3, including per-world git settings passed by environment, garbage collection off during a commission, the submodule refusal, and the digest used for H3. `internal/world` builds and works on Linux and Windows: `Run`'s time limit kills the whole process tree on both, through build-tagged implementations (Linux: process groups; Windows: a job object or an equivalent that kills descendants). World roots are kept short (CR-001).
 
 **Checks.**
 - C1.4.1 MM1.3: random sequences of fork, edit, commit, run and discard across up to 8 worlds.
@@ -92,9 +92,10 @@ Output conventions, relied on by the supervisor's verifier:
 - C1.4.4 `git config --list` for the repository is byte-identical before a commission and after it.
 - C1.4.5 A repository with a submodule is refused with one sentence and no world is created.
 - C1.4.6 `Run` enforces its time limit and reports a timeout distinctly from a non-zero exit.
-- C1.4.7 On Windows: a world path longer than 260 characters works. `SKIPPED-ENV` where no Windows host exists.
+- C1.4.7 On Windows: a world whose root path is at most 200 characters holds, commits, diffs and discards a file whose full path is longer than 260 characters; the same check run with `core.longpaths` disabled fails (proving the setting is what makes it pass). Opening a commission whose data directory would put a world root above 200 characters fails with a one-sentence error naming the limit. C1.4.6 also passes on Windows (the time limit kills descendants). `SKIPPED-ENV` only where no Windows host exists; the supervisor runs it on a Windows PC before merge. A package that does not build on Windows is a FAIL, never SKIPPED-ENV (CR-001).
+- C1.4.8 On every host: `GOOS=windows go vet ./...` and `GOOS=windows go test -c -o /dev/null ./internal/world/` succeed, so a Windows build failure is caught on Linux before the Windows run.
 
-**Sabotage.** `discard-leaves-branch`; `gc-left-enabled`; `config-written-to-repo`; `run-timeout-reported-as-exit-1`.
+**Sabotage.** `discard-leaves-branch`; `gc-left-enabled`; `config-written-to-repo`; `run-timeout-reported-as-exit-1`; `unix-only-call-in-shared-file` (a Unix-only syscall in a file without a build tag; C1.4.8 must fail).
 
 **Denied.** Copying the repository instead of using worktrees. Merging worlds (that arrives with rulings).
 
