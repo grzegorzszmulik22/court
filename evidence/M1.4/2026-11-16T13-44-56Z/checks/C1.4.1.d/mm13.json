@@ -1,0 +1,1612 @@
+{
+  "commits": 238,
+  "cv": 0.497,
+  "discards": 770,
+  "measurement": "MM1.3",
+  "median_ms": 1885,
+  "restored": 200,
+  "samples": [
+    {
+      "seed": 0,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1142
+    },
+    {
+      "seed": 1,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2122
+    },
+    {
+      "seed": 2,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 2921
+    },
+    {
+      "seed": 3,
+      "ok": true,
+      "ops": 16,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 2195
+    },
+    {
+      "seed": 4,
+      "ok": true,
+      "ops": 10,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2926
+    },
+    {
+      "seed": 5,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1543
+    },
+    {
+      "seed": 6,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1600
+    },
+    {
+      "seed": 7,
+      "ok": true,
+      "ops": 17,
+      "discards": 6,
+      "commits": 1,
+      "duration_ms": 2544
+    },
+    {
+      "seed": 8,
+      "ok": true,
+      "ops": 12,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 852
+    },
+    {
+      "seed": 9,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 3110
+    },
+    {
+      "seed": 10,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 882
+    },
+    {
+      "seed": 11,
+      "ok": true,
+      "ops": 21,
+      "discards": 6,
+      "commits": 4,
+      "duration_ms": 4374
+    },
+    {
+      "seed": 12,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2044
+    },
+    {
+      "seed": 13,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1796
+    },
+    {
+      "seed": 14,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 669
+    },
+    {
+      "seed": 15,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 731
+    },
+    {
+      "seed": 16,
+      "ok": true,
+      "ops": 12,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 930
+    },
+    {
+      "seed": 17,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1732
+    },
+    {
+      "seed": 18,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 3144
+    },
+    {
+      "seed": 19,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 1078
+    },
+    {
+      "seed": 20,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 609
+    },
+    {
+      "seed": 21,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1218
+    },
+    {
+      "seed": 22,
+      "ok": true,
+      "ops": 18,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2698
+    },
+    {
+      "seed": 23,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2037
+    },
+    {
+      "seed": 24,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2515
+    },
+    {
+      "seed": 25,
+      "ok": true,
+      "ops": 19,
+      "discards": 6,
+      "commits": 3,
+      "duration_ms": 948
+    },
+    {
+      "seed": 26,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1025
+    },
+    {
+      "seed": 27,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 1696
+    },
+    {
+      "seed": 28,
+      "ok": true,
+      "ops": 17,
+      "discards": 6,
+      "commits": 1,
+      "duration_ms": 2988
+    },
+    {
+      "seed": 29,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1610
+    },
+    {
+      "seed": 30,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 447
+    },
+    {
+      "seed": 31,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2087
+    },
+    {
+      "seed": 32,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1607
+    },
+    {
+      "seed": 33,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 3032
+    },
+    {
+      "seed": 34,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 2223
+    },
+    {
+      "seed": 35,
+      "ok": true,
+      "ops": 10,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1483
+    },
+    {
+      "seed": 36,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 451
+    },
+    {
+      "seed": 37,
+      "ok": true,
+      "ops": 19,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 1500
+    },
+    {
+      "seed": 38,
+      "ok": true,
+      "ops": 18,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1735
+    },
+    {
+      "seed": 39,
+      "ok": true,
+      "ops": 15,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3742
+    },
+    {
+      "seed": 40,
+      "ok": true,
+      "ops": 15,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3532
+    },
+    {
+      "seed": 41,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2353
+    },
+    {
+      "seed": 42,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 547
+    },
+    {
+      "seed": 43,
+      "ok": true,
+      "ops": 13,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 327
+    },
+    {
+      "seed": 44,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1389
+    },
+    {
+      "seed": 45,
+      "ok": true,
+      "ops": 15,
+      "discards": 2,
+      "commits": 4,
+      "duration_ms": 900
+    },
+    {
+      "seed": 46,
+      "ok": true,
+      "ops": 20,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 2246
+    },
+    {
+      "seed": 47,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1668
+    },
+    {
+      "seed": 48,
+      "ok": true,
+      "ops": 18,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 3481
+    },
+    {
+      "seed": 49,
+      "ok": true,
+      "ops": 18,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2547
+    },
+    {
+      "seed": 50,
+      "ok": true,
+      "ops": 17,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 2428
+    },
+    {
+      "seed": 51,
+      "ok": true,
+      "ops": 18,
+      "discards": 6,
+      "commits": 2,
+      "duration_ms": 2058
+    },
+    {
+      "seed": 52,
+      "ok": true,
+      "ops": 20,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 2129
+    },
+    {
+      "seed": 53,
+      "ok": true,
+      "ops": 12,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2826
+    },
+    {
+      "seed": 54,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 2378
+    },
+    {
+      "seed": 55,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 3181
+    },
+    {
+      "seed": 56,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2839
+    },
+    {
+      "seed": 57,
+      "ok": true,
+      "ops": 23,
+      "discards": 5,
+      "commits": 4,
+      "duration_ms": 2496
+    },
+    {
+      "seed": 58,
+      "ok": true,
+      "ops": 20,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 3381
+    },
+    {
+      "seed": 59,
+      "ok": true,
+      "ops": 19,
+      "discards": 4,
+      "commits": 4,
+      "duration_ms": 487
+    },
+    {
+      "seed": 60,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1777
+    },
+    {
+      "seed": 61,
+      "ok": true,
+      "ops": 10,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 2529
+    },
+    {
+      "seed": 62,
+      "ok": true,
+      "ops": 13,
+      "discards": 2,
+      "commits": 4,
+      "duration_ms": 3418
+    },
+    {
+      "seed": 63,
+      "ok": true,
+      "ops": 12,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 1959
+    },
+    {
+      "seed": 64,
+      "ok": true,
+      "ops": 18,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3201
+    },
+    {
+      "seed": 65,
+      "ok": true,
+      "ops": 16,
+      "discards": 7,
+      "commits": 0,
+      "duration_ms": 3926
+    },
+    {
+      "seed": 66,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 344
+    },
+    {
+      "seed": 67,
+      "ok": true,
+      "ops": 19,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 2149
+    },
+    {
+      "seed": 68,
+      "ok": true,
+      "ops": 12,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1490
+    },
+    {
+      "seed": 69,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 2290
+    },
+    {
+      "seed": 70,
+      "ok": true,
+      "ops": 9,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 138
+    },
+    {
+      "seed": 71,
+      "ok": true,
+      "ops": 12,
+      "discards": 2,
+      "commits": 0,
+      "duration_ms": 1135
+    },
+    {
+      "seed": 72,
+      "ok": true,
+      "ops": 9,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 996
+    },
+    {
+      "seed": 73,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1033
+    },
+    {
+      "seed": 74,
+      "ok": true,
+      "ops": 20,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 3867
+    },
+    {
+      "seed": 75,
+      "ok": true,
+      "ops": 12,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2437
+    },
+    {
+      "seed": 76,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2192
+    },
+    {
+      "seed": 77,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1793
+    },
+    {
+      "seed": 78,
+      "ok": true,
+      "ops": 14,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 1477
+    },
+    {
+      "seed": 79,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2557
+    },
+    {
+      "seed": 80,
+      "ok": true,
+      "ops": 13,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3016
+    },
+    {
+      "seed": 81,
+      "ok": true,
+      "ops": 18,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 741
+    },
+    {
+      "seed": 82,
+      "ok": true,
+      "ops": 14,
+      "discards": 6,
+      "commits": 1,
+      "duration_ms": 2769
+    },
+    {
+      "seed": 83,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 2200
+    },
+    {
+      "seed": 84,
+      "ok": true,
+      "ops": 15,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3342
+    },
+    {
+      "seed": 85,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 255
+    },
+    {
+      "seed": 86,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 589
+    },
+    {
+      "seed": 87,
+      "ok": true,
+      "ops": 13,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 1987
+    },
+    {
+      "seed": 88,
+      "ok": true,
+      "ops": 11,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 227
+    },
+    {
+      "seed": 89,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1226
+    },
+    {
+      "seed": 90,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1206
+    },
+    {
+      "seed": 91,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 909
+    },
+    {
+      "seed": 92,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3815
+    },
+    {
+      "seed": 93,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 2233
+    },
+    {
+      "seed": 94,
+      "ok": true,
+      "ops": 15,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 3997
+    },
+    {
+      "seed": 95,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1897
+    },
+    {
+      "seed": 96,
+      "ok": true,
+      "ops": 18,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 2536
+    },
+    {
+      "seed": 97,
+      "ok": true,
+      "ops": 18,
+      "discards": 6,
+      "commits": 3,
+      "duration_ms": 2793
+    },
+    {
+      "seed": 98,
+      "ok": true,
+      "ops": 14,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 1554
+    },
+    {
+      "seed": 99,
+      "ok": true,
+      "ops": 11,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 1645
+    },
+    {
+      "seed": 100,
+      "ok": true,
+      "ops": 15,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 1772
+    },
+    {
+      "seed": 101,
+      "ok": true,
+      "ops": 15,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 1770
+    },
+    {
+      "seed": 102,
+      "ok": true,
+      "ops": 8,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 2315
+    },
+    {
+      "seed": 103,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1670
+    },
+    {
+      "seed": 104,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2964
+    },
+    {
+      "seed": 105,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1383
+    },
+    {
+      "seed": 106,
+      "ok": true,
+      "ops": 13,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 463
+    },
+    {
+      "seed": 107,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2296
+    },
+    {
+      "seed": 108,
+      "ok": true,
+      "ops": 17,
+      "discards": 8,
+      "commits": 0,
+      "duration_ms": 2646
+    },
+    {
+      "seed": 109,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1015
+    },
+    {
+      "seed": 110,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2762
+    },
+    {
+      "seed": 111,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2078
+    },
+    {
+      "seed": 112,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2076
+    },
+    {
+      "seed": 113,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 2634
+    },
+    {
+      "seed": 114,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1856
+    },
+    {
+      "seed": 115,
+      "ok": true,
+      "ops": 16,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1696
+    },
+    {
+      "seed": 116,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1822
+    },
+    {
+      "seed": 117,
+      "ok": true,
+      "ops": 11,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 557
+    },
+    {
+      "seed": 118,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 2417
+    },
+    {
+      "seed": 119,
+      "ok": true,
+      "ops": 16,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2129
+    },
+    {
+      "seed": 120,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 690
+    },
+    {
+      "seed": 121,
+      "ok": true,
+      "ops": 13,
+      "discards": 2,
+      "commits": 3,
+      "duration_ms": 623
+    },
+    {
+      "seed": 122,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1753
+    },
+    {
+      "seed": 123,
+      "ok": true,
+      "ops": 18,
+      "discards": 8,
+      "commits": 0,
+      "duration_ms": 3672
+    },
+    {
+      "seed": 124,
+      "ok": true,
+      "ops": 16,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 983
+    },
+    {
+      "seed": 125,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1628
+    },
+    {
+      "seed": 126,
+      "ok": true,
+      "ops": 12,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1957
+    },
+    {
+      "seed": 127,
+      "ok": true,
+      "ops": 20,
+      "discards": 3,
+      "commits": 3,
+      "duration_ms": 1356
+    },
+    {
+      "seed": 128,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1165
+    },
+    {
+      "seed": 129,
+      "ok": true,
+      "ops": 15,
+      "discards": 3,
+      "commits": 3,
+      "duration_ms": 2512
+    },
+    {
+      "seed": 130,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1013
+    },
+    {
+      "seed": 131,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1882
+    },
+    {
+      "seed": 132,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 2723
+    },
+    {
+      "seed": 133,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 2566
+    },
+    {
+      "seed": 134,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1093
+    },
+    {
+      "seed": 135,
+      "ok": true,
+      "ops": 19,
+      "discards": 3,
+      "commits": 3,
+      "duration_ms": 2204
+    },
+    {
+      "seed": 136,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1441
+    },
+    {
+      "seed": 137,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1042
+    },
+    {
+      "seed": 138,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 2189
+    },
+    {
+      "seed": 139,
+      "ok": true,
+      "ops": 10,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 1322
+    },
+    {
+      "seed": 140,
+      "ok": true,
+      "ops": 11,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1991
+    },
+    {
+      "seed": 141,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 3108
+    },
+    {
+      "seed": 142,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1373
+    },
+    {
+      "seed": 143,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 2,
+      "duration_ms": 1774
+    },
+    {
+      "seed": 144,
+      "ok": true,
+      "ops": 15,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 833
+    },
+    {
+      "seed": 145,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1211
+    },
+    {
+      "seed": 146,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 288
+    },
+    {
+      "seed": 147,
+      "ok": true,
+      "ops": 16,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2335
+    },
+    {
+      "seed": 148,
+      "ok": true,
+      "ops": 12,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 1945
+    },
+    {
+      "seed": 149,
+      "ok": true,
+      "ops": 21,
+      "discards": 3,
+      "commits": 4,
+      "duration_ms": 1231
+    },
+    {
+      "seed": 150,
+      "ok": true,
+      "ops": 12,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 903
+    },
+    {
+      "seed": 151,
+      "ok": true,
+      "ops": 13,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2050
+    },
+    {
+      "seed": 152,
+      "ok": true,
+      "ops": 18,
+      "discards": 6,
+      "commits": 2,
+      "duration_ms": 1231
+    },
+    {
+      "seed": 153,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1046
+    },
+    {
+      "seed": 154,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 420
+    },
+    {
+      "seed": 155,
+      "ok": true,
+      "ops": 19,
+      "discards": 4,
+      "commits": 3,
+      "duration_ms": 1790
+    },
+    {
+      "seed": 156,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2235
+    },
+    {
+      "seed": 157,
+      "ok": true,
+      "ops": 19,
+      "discards": 5,
+      "commits": 3,
+      "duration_ms": 2375
+    },
+    {
+      "seed": 158,
+      "ok": true,
+      "ops": 16,
+      "discards": 3,
+      "commits": 3,
+      "duration_ms": 3031
+    },
+    {
+      "seed": 159,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2441
+    },
+    {
+      "seed": 160,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1034
+    },
+    {
+      "seed": 161,
+      "ok": true,
+      "ops": 10,
+      "discards": 2,
+      "commits": 1,
+      "duration_ms": 1417
+    },
+    {
+      "seed": 162,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 745
+    },
+    {
+      "seed": 163,
+      "ok": true,
+      "ops": 22,
+      "discards": 4,
+      "commits": 3,
+      "duration_ms": 2937
+    },
+    {
+      "seed": 164,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1237
+    },
+    {
+      "seed": 165,
+      "ok": true,
+      "ops": 11,
+      "discards": 2,
+      "commits": 3,
+      "duration_ms": 1912
+    },
+    {
+      "seed": 166,
+      "ok": true,
+      "ops": 13,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 426
+    },
+    {
+      "seed": 167,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 3,
+      "duration_ms": 3371
+    },
+    {
+      "seed": 168,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 3230
+    },
+    {
+      "seed": 169,
+      "ok": true,
+      "ops": 8,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 759
+    },
+    {
+      "seed": 170,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 2061
+    },
+    {
+      "seed": 171,
+      "ok": true,
+      "ops": 18,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1782
+    },
+    {
+      "seed": 172,
+      "ok": true,
+      "ops": 9,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 478
+    },
+    {
+      "seed": 173,
+      "ok": true,
+      "ops": 21,
+      "discards": 7,
+      "commits": 2,
+      "duration_ms": 2114
+    },
+    {
+      "seed": 174,
+      "ok": true,
+      "ops": 14,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 1971
+    },
+    {
+      "seed": 175,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 392
+    },
+    {
+      "seed": 176,
+      "ok": true,
+      "ops": 16,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 2170
+    },
+    {
+      "seed": 177,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 2172
+    },
+    {
+      "seed": 178,
+      "ok": true,
+      "ops": 23,
+      "discards": 5,
+      "commits": 5,
+      "duration_ms": 4324
+    },
+    {
+      "seed": 179,
+      "ok": true,
+      "ops": 9,
+      "discards": 2,
+      "commits": 0,
+      "duration_ms": 1916
+    },
+    {
+      "seed": 180,
+      "ok": true,
+      "ops": 17,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1740
+    },
+    {
+      "seed": 181,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 2313
+    },
+    {
+      "seed": 182,
+      "ok": true,
+      "ops": 17,
+      "discards": 2,
+      "commits": 3,
+      "duration_ms": 1311
+    },
+    {
+      "seed": 183,
+      "ok": true,
+      "ops": 14,
+      "discards": 2,
+      "commits": 2,
+      "duration_ms": 2080
+    },
+    {
+      "seed": 184,
+      "ok": true,
+      "ops": 20,
+      "discards": 5,
+      "commits": 1,
+      "duration_ms": 1129
+    },
+    {
+      "seed": 185,
+      "ok": true,
+      "ops": 8,
+      "discards": 1,
+      "commits": 1,
+      "duration_ms": 762
+    },
+    {
+      "seed": 186,
+      "ok": true,
+      "ops": 13,
+      "discards": 4,
+      "commits": 0,
+      "duration_ms": 1143
+    },
+    {
+      "seed": 187,
+      "ok": true,
+      "ops": 10,
+      "discards": 3,
+      "commits": 1,
+      "duration_ms": 181
+    },
+    {
+      "seed": 188,
+      "ok": true,
+      "ops": 15,
+      "discards": 6,
+      "commits": 1,
+      "duration_ms": 2826
+    },
+    {
+      "seed": 189,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 1997
+    },
+    {
+      "seed": 190,
+      "ok": true,
+      "ops": 14,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 1254
+    },
+    {
+      "seed": 191,
+      "ok": true,
+      "ops": 11,
+      "discards": 3,
+      "commits": 0,
+      "duration_ms": 1824
+    },
+    {
+      "seed": 192,
+      "ok": true,
+      "ops": 12,
+      "discards": 3,
+      "commits": 2,
+      "duration_ms": 243
+    },
+    {
+      "seed": 193,
+      "ok": true,
+      "ops": 17,
+      "discards": 3,
+      "commits": 3,
+      "duration_ms": 2772
+    },
+    {
+      "seed": 194,
+      "ok": true,
+      "ops": 14,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2629
+    },
+    {
+      "seed": 195,
+      "ok": true,
+      "ops": 15,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 1885
+    },
+    {
+      "seed": 196,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 2,
+      "duration_ms": 3484
+    },
+    {
+      "seed": 197,
+      "ok": true,
+      "ops": 17,
+      "discards": 6,
+      "commits": 0,
+      "duration_ms": 360
+    },
+    {
+      "seed": 198,
+      "ok": true,
+      "ops": 10,
+      "discards": 4,
+      "commits": 1,
+      "duration_ms": 2452
+    },
+    {
+      "seed": 199,
+      "ok": true,
+      "ops": 17,
+      "discards": 5,
+      "commits": 0,
+      "duration_ms": 2222
+    }
+  ],
+  "sessions": 200,
+  "target": "100% of \u003e= 200 randomised sessions restore the digest"
+}

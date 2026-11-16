@@ -722,8 +722,11 @@ func TestC1_4_4_ConfigIdentical(t *testing.T) {
 			t.Fatalf("gc.auto inside world = %q, want 0 (env)", r.Stdout)
 		}
 		r = mustRun(gw, "git", "config", "core.hooksPath")
-		if !strings.HasSuffix(strings.TrimSpace(r.Stdout), "/hooks") {
-			t.Fatalf("core.hooksPath inside world = %q, want the data dir hooks dir", r.Stdout)
+		// The world root is <data>/worlds/<name>; hooks must be the data
+		// directory's own hooks dir, not a folder inside the repository.
+		hooksWant := filepath.Join(filepath.Dir(filepath.Dir(gw.Path())), "hooks")
+		if got := strings.TrimSpace(r.Stdout); filepath.Clean(got) != filepath.Clean(hooksWant) {
+			t.Fatalf("core.hooksPath inside world = %q, want %q", r.Stdout, hooksWant)
 		}
 		r = mustRun(gw, "git", "config", "--local", "--list")
 		if strings.Contains(r.Stdout, "gc.auto") || strings.Contains(r.Stdout, "hooksPath") {
