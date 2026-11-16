@@ -183,13 +183,6 @@ func TestC1_8_3(t *testing.T) {
 		t.Fatal(err)
 	}
 	c.Retries = 200 // retry through the restart gap
-	eventCount := func() int {
-		evs, err := h.Events()
-		if err != nil {
-			t.Fatal(err)
-		}
-		return len(evs)
-	}
 	// Mid-run kill: the step runner posts through the restart.
 	steps := make([]*scripted.Step, 40)
 	for i := range steps {
