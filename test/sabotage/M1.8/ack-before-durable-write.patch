@@ -1,12 +1,15 @@
 diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
-index 40b9af1..c0980b0 100644
+index 40b9af1..fd3c8b8 100644
 --- a/internal/daemon/hook.go
 +++ b/internal/daemon/hook.go
-@@ -282,11 +282,11 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
+@@ -282,11 +282,14 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
  	if failed {
  		te.Outcome = "error"
  	}
 +	writeJSON(w, 200, map[string]any{})
++	if f, ok := w.(http.Flusher); ok {
++		f.Flush()
++	}
  	if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te); err != nil {
  		d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
  		return
