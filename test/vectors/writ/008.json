@@ -1,0 +1,5 @@
+{
+ "parent": "src",
+ "child": "src/x.go",
+ "contains": false
+}

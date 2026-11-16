@@ -5,6 +5,7 @@ package tools
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -28,6 +29,8 @@ type Deps struct {
 	// context reaches it so the daemon can name the request's own identity
 	// (session + JSON-RPC id) for retry deduplication.
 	Emit func(ctx context.Context, actor, typ string, body any) error
+	// Spawn creates a child world+session under a narrowed writ (M2.4).
+	Spawn func(ctx context.Context, actor string, in SpawnIn) (*SpawnOutcome, error)
 }
 
 // Categories is the closed list of spec/01 §4 (a copy, so the ledger's
@@ -84,6 +87,11 @@ func New(deps Deps) *mcp.Server {
 		Description: "Submit your backbrief before any other non-read tool: restate the goal, " +
 			"give the plan's files and line estimate, and list the decisions you expect.",
 	}, backbrief(deps))
+	mcp.AddTool(s, &mcp.Tool{
+		Name: "spawn",
+		Description: "Delegate a narrowed writ to a child agent: categories, territory and " +
+			"budgets may only shrink yours; the refusal is recorded and creates nothing.",
+	}, spawn(deps))
 	return s
 }
 
@@ -225,5 +233,48 @@ func backbrief(deps Deps) mcp.ToolHandlerFor[backbriefIn, any] {
 			return bad("not recorded: %v", err)
 		}
 		return ok("backbrief recorded")
+	}
+}
+
+type SpawnIn struct {
+	Agent      string   `json:"agent" jsonschema:"the child agent's id"`
+	Task       string   `json:"task" jsonschema:"the child's task"`
+	Categories []string `json:"categories" jsonschema:"categories the child may decide alone"`
+	Territory  []string `json:"territory" jsonschema:"path globs the child may touch"`
+	Budgets    struct {
+		Tokens      int64 `json:"tokens"`
+		Minutes     int64 `json:"minutes"`
+		Speculation int64 `json:"speculation"`
+	} `json:"budgets" jsonschema:"budgets carved out of yours"`
+}
+
+// SpawnOutcome is the daemon's answer to a successful spawn.
+type SpawnOutcome struct {
+	Token    string `json:"token"`
+	HookURL  string `json:"hook_url"`
+	MCPURL   string `json:"mcp_url"`
+	World    string `json:"world"`
+	Worktree string `json:"worktree"`
+	Writ     string `json:"writ"`
+	Agent    string `json:"agent"`
+}
+
+// spawn delegates a narrowed writ to a child agent (spec/01 §9). The
+// daemon attenuates against the caller's writ; a refusal records
+// writ.refused and creates nothing.
+func spawn(deps Deps) mcp.ToolHandlerFor[SpawnIn, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in SpawnIn) (*mcp.CallToolResult, any, error) {
+		if strings.TrimSpace(in.Agent) == "" {
+			return bad("agent is required")
+		}
+		if deps.Spawn == nil {
+			return bad("spawn is not available here")
+		}
+		res, err := deps.Spawn(ctx, deps.Actor("spawn"), in)
+		if err != nil {
+			return bad("%v", err)
+		}
+		raw, _ := json.Marshal(res)
+		return ok("spawned: " + string(raw))
 	}
 }

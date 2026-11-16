@@ -1,0 +1,12 @@
+diff --git a/internal/daemon/writ.go b/internal/daemon/writ.go
+index 0ebbeac..4a359a3 100644
+--- a/internal/daemon/writ.go
++++ b/internal/daemon/writ.go
+@@ -187,7 +187,6 @@ func (d *Daemon) Spawn(sess *Session, req SpawnRequest) (*SpawnResult, error) {
+ 	}
+ 	d.writs[child.ID] = child
+ 	d.writByAgent[sess.Commission+"/"+child.Agent] = child.ID
+-	d.spent[parent.ID] = addB(d.spent[parent.ID], child.Budgets)
+ 	token, err := d.startSession(Session{
+ 		Commission: sess.Commission, Agent: req.Agent, Parent: sess.Agent,
+ 		Tool: sess.Tool, Version: sess.Version,

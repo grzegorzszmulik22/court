@@ -1,0 +1,40 @@
+diff --git a/internal/daemon/writ.go b/internal/daemon/writ.go
+index 0ebbeac..da64778 100644
+--- a/internal/daemon/writ.go
++++ b/internal/daemon/writ.go
+@@ -152,17 +152,6 @@ func (d *Daemon) Spawn(sess *Session, req SpawnRequest) (*SpawnResult, error) {
+ 	if parent == nil {
+ 		return nil, fmt.Errorf("agent %s holds no writ", sess.Agent)
+ 	}
+-	if rule, detail := cwrit.Attenuate(parent, child, d.spent[parent.ID]); rule != "" {
+-		_, _, err := d.emit(sess.Commission, "court", "writ.refused",
+-			&ledger.WritRefused{
+-				Agent: req.Agent, Parent: sess.Agent, Categories: req.Categories,
+-				Class: "reversible", Territory: req.Territory, Budgets: req.Budgets,
+-				Rule: rule, Detail: detail})
+-		if err != nil {
+-			return nil, err
+-		}
+-		return nil, fmt.Errorf("spawn refused (%s): %s", rule, detail)
+-	}
+ 	// Fork the child's world under the commission's worlds root.
+ 	root, err := world.Open(d.opts.Repo, d.opts.DataDir, sess.Commission)
+ 	if err != nil {
+@@ -181,6 +170,17 @@ func (d *Daemon) Spawn(sess *Session, req SpawnRequest) (*SpawnResult, error) {
+ 	if !ok {
+ 		return nil, fmt.Errorf("unexpected world backend")
+ 	}
++	if rule, detail := cwrit.Attenuate(parent, child, d.spent[parent.ID]); rule != "" {
++		_, _, err := d.emit(sess.Commission, "court", "writ.refused",
++			&ledger.WritRefused{
++				Agent: req.Agent, Parent: sess.Agent, Categories: req.Categories,
++				Class: "reversible", Territory: req.Territory, Budgets: req.Budgets,
++				Rule: rule, Detail: detail})
++		if err != nil {
++			return nil, err
++		}
++		return nil, fmt.Errorf("spawn refused (%s): %s", rule, detail)
++	}
+ 	if _, _, err := d.emit(sess.Commission, "court", "writ.issued", child,
+ 		"writ|"+child.ID); err != nil {
+ 		return nil, err

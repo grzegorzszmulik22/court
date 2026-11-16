@@ -114,13 +114,15 @@ func (c *Client) Rule(commission, decision, option string) error {
 // IssueWrit asks the daemon to validate and record a writ for an agent:
 // the root writ (parent "human") is checked against the commission's own
 // authority, any other against the issuing agent's remaining authority.
-func (c *Client) IssueWrit(commission string, w *ledger.WritIssued) (*SessionReply, error) {
-	var r SessionReply
+func (c *Client) IssueWrit(commission string, w *ledger.WritIssued) (string, error) {
+	var r struct {
+		Writ string `json:"writ"`
+	}
 	if err := c.post("/admin/writ", map[string]any{
 		"commission": commission, "writ": w}, &r); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &r, nil
+	return r.Writ, nil
 }
 
 // Shutdown asks the daemon to stop.

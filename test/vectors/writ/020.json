@@ -1,0 +1,5 @@
+{
+ "parent": "src/**",
+ "child": "doc/x.go",
+ "contains": false
+}

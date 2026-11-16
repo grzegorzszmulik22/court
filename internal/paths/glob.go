@@ -147,9 +147,15 @@ func compile(elems []any) *nfa {
 	for i, el := range elems {
 		switch v := el.(type) {
 		case string: // "**" — zero or more whole segments
-			// ε to a star-state that also consumes '/', and ε onward.
 			mid := next()
-			n.eps[state] = append(n.eps[state], mid)
+			if i == 0 {
+				// Leading '**': its segments carry no leading separator.
+				n.add(state, 1, maxRune, mid)
+			} else {
+				// '**' after a segment must enter through a '/', so
+				// src/** never matches src2/... (C2.4.1 vector).
+				n.add(state, '/', '/', mid)
+			}
 			n.add(mid, 1, maxRune, mid) // any rune incl. '/'
 			st2 := next()
 			n.eps[mid] = append(n.eps[mid], st2)

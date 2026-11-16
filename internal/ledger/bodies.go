@@ -235,14 +235,17 @@ type Option struct {
 	Evidence string `json:"evidence,omitempty"`
 }
 
-// DecisionDeclared is the body of decision.declared.
+// DecisionDeclared is the body of decision.declared. OutsideWrit marks a
+// declaration whose category or paths fall outside the agent's writ
+// (M2.4).
 type DecisionDeclared struct {
-	Question string   `json:"question"`
-	Category string   `json:"category"`
-	Paths    []string `json:"paths"`
-	Options  []Option `json:"options"`
-	Chosen   string   `json:"chosen"`
-	Petition bool     `json:"petition"`
+	OutsideWrit bool     `json:"outside_writ,omitempty"`
+	Question    string   `json:"question"`
+	Category    string   `json:"category"`
+	Paths       []string `json:"paths"`
+	Options     []Option `json:"options"`
+	Chosen      string   `json:"chosen"`
+	Petition    bool     `json:"petition"`
 }
 
 // DecisionNone is the empty body of decision.none.
@@ -610,3 +613,10 @@ func normalizeSlices(v reflect.Value) {
 		}
 	}
 }
+
+// Categories returns the closed category list of spec/01 §4.
+func Categories() []string { return append([]string(nil), categories...) }
+
+// IsGuarantee reports whether c is a guarantee category: outside every
+// writ in version 1.
+func IsGuarantee(c string) bool { return guaranteeCategories[c] }

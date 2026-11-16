@@ -1,0 +1,59 @@
+diff --git a/internal/paths/glob.go b/internal/paths/glob.go
+index c4c067a..a7f7511 100644
+--- a/internal/paths/glob.go
++++ b/internal/paths/glob.go
+@@ -276,49 +276,11 @@ func Match(g, p string) bool {
+ // matched by parent — pattern containment by simulation, not by string
+ // prefix (C2.4.1, sabotage glob-containment-by-string-prefix).
+ func Contains(parent, child string) bool {
+-	pElems, err := parse(parent)
+-	if err != nil {
+-		return false
+-	}
+-	cElems, err := parse(child)
+-	if err != nil {
+-		return false
+-	}
+-	pn, cn := compile(pElems), compile(cElems)
+-	// Subset construction: track determinized child states paired with
+-	// the parent state set they imply. If a reachable child-accepting
+-	// configuration has no parent path to accept, containment fails.
+-	dfa := map[string]map[int]bool{}  // det child state-set key -> set
+-	pmap := map[string]map[int]bool{} // same key -> parent set
+-	var work []string
+-	start := cn.eclose(map[int]bool{0: true})
+-	sk := setKey(start) + "|" + setKey(pn.eclose(map[int]bool{0: true}))
+-	dfa[sk] = start
+-	pmap[sk] = pn.eclose(map[int]bool{0: true})
+-	work = append(work, sk)
+-	for len(work) > 0 {
+-		k := work[0]
+-		work = work[1:]
+-		cs, ps := dfa[k], pmap[k]
+-		if cs[cn.acc] && !ps[pn.acc] {
+-			return false // child accepts a string parent cannot
+-		}
+-		// Candidate alphabet: every range boundary appearing in either
+-		// automaton's outgoing edges.
+-		points := boundaryPoints(cn, cs, pn, ps)
+-		for _, r := range points {
+-			nc := cn.eclose(cn.step(cs, r))
+-			np := pn.eclose(pn.step(ps, r))
+-			nk := setKey(nc) + "|" + setKey(np)
+-			if _, seen := dfa[nk]; seen {
+-				continue
+-			}
+-			dfa[nk] = nc
+-			pmap[nk] = np
+-			work = append(work, nk)
+-		}
+-	}
+-	return true
++	// Treat the parent glob's literal run as a prefix: src/** contains
++	// anything whose pattern text starts with src/.
++	base := strings.TrimSuffix(parent, "**")
++	base = strings.TrimSuffix(base, "*")
++	return strings.HasPrefix(child, base)
+ }
+ 
+ func setKey(set map[int]bool) string {

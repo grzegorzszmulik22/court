@@ -1,0 +1,5 @@
+{
+ "parent": "a/*/c",
+ "child": "a/b/d/c",
+ "contains": false
+}

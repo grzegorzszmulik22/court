@@ -90,6 +90,7 @@ func NewHarness(o Options) (*Harness, error) {
 		DataDir: o.DataDir,
 		Policy:  pol, CourtBin: bin,
 		AppendDelay: o.AppendDelay,
+		Repo:        o.Repo,
 	})
 	if err != nil {
 		store.Close()
@@ -159,7 +160,7 @@ func (h *Harness) AddAgent(spec *AgentSpec) (*Client, error) {
 		"commission": h.Commission, "agent": spec.ID, "parent": parent,
 		"tool": "scripted", "version": "2.1.325", "session_id": sid,
 		"world": spec.ID, "base": base, "branch": gw.Branch(),
-		"worktree": gw.Path(), "writ": "",
+		"worktree": gw.Path(), "writ": spec.Writ,
 		"require_backbrief": spec.RequireBackbrief,
 		"await_clerk":       spec.AwaitClerk,
 	}, &resp); err != nil {
@@ -263,6 +264,18 @@ func (h *Harness) postJSONInto(path string, v any, into any) error {
 // Events returns the whole ledger in order.
 func (h *Harness) Events() ([]*ledger.Event, error) { return h.Store.Events() }
 
+// IssueWrit posts a writ to /admin/writ and returns its id.
+func (h *Harness) IssueWrit(commission string, w *ledger.WritIssued) (string, error) {
+	var out struct {
+		Writ string `json:"writ"`
+	}
+	if err := h.postJSONInto("/admin/writ", map[string]any{
+		"commission": commission, "writ": w}, &out); err != nil {
+		return "", err
+	}
+	return out.Writ, nil
+}
+
 // OpenCommissionID opens another commission on the same daemon. Checks
 // that need hundreds of commissions share the harness.
 func (h *Harness) OpenCommissionID(id, goal string, doneChecks []string) error {
@@ -298,6 +311,7 @@ func (h *Harness) AddSession(commission string, spec *AgentSpec) (*Client, error
 		"worktree":          filepath.Join(h.DataDir, "noworld", commission+"-"+spec.ID),
 		"require_backbrief": spec.RequireBackbrief,
 		"await_clerk":       spec.AwaitClerk,
+		"writ":              spec.Writ,
 	}, &resp); err != nil {
 		return nil, err
 	}

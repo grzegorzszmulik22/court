@@ -13,6 +13,7 @@ import (
 	"court/internal/daemon"
 	"court/internal/ledger"
 	"court/internal/world"
+	"court/internal/writ"
 )
 
 // Orchestrator is the fixed agent id of the commission's orchestrator.
@@ -173,6 +174,13 @@ func Run(o *Options) error {
 		return err
 	}
 
+	// The human's root writ to the orchestrator: all non-guarantee
+	// categories, reversible class, the commission territory and budgets.
+	rootWrit, err := cl.IssueWrit(id, writ.Root(Orchestrator, territory, budgets))
+	if err != nil {
+		return err
+	}
+
 	// The orchestrator's world and session. The world id is unique per
 	// commission: data directories are per repository, so repeated
 	// commissions share the worlds/ root.
@@ -210,7 +218,7 @@ func Run(o *Options) error {
 		Commission: id, Agent: Orchestrator, Parent: "human",
 		Tool: tool, Version: version, SessionID: sid,
 		World: worldName, Base: head, Branch: gw.Branch(),
-		Worktree: gw.Path(), Writ: "",
+		Worktree: gw.Path(), Writ: rootWrit,
 		RequireBackbrief: true, AwaitClerk: clerkConfigured,
 	})
 	if err != nil {

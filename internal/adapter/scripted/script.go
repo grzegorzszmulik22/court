@@ -32,6 +32,8 @@ type AgentSpec struct {
 	// gate; AwaitClerk additionally holds its first write for the clerk.
 	RequireBackbrief bool `yaml:"require_backbrief"`
 	AwaitClerk       bool `yaml:"await_clerk"`
+	// Writ is the writ id the session runs under (M2.4).
+	Writ string `yaml:"writ"`
 }
 
 // Step is one script action: exactly one of the fields is set.

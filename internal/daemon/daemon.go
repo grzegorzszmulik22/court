@@ -85,6 +85,7 @@ type Session struct {
 	Branch     string `json:"branch"`
 	Worktree   string `json:"worktree"`
 	Writ       string `json:"writ"`
+	Task       string `json:"task,omitempty"`
 	// RequireBackbrief gates this agent's non-read-only tool calls on its
 	// backbrief.submitted being in the ledger (M2.2).
 	RequireBackbrief bool `json:"require_backbrief,omitempty"`
@@ -125,6 +126,11 @@ type Daemon struct {
 	// backbriefed marks commission/actor pairs whose backbrief.submitted is
 	// in the ledger (the M2.2 ordering gate's release).
 	backbriefed map[string]bool
+	// writs holds issued writs by id; spent accrues the budgets granted
+	// to a writ's children so attenuation is against what remains (§9).
+	writs       map[string]*ledger.WritIssued
+	writByAgent map[string]string // commission/agent -> its writ id
+	spent       map[string]ledger.Budgets
 	pending     map[string][]preEntry    // token -> parked PreToolUse entries
 	worldMu     map[string]*sync.Mutex   // serialize gate sync per world
 	mcpSrv      map[*Session]*mcp.Server // session -> its tools server
@@ -152,6 +158,9 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		stopped:  map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
 		backbriefed: map[string]bool{},
+		writs:       map[string]*ledger.WritIssued{},
+		writByAgent: map[string]string{},
+		spent:       map[string]ledger.Budgets{},
 		pending:     map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
 		mcpSrv: map[*Session]*mcp.Server{},
 		closed: make(chan struct{}),
@@ -187,6 +196,7 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	d.mux.HandleFunc("POST /admin/shutdown", d.adminShutdown)
 	d.mux.HandleFunc("POST /admin/clerk", d.adminClerk)
 	d.mux.HandleFunc("GET /admin/events", d.adminEvents)
+	d.mux.HandleFunc("POST /admin/writ", d.adminWrit)
 	return d, nil
 }
 
@@ -279,6 +289,19 @@ func (d *Daemon) rebuildFromLedger() error {
 			d.stopped[ev.Commission+"/"+s(b["agent"])] = true
 		case "backbrief.submitted":
 			d.backbriefed[ev.Commission+"/"+ev.Actor] = true
+		case "writ.issued":
+			var w ledger.WritIssued
+			if remarshal(b, &w) == nil {
+				d.writs[w.ID] = &w
+				d.writByAgent[ev.Commission+"/"+w.Agent] = w.ID
+				if pw := d.writs[d.writByAgent[ev.Commission+"/"+w.Parent]]; pw != nil {
+					s := d.spent[pw.ID]
+					s.Tokens += w.Budgets.Tokens
+					s.Minutes += w.Budgets.Minutes
+					s.Speculation += w.Budgets.Speculation
+					d.spent[pw.ID] = s
+				}
+			}
 		case "commission.opened":
 			idemKeys = append(idemKeys, "commission.opened|"+ev.Commission)
 		case "world.created":
