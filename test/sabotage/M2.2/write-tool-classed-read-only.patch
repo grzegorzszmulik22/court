@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index bb36cc0..1a03b3a 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -148,7 +148,7 @@ func (d *Daemon) actorOf(sess *Session, p *hookPayload) (string, error) {
+ // call itself, the only way out of the ordering gate (spec M2.2).
+ func readOnlyTool(name string) bool {
+ 	switch name {
+-	case "Read", "NotebookRead", "Glob", "Grep", "LS",
++	case "Read", "NotebookRead", "Glob", "Grep", "LS", "Write", "Edit",
+ 		"mcp__court__backbrief":
+ 		return true
+ 	}

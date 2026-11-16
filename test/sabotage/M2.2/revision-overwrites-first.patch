@@ -1,0 +1,14 @@
+diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
+index e8aa250..395e647 100644
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -470,6 +470,9 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
+ 	// AppendIdem marshals canonically, validates, deduplicates on the
+ 	// request-identity keys and commits in one write transaction; the
+ 	// response goes out only after COMMIT.
++	if typ == "backbrief.submitted" {
++		idemKeys = append(idemKeys, "backbrief|"+commission+"/"+actor)
++	}
+ 	ev, appended, err := d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+ 	if err == nil && typ == "backbrief.submitted" {
+ 		d.backbriefed[commission+"/"+actor] = true

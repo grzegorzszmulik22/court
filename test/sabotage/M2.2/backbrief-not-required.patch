@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index bb36cc0..67b7254 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -256,7 +256,7 @@ func (d *Daemon) onPreToolUse(w http.ResponseWriter, r *http.Request,
+ 	if d.opts.Policy != nil {
+ 		decision, reason = d.opts.Policy.DecideHook(p.ToolName, p.ToolInput, sess.Worktree)
+ 	}
+-	if decision != "deny" && sess.RequireBackbrief && !readOnlyTool(p.ToolName) {
++	if decision != "deny" && false && !readOnlyTool(p.ToolName) {
+ 		// M2.2 ordering: until the agent's backbrief.submitted is stored,
+ 		// nothing but read-only tools may run. With AwaitClerk the
+ 		// commission's clerk list gates the first write as well (M2.3).
