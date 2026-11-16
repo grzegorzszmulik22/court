@@ -1,0 +1,16 @@
+diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
+index 5a9ebb9..90caeb8 100644
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -413,10 +413,7 @@ func (d *Daemon) emit(commission, actor, typ string, body any) (*ledger.Event, b
+ 	}
+ 	key := dedupeKey(actor, typ, bv)
+ 	d.mu.Lock()
+-	if d.dedupe[key] {
+-		d.mu.Unlock()
+-		return nil, true, nil
+-	}
++
+ 	if d.opts.AppendDelay > 0 {
+ 		time.Sleep(d.opts.AppendDelay)
+ 	}
