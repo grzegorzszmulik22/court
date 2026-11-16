@@ -87,10 +87,24 @@ func (s *Store) initSchema() error {
 	return err
 }
 
-// Close closes the store.
+// Close closes the store: the cached statements, the connection, then the
+// pool. A statement left open keeps its connection, and with it the
+// database file, open; on Windows the file then cannot be removed or
+// replaced until the process exits.
 func (s *Store) Close() error {
-	s.conn.Close()
-	return s.db.Close()
+	var first error
+	keep := func(err error) {
+		if first == nil {
+			first = err
+		}
+	}
+	for q, st := range s.stmts {
+		keep(st.Close())
+		delete(s.stmts, q)
+	}
+	keep(s.conn.Close())
+	keep(s.db.Close())
+	return first
 }
 
 // Head returns the current chain head (seq and hash), or seq=-1 when empty.
