@@ -172,12 +172,20 @@ func TestC1_7_3(t *testing.T) {
 			t.Fatalf("double args missing %q:\n%s", flag, log)
 		}
 	}
-	// The generated files exist under the data dir, not the world.
+	// The generated files exist under the data dir, and no settings or
+	// hook configuration of any name leaked into the world.
 	if _, err := os.Stat(filepath.Join(dir, "agents", "a1", "settings.json")); err != nil {
 		t.Fatal("settings.json not generated under data dir")
 	}
-	if _, err := os.Stat(filepath.Join(world, "settings.json")); !os.IsNotExist(err) {
-		t.Fatal("settings leaked into the world")
+	err = filepath.Walk(world, func(p string, _ os.FileInfo, _ error) error {
+		base := filepath.Base(p)
+		if base == "settings.json" || base == ".claude" || base == "mcp.json" {
+			t.Fatalf("configuration leaked into the world: %s", p)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
 }
 

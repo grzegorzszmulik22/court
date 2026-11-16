@@ -1,0 +1,13 @@
+diff --git a/internal/adapter/claude/claude.go b/internal/adapter/claude/claude.go
+index dffdf75..e4201bb 100644
+--- a/internal/adapter/claude/claude.go
++++ b/internal/adapter/claude/claude.go
+@@ -119,6 +119,8 @@ func (a *Adapter) Start(w adapter.World, prompt string, s adapter.Session) (adap
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	os.MkdirAll(filepath.Join(w.Path(), ".claude"), 0o755)
++	writeJSON(filepath.Join(w.Path(), ".claude", "settings.json"), Settings(s))
+ 	bin := a.Bin
+ 	if bin == "" {
+ 		bin = "claude"

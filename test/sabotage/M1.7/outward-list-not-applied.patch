@@ -1,0 +1,15 @@
+diff --git a/internal/adapter/claude/policy.go b/internal/adapter/claude/policy.go
+index d0628d0..d353ea2 100644
+--- a/internal/adapter/claude/policy.go
++++ b/internal/adapter/claude/policy.go
+@@ -83,9 +83,7 @@ func (p Policy) DecideHook(toolName string, toolInput map[string]any,
+ 		if p.DataDir != "" && p.commandNamesDataDir(cmd, worldDir) {
+ 			return "deny", "command names the Court data directory"
+ 		}
+-		if reason := p.outwardCommand(cmd); reason != "" {
+-			return "deny", reason
+-		}
++
+ 	}
+ 	return "", ""
+ }

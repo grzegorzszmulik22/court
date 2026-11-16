@@ -1,0 +1,20 @@
+diff --git a/internal/adapter/claude/policy.go b/internal/adapter/claude/policy.go
+index d0628d0..34988bc 100644
+--- a/internal/adapter/claude/policy.go
++++ b/internal/adapter/claude/policy.go
+@@ -94,14 +94,7 @@ func (p Policy) DecideHook(toolName string, toolInput map[string]any,
+ // but outside worldDir. Cleaning resolves `..`, so a path like
+ // <world>/../ledger.db still lands inside the denied region.
+ func (p Policy) insideDataDir(path, worldDir string) bool {
+-	if p.DataDir == "" {
+-		return false
+-	}
+-	cand := filepath.Clean(path)
+-	if inside(cand, worldDir) {
+-		return false
+-	}
+-	return inside(cand, p.DataDir)
++	return false
+ }
+ 
+ // commandNamesDataDir reports whether a shell command reaches into the
