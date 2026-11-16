@@ -1,24 +1,24 @@
 --- a/internal/ledger/store.go
 +++ b/internal/ledger/store.go
-@@ -127,11 +127,11 @@
- // makes the head read below see the newest committed row.
- func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, error) {
- 	ctx := context.Background()
--	// A head read outside the transaction, only to label the fault points
--	// below with the upcoming seq; the in-transaction headInTx is the
--	// authoritative one.
--	pseq, _, _ := s.headInTx()
--	fault("begin", pseq+1)
+@@ -137,12 +137,11 @@
+ 	// The upcoming-seq label for the pre-transaction fault points comes
+ 	// from nextSeqHint (one real read on the first append only); the
+ 	// in-transaction headInTx below is the authoritative one.
+-	if s.nextSeqHint < 0 {
+-		p, _, _ := s.headInTx()
+-		s.nextSeqHint = p + 1
 +	seq, prevHash, err := s.headInTx()
 +	if err != nil {
 +		return nil, err
-+	}
+ 	}
+-	pseq := s.nextSeqHint - 1
+-	fault("begin", pseq+1)
 +	fault("begin", seq+1)
- 	if _, err := s.conn.ExecContext(ctx, "BEGIN IMMEDIATE"); err != nil {
+ 	if err := s.exec(ctx, "BEGIN IMMEDIATE"); err != nil {
  		return nil, err
  	}
-@@ -141,11 +141,7 @@
- 			s.conn.ExecContext(ctx, "ROLLBACK")
+@@ -152,11 +151,7 @@
+ 			s.exec(ctx, "ROLLBACK")
  		}
  	}()
 -	fault("began", pseq+1)
