@@ -56,11 +56,14 @@ func Open(path string) (*Store, error) {
 	return s, nil
 }
 
-// SyncLevel is the SQLite synchronous pragma for commits. WAL mode at
-// NORMAL is durable across process and OS crashes (every commit's WAL
-// frames reach stable storage ordering points); FULL adds per-commit fsync
-// for power-loss but costs an order of magnitude in append throughput, so
-// the store runs at NORMAL to meet MM1.5.
+// SyncLevel is the SQLite synchronous pragma for commits. In WAL mode,
+// NORMAL keeps every committed append across a process crash and never
+// corrupts the ledger, but after an OS crash or power loss the most recent
+// commits may roll back: the chain still verifies, it just ends earlier.
+// FULL fsyncs every commit and also survives power loss, at a much lower
+// append rate than MM1.5's 2,000 events/s needs. M1.8 decides which level
+// an acknowledged hook post requires (its denied list: no acknowledgement
+// before the write is durable).
 var SyncLevel = "NORMAL"
 
 const schemaSQL = `
