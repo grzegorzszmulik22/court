@@ -28,6 +28,10 @@ type AgentSpec struct {
 	ID     string  `yaml:"id"`
 	Parent string  `yaml:"parent"`
 	Steps  []*Step `yaml:"steps"`
+	// RequireBackbrief registers the session under the M2.2 ordering
+	// gate; AwaitClerk additionally holds its first write for the clerk.
+	RequireBackbrief bool `yaml:"require_backbrief"`
+	AwaitClerk       bool `yaml:"await_clerk"`
 }
 
 // Step is one script action: exactly one of the fields is set.

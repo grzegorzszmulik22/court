@@ -115,18 +115,21 @@ type Daemon struct {
 	mux   *http.ServeMux
 
 	mu         sync.Mutex
-	sessions   map[string]*Session      // token -> session
-	byAgent    map[string]*Session      // commission/agent -> session (children included)
-	byTree     map[string]*Session      // normalized worktree path -> session
-	started    map[string]bool          // commission/agent already has agent.started
-	stopped    map[string]bool          // commission/agent already has agent.stopped
-	recorded   map[string]bool          // recorded commit ids
-	lastCommit map[string]string        // world -> newest recorded commit
-	pending    map[string][]preEntry    // token -> parked PreToolUse entries
-	worldMu    map[string]*sync.Mutex   // serialize gate sync per world
-	mcpSrv     map[*Session]*mcp.Server // session -> its tools server
-	mcpHTTP    http.Handler
-	refusalMu  sync.Mutex
+	sessions   map[string]*Session // token -> session
+	byAgent    map[string]*Session // commission/agent -> session (children included)
+	byTree     map[string]*Session // normalized worktree path -> session
+	started    map[string]bool     // commission/agent already has agent.started
+	stopped    map[string]bool     // commission/agent already has agent.stopped
+	recorded   map[string]bool     // recorded commit ids
+	lastCommit map[string]string   // world -> newest recorded commit
+	// backbriefed marks commission/actor pairs whose backbrief.submitted is
+	// in the ledger (the M2.2 ordering gate's release).
+	backbriefed map[string]bool
+	pending     map[string][]preEntry    // token -> parked PreToolUse entries
+	worldMu     map[string]*sync.Mutex   // serialize gate sync per world
+	mcpSrv      map[*Session]*mcp.Server // session -> its tools server
+	mcpHTTP     http.Handler
+	refusalMu   sync.Mutex
 
 	adminToken string
 	closed     chan struct{}
@@ -148,7 +151,8 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		byTree: map[string]*Session{}, started: map[string]bool{},
 		stopped:  map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
-		pending: map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
+		backbriefed: map[string]bool{},
+		pending:     map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
 		mcpSrv: map[*Session]*mcp.Server{},
 		closed: make(chan struct{}),
 	}
@@ -271,6 +275,8 @@ func (d *Daemon) rebuildFromLedger() error {
 			idemKeys = append(idemKeys, "agent.started|"+ev.Commission+"/"+agent)
 		case "agent.stopped":
 			d.stopped[ev.Commission+"/"+s(b["agent"])] = true
+		case "backbrief.submitted":
+			d.backbriefed[ev.Commission+"/"+ev.Actor] = true
 		case "commission.opened":
 			idemKeys = append(idemKeys, "commission.opened|"+ev.Commission)
 		case "world.created":
@@ -464,7 +470,19 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
 	// AppendIdem marshals canonically, validates, deduplicates on the
 	// request-identity keys and commits in one write transaction; the
 	// response goes out only after COMMIT.
-	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+	ev, appended, err := d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+	if err == nil && typ == "backbrief.submitted" {
+		d.backbriefed[commission+"/"+actor] = true
+	}
+	return ev, appended, err
+}
+
+// hasBackbrief reports whether the actor's backbrief.submitted is in the
+// ledger (actor is the ledger actor: "agent:<name>" or "clerk").
+func (d *Daemon) hasBackbrief(commission, actor string) bool {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.backbriefed[commission+"/"+actor]
 }
 
 // --------------------------------------------------------------------------

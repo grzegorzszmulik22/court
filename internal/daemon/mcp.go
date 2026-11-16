@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -48,6 +49,17 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
 	s := tools.New(tools.Deps{
 		Actor: func(tool string) string { return d.actorForMCP(sess, tool) },
 		Emit: func(ctx context.Context, actor, typ string, body any) error {
+			// The ordering gate applies at this boundary too: an MCP call
+			// that bypassed its PreToolUse (or the hook layer) may not
+			// write ahead of the actor's backbrief (M2.2).
+			if sess.RequireBackbrief && typ != "backbrief.submitted" {
+				if !d.hasBackbrief(sess.Commission, "agent:"+actor) {
+					return fmt.Errorf("Submit your backbrief first")
+				}
+				if sess.AwaitClerk && !d.hasBackbrief(sess.Commission, "clerk") {
+					return fmt.Errorf("waiting for the clerk's list")
+				}
+			}
 			var keys []string
 			if id := rpcIDFrom(ctx); id != "" {
 				// MCP retry identity: the session plus the JSON-RPC

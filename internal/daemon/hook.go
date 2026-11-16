@@ -143,6 +143,18 @@ func (d *Daemon) actorOf(sess *Session, p *hookPayload) (string, error) {
 	return child, nil
 }
 
+// readOnlyTool is the fixed adapter list of tools an agent may use before
+// its backbrief is in — file read, search and listing, plus the backbrief
+// call itself, the only way out of the ordering gate (spec M2.2).
+func readOnlyTool(name string) bool {
+	switch name {
+	case "Read", "NotebookRead", "Glob", "Grep", "LS",
+		"mcp__court__backbrief":
+		return true
+	}
+	return false
+}
+
 // buildToolEvent derives the stored body: digest of the full tool_input,
 // selected fields only.
 func buildToolEvent(p *hookPayload, outcome, reason string) (*ledger.ToolEvent, error) {
@@ -243,6 +255,17 @@ func (d *Daemon) onPreToolUse(w http.ResponseWriter, r *http.Request,
 	decision, reason := "", ""
 	if d.opts.Policy != nil {
 		decision, reason = d.opts.Policy.DecideHook(p.ToolName, p.ToolInput, sess.Worktree)
+	}
+	if decision != "deny" && sess.RequireBackbrief && !readOnlyTool(p.ToolName) {
+		// M2.2 ordering: until the agent's backbrief.submitted is stored,
+		// nothing but read-only tools may run. With AwaitClerk the
+		// commission's clerk list gates the first write as well (M2.3).
+		switch {
+		case !d.hasBackbrief(sess.Commission, "agent:"+actor):
+			decision, reason = "deny", "Submit your backbrief first"
+		case sess.AwaitClerk && !d.hasBackbrief(sess.Commission, "clerk"):
+			decision, reason = "deny", "waiting for the clerk's list"
+		}
 	}
 	if decision == "deny" {
 		te, err := buildToolEvent(p, "denied", reason)

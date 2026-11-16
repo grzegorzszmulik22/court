@@ -79,6 +79,11 @@ func New(deps Deps) *mcp.Server {
 		Description: "Call alarm to bring the human a problem only they can settle; it is " +
 			"recorded even if your parent drops it.",
 	}, alarm(deps))
+	mcp.AddTool(s, &mcp.Tool{
+		Name: "backbrief",
+		Description: "Submit your backbrief before any other non-read tool: restate the goal, " +
+			"give the plan's files and line estimate, and list the decisions you expect.",
+	}, backbrief(deps))
 	return s
 }
 
@@ -104,6 +109,28 @@ type claimDoneIn struct {
 type alarmIn struct {
 	Text  string   `json:"text" jsonschema:"what the human needs to settle"`
 	Paths []string `json:"paths" jsonschema:"paths the alarm is about"`
+}
+
+type planIn struct {
+	Files []string `json:"files" jsonschema:"files the plan intends to touch"`
+	Lines int64    `json:"lines" jsonschema:"estimated changed lines"`
+}
+
+type expectedIn struct {
+	Question string `json:"question" jsonschema:"the decision's question"`
+	// Category is optional in the wire schema so a call that omits it is
+	// rejected by the tool with the valid list, not by schema validation
+	// (C2.2.2).
+	Category        string   `json:"category,omitempty" jsonschema:"decision category"`
+	Paths           []string `json:"paths" jsonschema:"paths the decision touches"`
+	IntendedDefault string   `json:"intended_default" jsonschema:"the option taken absent a ruling"`
+}
+
+type backbriefIn struct {
+	Goal              string       `json:"goal" jsonschema:"the goal restated in your own words"`
+	Plan              planIn       `json:"plan" jsonschema:"files and line estimate"`
+	ExpectedDecisions []expectedIn `json:"expected_decisions" jsonschema:"decisions you expect to face"`
+	WillNotTouch      []string     `json:"will_not_touch" jsonschema:"paths outside the plan"`
 }
 
 func recordDecision(deps Deps) mcp.ToolHandlerFor[decisionIn, any] {
@@ -167,5 +194,36 @@ func alarm(deps Deps) mcp.ToolHandlerFor[alarmIn, any] {
 			return bad("not recorded: %v", err)
 		}
 		return ok("alarm raised")
+	}
+}
+
+// backbrief records backbrief.submitted; the event is the ordering gate's
+// release: nothing but read-only tools may run before it (M2.2). A second
+// submission is a revision — append-only keeps both (C2.2.4).
+func backbrief(deps Deps) mcp.ToolHandlerFor[backbriefIn, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in backbriefIn) (*mcp.CallToolResult, any, error) {
+		if strings.TrimSpace(in.Goal) == "" {
+			return bad("goal is required")
+		}
+		exp := make([]ledger.Expected, len(in.ExpectedDecisions))
+		for i, e := range in.ExpectedDecisions {
+			if !validCategory(e.Category) {
+				return bad("expected_decisions[%d]: unknown category %q; valid categories: %s",
+					i, e.Category, strings.Join(Categories, ", "))
+			}
+			exp[i] = ledger.Expected{
+				Question: e.Question, Category: e.Category,
+				Paths: e.Paths, IntendedDefault: e.IntendedDefault,
+			}
+		}
+		err := deps.Emit(ctx, deps.Actor("backbrief"), "backbrief.submitted",
+			&ledger.BackbriefSubmitted{
+				Goal:              in.Goal,
+				Plan:              ledger.Plan{Files: in.Plan.Files, Lines: in.Plan.Lines},
+				ExpectedDecisions: exp, WillNotTouch: in.WillNotTouch})
+		if err != nil {
+			return bad("not recorded: %v", err)
+		}
+		return ok("backbrief recorded")
 	}
 }
