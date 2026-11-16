@@ -17,5 +17,7 @@ func procAttr(cmd *exec.Cmd) {
 // every descendant still in the group die together, so a child holding the
 // output pipes cannot hang Run after its parent is gone.
 func killProcTree(cmd *exec.Cmd) {
+	// Best effort: the only expected error is ESRCH (the group already exited).
+	// C1.4.6 checks the outcome: no descendant outlives the time limit.
 	_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 }

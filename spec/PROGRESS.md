@@ -13,7 +13,7 @@ M0 is human work and is tracked here only so the gate is visible.
 | M1.1 | Repository, toolchain, check tooling | DONE | 3 | evidence/M1.1/2026-11-15T16-25-07Z | lane foundation; supervisor review 1 sent back SKIP and stale-patch exit paths; review 2 caught 5/5 unseen sabotages. C1.1.1 runs through a make shim because GNU make cannot spawn children in an unprivileged namespace on this host (verified by supervisor) |
 | M1.2 | Ledger | TODO | 0 | | |
 | M1.3 | Reference verifier, replay, mutations | TODO | 0 | | |
-| M1.4 | Worlds | IN_PROGRESS | 3 | evidence/M1.4/2026-11-16T10-13-32Z-windows-supervisor | CR-001 ACCEPTED 2026-11-16: Court must run on Windows. Reopened for a Windows-capable Run (build-tagged process-tree kill), the restated C1.4.7, and new C1.4.8 (cross-compiles for Windows on every host). Supervisor runs C1.4.7 on a Windows PC before merge. Earlier: merged after review (fail-open Discard fixed; 3/3 unseen sabotages caught) |
+| M1.4 | Worlds | DONE | 6 | evidence/M1.4/2026-11-16T13-44-56Z; evidence/M1.4/2026-11-16T15-15-00Z-windows-supervisor-final | CR-001 done: builds and runs on Windows (build-tagged process-tree kill, 200-char world root limit, core.longpaths). Re-verified by supervisor: Linux fresh-clone review (4/4 unseen sabotages caught, regress green; C1.4.7 SKIPPED-ENV on Linux by design) and Windows 11 run (whole suite green, 3/3 unseen Windows sabotages caught). Sent back 3 times: ignored Discard error, a Discard test that never reached the fix, a '/'-only path assertion. Supervisor commit: comments on the best-effort kills. |
 | M1.5 | Scripted agent and the hook endpoint | TODO | 0 | | |
 | M1.6 | Agent tools | TODO | 0 | | |
 | M1.7 | Claude Code adapter | TODO | 0 | | |
