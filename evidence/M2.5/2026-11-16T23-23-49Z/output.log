@@ -1,0 +1,31 @@
+=== RUN   TestC2_5_1
+--- PASS: TestC2_5_1 (1.48s)
+PASS
+ok  	court/internal/commission	1.507s
+CHECK C2.5.1 PASS
+=== RUN   TestC2_5_2
+--- PASS: TestC2_5_2 (2.53s)
+PASS
+ok  	court/internal/commission	2.554s
+CHECK C2.5.2 PASS
+=== RUN   TestC2_5_3
+--- PASS: TestC2_5_3 (0.25s)
+PASS
+ok  	court/internal/commission	0.277s
+CHECK C2.5.3 PASS
+=== RUN   TestC2_5_4
+--- PASS: TestC2_5_4 (0.56s)
+PASS
+ok  	court/internal/commission	0.598s
+CHECK C2.5.4 PASS
+=== RUN   TestC2_5_5
+--- PASS: TestC2_5_5 (4.09s)
+PASS
+ok  	court/internal/commission	4.117s
+CHECK C2.5.5 PASS
+=== RUN   TestC2_5_6
+--- PASS: TestC2_5_6 (0.32s)
+PASS
+ok  	court/internal/commission	0.347s
+CHECK C2.5.6 PASS
+check.sh: evidence: evidence/M2.5/2026-11-16T23-23-49Z
