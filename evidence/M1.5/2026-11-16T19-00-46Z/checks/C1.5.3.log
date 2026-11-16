@@ -1,0 +1,6 @@
+=== RUN   TestToolEvent_CommandTruncatesRunes
+--- PASS: TestToolEvent_CommandTruncatesRunes (0.35s)
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.31s)
+PASS
+ok  	court/internal/adapter/scripted	0.763s
