@@ -14,5 +14,5 @@ if [ ! -d test/vectors/hooks/recorded/hooks ] \
     echo "recorded hook fixtures not on main yet" >&2
     exit 78
 fi
-go test ./internal/adapter/scripted -count=1 -timeout 60s -v -run '^TestC1_5_6$' \
+go test ./internal/adapter/scripted -count=1 -timeout 60s -v -run '^TestC1_5_6' \
     || { echo "fixture drift check failed; see go test output" >&2; exit 1; }

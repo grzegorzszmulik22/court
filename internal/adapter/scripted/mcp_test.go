@@ -1,12 +1,16 @@
 package scripted_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
 
 	"court/internal/adapter/scripted"
+	"court/internal/daemon"
 	"court/internal/ledger"
 	"court/internal/tools"
 )
@@ -167,6 +171,100 @@ func TestC1_6_4(t *testing.T) {
 	claims := eventsOfType(t, h, "claim.done")
 	if len(claims) != 1 || strOf(bodyField(t, claims[0], "task")) != "t1" {
 		t.Fatalf("claim.done = %v", claims)
+	}
+}
+
+// postRawRPC posts one tools/call JSON-RPC request body verbatim (a
+// controlled request id, for retry testing) and returns the status code.
+func postRawRPC(t *testing.T, url string, raw []byte) int {
+	t.Helper()
+	req, err := http.NewRequest("POST", url, bytes.NewReader(raw))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json, text/event-stream")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	io.Copy(io.Discard, resp.Body)
+	resp.Body.Close()
+	return resp.StatusCode
+}
+
+// TestMCP_RequestIdentity: a retry is recognised by the request's own
+// identity — the session plus the JSON-RPC request id — never by content.
+// Two identical alarms or decisions from one agent are two events; a
+// reposted request id is one event; a repost after a daemon restart
+// stays one (C1.8.3's guarantee holds on request identity).
+func TestMCP_RequestIdentity(t *testing.T) {
+	h := newHarness(t)
+	c, err := h.AddAgent(&scripted.AgentSpec{ID: "i1", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	args := map[string]any{"text": "the same alarm twice", "paths": []string{"a.go"}}
+	// Two distinct requests with identical arguments: two events.
+	for i := 0; i < 2; i++ {
+		if _, err := c.CallTool("alarm", args); err != nil {
+			t.Fatalf("alarm %d: %v", i, err)
+		}
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 2 {
+		t.Fatalf("identical alarms recorded %d events, want 2", n)
+	}
+	// Two identical decisions: two events.
+	dargs := map[string]any{
+		"question": "same decision?", "category": "interface", "paths": []string{"a.go"},
+		"options": []any{map[string]any{"id": "a", "summary": "s"}},
+		"chosen":  "a",
+	}
+	for i := 0; i < 2; i++ {
+		if _, err := c.CallTool("record_decision", dargs); err != nil {
+			t.Fatalf("decision %d: %v", i, err)
+		}
+	}
+	if n := len(eventsOfType(t, h, "decision.declared")); n != 2 {
+		t.Fatalf("identical decisions recorded %d events, want 2", n)
+	}
+	// One request reposted: the same JSON-RPC id is one event.
+	raw, _ := json.Marshal(map[string]any{
+		"jsonrpc": "2.0", "id": 424242, "method": "tools/call",
+		"params": map[string]any{
+			"name": "alarm",
+			"arguments": map[string]any{
+				"text": "retried request", "paths": []string{"b.go"},
+			},
+		},
+	})
+	for i := 0; i < 3; i++ {
+		if st := postRawRPC(t, c.MCPURL, raw); st != 200 {
+			t.Fatalf("repost %d: status %d", i, st)
+		}
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 3 {
+		t.Fatalf("retried request recorded %d total alarms, want 3", n)
+	}
+	// After a daemon restart over the same ledger, the same repost is
+	// still deduplicated — the identity is durable, not in memory.
+	oldURL := h.Daemon.URL()
+	h.Daemon.Close()
+	d2, err := daemon.New(h.Store, daemon.Options{
+		DataDir: h.DataDir, CourtBin: h.CourtBin})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := d2.Start(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(d2.Close)
+	url := strings.Replace(c.MCPURL, oldURL, d2.URL(), 1)
+	if st := postRawRPC(t, url, raw); st != 200 {
+		t.Fatalf("post-restart repost: status %d", st)
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 3 {
+		t.Fatalf("repost after restart recorded %d total alarms, want 3", n)
 	}
 }
 

@@ -5,8 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-
-	"court/internal/adapter/claude"
 )
 
 // Run executes an agent's steps in order against the client's daemon. Each
@@ -115,8 +113,8 @@ func (c *Client) doTool(t *ToolStep) error {
 			return err
 		}
 		if code != 0 {
-			// A non-zero exit is still a completed tool call in the
-			// documented shape; `fail` selects PostToolUseFailure instead.
+			// A non-zero exit is still a completed tool call;
+			// `fail` selects PostToolUseFailure instead.
 			c.logf("bash exited %d", code)
 		}
 	}
@@ -165,27 +163,15 @@ func (c *Client) doMCPTool(name string, args map[string]any, agentID, agentType 
 	return c.PostToolUse(tuid, toolName, args, false, agentID, agentType)
 }
 
-// doHook posts one raw hook event verbatim.
+// doHook posts one raw hook event in its recorded shape. Extra entries
+// override values of fields the recorded template carries; a key that is
+// not in the recorded shape is an error, never an invented field.
 func (c *Client) doHook(h *HookStep) error {
-	p := claude.PayloadParams{
+	return c.HookEvent(h.Event, PayloadOpts{
 		ToolName: h.ToolName, ToolInput: h.ToolInput, ToolUseID: h.ToolUseID,
 		AgentID: h.AgentID, AgentType: h.AgentType,
-	}
-	for k, v := range h.Extra {
-		switch k {
-		case "prompt":
-			p.Prompt, _ = v.(string)
-		case "session_title":
-			p.SessionTitle, _ = v.(string)
-		case "stop_hook_active":
-			p.StopHookActive, _ = v.(bool)
-		case "last_assistant_message":
-			p.LastAssistant, _ = v.(string)
-		case "agent_transcript_path":
-			p.AgentTranscript, _ = v.(string)
-		}
-	}
-	return c.HookEvent(h.Event, p)
+		Set: h.Extra,
+	})
 }
 
 func orStrings(s []string) []string {

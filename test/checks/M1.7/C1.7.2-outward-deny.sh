@@ -9,3 +9,8 @@ go build -o "$d/court" ./cmd/court || { echo "court build failed" >&2; exit 1; }
 export COURT_BIN="$d/court"
 go test ./internal/adapter/scripted -count=1 -timeout 120s -v -run '^TestC1_7_2$' \
     || { echo "outward deny check failed; see go test output" >&2; exit 1; }
+# The deny-list property itself: every outward program and publish pair
+# denied in every command position (nested -c, substitutions, subshells,
+# groups, wrappers, paths).
+go test ./internal/adapter/claude -count=1 -timeout 60s -v -run '^TestOutwardDeny_' \
+    || { echo "outward deny table failed; see go test output" >&2; exit 1; }

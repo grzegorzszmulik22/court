@@ -1,17 +1,15 @@
 diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
-index 5e054e0..62a4522 100644
 --- a/internal/daemon/mcp.go
 +++ b/internal/daemon/mcp.go
-@@ -2,7 +2,6 @@ package daemon
- 
- import (
+@@ -5,7 +5,6 @@ import (
+ 	"encoding/json"
+ 	"io"
  	"net/http"
 -	"strings"
  
  	"github.com/modelcontextprotocol/go-sdk/mcp"
  
-@@ -48,13 +47,6 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
- func (d *Daemon) actorForMCP(sess *Session, tool string) string {
+@@ -71,11 +70,4 @@ func (d *Daemon) actorForMCP(sess *Session, tool string) string {
  	d.mu.Lock()
  	defer d.mu.Unlock()
 -	list := d.pending[sess.Token]
@@ -23,4 +21,3 @@ index 5e054e0..62a4522 100644
 -	}
  	return sess.Agent
  }
- 

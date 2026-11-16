@@ -18,7 +18,6 @@ package daemon
 import (
 	"context"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -112,7 +111,6 @@ type Daemon struct {
 	byTree     map[string]*Session      // normalized worktree path -> session
 	started    map[string]bool          // commission/agent already has agent.started
 	stopped    map[string]bool          // commission/agent already has agent.stopped
-	dedupe     map[string]bool          // append idempotency keys
 	recorded   map[string]bool          // recorded commit ids
 	lastCommit map[string]string        // world -> newest recorded commit
 	pending    map[string][]preEntry    // token -> parked PreToolUse entries
@@ -127,8 +125,10 @@ type Daemon struct {
 }
 
 // New opens a daemon over the given store. It re-derives its in-memory
-// bookkeeping (dedupe keys, recorded commits, started/stopped agents) from
-// the ledger so a restart loses nothing the ledger has.
+// bookkeeping (recorded commits, started/stopped agents) from the ledger so
+// a restart loses nothing the ledger has, and backfills request identities
+// of the events already appended into the store's idem table so retried
+// posts keep deduplicating across restart.
 func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	if opts.DataDir == "" {
 		return nil, fmt.Errorf("daemon: DataDir required")
@@ -137,7 +137,7 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		store: store, opts: opts,
 		sessions: map[string]*Session{}, byAgent: map[string]*Session{},
 		byTree: map[string]*Session{}, started: map[string]bool{},
-		stopped: map[string]bool{}, dedupe: map[string]bool{},
+		stopped:  map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
 		pending: map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
 		mcpSrv: map[*Session]*mcp.Server{},
@@ -249,21 +249,37 @@ func (d *Daemon) rebuildFromLedger() error {
 	if err != nil {
 		return fmt.Errorf("daemon: rebuild: %w", err)
 	}
+	var idemKeys []string
 	for _, ev := range events {
-		d.dedupe[dedupeKey(ev.Actor, ev.Type, ev.Body)] = true
+		b, _ := bodyMap(ev.Body)
 		switch ev.Type {
 		case "agent.started":
-			b, _ := bodyMap(ev.Body)
-			d.started[ev.Commission+"/"+s(b["agent"])] = true
+			agent := s(b["agent"])
+			d.started[ev.Commission+"/"+agent] = true
+			idemKeys = append(idemKeys, "agent.started|"+ev.Commission+"/"+agent)
 		case "agent.stopped":
-			b, _ := bodyMap(ev.Body)
 			d.stopped[ev.Commission+"/"+s(b["agent"])] = true
+		case "commission.opened":
+			idemKeys = append(idemKeys, "commission.opened|"+ev.Commission)
+		case "world.created":
+			idemKeys = append(idemKeys, "world.created|"+s(b["world"]))
 		case "world.commit":
-			b, _ := bodyMap(ev.Body)
 			w := s(b["world"])
-			d.recorded[s(b["commit"])] = true
-			d.lastCommit[w] = s(b["commit"])
+			c := s(b["commit"])
+			d.recorded[c] = true
+			d.lastCommit[w] = c
+			idemKeys = append(idemKeys, "world.commit|"+c)
+		case "tool.event":
+			if tuid := s(b["tool_use_id"]); tuid != "" {
+				idemKeys = append(idemKeys, "hook|"+tuid)
+			}
 		}
+	}
+	// Events recorded before the idem table existed still answer their
+	// retried requests: the natural keys above re-derive the request
+	// identity of everything already in the chain.
+	if err := d.store.AddIdemKeys(idemKeys); err != nil {
+		return fmt.Errorf("daemon: rebuild idem keys: %w", err)
 	}
 	return nil
 }
@@ -391,43 +407,25 @@ func (d *Daemon) sessionOf(r *http.Request) (*Session, bool) {
 }
 
 // --------------------------------------------------------------------------
-// Append with idempotency: an event identical to one already in the ledger
-// (same actor, type and canonical body) is the same event arriving twice —
-// an acknowledged post the caller retried. It is answered as recorded
-// without appending (C1.8.3).
+// Append with request-identity idempotency: a retry is the same request
+// arriving again, named by its own identity — a hook post's tool_use_id, an
+// MCP call's session plus JSON-RPC request id, or a client-supplied
+// Idempotency-Key — never the event content. The store checks the keys and
+// appends in one transaction, so a retried request is recorded once and a
+// distinct request with identical content is recorded again; the keys live
+// in the ledger file, so the rule survives a daemon restart (C1.8.3).
 // --------------------------------------------------------------------------
 
-func dedupeKey(actor, typ string, body *ledger.Value) string {
-	canon, err := ledger.Canonical(body)
-	if err != nil {
-		canon = []byte(fmt.Sprintf("%v", body))
-	}
-	sum := sha256.Sum256(canon)
-	return actor + "|" + typ + "|" + hex.EncodeToString(sum[:])
-}
-
-func (d *Daemon) emit(commission, actor, typ string, body any) (*ledger.Event, bool, error) {
-	bv, err := ledger.BodyFrom(body)
-	if err != nil {
-		return nil, false, fmt.Errorf("marshal body: %w", err)
-	}
-	key := dedupeKey(actor, typ, bv)
+func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...string) (*ledger.Event, bool, error) {
 	d.mu.Lock()
-	if d.dedupe[key] {
-		d.mu.Unlock()
-		return nil, true, nil
-	}
+	defer d.mu.Unlock()
 	if d.opts.AppendDelay > 0 {
 		time.Sleep(d.opts.AppendDelay)
 	}
-	// Append takes the typed body: it marshals canonically and validates
-	// inside the write transaction; the response goes out only after COMMIT.
-	ev, err := d.store.Append(commission, actor, typ, body)
-	if err == nil {
-		d.dedupe[key] = true
-	}
-	d.mu.Unlock()
-	return ev, false, err
+	// AppendIdem marshals canonically, validates, deduplicates on the
+	// request-identity keys and commits in one write transaction; the
+	// response goes out only after COMMIT.
+	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
 }
 
 // --------------------------------------------------------------------------
@@ -470,26 +468,21 @@ type Commission struct {
 }
 
 // OpenCommission records commission.opened. It is idempotent: reopening an
-// existing commission is a no-op.
+// existing commission is a no-op (the commission id is the request's own
+// identity).
 func (d *Daemon) OpenCommission(c Commission) error {
+	return d.openCommission(c)
+}
+
+func (d *Daemon) openCommission(c Commission, extraKeys ...string) error {
 	if c.ID == "" || c.Goal == "" {
 		return fmt.Errorf("daemon: commission and goal are required")
-	}
-	d.mu.Lock()
-	_, exists := d.dedupe[dedupeKey("human", "commission.opened", mustBody(ledger.CommissionOpened{
-		Goal: c.Goal, DoneChecks: c.DoneChecks, Territory: c.Territory,
-		Budgets: c.Budgets, Attention: c.Attention, Defaults: c.Defaults,
-		Exemptions: c.Exemptions,
-	}))]
-	d.mu.Unlock()
-	if exists {
-		return nil
 	}
 	_, _, err := d.emit(c.ID, "human", "commission.opened", &ledger.CommissionOpened{
 		Goal: c.Goal, DoneChecks: c.DoneChecks, Territory: c.Territory,
 		Budgets: c.Budgets, Attention: c.Attention, Defaults: c.Defaults,
 		Exemptions: c.Exemptions,
-	})
+	}, append([]string{"commission.opened|" + c.ID}, extraKeys...)...)
 	return err
 }
 
@@ -502,16 +495,31 @@ func (d *Daemon) adminCommission(w http.ResponseWriter, r *http.Request) {
 		d.refuse(w, r, "admin", "bad commission body", http.StatusBadRequest)
 		return
 	}
-	if err := d.OpenCommission(c); err != nil {
+	if err := d.openCommission(c, clientKey(r, "admin:commission")); err != nil {
 		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
 		return
 	}
 	writeJSON(w, 200, map[string]any{"commission": c.ID})
 }
 
+// clientKey derives the idempotency key of a request carrying an
+// Idempotency-Key header, namespaced per endpoint so one key can never
+// cancel a different request. Empty when the header is absent.
+func clientKey(r *http.Request, namespace string) string {
+	k := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
+	if k == "" {
+		return ""
+	}
+	return "key|" + namespace + "|" + k
+}
+
 // StartSession registers an agent session: world.created when the world is
 // new, then agent.started; it returns the fresh token and URLs.
 func (d *Daemon) StartSession(sess Session) (string, error) {
+	return d.startSession(sess)
+}
+
+func (d *Daemon) startSession(sess Session, extraKeys ...string) (string, error) {
 	if sess.Commission == "" || sess.Agent == "" || sess.World == "" {
 		return "", fmt.Errorf("daemon: commission, agent and world are required")
 	}
@@ -553,14 +561,16 @@ func (d *Daemon) StartSession(sess Session) (string, error) {
 	}
 	if sess.Base != "" {
 		if _, _, err := d.emit(sess.Commission, "court", "world.created", &ledger.WorldCreated{
-			World: sess.World, Base: sess.Base, Branch: sess.Branch}); err != nil {
+			World: sess.World, Base: sess.Base, Branch: sess.Branch},
+			append([]string{"world.created|" + sess.World}, extraKeys...)...); err != nil {
 			return "", err
 		}
 	}
 	if !d.started[sess.Commission+"/"+sess.Agent] {
 		if _, _, err := d.emit(sess.Commission, "court", "agent.started", &ledger.AgentStarted{
 			Agent: sess.Agent, Parent: sess.Parent, Tool: sess.Tool,
-			Version: sess.Version, World: sess.World, Writ: sess.Writ}); err != nil {
+			Version: sess.Version, World: sess.World, Writ: sess.Writ},
+			append([]string{"agent.started|" + sess.Commission + "/" + sess.Agent}, extraKeys...)...); err != nil {
 			return "", err
 		}
 		d.mu.Lock()
@@ -579,7 +589,7 @@ func (d *Daemon) adminSession(w http.ResponseWriter, r *http.Request) {
 		d.refuse(w, r, "admin", "bad session body", http.StatusBadRequest)
 		return
 	}
-	token, err := d.StartSession(sess)
+	token, err := d.startSession(sess, clientKey(r, "admin:session"))
 	if err != nil {
 		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
 		return
@@ -638,12 +648,4 @@ func s(v *ledger.Value) string {
 		return ""
 	}
 	return v.Str
-}
-
-func mustBody(b any) *ledger.Value {
-	v, err := ledger.BodyFrom(b)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }

@@ -15,8 +15,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 
-	"court/internal/adapter/claude"
 	"court/internal/adapter/scripted"
 	"court/internal/daemon"
 	"court/internal/ledger"
@@ -145,12 +145,76 @@ func TestC1_5_1(t *testing.T) {
 	}
 }
 
+// TestToolEvent_CommandTruncatesRunes: spec/01 §11.3 — the stored
+// command is the first 500 Unicode characters, always valid UTF-8.
+// Boundary cases: 499 ASCII characters followed by a 2-, 3- and 4-byte
+// character (501 bytes — a byte cut would split the character and store
+// corrupt UTF-8; the rune cut stores all 500 characters whole), exactly
+// 500 characters, 501, and a cut landing inside a multi-byte character.
+func TestToolEvent_CommandTruncatesRunes(t *testing.T) {
+	h := newHarness(t)
+	c, err := h.AddAgent(&scripted.AgentSpec{ID: "w1", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	ascii499 := strings.Repeat("a", 499)
+	ascii500 := strings.Repeat("a", 500)
+	cases := []struct {
+		name    string
+		command string
+		want    string // expected stored command
+	}{
+		{"499+2byte", ascii499 + "é", ascii499 + "é"},
+		{"499+3byte", ascii499 + "€", ascii499 + "€"},
+		{"499+4byte", ascii499 + "\U0001f600", ascii499 + "\U0001f600"},
+		{"exactly500", ascii499 + "x", ascii499 + "x"},
+		{"501", ascii499 + "xy", ascii499 + "x"},
+		{"cut-inside-2byte", ascii500 + "é", ascii500},
+	}
+	for _, tc := range cases {
+		in := map[string]any{"command": tc.command}
+		tuid, denied, err := c.PreToolUse("Bash", in, "", "")
+		if err != nil || denied {
+			t.Fatalf("%s: pre: %v denied=%v", tc.name, err, denied)
+		}
+		if err := c.PostToolUse(tuid, "Bash", in, false, "", ""); err != nil {
+			t.Fatalf("%s: %v", tc.name, err)
+		}
+	}
+	evs := toolEvents(t, h)
+	if len(evs) != len(cases) {
+		t.Fatalf("tool.events = %d, want %d", len(evs), len(cases))
+	}
+	for i, tc := range cases {
+		v := bodyField(t, evs[i], "fields")
+		if v == nil {
+			t.Fatalf("%s: no fields", tc.name)
+		}
+		var cmd string
+		for _, m := range v.Obj {
+			if m.Key == "command" {
+				cmd = m.Val.Str
+			}
+		}
+		if cmd != tc.want {
+			t.Fatalf("%s: stored command is %d runes, want %d", tc.name,
+				len([]rune(cmd)), len([]rune(tc.want)))
+		}
+		if !utf8.ValidString(cmd) {
+			t.Fatalf("%s: stored command is not valid UTF-8", tc.name)
+		}
+	}
+}
+
 // TestC1_5_2: unknown token refused, refusal recorded, nothing attributed.
 func TestC1_5_2(t *testing.T) {
 	h := newHarness(t)
-	p := claude.Payload("PostToolUse", claude.PayloadParams{
+	p, err := scripted.BuildPayload("PostToolUse", scripted.PayloadOpts{
 		ToolName: "Bash", ToolInput: map[string]any{"command": "true"},
 		ToolUseID: "toolu_x", SessionID: "whatever", Cwd: "/tmp"})
+	if err != nil {
+		t.Fatal(err)
+	}
 	raw, _ := json.Marshal(p)
 	resp, err := http.Post(h.Daemon.URL()+"/hook/deadbeefdeadbeef",
 		"application/json", bytes.NewReader(raw))
@@ -197,8 +261,11 @@ func TestHook_TokenIsIdentity(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Payload built for B but POSTed to A's hook URL.
-	p := b.PayloadFor("PostToolUse", "toolu_cross", "Bash",
+	p, err := b.PayloadFor("PostToolUse", "toolu_cross", "Bash",
 		map[string]any{"command": "true"}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
 	raw, _ := json.Marshal(p)
 	resp, err := http.Post(a.HookURL, "application/json", bytes.NewReader(raw))
 	if err != nil {
@@ -232,14 +299,10 @@ func TestC1_5_3(t *testing.T) {
 	canary := "CANARY_FILE_CONTENT_4f8a9b2c"
 	outCanary := "CANARY_COMMAND_OUTPUT_77e0d1"
 	// A real session's payloads carry file contents and output; every
-	// fixture under test/vectors/hooks is posted, then every stored event
-	// is scanned for content that must never have been kept.
-	fixtureDirs := []string{
-		"test/vectors/hooks/documented",
-		"test/vectors/hooks/recorded",
-	}
+	// recorded fixture under test/vectors/hooks is posted, then every
+	// stored event is scanned for content that must never have been kept.
 	posted := 0
-	for _, dir := range fixtureDirs {
+	for _, dir := range []string{"test/vectors/hooks/recorded/hooks"} {
 		ents, err := filepath.Glob(filepath.Join(findRepoRoot(t), dir, "*.json"))
 		if err != nil || len(ents) == 0 {
 			continue
@@ -547,7 +610,10 @@ func TestHook_IdempotentRetry(t *testing.T) {
 	}
 	in := map[string]any{"command": "true"}
 	post := func(tuid string) *http.Response {
-		p := c.PayloadFor("PostToolUse", tuid, "Bash", in, "", "")
+		p, err := c.PayloadFor("PostToolUse", tuid, "Bash", in, "", "")
+		if err != nil {
+			t.Fatal(err)
+		}
 		raw, _ := json.Marshal(p)
 		resp, err := http.Post(c.HookURL, "application/json", bytes.NewReader(raw))
 		if err != nil {
@@ -631,7 +697,10 @@ func TestDaemon_RestartKeepsDedupe(t *testing.T) {
 		t.Fatal(err)
 	}
 	in := map[string]any{"command": "true"}
-	p := c.PayloadFor("PostToolUse", "toolu_dup1", "Bash", in, "", "")
+	p, err := c.PayloadFor("PostToolUse", "toolu_dup1", "Bash", in, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
 	raw, _ := json.Marshal(p)
 	post := func(url string) {
 		resp, err := http.Post(url, "application/json", bytes.NewReader(raw))

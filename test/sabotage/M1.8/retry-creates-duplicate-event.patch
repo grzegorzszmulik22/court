@@ -1,16 +1,12 @@
 diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
-index 5a9ebb9..90caeb8 100644
 --- a/internal/daemon/daemon.go
 +++ b/internal/daemon/daemon.go
-@@ -413,10 +413,7 @@ func (d *Daemon) emit(commission, actor, typ string, body any) (*ledger.Event, b
- 	}
- 	key := dedupeKey(actor, typ, bv)
- 	d.mu.Lock()
--	if d.dedupe[key] {
--		d.mu.Unlock()
--		return nil, true, nil
--	}
-+
- 	if d.opts.AppendDelay > 0 {
- 		time.Sleep(d.opts.AppendDelay)
- 	}
+@@ -425,5 +425,7 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
+ 	// AppendIdem marshals canonically, validates, deduplicates on the
+ 	// request-identity keys and commits in one write transaction; the
+ 	// response goes out only after COMMIT.
+-	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
++	ev, err := d.store.Append(commission, actor, typ, body)
++	_ = idemKeys
++	return ev, false, err
+ }

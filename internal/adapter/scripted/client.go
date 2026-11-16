@@ -15,12 +15,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"court/internal/adapter/claude"
 	"court/internal/tools"
 )
 
 // Client is one scripted agent session: it posts hook payloads in the
-// documented Claude Code shape and calls the daemon's MCP endpoint. One
+// recorded Claude Code shape and calls the daemon's MCP endpoint. One
 // Client is one session token; subagent posts go through the same client
 // with agent_id set, like a real session's subagents share its token.
 type Client struct {
@@ -32,6 +31,8 @@ type Client struct {
 	Worktree string
 	// SessionID is the tool-side session id placed on every payload.
 	SessionID string
+	// PromptID goes on payloads whose recorded template carries one.
+	PromptID string
 	// Agent is the agent id (for logging and default agent_type).
 	Agent string
 	// GitEnv is the world's per-world git configuration (world.GitEnv()).
@@ -123,33 +124,45 @@ func (c *Client) postHook(payload map[string]any) (*http.Response, error) {
 	return nil, lastErr
 }
 
-// PayloadFor builds a documented-shape payload for a tool call in this
+// PayloadFor builds a recorded-shape payload for a tool call in this
 // session (used by checks that post hook bodies directly).
 func (c *Client) PayloadFor(event, toolUseID, toolName string,
-	input map[string]any, agentID, agentType string) map[string]any {
-	return c.payload(event, claude.PayloadParams{
+	input map[string]any, agentID, agentType string) (map[string]any, error) {
+	return c.buildPayload(event, PayloadOpts{
 		ToolName: toolName, ToolInput: input, ToolUseID: toolUseID,
 		AgentID: agentID, AgentType: agentType,
-		ToolResponse: map[string]any{"scripted": true},
 	})
 }
 
-// payload assembles a documented-shape hook payload around this session.
-func (c *Client) payload(event string, p claude.PayloadParams) map[string]any {
-	p.SessionID = c.SessionID
-	p.TranscriptPath = c.Transcript
-	if p.TranscriptPath == "" {
-		p.TranscriptPath = filepath.Join(c.Worktree, ".transcript.jsonl")
+// buildPayload assembles a recorded-shape hook payload around this
+// session: the recorded post of the event and context is the template and
+// only values change.
+func (c *Client) buildPayload(event string, o PayloadOpts) (map[string]any, error) {
+	if o.SessionID == "" {
+		o.SessionID = c.SessionID
 	}
-	p.Cwd = c.Worktree
-	p.ScratchpadDir = filepath.Join(c.Worktree, ".scratchpad")
-	if p.PermissionMode == "" {
-		p.PermissionMode = "default"
+	if o.PromptID == "" {
+		o.PromptID = c.PromptID
 	}
-	if p.EffortLevel == "" {
-		p.EffortLevel = "medium"
+	if o.TranscriptPath == "" {
+		o.TranscriptPath = c.Transcript
 	}
-	return claude.Payload(event, p)
+	if o.TranscriptPath == "" {
+		o.TranscriptPath = filepath.Join(c.Worktree, ".transcript.jsonl")
+	}
+	if o.Cwd == "" {
+		o.Cwd = c.Worktree
+	}
+	if o.ScratchpadDir == "" {
+		o.ScratchpadDir = filepath.Join(c.Worktree, ".scratchpad")
+	}
+	if o.PermissionMode == "" {
+		o.PermissionMode = "default"
+	}
+	if o.EffortLevel == "" {
+		o.EffortLevel = "medium"
+	}
+	return BuildPayload(event, o)
 }
 
 // PreToolUse posts the Pre hook and reports whether the daemon denied it
@@ -157,11 +170,14 @@ func (c *Client) payload(event string, p claude.PayloadParams) map[string]any {
 func (c *Client) PreToolUse(toolName string, input map[string]any,
 	agentID, agentType string) (toolUseID string, denied bool, err error) {
 	toolUseID = fmt.Sprintf("toolu_%s_%d", c.Agent, c.seq.Add(1))
-	p := claude.PayloadParams{
+	p, err := c.buildPayload("PreToolUse", PayloadOpts{
 		ToolName: toolName, ToolInput: input, ToolUseID: toolUseID,
 		AgentID: agentID, AgentType: agentType,
+	})
+	if err != nil {
+		return "", false, err
 	}
-	resp, err := c.postHook(c.payload("PreToolUse", p))
+	resp, err := c.postHook(p)
 	if err != nil {
 		return "", false, err
 	}
@@ -181,20 +197,25 @@ func (c *Client) PreToolUse(toolName string, input map[string]any,
 	return toolUseID, body.HookSpecificOutput.PermissionDecision == "deny", nil
 }
 
-// PostToolUse posts the Post hook closing a tool call.
+// PostToolUse posts the Post hook closing a tool call. The recorded
+// tool_response of the template is sent verbatim — it is per-tool and
+// never synthesized.
 func (c *Client) PostToolUse(toolUseID, toolName string, input map[string]any,
 	failed bool, agentID, agentType string) error {
 	event := "PostToolUse"
-	p := claude.PayloadParams{
+	o := PayloadOpts{
 		ToolName: toolName, ToolInput: input, ToolUseID: toolUseID,
-		AgentID: agentID, AgentType: agentType, DurationMs: 3,
-		ToolResponse: map[string]any{"scripted": true},
+		AgentID: agentID, AgentType: agentType,
 	}
 	if failed {
 		event = "PostToolUseFailure"
-		p.Error = "scripted failure"
+		o.Set = map[string]any{"error": "scripted failure"}
 	}
-	resp, err := c.postHook(c.payload(event, p))
+	p, err := c.buildPayload(event, o)
+	if err != nil {
+		return err
+	}
+	resp, err := c.postHook(p)
 	if err != nil {
 		return err
 	}
@@ -206,9 +227,14 @@ func (c *Client) PostToolUse(toolUseID, toolName string, input map[string]any,
 	return nil
 }
 
-// HookEvent posts a non-tool hook event verbatim (with optional extras).
-func (c *Client) HookEvent(event string, p claude.PayloadParams) error {
-	resp, err := c.postHook(c.payload(event, p))
+// HookEvent posts a non-tool hook event in its recorded shape (o.Set may
+// override any field the template carries).
+func (c *Client) HookEvent(event string, o PayloadOpts) error {
+	p, err := c.buildPayload(event, o)
+	if err != nil {
+		return err
+	}
+	resp, err := c.postHook(p)
 	if err != nil {
 		return err
 	}

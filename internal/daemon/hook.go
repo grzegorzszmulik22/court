@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"court/internal/ledger"
 )
@@ -103,6 +104,15 @@ func (d *Daemon) handleHook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// hookKey is the request identity of a hook post: its tool_use_id (the
+// retry contract of spec/02 §4.1 — a repost carries the same id).
+func hookKey(toolUseID string) string {
+	if toolUseID == "" {
+		return ""
+	}
+	return "hook|" + toolUseID
+}
+
 // actorOf resolves the ledger actor of a hook post: a payload carrying
 // agent_id comes from a subagent inside the session (research §1a) and is
 // attributed to the child agent; anything else is the session's agent.
@@ -119,7 +129,8 @@ func (d *Daemon) actorOf(sess *Session, p *hookPayload) (string, error) {
 		if _, _, err := d.emit(sess.Commission, "court", "agent.started",
 			&ledger.AgentStarted{
 				Agent: child, Parent: sess.Agent, Tool: sess.Tool,
-				Version: sess.Version, World: sess.World, Writ: sess.Writ}); err != nil {
+				Version: sess.Version, World: sess.World, Writ: sess.Writ},
+			"agent.started|"+key); err != nil {
 			return "", err
 		}
 		d.mu.Lock()
@@ -166,8 +177,12 @@ func buildToolEvent(p *hookPayload, outcome, reason string) (*ledger.ToolEvent, 
 		}
 		if keys.command != "" {
 			if v, ok := p.ToolInput[keys.command].(string); ok {
-				if len(v) > 500 {
-					v = v[:500]
+				// spec/01 §11.3: the first 500 characters — Unicode code
+				// points, not bytes. Cutting runes keeps the stored
+				// command valid UTF-8 when the boundary lands on a
+				// multi-byte character.
+				if utf8.RuneCountInString(v) > 500 {
+					v = string([]rune(v)[:500])
 				}
 				te.Fields.Command = v
 			}
@@ -222,7 +237,8 @@ func (d *Daemon) onPreToolUse(w http.ResponseWriter, r *http.Request,
 			d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te); err != nil {
+		if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te,
+			hookKey(p.ToolUseID)); err != nil {
 			d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -282,7 +298,8 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
 	if failed {
 		te.Outcome = "error"
 	}
-	if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te); err != nil {
+	if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te,
+		hookKey(p.ToolUseID)); err != nil {
 		d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
 		return
 	}

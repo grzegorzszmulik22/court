@@ -126,8 +126,11 @@ func TestC1_8_2(t *testing.T) {
 	httpc := &http.Client{Timeout: 10 * time.Second}
 	var diffs []time.Duration
 	for i := 0; i < 150; i++ {
-		payload := c.PayloadFor("PreToolUse", fmt.Sprintf("toolu_lat_%d", i),
+		payload, err := c.PayloadFor("PreToolUse", fmt.Sprintf("toolu_lat_%d", i),
 			"Read", map[string]any{"file_path": "f.txt"}, "", "")
+		if err != nil {
+			t.Fatal(err)
+		}
 		raw, _ := json.Marshal(payload)
 		t0 := time.Now()
 		resp, err := httpc.Post(c.HookURL, "application/json", bytes.NewReader(raw))
@@ -221,8 +224,11 @@ func TestC1_8_3(t *testing.T) {
 		t.Fatalf("tool.event = %d, want 40 (lost acked post or duplicate)", n)
 	}
 	// Resend a byte-identical payload: dedupe must not record it again.
-	p := c.PayloadFor("PostToolUse", "toolu_survivor_1", "Read",
+	p, err := c.PayloadFor("PostToolUse", "toolu_survivor_1", "Read",
 		map[string]any{"file_path": "f00"}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
 	raw, _ := json.Marshal(p)
 	resp, err := http.Post(c.HookURL, "application/json", bytes.NewReader(raw))
 	if err != nil {
@@ -238,8 +244,11 @@ func TestC1_8_3(t *testing.T) {
 	}
 	// Ack implies durable: after each successful post the event is in
 	// the ledger — never an acknowledged-but-missing event.
-	p2 := c.PayloadFor("PostToolUse", "toolu_ackcheck", "Read",
+	p2, err := c.PayloadFor("PostToolUse", "toolu_ackcheck", "Read",
 		map[string]any{"file_path": "ack"}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
 	raw2, _ := json.Marshal(p2)
 	resp, err = http.Post(c.HookURL, "application/json", bytes.NewReader(raw2))
 	if err != nil {

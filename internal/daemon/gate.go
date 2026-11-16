@@ -101,7 +101,7 @@ func (d *Daemon) handleGate(w http.ResponseWriter, r *http.Request) {
 	}
 	// Serialize per world so two near-simultaneous posts record in order.
 	wl.Lock()
-	err := d.recordCommits(sess, gp.Commit)
+	err := d.recordCommits(sess, gp.Commit, clientKey(r, "gate"))
 	wl.Unlock()
 	if err != nil {
 		d.refuse(w, r, "gate", err.Error(), http.StatusInternalServerError)
@@ -121,8 +121,10 @@ func (d *Daemon) worldMuFor(world string) *sync.Mutex {
 
 // recordCommits walks back from `head` until it reaches commits already in
 // the ledger (or the world's base — the fork point is not the world's
-// commit), then appends world.commit oldest-first.
-func (d *Daemon) recordCommits(sess *Session, head string) error {
+// commit), then appends world.commit oldest-first. Every event carries the
+// commit id as its request identity plus any client-supplied key, so a
+// reposted gate call can never double-record.
+func (d *Daemon) recordCommits(sess *Session, head, key string) error {
 	// List commits from head back to the oldest already-recorded commit of
 	// this world; without one, the world's base bounds the walk.
 	d.mu.Lock()
@@ -153,7 +155,7 @@ func (d *Daemon) recordCommits(sess *Session, head string) error {
 		if seen {
 			continue
 		}
-		if err := d.recordOne(sess, id); err != nil {
+		if err := d.recordOne(sess, id, key); err != nil {
 			return err
 		}
 	}
@@ -162,7 +164,7 @@ func (d *Daemon) recordCommits(sess *Session, head string) error {
 
 // recordOne emits one world.commit with parents and the numstat change
 // list, resolved inside the world's own worktree.
-func (d *Daemon) recordOne(sess *Session, commit string) error {
+func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 	pout, err := gitOut(sess.Worktree, "rev-list", "--parents", "-n", "1", commit)
 	if err != nil {
 		return fmt.Errorf("gate: parents of %s: %w", commit[:12], err)
@@ -201,7 +203,7 @@ func (d *Daemon) recordOne(sess *Session, commit string) error {
 		&ledger.WorldCommit{
 			World: sess.World, Commit: commit, Parents: parents,
 			Changes: changes, Gated: false, Assumes: []string{},
-		})
+		}, "world.commit|"+commit, key)
 	if err != nil {
 		return err
 	}

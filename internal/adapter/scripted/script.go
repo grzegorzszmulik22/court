@@ -2,7 +2,8 @@
 // deterministic adapter that reads a script.yaml (spec/04 §3), applies
 // edits, runs commands, calls the agent tools, makes commits and posts
 // hook payloads to the daemon in exactly the shape Claude Code sends
-// (the documented shapes of internal/adapter/claude).
+// (the recorded posts of test/vectors/hooks/recorded/hooks/ are the
+// authority — payloads are built from them, see templates.go).
 //
 // Every observable action is a hook post (or an MCP call wrapped in one);
 // the package is the only place hermetic checks need to simulate an

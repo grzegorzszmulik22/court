@@ -24,8 +24,10 @@ type Deps struct {
 	// agent of the parked PreToolUse when the call came through a hook
 	// pairing, else the session's own agent.
 	Actor func(toolName string) string
-	// Emit appends one event under the resolved actor.
-	Emit func(actor, typ string, body any) error
+	// Emit appends one event under the resolved actor. The call's request
+	// context reaches it so the daemon can name the request's own identity
+	// (session + JSON-RPC id) for retry deduplication.
+	Emit func(ctx context.Context, actor, typ string, body any) error
 }
 
 // Categories is the closed list of spec/01 §4 (a copy, so the ledger's
@@ -129,7 +131,7 @@ func recordDecision(deps Deps) mcp.ToolHandlerFor[decisionIn, any] {
 		for i, o := range in.Options {
 			opts[i] = ledger.Option{ID: o.ID, Summary: o.Summary}
 		}
-		err := deps.Emit(deps.Actor("record_decision"), "decision.declared",
+		err := deps.Emit(ctx, deps.Actor("record_decision"), "decision.declared",
 			&ledger.DecisionDeclared{
 				Question: in.Question, Category: in.Category, Paths: in.Paths,
 				Options: opts, Chosen: in.Chosen, Petition: in.Petition})
@@ -145,7 +147,7 @@ func claimDone(deps Deps) mcp.ToolHandlerFor[claimDoneIn, any] {
 		if strings.TrimSpace(in.Task) == "" {
 			return bad("task is required")
 		}
-		err := deps.Emit(deps.Actor("claim_done"), "claim.done",
+		err := deps.Emit(ctx, deps.Actor("claim_done"), "claim.done",
 			&ledger.ClaimDone{Task: in.Task, Checks: in.Checks})
 		if err != nil {
 			return bad("not recorded: %v", err)
@@ -159,7 +161,7 @@ func alarm(deps Deps) mcp.ToolHandlerFor[alarmIn, any] {
 		if strings.TrimSpace(in.Text) == "" {
 			return bad("text is required")
 		}
-		err := deps.Emit(deps.Actor("alarm"), "alarm.raised",
+		err := deps.Emit(ctx, deps.Actor("alarm"), "alarm.raised",
 			&ledger.AlarmRaised{Text: in.Text, Paths: in.Paths})
 		if err != nil {
 			return bad("not recorded: %v", err)

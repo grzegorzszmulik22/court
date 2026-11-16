@@ -167,6 +167,7 @@ func (h *Harness) AddAgent(spec *AgentSpec) (*Client, error) {
 		HookURL: resp.HookURL, MCPURL: resp.MCPURL,
 		Worktree: gw.Path(), Agent: spec.ID,
 		SessionID:  sid,
+		PromptID:   fmt.Sprintf("prompt-%s-%s", spec.ID, sid),
 		Transcript: filepath.Join(h.DataDir, "transcripts", spec.ID+".jsonl"),
 		GitEnv:     gw.GitEnv(),
 		Retries:    3,
