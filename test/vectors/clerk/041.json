@@ -1,0 +1,32 @@
+{
+ "name": "041",
+ "orchestrator": [
+  {
+   "question": "a?",
+   "category": "guardrail",
+   "paths": [
+    "g"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "clerk": [
+  {
+   "question": "b?",
+   "category": "territory",
+   "paths": [
+    "t"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "expect": {
+  "both": [],
+  "only_orch": [
+   0
+  ],
+  "only_clerk": [
+   0
+  ]
+ }
+}

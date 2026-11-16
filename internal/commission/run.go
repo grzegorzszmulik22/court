@@ -201,12 +201,16 @@ func Run(o *Options) error {
 		return err
 	}
 	sid = "sess-" + sid
+	// The clerk gate holds the orchestrator's first write until the
+	// clerk's list is in; with no clerk configured there is nothing to
+	// wait for (C2.3.4).
+	clerkConfigured := o.Clerk != "" || o.ClerkCmd != ""
 	sess, err := cl.StartSession(daemon.Session{
 		Commission: id, Agent: Orchestrator, Parent: "human",
 		Tool: tool, Version: version, SessionID: sid,
 		World: worldName, Base: head, Branch: gw.Branch(),
 		Worktree: gw.Path(), Writ: "",
-		RequireBackbrief: true, AwaitClerk: true,
+		RequireBackbrief: true, AwaitClerk: clerkConfigured,
 	})
 	if err != nil {
 		return err
@@ -225,15 +229,15 @@ func Run(o *Options) error {
 	sf := AgentSession{
 		Adapter: adapter, Agent: Orchestrator, Commission: id,
 		HookURL: sess.HookURL, MCPURL: sess.MCPURL,
-		SessionID: sid,
-		PromptID:  "prompt-" + Orchestrator,
+		SessionID:  sid,
+		PromptID:   "prompt-" + Orchestrator,
 		Transcript: filepath.Join(agDir, "transcript.jsonl"),
 		Worktree:   gw.Path(), GitEnv: gw.GitEnv(),
 		Script:  o.Script,
 		Prompt:  promptText(o.Goal, territory, doneChecks),
 		DataDir: dataDir, Token: sess.Token,
-		World:   worldName, Writ: "",
-		Tool:    tool, Version: version,
+		World: worldName, Writ: "",
+		Tool: tool, Version: version,
 	}
 	raw, err := json.MarshalIndent(sf, "", "  ")
 	if err != nil {
@@ -279,7 +283,39 @@ func Run(o *Options) error {
 	fmt.Fprintf(o.Out, "orchestrator: world %s on %s (session %s)\n",
 		gw.Path(), gw.Branch(), sess.Token[:8])
 
-	// Later phases (backbrief wait, clerk, comparison, hearing) run here.
+	// M2.3: the blind clerk sees only the commission; its output enters
+	// the ledger as the clerk's backbrief.submitted before use.
+	if clerkConfigured {
+		_, reqRaw, err := WriteClerkRequest(agDir, id, o.Goal)
+		if err != nil {
+			return err
+		}
+		raw, err := RunClerk(o, reqRaw)
+		if err != nil {
+			return err
+		}
+		exp, perr := ParseClerkOutput(raw)
+		if perr != nil {
+			if err := cl.Clerk(daemon.ClerkResult{
+				Commission: id, Goal: o.Goal,
+				Expected: []ledger.Expected{},
+				Invalid:  true, Output: raw}); err != nil {
+				return err
+			}
+			fmt.Fprintln(o.Out,
+				"clerk output was invalid: proceeding on the orchestrator's list alone")
+		} else {
+			if err := cl.Clerk(daemon.ClerkResult{
+				Commission: id, Goal: o.Goal, Expected: exp}); err != nil {
+				return err
+			}
+		}
+	} else {
+		fmt.Fprintln(o.Out,
+			"no clerk model configured: proceeding on the orchestrator's list alone")
+	}
+
+	// Later phases (comparison, hearing) run here.
 	return nil
 }
 

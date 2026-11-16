@@ -1,0 +1,52 @@
+{
+ "name": "040",
+ "orchestrator": [
+  {
+   "question": "a?",
+   "category": "interface",
+   "paths": [
+    "x"
+   ],
+   "intended_default": "d"
+  },
+  {
+   "question": "b?",
+   "category": "schema",
+   "paths": [
+    "s1"
+   ],
+   "intended_default": "d"
+  },
+  {
+   "question": "c?",
+   "category": "schema",
+   "paths": [
+    "s2"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "clerk": [
+  {
+   "question": "d?",
+   "category": "interface",
+   "paths": [
+    "x"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "expect": {
+  "both": [
+   [
+    0,
+    0
+   ]
+  ],
+  "only_orch": [
+   1,
+   2
+  ],
+  "only_clerk": []
+ }
+}

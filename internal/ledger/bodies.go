@@ -196,6 +196,11 @@ type BackbriefSubmitted struct {
 	Plan              Plan       `json:"plan"`
 	ExpectedDecisions []Expected `json:"expected_decisions"`
 	WillNotTouch      []string   `json:"will_not_touch"`
+	// Invalid marks a clerk output that failed schema validation: the
+	// model's raw output still enters the ledger (01 §2) and the
+	// commission proceeds on the orchestrator's list (C2.3.3).
+	Invalid bool   `json:"invalid,omitempty"`
+	Output  string `json:"output,omitempty"`
 }
 
 // WritIssued is the body of writ.issued.
@@ -430,6 +435,9 @@ func ValidateBody(typ string, body any) error {
 	case *BackbriefSubmitted:
 		if b.Goal == "" {
 			return fmt.Errorf("goal is empty")
+		}
+		if b.Invalid {
+			return nil
 		}
 		for i, e := range b.ExpectedDecisions {
 			if err := question(e.Question); err != nil {

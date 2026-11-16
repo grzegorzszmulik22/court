@@ -207,3 +207,19 @@ func EnsureDaemon(courtBin, dataDir, repo string) (*Client, error) {
 		time.Sleep(25 * time.Millisecond)
 	}
 }
+
+// Clerk posts the clerk's recorded output (M2.3).
+func (c *Client) Clerk(cr daemon.ClerkResult) error {
+	return c.post("/admin/clerk", cr, nil)
+}
+
+// Events returns the commission's ledger events in order.
+func (c *Client) Events(commission string) ([]*ledger.Event, error) {
+	var out struct {
+		Events []*ledger.Event `json:"events"`
+	}
+	if err := c.get("/admin/events?commission="+commission, &out); err != nil {
+		return nil, err
+	}
+	return out.Events, nil
+}

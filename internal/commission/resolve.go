@@ -74,7 +74,7 @@ func DetectDoneChecks(repo string) (cmds []string, rules []string) {
 // commission.opened.defaults (C2.1.5).
 var Defaults = struct {
 	Tokens, Minutes, Speculation, Attention int64
-	Territory                             []string
+	Territory                               []string
 }{
 	Tokens:      100000,
 	Minutes:     60,

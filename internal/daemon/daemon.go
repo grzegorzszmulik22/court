@@ -185,6 +185,8 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	d.mux.HandleFunc("POST /admin/session", d.adminSession)
 	d.mux.HandleFunc("GET /admin/info", d.adminInfo)
 	d.mux.HandleFunc("POST /admin/shutdown", d.adminShutdown)
+	d.mux.HandleFunc("POST /admin/clerk", d.adminClerk)
+	d.mux.HandleFunc("GET /admin/events", d.adminEvents)
 	return d, nil
 }
 
@@ -510,6 +512,76 @@ func (d *Daemon) adminShutdown(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, 200, map[string]any{"ok": true})
 	go d.Close()
+}
+
+// ClerkResult is the /admin/clerk payload: the clerk's expected-decision
+// list, or the invalid-output marker when it failed schema validation.
+type ClerkResult struct {
+	Commission string            `json:"commission"`
+	Goal       string            `json:"goal"`
+	Expected   []ledger.Expected `json:"expected_decisions"`
+	Invalid    bool              `json:"invalid"`
+	Output     string            `json:"output"`
+}
+
+// RecordClerk stores the clerk's answer as backbrief.submitted under
+// actor clerk — before anything reads it (02 §7). It is idempotent per
+// commission: the clerk runs once.
+func (d *Daemon) RecordClerk(c ClerkResult) error {
+	if c.Commission == "" {
+		return fmt.Errorf("daemon: commission is required")
+	}
+	out := c.Output
+	if r := []rune(out); len(r) > 2000 {
+		out = string(r[:2000])
+	}
+	_, _, err := d.emit(c.Commission, "clerk", "backbrief.submitted",
+		&ledger.BackbriefSubmitted{
+			Goal: c.Goal, ExpectedDecisions: c.Expected,
+			WillNotTouch: []string{},
+			Invalid:      c.Invalid, Output: out},
+		"clerk|"+c.Commission)
+	return err
+}
+
+func (d *Daemon) adminClerk(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	var c ClerkResult
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&c); err != nil {
+		d.refuse(w, r, "admin", "bad clerk body", http.StatusBadRequest)
+		return
+	}
+	if err := d.RecordClerk(c); err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJSON(w, 200, map[string]any{"ok": true})
+}
+
+// adminEvents returns the commission's events in ledger order (or all
+// events without the filter), for the commissioner and checks.
+func (d *Daemon) adminEvents(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	comm := r.URL.Query().Get("commission")
+	evs, err := d.store.Events()
+	if err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var out []*ledger.Event
+	for _, e := range evs {
+		if comm == "" || e.Commission == comm {
+			out = append(out, e)
+		}
+	}
+	if out == nil {
+		out = []*ledger.Event{}
+	}
+	writeJSON(w, 200, map[string]any{"events": out})
 }
 
 // Commission is the registration payload of /admin/commission.
