@@ -13,7 +13,7 @@ M0 is human work and is tracked here only so the gate is visible.
 | M1.1 | Repository, toolchain, check tooling | DONE | 3 | evidence/M1.1/2026-11-15T16-25-07Z | lane foundation; supervisor review 1 sent back SKIP and stale-patch exit paths; review 2 caught 5/5 unseen sabotages. C1.1.1 runs through a make shim because GNU make cannot spawn children in an unprivileged namespace on this host (verified by supervisor) |
 | M1.2 | Ledger | TODO | 0 | | |
 | M1.3 | Reference verifier, replay, mutations | TODO | 0 | | |
-| M1.4 | Worlds | SKIPPED-ENV | 3 | evidence/M1.4/2026-11-15T23-20-21Z | lane worlds; C1.4.7 needs Windows (no Windows build host; to be run on the supervisor PC; note the check as written only reports BLOCKED on Windows: the long-path probe itself is not written yet). Review 1 sent back a fail-open deletion of loose objects from the shared store in Discard (could delete a sibling world staged blobs); removed, with a sibling-staged-blob check added. Review 2: 3/3 unseen sabotages caught |
+| M1.4 | Worlds | BLOCKED-CR-001 | 3 | evidence/M1.4/2026-11-16T10-13-32Z-windows-supervisor | Merged; C1.4.7 run by the supervisor on a Windows PC (2026-11-16): FAIL, not SKIPPED-ENV. internal/world does not compile on Windows (Setpgid, syscall.Kill in Run), and C1.4.7 as written is unachievable: git refuses worktree roots over 260 chars. Long file paths inside a short-rooted world work with core.longpaths. Restated check and Windows Run fix proposed in spec/CHANGE_REQUESTS/001; awaiting a human decision. Earlier reviews: fail-open deletion in Discard fixed; 3/3 unseen sabotages caught |
 | M1.5 | Scripted agent and the hook endpoint | TODO | 0 | | |
 | M1.6 | Agent tools | TODO | 0 | | |
 | M1.7 | Claude Code adapter | TODO | 0 | | |
