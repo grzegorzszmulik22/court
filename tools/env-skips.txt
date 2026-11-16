@@ -1,0 +1,8 @@
+# Checks of DONE chunks that may report SKIP in `make regress`, and only on the
+# operating systems listed. A SKIP of any other check, or on any other OS, fails
+# regress. A skip is never a pass: regress prints every accepted one.
+#
+# Columns: check-id  os(uname -s, comma-separated)  reason
+# Only the supervisor edits this file; each line names the evidence that the
+# check passed where it can run.
+C1.4.7  Linux,Darwin  Windows-only (CR-001); passed on Windows 11: evidence/M1.4/2026-11-16T15-15-00Z-windows-supervisor-final

@@ -31,9 +31,18 @@ for c in sorted(seen):
 PYEOF
 )
 
+os=$(uname -s)
 for c in $chunks; do
     echo "regress: check-$c"
-    make --no-print-directory "check-$c" || fail=1
+    out=$(make --no-print-directory "check-$c" 2>&1); rc=$?
+    printf '%s\n' "$out"
+    [ "$rc" -eq 0 ] && continue
+    # A failing run is accepted only when every non-PASS check is a SKIP that
+    # tools/env-skips.txt allows on this OS (and the run did check something).
+    if printf '%s\n' "$out" | python3 tools/env_skip_ok.py tools/env-skips.txt "$os"; then
+        continue
+    fi
+    fail=1
 done
 
 [ -z "$chunks" ] && echo "regress: no DONE chunks"
