@@ -1,0 +1,18 @@
+diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
+index 5e054e0..eebe037 100644
+--- a/internal/daemon/mcp.go
++++ b/internal/daemon/mcp.go
+@@ -48,13 +48,6 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
+ func (d *Daemon) actorForMCP(sess *Session, tool string) string {
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+-	list := d.pending[sess.Token]
+-	for i, e := range list {
+-		if e.tool == tool || strings.HasSuffix(e.tool, "__"+tool) {
+-			d.pending[sess.Token] = append(list[:i], list[i+1:]...)
+-			return e.actor
+-		}
+-	}
+ 	return sess.Agent
+ }
+ 

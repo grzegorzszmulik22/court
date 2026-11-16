@@ -1,0 +1,16 @@
+diff --git a/internal/tools/tools.go b/internal/tools/tools.go
+index 1392e1c..307201d 100644
+--- a/internal/tools/tools.go
++++ b/internal/tools/tools.go
+@@ -109,10 +109,7 @@ func recordDecision(deps Deps) mcp.ToolHandlerFor[decisionIn, any] {
+ 		if strings.TrimSpace(in.Question) == "" {
+ 			return bad("question is required")
+ 		}
+-		if !validCategory(in.Category) {
+-			return bad("unknown category %q; valid categories: %s",
+-				in.Category, strings.Join(Categories, ", "))
+-		}
++		_ = validCategory
+ 		if len(in.Options) == 0 {
+ 			return bad("options is required and must not be empty")
+ 		}
