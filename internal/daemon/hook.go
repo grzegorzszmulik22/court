@@ -71,24 +71,23 @@ func inputDigest(toolInput map[string]any) (string, error) {
 
 // handleHook serves POST /hook/<token>.
 func (d *Daemon) handleHook(w http.ResponseWriter, r *http.Request) {
+	sess, ok := d.sessionOf(r)
+	if !ok {
+		d.refuse(w, r, "hook", "unknown token", http.StatusNotFound)
+		return
+	}
 	var p hookPayload
 	body := http.MaxBytesReader(w, r.Body, 4<<20)
 	if err := json.NewDecoder(body).Decode(&p); err != nil {
 		d.refuse(w, r, "hook", "payload is not a hook object", http.StatusBadRequest)
 		return
 	}
-	var sess *Session
-	var ok bool
-	d.mu.Lock()
-	for _, s := range d.sessions {
-		if s.SessionID == p.SessionID {
-			sess, ok = s, true
-			break
-		}
-	}
-	d.mu.Unlock()
-	if !ok {
-		d.refuse(w, r, "hook", "unknown token", http.StatusNotFound)
+	// The token is the identity; session_id only has to be the session's
+	// own (a payload naming another session lies about which tool posted
+	// it, and is refused rather than reattributed).
+	if sess.SessionID != "" && p.SessionID != "" && p.SessionID != sess.SessionID {
+		d.refuse(w, r, "hook", "session_id does not match the token's session",
+			http.StatusBadRequest)
 		return
 	}
 	switch p.HookEvent {
