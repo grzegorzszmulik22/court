@@ -7,6 +7,7 @@ package claude
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -109,6 +110,19 @@ func TestOutwardDeny_EveryEntryEveryPosition(t *testing.T) {
 		pos := positions(frag)
 		pos["abs-path"] = "/usr/bin/" + frag
 		pos["rel-path"] = "./" + frag
+		// Windows forms (CR-001): Claude Code on Windows runs commands in
+		// Git Bash, where programs carry .exe and may be named by a
+		// drive path. An unquoted backslash is a shell escape there, so a
+		// backslash path only survives single-quoted.
+		prog, rest, _ := strings.Cut(frag, " ")
+		if rest != "" {
+			rest = " " + rest
+		}
+		pos["exe-suffix"] = prog + ".exe" + rest
+		pos["win-drive-slash"] = "C:/Windows/System32/" + prog + ".exe" + rest
+		pos["win-msys-path"] = "/c/Windows/System32/" + prog + ".exe" + rest
+		pos["win-backslash-quoted"] = `'C:\Windows\System32\` + prog + `.exe'` + rest
+		pos["win-wrapper-exe"] = "env.exe " + prog + ".exe" + rest
 		for pname, line := range pos {
 			if !denied(t, line) {
 				t.Errorf("%-18s in position %-15s not denied: %q", name, pname, line)

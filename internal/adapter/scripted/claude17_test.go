@@ -2,7 +2,10 @@ package scripted_test
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -131,14 +134,10 @@ func TestC1_7_3(t *testing.T) {
 	world := t.TempDir()
 	logPath := filepath.Join(dir, "double.log")
 	// The double records its cwd and argv, prints a stream-json line and
-	// drains stdin until EOF so Send and Stop are exercised.
-	double := filepath.Join(dir, "claude-double.sh")
-	os.WriteFile(double, []byte(
-		"#!/usr/bin/env bash\n"+
-			"echo \"cwd=$(pwd)\" >> "+logPath+"\n"+
-			"echo \"args=$@\" >> "+logPath+"\n"+
-			"echo '{\"type\":\"system\",\"subtype\":\"init\"}'\n"+
-			"cat >/dev/null\n"), 0o755)
+	// drains stdin until EOF so Send and Stop are exercised. It is a Go
+	// program built here, so the test runs on every OS Court supports
+	// (a shell script cannot be started directly on Windows).
+	double := buildDouble(t, dir, logPath)
 	a := &claude.Adapter{Bin: double}
 	h, err := a.Start(stubWorld{world}, "the commission prompt",
 		adapter.Session{Agent: "a1", Token: "tok9", DataDir: dir,
@@ -192,3 +191,54 @@ func TestC1_7_3(t *testing.T) {
 type stubWorld struct{ path string }
 
 func (s stubWorld) Path() string { return s.path }
+
+// buildDouble compiles the stand-in claude executable into dir. It appends
+// "cwd=<dir>" and "args=<argv joined by spaces>" lines to logPath.
+func buildDouble(t *testing.T, dir, logPath string) string {
+	t.Helper()
+	src := filepath.Join(dir, "double")
+	if err := os.MkdirAll(src, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	prog := `package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"strings"
+)
+
+func main() {
+	f, err := os.OpenFile(` + strconv.Quote(logPath) + `, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		os.Exit(2)
+	}
+	wd, _ := os.Getwd()
+	fmt.Fprintf(f, "cwd=%s\nargs=%s\n", wd, strings.Join(os.Args[1:], " "))
+	if err := f.Close(); err != nil {
+		os.Exit(2)
+	}
+	fmt.Println(` + "`" + `{"type":"system","subtype":"init"}` + "`" + `)
+	io.Copy(io.Discard, os.Stdin)
+}
+`
+	if err := os.WriteFile(filepath.Join(src, "main.go"), []byte(prog), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(src, "go.mod"), []byte("module double\n\ngo 1.21\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	bin := filepath.Join(dir, "claude-double")
+	if runtime.GOOS == "windows" {
+		bin += ".exe"
+	}
+	gobin := filepath.Join(runtime.GOROOT(), "bin", "go")
+	cmd := exec.Command(gobin, "build", "-o", bin, ".")
+	cmd.Dir = src
+	cmd.Env = append(os.Environ(), "GOFLAGS=", "GOWORK=off", "CGO_ENABLED=0")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("build claude double: %v\n%s", err, out)
+	}
+	return bin
+}
