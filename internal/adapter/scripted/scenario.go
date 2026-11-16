@@ -120,7 +120,7 @@ func (h *Harness) OpenCommission(goal string, doneChecks []string) error {
 	return h.postJSON("/admin/commission", map[string]any{
 		"commission": h.Commission, "goal": goal,
 		"done_checks": doneChecks, "territory": []string{},
-		"budgets": map[string]any{"tokens": 0, "minutes": 0, "speculation": 0},
+		"budgets":   map[string]any{"tokens": 0, "minutes": 0, "speculation": 0},
 		"attention": 0, "defaults": []string{}, "exemptions": []string{},
 	})
 }
@@ -166,7 +166,7 @@ func (h *Harness) AddAgent(spec *AgentSpec) (*Client, error) {
 	c := &Client{
 		HookURL: resp.HookURL, MCPURL: resp.MCPURL,
 		Worktree: gw.Path(), Agent: spec.ID,
-		SessionID: sid,
+		SessionID:  sid,
 		Transcript: filepath.Join(h.DataDir, "transcripts", spec.ID+".jsonl"),
 		GitEnv:     gw.GitEnv(),
 		Retries:    3,

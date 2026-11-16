@@ -29,7 +29,7 @@ func newHarness(t *testing.T) *scripted.Harness {
 	root := t.TempDir()
 	repo := filepath.Join(root, "repo")
 	if err := scripted.InitRepo(repo, map[string]string{
-		"main.go":  "package main\n\nfunc main() {}\n",
+		"main.go":   "package main\n\nfunc main() {}\n",
 		"README.md": "# fixture\n",
 	}); err != nil {
 		t.Fatal(err)

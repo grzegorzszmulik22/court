@@ -136,8 +136,8 @@ type EmptyStep struct{}
 // BackbriefStep is `backbrief: {...}` (M2 tool; parsed now so scripts are
 // stable across milestones).
 type BackbriefStep struct {
-	Goal     string         `yaml:"goal"`
-	Plan     map[string]any `yaml:"plan"`
+	Goal     string           `yaml:"goal"`
+	Plan     map[string]any   `yaml:"plan"`
 	Expected []map[string]any `yaml:"expected"`
 }
 

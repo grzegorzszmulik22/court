@@ -86,12 +86,12 @@ type optionIn struct {
 }
 
 type decisionIn struct {
-	Question string      `json:"question" jsonschema:"the decision's question"`
-	Category string      `json:"category" jsonschema:"decision category"`
-	Paths    []string    `json:"paths" jsonschema:"paths the decision touches"`
-	Options  []optionIn  `json:"options" jsonschema:"the options you weighed"`
-	Chosen   string      `json:"chosen" jsonschema:"id of the chosen option"`
-	Petition bool        `json:"petition,omitempty" jsonschema:"true when the choice needs the human"`
+	Question string     `json:"question" jsonschema:"the decision's question"`
+	Category string     `json:"category" jsonschema:"decision category"`
+	Paths    []string   `json:"paths" jsonschema:"paths the decision touches"`
+	Options  []optionIn `json:"options" jsonschema:"the options you weighed"`
+	Chosen   string     `json:"chosen" jsonschema:"id of the chosen option"`
+	Petition bool       `json:"petition,omitempty" jsonschema:"true when the choice needs the human"`
 }
 
 type claimDoneIn struct {

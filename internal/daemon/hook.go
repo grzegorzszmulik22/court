@@ -46,15 +46,15 @@ var inputKeys = map[string]struct {
 // hookPayload is one decoded hook post. Fields are raw so nothing the
 // mapping does not select is ever retained.
 type hookPayload struct {
-	HookEvent   string         `json:"hook_event_name"`
-	SessionID   string         `json:"session_id"`
-	ToolName    string         `json:"tool_name"`
-	ToolUseID   string         `json:"tool_use_id"`
-	ToolInput   map[string]any `json:"tool_input"`
-	AgentID     string         `json:"agent_id"`
-	AgentType   string         `json:"agent_type"`
-	MCPServer   map[string]any `json:"mcp_server"`
-	RawBody     []byte         `json:"-"`
+	HookEvent string         `json:"hook_event_name"`
+	SessionID string         `json:"session_id"`
+	ToolName  string         `json:"tool_name"`
+	ToolUseID string         `json:"tool_use_id"`
+	ToolInput map[string]any `json:"tool_input"`
+	AgentID   string         `json:"agent_id"`
+	AgentType string         `json:"agent_type"`
+	MCPServer map[string]any `json:"mcp_server"`
+	RawBody   []byte         `json:"-"`
 }
 
 // inputDigest hashes tool_input canonically; it both fills

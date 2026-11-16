@@ -107,16 +107,16 @@ type Daemon struct {
 	mux   *http.ServeMux
 
 	mu         sync.Mutex
-	sessions   map[string]*Session  // token -> session
-	byAgent    map[string]*Session  // commission/agent -> session (children included)
-	byTree     map[string]*Session  // normalized worktree path -> session
-	started    map[string]bool      // commission/agent already has agent.started
-	stopped    map[string]bool      // commission/agent already has agent.stopped
-	dedupe     map[string]bool      // append idempotency keys
-	recorded   map[string]bool      // recorded commit ids
-	lastCommit map[string]string    // world -> newest recorded commit
-	pending    map[string][]preEntry // token -> parked PreToolUse entries
-	worldMu    map[string]*sync.Mutex // serialize gate sync per world
+	sessions   map[string]*Session      // token -> session
+	byAgent    map[string]*Session      // commission/agent -> session (children included)
+	byTree     map[string]*Session      // normalized worktree path -> session
+	started    map[string]bool          // commission/agent already has agent.started
+	stopped    map[string]bool          // commission/agent already has agent.stopped
+	dedupe     map[string]bool          // append idempotency keys
+	recorded   map[string]bool          // recorded commit ids
+	lastCommit map[string]string        // world -> newest recorded commit
+	pending    map[string][]preEntry    // token -> parked PreToolUse entries
+	worldMu    map[string]*sync.Mutex   // serialize gate sync per world
 	mcpSrv     map[*Session]*mcp.Server // session -> its tools server
 	mcpHTTP    http.Handler
 	refusalMu  sync.Mutex
@@ -140,7 +140,7 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		stopped: map[string]bool{}, dedupe: map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
 		pending: map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
-		mcpSrv:  map[*Session]*mcp.Server{},
+		mcpSrv: map[*Session]*mcp.Server{},
 		closed: make(chan struct{}),
 	}
 	d.mcpHTTP = d.newMCPHandler()
@@ -459,14 +459,14 @@ func (d *Daemon) adminShutdown(w http.ResponseWriter, r *http.Request) {
 
 // Commission is the registration payload of /admin/commission.
 type Commission struct {
-	ID         string          `json:"commission"`
-	Goal       string          `json:"goal"`
-	DoneChecks []string        `json:"done_checks"`
-	Territory  []string        `json:"territory"`
-	Budgets    ledger.Budgets  `json:"budgets"`
-	Attention  int64           `json:"attention"`
-	Defaults   []string        `json:"defaults"`
-	Exemptions []string        `json:"exemptions"`
+	ID         string         `json:"commission"`
+	Goal       string         `json:"goal"`
+	DoneChecks []string       `json:"done_checks"`
+	Territory  []string       `json:"territory"`
+	Budgets    ledger.Budgets `json:"budgets"`
+	Attention  int64          `json:"attention"`
+	Defaults   []string       `json:"defaults"`
+	Exemptions []string       `json:"exemptions"`
 }
 
 // OpenCommission records commission.opened. It is idempotent: reopening an

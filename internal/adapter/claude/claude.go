@@ -19,7 +19,6 @@ import (
 	"court/internal/adapter"
 )
 
-
 // Adapter starts Claude Code sessions. Bin defaults to "claude" and
 // exists so hermetic checks can point the adapter at a stand-in
 // executable (C1.7.3); it is never the vendor's SDK.
