@@ -1,0 +1,18 @@
+{
+  "command": "court commission \u003cgoal\u003e --data-dir D --script s.yaml",
+  "cv": 0.30533931567658595,
+  "keystrokes": 0,
+  "keystrokes_target": 1,
+  "machine": "uname: Linux 7.0.0-1013-oracle aarch64 GNU/Linux\nos: Ubuntu 24.04.5 LTS\narch: aarch64\ncpus: 2\nmem: 11925 MiB\ngit: 2.43.0\ngo: go1.27.4\npython3: 3.12.3\ncommit: db684624ff2b0a79dd047ee670ab8660646b5958",
+  "measurement": "MM2.3 commission-to-first-agent-step / MM2.4 keystrokes",
+  "median_s": 0.231298368,
+  "runs": 5,
+  "samples_s": [
+    0.330886552,
+    0.224294515,
+    0.345139298,
+    0.231298368,
+    0.134505845
+  ],
+  "target_s": 3
+}

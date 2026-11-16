@@ -1,0 +1,13 @@
+diff --git a/internal/commission/run.go b/internal/commission/run.go
+index 7da135e..c8503eb 100644
+--- a/internal/commission/run.go
++++ b/internal/commission/run.go
+@@ -166,7 +166,7 @@ func Run(o *Options) error {
+ 	}
+ 	if err := cl.OpenCommission(daemon.Commission{
+ 		ID: id, Goal: o.Goal, DoneChecks: doneChecks, Territory: territory,
+-		Budgets: budgets, Attention: attention, Defaults: defaults,
++		Budgets: budgets, Attention: attention, Defaults: []string{},
+ 		Exemptions: []string{},
+ 	}); err != nil {
+ 		return err

@@ -1,0 +1,13 @@
+diff --git a/internal/commission/resolve.go b/internal/commission/resolve.go
+index 5a63ad7..1e0d959 100644
+--- a/internal/commission/resolve.go
++++ b/internal/commission/resolve.go
+@@ -80,7 +80,7 @@ var Defaults = struct {
+ 	Minutes:     60,
+ 	Speculation: 2000,
+ 	Attention:   30,
+-	Territory:   []string{"**"},
++	Territory:   []string{},
+ }
+ 
+ // stateRoot is the per-user state directory Court keeps its data under.
