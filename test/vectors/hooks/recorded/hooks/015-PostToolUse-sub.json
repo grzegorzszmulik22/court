@@ -1,0 +1,46 @@
+{
+ "method": "POST",
+ "path": "/hook/fixturetoken01",
+ "headers": {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "User-Agent": "axios/1.15.2",
+  "Content-Length": "1304",
+  "Accept-Encoding": "gzip, compress, deflate, br",
+  "Host": "127.0.0.1:47613",
+  "Connection": "keep-alive"
+ },
+ "raw_body": "{\"session_id\":\"d01d6b8e-2785-4574-9b08-996a55a5c982\",\"transcript_path\":\"C:\\\\Users\\\\fixture\\\\.claude\\\\projects\\\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl\",\"cwd\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"scratchpad_dir\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\47389be5a568e1ad\\\\d01d6b8e-2785-4574-9b08-996a55a5c982\\\\scratchpad\",\"prompt_id\":\"23d1f3e7-72a0-461b-92b3-d1bf2585e803\",\"permission_mode\":\"default\",\"agent_id\":\"a0a15a18c7ffea0e0\",\"agent_type\":\"general-purpose\",\"effort\":{\"level\":\"medium\"},\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"Read\",\"tool_input\":{\"file_path\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\\\\calc.py\"},\"tool_response\":{\"type\":\"text\",\"file\":{\"filePath\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\\\\calc.py\",\"content\":\"def add(a, b):\\n    return a + b\\n\\n\\ndef sub(a, b):\\n    return a - b\\n\",\"numLines\":7,\"startLine\":1,\"totalLines\":7}},\"tool_use_id\":\"toolu_014582phMBygFRUXWQwQeRt7\",\"duration_ms\":9}",
+ "body": {
+  "session_id": "d01d6b8e-2785-4574-9b08-996a55a5c982",
+  "transcript_path": "C:\\Users\\fixture\\.claude\\projects\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl",
+  "cwd": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+  "scratchpad_dir": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\47389be5a568e1ad\\d01d6b8e-2785-4574-9b08-996a55a5c982\\scratchpad",
+  "prompt_id": "23d1f3e7-72a0-461b-92b3-d1bf2585e803",
+  "permission_mode": "default",
+  "agent_id": "a0a15a18c7ffea0e0",
+  "agent_type": "general-purpose",
+  "effort": {
+   "level": "medium"
+  },
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Read",
+  "tool_input": {
+   "file_path": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world\\calc.py"
+  },
+  "tool_response": {
+   "type": "text",
+   "file": {
+    "filePath": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world\\calc.py",
+    "content": "def add(a, b):\n    return a + b\n\n\ndef sub(a, b):\n    return a - b\n",
+    "numLines": 7,
+    "startLine": 1,
+    "totalLines": 7
+   }
+  },
+  "tool_use_id": "toolu_014582phMBygFRUXWQwQeRt7",
+  "duration_ms": 9
+ },
+ "reply_status": 200,
+ "reply": {}
+}

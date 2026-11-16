@@ -1,0 +1,26 @@
+{
+ "method": "POST",
+ "path": "/hook/fixturetoken01",
+ "headers": {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "User-Agent": "axios/1.15.2",
+  "Content-Length": "1208",
+  "Accept-Encoding": "gzip, compress, deflate, br",
+  "Host": "127.0.0.1:47613",
+  "Connection": "keep-alive"
+ },
+ "raw_body": "{\"session_id\":\"d01d6b8e-2785-4574-9b08-996a55a5c982\",\"transcript_path\":\"C:\\\\Users\\\\fixture\\\\.claude\\\\projects\\\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl\",\"cwd\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"scratchpad_dir\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\47389be5a568e1ad\\\\d01d6b8e-2785-4574-9b08-996a55a5c982\\\\scratchpad\",\"prompt_id\":\"23d1f3e7-72a0-461b-92b3-d1bf2585e803\",\"permission_mode\":\"default\",\"hook_event_name\":\"UserPromptSubmit\",\"prompt\":\"This is a fixture-recording session. Do these steps in order, one tool call at a time, and do not ask questions:\\n1. Read the file missing.txt (it does not exist; that is expected).\\n2. Edit calc.py: add a function sub(a, b) returning a - b.\\n3. Run: python test_calc.py\\n4. Run: curl -s https://example.com (it may be denied; that is expected, do not retry).\\n5. Use the Agent tool with a general-purpose subagent and this task: 'Read calc.py, then run python test_calc.py, and report the output in one line.'\\n6. Reply with one line: done.\"}",
+ "body": {
+  "session_id": "d01d6b8e-2785-4574-9b08-996a55a5c982",
+  "transcript_path": "C:\\Users\\fixture\\.claude\\projects\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl",
+  "cwd": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+  "scratchpad_dir": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\47389be5a568e1ad\\d01d6b8e-2785-4574-9b08-996a55a5c982\\scratchpad",
+  "prompt_id": "23d1f3e7-72a0-461b-92b3-d1bf2585e803",
+  "permission_mode": "default",
+  "hook_event_name": "UserPromptSubmit",
+  "prompt": "This is a fixture-recording session. Do these steps in order, one tool call at a time, and do not ask questions:\n1. Read the file missing.txt (it does not exist; that is expected).\n2. Edit calc.py: add a function sub(a, b) returning a - b.\n3. Run: python test_calc.py\n4. Run: curl -s https://example.com (it may be denied; that is expected, do not retry).\n5. Use the Agent tool with a general-purpose subagent and this task: 'Read calc.py, then run python test_calc.py, and report the output in one line.'\n6. Reply with one line: done."
+ },
+ "reply_status": 200,
+ "reply": {}
+}

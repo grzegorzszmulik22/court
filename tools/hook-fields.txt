@@ -1,25 +1,27 @@
 # Hook payload field lists (C1.5.6). One line per hook event Court consumes;
-# the fields of each fixture in test/vectors/hooks/ must equal the common
-# list plus the event's own list (plus `subagent` fields when the payload
-# carries agent_id). Source: the documented Claude Code hook format at the
-# pinned version (research/4_build_facts.md §1a; tools/versions.env).
+# the `body` fields of each fixture in test/vectors/hooks/recorded/hooks/
+# must equal the common list plus the event's own list (plus `subagent`
+# fields when the payload carries agent_id). Field names here are the
+# recorded Claude Code 2.1.325 shapes (the pinned version,
+# tools/versions.env), kept in sync with the documented format of
+# research/4_build_facts.md §1a.
 #
 #   <event>: field field field ...
 #
-# `common` applies to every event payload. prompt_id is documented as
-# absent until the first user input; it is listed as a common field and a
-# fixture recorded before the first prompt may lack it (the check treats
-# prompt_id as optional).
-common: session_id transcript_path cwd scratchpad_dir permission_mode effort hook_event_name
-common-optional: prompt_id
+# `common` applies to every event payload. `common-optional` lists fields
+# the tool sends only in some payloads (permission_mode and effort are
+# absent from UserPromptSubmit and SubagentStart; prompt_id is documented
+# as absent until the first user input).
+common: session_id transcript_path cwd scratchpad_dir hook_event_name
+common-optional: prompt_id permission_mode effort
 subagent: agent_id agent_type
 PreToolUse: tool_name tool_input tool_use_id
 PostToolUse: tool_name tool_input tool_response tool_use_id duration_ms
 PostToolUseFailure: tool_name tool_input tool_use_id error is_interrupt duration_ms
 PostToolBatch: tool_calls
-SubagentStart: agent_id agent_type
-SubagentStop: stop_hook_active agent_id agent_type agent_transcript_path last_assistant_message background_tasks session_crons
+SubagentStart:
+SubagentStop: stop_hook_active agent_transcript_path last_assistant_message background_tasks session_crons
 Stop: stop_hook_active last_assistant_message background_tasks session_crons
-UserPromptSubmit: prompt session_title
+UserPromptSubmit: prompt
 SessionStart: source model agent_type
 SessionEnd: reason

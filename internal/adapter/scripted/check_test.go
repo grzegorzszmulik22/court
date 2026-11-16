@@ -428,7 +428,7 @@ func TestC1_5_5(t *testing.T) {
 // equal the field list in tools/hook-fields.txt.
 func TestC1_5_6(t *testing.T) {
 	root := findRepoRoot(t)
-	recDir := filepath.Join(root, "test/vectors/hooks/recorded")
+	recDir := filepath.Join(root, "test/vectors/hooks/recorded/hooks")
 	ents, _ := filepath.Glob(filepath.Join(recDir, "*.json"))
 	if len(ents) == 0 {
 		t.Skip("recorded hook fixtures not on main yet")
@@ -439,9 +439,13 @@ func TestC1_5_6(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		var m map[string]any
-		if err := json.Unmarshal(raw, &m); err != nil {
+		var wrap map[string]any
+		if err := json.Unmarshal(raw, &wrap); err != nil {
 			t.Fatalf("%s: %v", f, err)
+		}
+		m, _ := wrap["body"].(map[string]any)
+		if m == nil {
+			m = wrap // tolerate a bare payload
 		}
 		event, _ := m["hook_event_name"].(string)
 		exp := append(append([]string{}, want["common"]...), want[event]...)

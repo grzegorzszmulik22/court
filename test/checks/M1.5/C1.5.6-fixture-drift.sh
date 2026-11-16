@@ -9,8 +9,8 @@
 # field table the file is checked against, so comparing them proves
 # nothing.
 set -uo pipefail
-if [ ! -d test/vectors/hooks/recorded ] \
-    || ! ls test/vectors/hooks/recorded/*.json >/dev/null 2>&1; then
+if [ ! -d test/vectors/hooks/recorded/hooks ] \
+    || ! ls test/vectors/hooks/recorded/hooks/*.json >/dev/null 2>&1; then
     echo "recorded hook fixtures not on main yet" >&2
     exit 78
 fi

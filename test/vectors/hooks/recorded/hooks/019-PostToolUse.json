@@ -1,0 +1,104 @@
+{
+ "method": "POST",
+ "path": "/hook/fixturetoken01",
+ "headers": {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "User-Agent": "axios/1.15.2",
+  "Content-Length": "2265",
+  "Accept-Encoding": "gzip, compress, deflate, br",
+  "Host": "127.0.0.1:47613",
+  "Connection": "keep-alive"
+ },
+ "raw_body": "{\"session_id\":\"d01d6b8e-2785-4574-9b08-996a55a5c982\",\"transcript_path\":\"C:\\\\Users\\\\fixture\\\\.claude\\\\projects\\\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl\",\"cwd\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\80e6d911f3d9226c\\\\34e786c1-5670-4734-98f1-8baa2211ba62\\\\scratchpad\\\\rec\\\\world\",\"scratchpad_dir\":\"C:\\\\Users\\\\fixture\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\47389be5a568e1ad\\\\d01d6b8e-2785-4574-9b08-996a55a5c982\\\\scratchpad\",\"prompt_id\":\"23d1f3e7-72a0-461b-92b3-d1bf2585e803\",\"permission_mode\":\"default\",\"effort\":{\"level\":\"medium\"},\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"Agent\",\"tool_input\":{\"description\":\"Read calc and run tests\",\"prompt\":\"Read calc.py, then run python test_calc.py, and report the output in one line.\",\"subagent_type\":\"general-purpose\",\"run_in_background\":false},\"tool_response\":{\"status\":\"completed\",\"prompt\":\"Read calc.py, then run python test_calc.py, and report the output in one line.\",\"agentId\":\"a0a15a18c7ffea0e0\",\"agentType\":\"general-purpose\",\"toolsUsed\":[\"Bash\",\"Read\"],\"harnessNoteCount\":0,\"harnessTailCount\":0,\"harnessSectionHash\":\"26f93746ce7b25c0\",\"content\":[{\"type\":\"text\",\"text\":\"`python test_calc.py` printed `ok`. `calc.py` only defines `add(a, b)` and `sub(a, b)`.\"}],\"resolvedModel\":\"claude-sonnet-5-5\",\"totalDurationMs\":7509,\"totalTokens\":35387,\"totalToolUseCount\":2,\"usage\":{\"output_tokens_details\":{\"thinking_tokens\":0},\"input_tokens\":2,\"cache_creation_input_tokens\":1967,\"cache_read_input_tokens\":33372,\"output_tokens\":46,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":1967},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":46,\"cache_read_input_tokens\":33372,\"cache_creation_input_tokens\":1967,\"cache_creation\":{\"ephemeral_5m_input_tokens\":1967,\"ephemeral_1h_input_tokens\":0},\"type\":\"message\"}],\"speed\":\"standard\",\"fallback_credit\":null},\"toolStats\":{\"readCount\":1,\"searchCount\":0,\"bashCount\":1,\"editFileCount\":0,\"linesAdded\":0,\"linesRemoved\":0,\"otherToolCount\":0},\"canContinueAgent\":true},\"tool_use_id\":\"toolu_01SbATziEvMn8tLF5d8kVBCF\",\"duration_ms\":7510}",
+ "body": {
+  "session_id": "d01d6b8e-2785-4574-9b08-996a55a5c982",
+  "transcript_path": "C:\\Users\\fixture\\.claude\\projects\\C--Users-fixture-AppData-Local-Temp-claude-80e6d911f3d9226c-34e786c1-5670-4734-98f1-8baa2211ba62-scratchpad-rec-world\\d01d6b8e-2785-4574-9b08-996a55a5c982.jsonl",
+  "cwd": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\80e6d911f3d9226c\\34e786c1-5670-4734-98f1-8baa2211ba62\\scratchpad\\rec\\world",
+  "scratchpad_dir": "C:\\Users\\fixture\\AppData\\Local\\Temp\\claude\\47389be5a568e1ad\\d01d6b8e-2785-4574-9b08-996a55a5c982\\scratchpad",
+  "prompt_id": "23d1f3e7-72a0-461b-92b3-d1bf2585e803",
+  "permission_mode": "default",
+  "effort": {
+   "level": "medium"
+  },
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Agent",
+  "tool_input": {
+   "description": "Read calc and run tests",
+   "prompt": "Read calc.py, then run python test_calc.py, and report the output in one line.",
+   "subagent_type": "general-purpose",
+   "run_in_background": false
+  },
+  "tool_response": {
+   "status": "completed",
+   "prompt": "Read calc.py, then run python test_calc.py, and report the output in one line.",
+   "agentId": "a0a15a18c7ffea0e0",
+   "agentType": "general-purpose",
+   "toolsUsed": [
+    "Bash",
+    "Read"
+   ],
+   "harnessNoteCount": 0,
+   "harnessTailCount": 0,
+   "harnessSectionHash": "26f93746ce7b25c0",
+   "content": [
+    {
+     "type": "text",
+     "text": "`python test_calc.py` printed `ok`. `calc.py` only defines `add(a, b)` and `sub(a, b)`."
+    }
+   ],
+   "resolvedModel": "claude-sonnet-5-5",
+   "totalDurationMs": 7509,
+   "totalTokens": 35387,
+   "totalToolUseCount": 2,
+   "usage": {
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1967,
+    "cache_read_input_tokens": 33372,
+    "output_tokens": 46,
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 1967
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 46,
+      "cache_read_input_tokens": 33372,
+      "cache_creation_input_tokens": 1967,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 1967,
+       "ephemeral_1h_input_tokens": 0
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "toolStats": {
+    "readCount": 1,
+    "searchCount": 0,
+    "bashCount": 1,
+    "editFileCount": 0,
+    "linesAdded": 0,
+    "linesRemoved": 0,
+    "otherToolCount": 0
+   },
+   "canContinueAgent": true
+  },
+  "tool_use_id": "toolu_01SbATziEvMn8tLF5d8kVBCF",
+  "duration_ms": 7510
+ },
+ "reply_status": 200,
+ "reply": {}
+}
