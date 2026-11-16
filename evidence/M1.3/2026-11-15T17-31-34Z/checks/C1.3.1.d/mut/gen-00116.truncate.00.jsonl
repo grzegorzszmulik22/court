@@ -1,0 +1,2 @@
+{"actor":"human","at":"2026-11-15T00:00:00.001Z","body":{"attention":30,"budgets":{"minutes":60,"speculation":500,"tokens":100000},"defaults":["territory","budgets"],"done_checks":["go test ./..."],"exemptions":["vendor/**"],"goal":"generated ledger 21179719","territory":["**"]},"commission":"C1","hash":"8172883ccac2e24170ec6c4d8b2f416c0fb4edece4b8f2ce5a0dd63fe9610dd0","prev":"0000000000000000000000000000000000000000000000000000000000000000","seq":0,"type":"commission.opened"}
+{"actor":"court","at":"2026-11-15T00:00:00.002Z","body":{"agent":"a0","budgets":{"minutes":30,"sp

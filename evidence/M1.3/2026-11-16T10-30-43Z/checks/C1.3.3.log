@@ -1,0 +1,3 @@
+LOADGEN /home/opc/src/ct-ledger/evidence/M1.3/2026-11-16T10-30-43Z/checks/C1.3.3.d/run.sqlite events=10630
+REPLAY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-16T10-30-43Z/checks/C1.3.3.d/run.sqlite PASS events=10622 tables=11 reconciled=24 derived-checked
+REPLAY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-16T10-30-43Z/checks/C1.3.3.d/run.jsonl PASS events=10622 tables=11 reconciled=24 no-stored-derived

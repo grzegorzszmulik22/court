@@ -1,0 +1,6 @@
+Source: https://github.com/cyberphone/json-canonicalization testdata/
+(input/, output/, outhex/, README.md, numgen.go)
+Saved under evidence/M1.2/<ts>/upstream/ per the M1.2 check requirement.
+The ES6 number stream is regenerated locally by numgen.go's algorithm; the
+expected sha256 of the first 10000 "hex,expected" lines is taken from the
+upstream README table (b9f7a8e75ef22a835685a52ccba7f7d6bdc99e34b010992cbc5864cd12be6892).

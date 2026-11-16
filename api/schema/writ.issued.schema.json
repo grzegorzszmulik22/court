@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://court.local/schema/writ.issued.schema.json",
+  "title": "ledger event envelope: writ.issued",
+  "type": "object",
+  "required": [
+    "seq",
+    "prev",
+    "at",
+    "commission",
+    "actor",
+    "type",
+    "body",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "prev": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "commission": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "const": "court"
+    },
+    "type": {
+      "const": "writ.issued"
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "id",
+        "agent",
+        "parent",
+        "categories",
+        "class",
+        "territory",
+        "budgets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "dependency",
+              "schema",
+              "interface",
+              "test-strength",
+              "type-strength",
+              "guardrail",
+              "failure-handling",
+              "outbound",
+              "authority",
+              "deletion",
+              "territory",
+              "scope",
+              "behaviour",
+              "structure",
+              "other"
+            ]
+          }
+        },
+        "class": {
+          "const": "reversible"
+        },
+        "territory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "budgets": {
+          "$ref": "#/$defs/budgets"
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "budgets": {
+      "type": "object",
+      "required": [
+        "tokens",
+        "minutes",
+        "speculation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "speculation": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

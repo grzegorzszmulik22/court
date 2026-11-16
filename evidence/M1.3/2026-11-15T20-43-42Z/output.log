@@ -1,0 +1,45 @@
+agreement: 200 ledgers, 4805 mutants, 0 disagreements
+{
+ "mutant_files": 5005,
+ "classes": {
+  "go:envelope": 627,
+  "go:hash": 1019,
+  "go:json": 1754,
+  "go:ok": 200,
+  "go:prev": 202,
+  "go:schema": 200,
+  "go:seq": 801,
+  "go:truncated": 202,
+  "py:envelope": 627,
+  "py:hash": 1019,
+  "py:json": 1754,
+  "py:ok": 200,
+  "py:prev": 202,
+  "py:schema": 200,
+  "py:seq": 801,
+  "py:truncated": 202
+ }
+}
+CHECK C1.3.1 PASS
+VERIFY test/vectors/ledger/golden-large.jsonl ok
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok
+VERIFY test/vectors/ledger/golden-large.jsonl ok
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok
+VERIFY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.2.d/golden-mixed.sqlite ok
+VERIFY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.2.d/golden-mixed.sqlite ok
+reject vectors: 11
+rejects: 11 vectors, both verifiers report the expected class
+CHECK C1.3.2 PASS
+LOADGEN /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.3.d/run.sqlite events=10630
+REPLAY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.3.d/run.sqlite PASS events=10622 tables=11 reconciled=24 derived-checked
+REPLAY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.3.d/run.jsonl PASS events=10622 tables=11 reconciled=24 no-stored-derived
+CHECK C1.3.3 PASS
+imports: hashlib json math os re sqlite3 struct sys
+SELFTEST PASS es6-number-stream sha256=b9f7a8e75ef22a835685a52ccba7f7d6bdc99e34b010992cbc5864cd12be6892
+VERIFY /home/opc/src/ct-ledger/evidence/M1.3/2026-11-15T20-43-42Z/checks/C1.3.4.d/g/gen-00000.jsonl ok
+CHECK C1.3.4 PASS
+check.sh: evidence: evidence/M1.3/2026-11-15T20-43-42Z

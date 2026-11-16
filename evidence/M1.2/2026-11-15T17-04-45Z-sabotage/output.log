@@ -1,0 +1,28 @@
+SABOTAGE decoder-accepts-unknown-field caught by C1.2.5
+CHECK C1.2.1 PASS
+CHECK C1.2.2 PASS
+CHECK C1.2.3 PASS
+CHECK C1.2.4 PASS
+CHECK C1.2.5 FAIL event-type round trip / schema bijection / strict decode failed 
+CHECK C1.2.6 PASS
+check.sh: evidence: evidence/M1.2/2026-11-15T17-04-46Z
+make[1]: *** [Makefile:33: check-M1.2] Error 1
+SABOTAGE prev-hashes-body-only caught by C1.2.2
+CHECK C1.2.1 PASS
+CHECK C1.2.2 FAIL 10,000-event chain failed to build or verify 
+CHECK C1.2.3 PASS
+CHECK C1.2.4 PASS
+CHECK C1.2.5 PASS
+CHECK C1.2.6 PASS
+check.sh: evidence: evidence/M1.2/2026-11-15T17-05-21Z
+make[1]: *** [Makefile:33: check-M1.2] Error 1
+SABOTAGE seq-reused-after-failed-append caught by C1.2.3
+CHECK C1.2.1 PASS
+CHECK C1.2.2 PASS
+CHECK C1.2.3 FAIL concurrent append lost events or broke the chain 
+CHECK C1.2.4 PASS
+CHECK C1.2.5 PASS
+CHECK C1.2.6 PASS
+check.sh: evidence: evidence/M1.2/2026-11-15T17-05-52Z
+make[1]: *** [Makefile:33: check-M1.2] Error 1
+0 uncaught

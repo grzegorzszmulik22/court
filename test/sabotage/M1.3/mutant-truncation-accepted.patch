@@ -1,0 +1,13 @@
+--- a/internal/ledger/verify.go
++++ b/internal/ledger/verify.go
+@@ -128,10 +128,6 @@
+ 	if len(data) == 0 {
+ 		return nil, Verdict{Class: ClassEmpty, Seq: -1, Detail: "empty file"}
+ 	}
+-	if data[len(data)-1] != '\n' {
+-		return nil, Verdict{Class: ClassTruncated, Seq: -1,
+-			Detail: "file does not end with a newline"}
+-	}
+ 	data = data[:len(data)-1]
+ 	lines := bytes.Split(data, []byte{'\n'})
+ 	for i, l := range lines {

@@ -1,0 +1,19 @@
+{
+ "gen": {
+  "cmd": "court ledger gen",
+  "seed": 20261115,
+  "count": 200,
+  "size": 40
+ },
+ "mut": {
+  "cmd": "court ledger mutate --indir gen --seed 4242 (per-ledger seed = 4242 + index i=0..199)",
+  "kinds": "all of MutantKinds (one per kind per ledger)"
+ },
+ "edge": [
+  "bad-last-hash",
+  "bad-last-prev",
+  "no-newline",
+  "partial-last",
+  "first-moved-last"
+ ]
+}

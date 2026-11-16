@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://court.local/schema/backbrief.submitted.schema.json",
+  "title": "ledger event envelope: backbrief.submitted",
+  "type": "object",
+  "required": [
+    "seq",
+    "prev",
+    "at",
+    "commission",
+    "actor",
+    "type",
+    "body",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "prev": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "commission": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "anyOf": [
+        {
+          "const": "clerk"
+        },
+        {
+          "type": "string",
+          "pattern": "^agent:[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+        }
+      ]
+    },
+    "type": {
+      "const": "backbrief.submitted"
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "goal",
+        "plan",
+        "expected_decisions",
+        "will_not_touch"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plan": {
+          "$ref": "#/$defs/plan"
+        },
+        "expected_decisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/expected"
+          }
+        },
+        "will_not_touch": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "plan": {
+      "type": "object",
+      "required": [
+        "files",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "required": [
+        "question",
+        "category",
+        "paths",
+        "intended_default"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "\\?$"
+        },
+        "category": {
+          "enum": [
+            "dependency",
+            "schema",
+            "interface",
+            "test-strength",
+            "type-strength",
+            "guardrail",
+            "failure-handling",
+            "outbound",
+            "authority",
+            "deletion",
+            "territory",
+            "scope",
+            "behaviour",
+            "structure",
+            "other"
+          ]
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "intended_default": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

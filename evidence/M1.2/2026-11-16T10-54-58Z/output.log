@@ -1,0 +1,13 @@
+ok  	court/internal/ledger	1.179s
+CHECK C1.2.1 PASS
+ok  	court/internal/ledger	2.639s
+CHECK C1.2.2 PASS
+ok  	court/internal/ledger	0.155s
+CHECK C1.2.3 PASS
+ok  	court/internal/ledger	5.101s
+CHECK C1.2.4 PASS
+ok  	court/internal/ledger	0.021s
+CHECK C1.2.5 PASS
+ok  	court/internal/ledger	1.456s
+CHECK C1.2.6 PASS
+check.sh: evidence: evidence/M1.2/2026-11-16T10-54-58Z
