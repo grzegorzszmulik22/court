@@ -1,10 +1,10 @@
 diff --git a/internal/world/git.go b/internal/world/git.go
-index 0fcb64e..cfee405 100644
+index 3dbdb63..f0a7381 100644
 --- a/internal/world/git.go
 +++ b/internal/world/git.go
-@@ -412,7 +412,8 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
+@@ -428,7 +428,8 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
  	case <-ctx.Done():
- 		_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+ 		killProcTree(cmd)
  		<-done
 -		res.TimedOut = ctx.Err() == context.DeadlineExceeded
 +		res.TimedOut = false

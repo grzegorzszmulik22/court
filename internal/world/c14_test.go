@@ -762,7 +762,9 @@ func assertOneSentence(t *testing.T, msg string) {
 }
 
 // TestC1_4_6_RunTimeout implements check C1.4.6: Run enforces its time limit
-// and reports a timeout distinctly from a non-zero exit.
+// and reports a timeout distinctly from a non-zero exit. It runs under plain
+// `go test` on Windows and Linux alike: the commands Run executes are the
+// test binary itself (helperArgv), never a shell.
 func TestC1_4_6_RunTimeout(t *testing.T) {
 	repo := newRepo(t, 1)
 	root := open(t, repo)
@@ -771,9 +773,10 @@ func TestC1_4_6_RunTimeout(t *testing.T) {
 		t.Fatalf("fork: %v", err)
 	}
 	gw := w.(*world.GitWorld)
+	t.Setenv("COURT_TEST_HELPER", "1")
 
 	start := time.Now()
-	r, err := gw.Run([]string{"sleep", "30"}, world.Limits{Timeout: 300 * time.Millisecond})
+	r, err := gw.Run(helperArgv("sleep"), world.Limits{Timeout: 300 * time.Millisecond})
 	if err != nil {
 		t.Fatalf("run sleep: %v", err)
 	}
@@ -784,22 +787,23 @@ func TestC1_4_6_RunTimeout(t *testing.T) {
 		t.Fatalf("timeout reported as exit=%d timedOut=%v; want timedOut=true exit=-1", r.ExitCode, r.TimedOut)
 	}
 
-	// A child that keeps running must not hang the call (process group).
+	// A child that keeps running must not hang the call: the timeout kills
+	// the whole process tree, so the pipes the grandchild holds close.
 	start = time.Now()
-	r, err = gw.Run([]string{"sh", "-c", "sleep 30 & wait"}, world.Limits{Timeout: 300 * time.Millisecond})
+	r, err = gw.Run(helperArgv("tree"), world.Limits{Timeout: 300 * time.Millisecond})
 	if err != nil {
-		t.Fatalf("run group: %v", err)
+		t.Fatalf("run tree: %v", err)
 	}
 	if d := time.Since(start); d > 10*time.Second {
-		t.Fatalf("timed-out process group took %s", d)
+		t.Fatalf("timed-out process tree took %s; descendants survived", d)
 	}
 	if !r.TimedOut {
-		t.Fatalf("process-group timeout reported as exit=%d timedOut=%v", r.ExitCode, r.TimedOut)
+		t.Fatalf("process-tree timeout reported as exit=%d timedOut=%v", r.ExitCode, r.TimedOut)
 	}
 
 	// Non-zero exits keep their code and are not timeouts.
 	for _, code := range []int{1, 3, 42} {
-		r, err = gw.Run([]string{"sh", "-c", "exit " + strconv.Itoa(code)}, world.Limits{Timeout: 10 * time.Second})
+		r, err = gw.Run(helperArgv(strconv.Itoa(code)), world.Limits{Timeout: 10 * time.Second})
 		if err != nil {
 			t.Fatalf("run exit %d: %v", code, err)
 		}
@@ -808,11 +812,105 @@ func TestC1_4_6_RunTimeout(t *testing.T) {
 		}
 	}
 
-	r, err = gw.Run([]string{"sh", "-c", "echo out; echo err >&2"}, world.Limits{Timeout: 10 * time.Second})
+	r, err = gw.Run(helperArgv("echo"), world.Limits{Timeout: 10 * time.Second})
 	if err != nil || r.ExitCode != 0 {
 		t.Fatalf("run echo: err=%v exit=%d", err, r.ExitCode)
 	}
 	if r.Stdout != "out\n" || r.Stderr != "err\n" {
 		t.Fatalf("streams not captured: stdout=%q stderr=%q", r.Stdout, r.Stderr)
+	}
+}
+
+// TestC1_4_7_WindowsLongPaths implements check C1.4.7 on Windows (restated
+// by CR-001): a world whose root is at most 200 characters holds, commits,
+// diffs and discards a file whose full path is longer than 260 characters;
+// the same file fails with core.longpaths off, proving the per-world env
+// config is what makes it work. It also asserts the stated limit: Open
+// refuses a data directory that would put a world root above 200
+// characters. Skipped on non-Windows hosts — C1.4.8 proves the package
+// still builds for Windows from Linux.
+func TestC1_4_7_WindowsLongPaths(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("SKIPPED-ENV: C1.4.7 needs a Windows host (CR-001)")
+	}
+	repo := newRepo(t, 1)
+	root := open(t, repo)
+	base := head(t, repo)
+
+	w, err := root.Fork(base, "lp")
+	if err != nil {
+		t.Fatalf("fork: %v", err)
+	}
+	gw := w.(*world.GitWorld)
+	if got := len(gw.Path()); got > world.MaxWorldRootLen {
+		t.Fatalf("world root is %d characters, above the %d limit", got, world.MaxWorldRootLen)
+	}
+
+	// A file whose full path inside the world exceeds 260 characters.
+	rel := "leaf.txt"
+	for len(filepath.Join(gw.Path(), rel)) <= 270 {
+		rel = filepath.Join("d0123456789", rel)
+	}
+	writeFile(t, gw.Path(), rel, "deep\n")
+	full := filepath.Join(gw.Path(), rel)
+	if len(full) <= 260 {
+		t.Fatalf("test file path is only %d characters, want >260", len(full))
+	}
+	if r := mustRun(gw, "git", "add", "-A", "."); r.ExitCode != 0 {
+		t.Fatalf("git add of a >260 path failed under core.longpaths=true: %s", r.Stderr)
+	}
+	if r := mustRun(gw, "git", "commit", "-qm", "deep"); r.ExitCode != 0 {
+		t.Fatalf("git commit of a >260 path failed under core.longpaths=true: %s", r.Stderr)
+	}
+	cs, err := gw.Commits()
+	if err != nil || len(cs) == 0 {
+		t.Fatalf("commits after the deep commit: %v", err)
+	}
+	ch, err := gw.Diff(base, cs[0])
+	if err != nil {
+		t.Fatalf("diff: %v", err)
+	}
+	found := false
+	for _, f := range ch.Files {
+		if strings.HasSuffix(filepath.ToSlash(f.Path), "leaf.txt") {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("diff does not report the >260 path: %+v", ch.Files)
+	}
+
+	// Negative control: without core.longpaths the same kind of file cannot
+	// be staged — the setting is what makes the positive case work.
+	rel2 := "leaf2.txt"
+	for len(filepath.Join(gw.Path(), rel2)) <= 270 {
+		rel2 = filepath.Join("d0123456789", rel2)
+	}
+	writeFile(t, gw.Path(), rel2, "deep2\n")
+	if _, err := gitE(gw.Path(), "-c", "core.longpaths=false", "add", "-A", "."); err == nil {
+		if out := git(t, gw.Path(), "ls-files", "--", filepath.ToSlash(rel2)); strings.TrimSpace(out) != "" {
+			t.Fatal("a >260 path was staged with core.longpaths=false; the positive case proves nothing")
+		}
+	}
+	if err := gw.Discard(); err != nil {
+		t.Fatalf("discard: %v", err)
+	}
+	if _, err := os.Stat(gw.Path()); !os.IsNotExist(err) {
+		t.Fatal("world dir still present after discard")
+	}
+
+	// The stated limit: opening a commission whose data directory would put
+	// a world root above 200 characters fails in one sentence naming it.
+	deep := filepath.Join(t.TempDir(), strings.Repeat("d", 150))
+	_, err = world.Open(repo, deep, "Ctest")
+	if err == nil {
+		t.Fatal("Open accepted a data directory that would put a world root above 200 characters")
+	}
+	assertOneSentence(t, err.Error())
+	if !strings.Contains(err.Error(), "200") {
+		t.Fatalf("refusal does not name the limit: %q", err.Error())
+	}
+	if _, err := os.Stat(deep); !os.IsNotExist(err) {
+		t.Fatalf("%s was created despite refusal", deep)
 	}
 }

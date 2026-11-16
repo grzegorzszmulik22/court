@@ -1,0 +1,2 @@
+frozen: spec/01-b.md: matches frozen pattern 'spec/0*.md' but is not listed
+frozen_verify separator test: ok

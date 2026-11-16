@@ -5,15 +5,60 @@ package world_test
 // repository it did not create (tools/host.md, lane note).
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"court/internal/world"
 )
+
+// helperArgv re-executes the test binary itself as a portable subprocess for
+// Run's timeout, tree-kill and stream checks — no shell and no sleep binary,
+// so the checks run identically on Windows and Linux (CR-001).
+func helperArgv(mode string) []string {
+	return []string{os.Args[0], "-test.run=^TestHelperProcess$", "--", mode}
+}
+
+// TestHelperProcess is not a test; it is the subprocess helperArgv starts.
+// COURT_TEST_HELPER gates it so an ordinary `go test` run just returns.
+// Modes: "sleep" (sleep 30s), "tree" (spawn a sleeping child holding this
+// process's output pipes, then sleep), "echo" (write to stdout and stderr),
+// or a decimal exit code.
+func TestHelperProcess(t *testing.T) {
+	if os.Getenv("COURT_TEST_HELPER") != "1" {
+		return
+	}
+	switch mode := os.Args[len(os.Args)-1]; mode {
+	case "sleep":
+		time.Sleep(30 * time.Second)
+	case "tree":
+		// A descendant holding this process's stdout/stderr: if the timeout
+		// kills only the parent, the pipes stay open and Run hangs until the
+		// child's 30s are up — which is how the checks detect tree-kill.
+		cmd := exec.Command(os.Args[0], "-test.run=^TestHelperProcess$", "--", "sleep")
+		cmd.Env = os.Environ()
+		cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+		if err := cmd.Start(); err != nil {
+			os.Exit(2)
+		}
+		time.Sleep(30 * time.Second)
+	case "echo":
+		fmt.Println("out")
+		fmt.Fprintln(os.Stderr, "err")
+	default:
+		code, err := strconv.Atoi(mode)
+		if err != nil {
+			os.Exit(2)
+		}
+		os.Exit(code)
+	}
+	os.Exit(0)
+}
 
 // git runs git in dir with a clean git environment (no inherited GIT_*
 // variables, so what a test measures is file config, never env config).

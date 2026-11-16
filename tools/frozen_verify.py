@@ -21,6 +21,14 @@ import os
 import sys
 
 
+def normpath(path: str) -> str:
+    """Return path with '/' separators — the manifest convention — on every
+    platform. On Windows, glob/relpath produce 'spec\\x.md' while listed
+    entries read 'spec/x.md'; comparing them directly reports every frozen
+    file as unlisted."""
+    return path.replace("\\", "/")
+
+
 def main() -> int:
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print("usage: frozen_verify.py <manifest> [root]", file=sys.stderr)
@@ -58,7 +66,7 @@ def main() -> int:
             bad.append(f"{path}: sha256 differs ({got[:16]}… != {want[:16]}…)")
     for pat in patterns:
         for path in glob.glob(os.path.join(root, pat)):
-            rel = os.path.relpath(path, root)
+            rel = normpath(os.path.relpath(path, root))
             if os.path.isfile(path) and rel not in listed:
                 bad.append(f"{rel}: matches frozen pattern '{pat}' but is not listed")
     for b in bad:

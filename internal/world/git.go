@@ -15,12 +15,20 @@ import (
 	"sort"
 	"strings"
 	"sync/atomic"
-	"syscall"
 	"time"
 )
 
 // DefaultRunTimeout bounds Run when Limits.Timeout is zero.
 const DefaultRunTimeout = 10 * time.Minute
+
+// MaxWorldRootLen bounds a world root path (<dataDir>/worlds/<name>), per
+// CR-001: git for Windows refuses worktree roots longer than 260 characters
+// even with core.longpaths, so roots are kept well short of it and the
+// limit is stated and refused, not promised silently.
+const MaxWorldRootLen = 200
+
+// maxNameLen is the longest name nameRe admits (1 + {0,62} characters).
+const maxNameLen = 63
 
 // maxRunOutput caps captured stdout/stderr of Run.
 const maxRunOutput = 1 << 20
@@ -104,6 +112,11 @@ func Open(repoPath, dataDir, commission string) (*GitWorld, error) {
 	dataDir, err = filepath.Abs(dataDir)
 	if err != nil {
 		return nil, err
+	}
+	// A world root is <dataDir>/worlds/<name>; a data directory whose longest
+	// possible root would exceed the limit is refused up front (C1.4.7).
+	if len(filepath.Join(dataDir, "worlds", strings.Repeat("n", maxNameLen))) > MaxWorldRootLen {
+		return nil, fmt.Errorf("world: data directory would put a world root above the %d character limit.", MaxWorldRootLen)
 	}
 	s := &store{repo: repo, gitDir: gitDir, dataDir: dataDir, commission: commission}
 	if err := os.MkdirAll(s.hooksDir(), 0o755); err != nil {
@@ -268,6 +281,9 @@ func (w *GitWorld) Fork(base Commit, name string) (World, error) {
 	}
 	branch := "court/" + w.s.commission + "/" + name
 	dir := filepath.Join(w.s.worldsDir(), name)
+	if len(dir) > MaxWorldRootLen {
+		return nil, fmt.Errorf("world: fork %s would put the world root above the %d character limit.", name, MaxWorldRootLen)
+	}
 	if _, err := os.Stat(dir); err == nil {
 		return nil, fmt.Errorf("world: %s already exists", dir)
 	}
@@ -390,7 +406,7 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
 	cmd := exec.Command(argv[0], argv[1:]...)
 	cmd.Dir = w.dir
 	cmd.Env = w.cleanEnv()
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	procAttr(cmd)
 	stdout := &capBuf{limit: maxRunOutput}
 	stderr := &capBuf{limit: maxRunOutput}
 	cmd.Stdout, cmd.Stderr = stdout, stderr
@@ -410,7 +426,7 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
 			res.ExitCode = ee.ExitCode()
 		}
 	case <-ctx.Done():
-		_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+		killProcTree(cmd)
 		<-done
 		res.TimedOut = ctx.Err() == context.DeadlineExceeded
 	}

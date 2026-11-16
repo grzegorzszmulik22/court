@@ -1,0 +1,20 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 3dbdb63..3b1d377 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -15,6 +15,7 @@ import (
+ 	"sort"
+ 	"strings"
+ 	"sync/atomic"
++	"syscall"
+ 	"time"
+ )
+ 
+@@ -407,6 +408,7 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
+ 	cmd.Dir = w.dir
+ 	cmd.Env = w.cleanEnv()
+ 	procAttr(cmd)
++	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+ 	stdout := &capBuf{limit: maxRunOutput}
+ 	stderr := &capBuf{limit: maxRunOutput}
+ 	cmd.Stdout, cmd.Stderr = stdout, stderr
