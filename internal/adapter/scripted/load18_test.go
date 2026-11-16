@@ -252,12 +252,12 @@ func TestC1_8_3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	io.Copy(io.Discard, resp.Body)
-	resp.Body.Close()
+	// Do returns when the response headers arrive: the ack is on the
+	// wire. The event must already be durable — before the body drains,
+	// while a premature ack would still be inside the append delay.
 	if resp.StatusCode != 200 {
 		t.Fatalf("ack check post: %s", resp.Status)
 	}
-	before := eventCount()
 	found := false
 	evs, _ := h.Events()
 	for _, e := range evs {
@@ -265,7 +265,9 @@ func TestC1_8_3(t *testing.T) {
 			found = true
 		}
 	}
-	if !found || before == 0 {
+	io.Copy(io.Discard, resp.Body)
+	resp.Body.Close()
+	if !found {
 		t.Fatalf("acknowledged post not durable at ack time")
 	}
 }
