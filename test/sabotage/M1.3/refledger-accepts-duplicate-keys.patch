@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -80,7 +80,7 @@
+         pairs = []
+         for k, x in v[1]:
+             if k in seen:
+-                raise DupKey(k)
++                pass  # later key wins
+             seen.add(k)
+             _check_str(k)
+             pairs.append((k, _lift(x)))

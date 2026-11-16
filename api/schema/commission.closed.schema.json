@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://court.local/schema/commission.closed.schema.json",
+  "title": "ledger event envelope: commission.closed",
+  "type": "object",
+  "required": [
+    "seq",
+    "prev",
+    "at",
+    "commission",
+    "actor",
+    "type",
+    "body",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "prev": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "commission": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "const": "court"
+    },
+    "type": {
+      "const": "commission.closed"
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "counts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "counts": {
+          "type": "object",
+          "required": [
+            "confirmed",
+            "declared-only",
+            "undeclared",
+            "late",
+            "unanswered",
+            "unforeseen"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "confirmed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "declared-only": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "undeclared": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "late": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unanswered": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unforeseen": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

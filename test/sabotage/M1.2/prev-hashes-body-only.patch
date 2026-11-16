@@ -1,0 +1,20 @@
+--- a/internal/ledger/event.go
++++ b/internal/ledger/event.go
+@@ -50,16 +50,7 @@
+ // CanonicalBytes returns the RFC 8785 bytes of the envelope without `hash`.
+ // It always recomputes: callers may mutate fields after decoding.
+ func (e *Event) CanonicalBytes() ([]byte, error) {
+-	v := &Value{Kind: Object, Obj: []Member{
+-		{Key: "seq", Val: &Value{Kind: Number, Num: strconv.FormatInt(e.Seq, 10)}},
+-		{Key: "prev", Val: &Value{Kind: String, Str: e.Prev}},
+-		{Key: "at", Val: &Value{Kind: String, Str: e.At}},
+-		{Key: "commission", Val: &Value{Kind: String, Str: e.Commission}},
+-		{Key: "actor", Val: &Value{Kind: String, Str: e.Actor}},
+-		{Key: "type", Val: &Value{Kind: String, Str: e.Type}},
+-		{Key: "body", Val: e.Body},
+-	}}
+-	return Canonical(v)
++	return Canonical(e.Body)
+ }
+ 
+ // HashBytes returns the event hash: sha256 of the canonical bytes.

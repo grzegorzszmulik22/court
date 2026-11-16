@@ -1,0 +1,11 @@
+--- a/internal/ledger/verify.go
++++ b/internal/ledger/verify.go
+@@ -40,7 +40,7 @@
+ 		return Verdict{Class: ClassEmpty, Seq: -1, Detail: "no events"}
+ 	}
+ 	var prevCanon []byte
+-	for i, line := range lines {
++	for i, line := range lines[:len(lines)-1] {
+ 		ev, err := DecodeEnvelope(line)
+ 		if err != nil {
+ 			if _, ok := err.(*parseError); ok {

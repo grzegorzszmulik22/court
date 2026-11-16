@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://court.local/schema/tool.event.schema.json",
+  "title": "ledger event envelope: tool.event",
+  "type": "object",
+  "required": [
+    "seq",
+    "prev",
+    "at",
+    "commission",
+    "actor",
+    "type",
+    "body",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "prev": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "commission": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "string",
+      "pattern": "^agent:[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+    },
+    "type": {
+      "const": "tool.event"
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "tool",
+        "tool_use_id",
+        "input_digest",
+        "fields",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tool": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tool_use_id": {
+          "type": "string"
+        },
+        "input_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fields": {
+          "type": "object",
+          "required": [
+            "paths",
+            "command",
+            "hosts"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "command": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "hosts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "denied"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "denied"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "reason"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "reason"
+          ]
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
