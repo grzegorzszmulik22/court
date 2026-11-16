@@ -1,7 +1,8 @@
 diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index cd7cfa9..59e0fc0 100644
 --- a/internal/daemon/hook.go
 +++ b/internal/daemon/hook.go
-@@ -298,10 +298,13 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
+@@ -311,12 +311,15 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
  	if failed {
  		te.Outcome = "error"
  	}
@@ -10,7 +11,7 @@ diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
 +		f.Flush()
 +	}
  	if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te,
- 		hookKey(p.ToolUseID)); err != nil {
+ 		hookKey(sess.Token, p.ToolUseID)); err != nil {
  		d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
  		return
  	}
@@ -18,3 +19,18 @@ diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
  }
  
  // park appends a parked PreToolUse entry (caller holds d.mu).
+diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
+index 0691ad9..9185ac1 100644
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -455,7 +455,9 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
+ 	// AppendIdem marshals canonically, validates, deduplicates on the
+ 	// request-identity keys and commits in one write transaction; the
+ 	// response goes out only after COMMIT.
+-	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
++	ev, err := d.store.Append(commission, actor, typ, body)
++	_ = idemKeys
++	return ev, false, err
+ }
+ 
+ // --------------------------------------------------------------------------

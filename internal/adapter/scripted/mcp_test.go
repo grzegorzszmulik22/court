@@ -268,6 +268,76 @@ func TestMCP_RequestIdentity(t *testing.T) {
 	}
 }
 
+// TestMCP_RequestIdentityPerSession: a request's identity is the session
+// plus its JSON-RPC id, so the same id from two sessions is two requests —
+// both recorded — while the same session's repost of that id is one. The
+// same holds for a string id colliding with a number: the raw id bytes
+// are the identity.
+func TestMCP_RequestIdentityPerSession(t *testing.T) {
+	h := newHarness(t)
+	a, err := h.AddAgent(&scripted.AgentSpec{ID: "sa", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := h.AddAgent(&scripted.AgentSpec{ID: "sb", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	call := func(id any) []byte {
+		raw, _ := json.Marshal(map[string]any{
+			"jsonrpc": "2.0", "id": id, "method": "tools/call",
+			"params": map[string]any{
+				"name": "alarm",
+				"arguments": map[string]any{
+					"text": "cross-session alarm", "paths": []string{"c.go"},
+				},
+			},
+		})
+		return raw
+	}
+	// Sessions A and B both send JSON-RPC id 1: two requests, two events —
+	// one under each agent.
+	raw1 := call(1)
+	for _, c := range []*scripted.Client{a, b} {
+		if st := postRawRPC(t, c.MCPURL, raw1); st != 200 {
+			t.Fatalf("%s id 1: status %d", c.Agent, st)
+		}
+	}
+	alarms := eventsOfType(t, h, "alarm.raised")
+	if len(alarms) != 2 {
+		t.Fatalf("same id from two sessions recorded %d alarms, want 2", len(alarms))
+	}
+	seen := map[string]bool{}
+	for _, e := range alarms {
+		seen[e.Actor] = true
+	}
+	if !seen["agent:sa"] || !seen["agent:sb"] {
+		t.Fatalf("cross-session alarms attributed to %v", seen)
+	}
+	// Session A retries id 1: still two events.
+	if st := postRawRPC(t, a.MCPURL, raw1); st != 200 {
+		t.Fatalf("A retry id 1: status %d", st)
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 2 {
+		t.Fatalf("A's retry of id 1 recorded %d alarms, want 2", n)
+	}
+	// A string id is a different request from the number 1 in the same
+	// session (raw id bytes are the identity); it records a third event.
+	if st := postRawRPC(t, a.MCPURL, call("1")); st != 200 {
+		t.Fatalf("A string id: status %d", st)
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 3 {
+		t.Fatalf("string id recorded %d alarms, want 3", n)
+	}
+	// But session B's string "1" is independent of A's: a fourth event.
+	if st := postRawRPC(t, b.MCPURL, call("1")); st != 200 {
+		t.Fatalf("B string id: status %d", st)
+	}
+	if n := len(eventsOfType(t, h, "alarm.raised")); n != 4 {
+		t.Fatalf("B's string id recorded %d alarms, want 4", n)
+	}
+}
+
 // TestC1_6_5: every tool description is one sentence of at most 200
 // characters.
 func TestC1_6_5(t *testing.T) {

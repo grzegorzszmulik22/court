@@ -1,0 +1,14 @@
+=== RUN   TestToolEvent_CommandTruncatesRunes
+--- PASS: TestToolEvent_CommandTruncatesRunes (0.27s)
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.22s)
+=== RUN   TestToolEvent_StoresHostOnly
+--- PASS: TestToolEvent_StoresHostOnly (0.25s)
+PASS
+ok  	court/internal/adapter/scripted	0.793s
+=== RUN   TestHostOf
+--- PASS: TestHostOf (0.00s)
+=== RUN   TestBuildToolEvent_HostsOnly
+--- PASS: TestBuildToolEvent_HostsOnly (0.00s)
+PASS
+ok  	court/internal/daemon	0.049s

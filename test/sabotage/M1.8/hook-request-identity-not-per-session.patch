@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index cd7cfa9..c7f0719 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -113,7 +113,7 @@ func hookKey(token, toolUseID string) string {
+ 	if toolUseID == "" {
+ 		return ""
+ 	}
+-	return "hook|" + token + "|" + toolUseID
++	return "hook|" + toolUseID
+ }
+ 
+ // actorOf resolves the ledger actor of a hook post: a payload carrying

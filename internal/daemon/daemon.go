@@ -152,10 +152,13 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	if err := os.MkdirAll(opts.DataDir, 0o755); err != nil {
 		return nil, err
 	}
-	if err := d.rebuildFromLedger(); err != nil {
+	// Sessions load before the ledger rebuild: the idem backfill resolves
+	// each recorded event's session so retried requests keep their
+	// per-session request identity across restarts.
+	if err := d.loadSessions(); err != nil {
 		return nil, err
 	}
-	if err := d.loadSessions(); err != nil {
+	if err := d.rebuildFromLedger(); err != nil {
 		return nil, err
 	}
 	if err := d.resolveAdminToken(); err != nil {
@@ -271,7 +274,13 @@ func (d *Daemon) rebuildFromLedger() error {
 			idemKeys = append(idemKeys, "world.commit|"+c)
 		case "tool.event":
 			if tuid := s(b["tool_use_id"]); tuid != "" {
-				idemKeys = append(idemKeys, "hook|"+tuid)
+				// The key is per session (hookKey), so the rebuild must
+				// find the session the event's actor posted under. An
+				// event whose session is gone answers no retry anyway —
+				// a repost would be refused on the unknown token.
+				if sess := d.sessionForActor(ev.Commission, ev.Actor); sess != nil {
+					idemKeys = append(idemKeys, hookKey(sess.Token, tuid))
+				}
 			}
 		}
 	}
@@ -406,14 +415,35 @@ func (d *Daemon) sessionOf(r *http.Request) (*Session, bool) {
 	return s, ok
 }
 
+// sessionForActor resolves the session a recorded event was posted under:
+// the actor is agent:<agent> for the session's own calls and
+// agent:<agent>:<subagent-id> for a subagent sharing the session's token.
+// Longest agent id wins, so a literal ':' inside an agent id still finds
+// its own session first.
+func (d *Daemon) sessionForActor(commission, actor string) *Session {
+	a := strings.TrimPrefix(actor, "agent:")
+	for a != "" {
+		if sess, ok := d.byAgent[commission+"/"+a]; ok {
+			return sess
+		}
+		i := strings.LastIndexByte(a, ':')
+		if i < 0 {
+			return nil
+		}
+		a = a[:i]
+	}
+	return nil
+}
+
 // --------------------------------------------------------------------------
 // Append with request-identity idempotency: a retry is the same request
-// arriving again, named by its own identity — a hook post's tool_use_id, an
-// MCP call's session plus JSON-RPC request id, or a client-supplied
-// Idempotency-Key — never the event content. The store checks the keys and
-// appends in one transaction, so a retried request is recorded once and a
-// distinct request with identical content is recorded again; the keys live
-// in the ledger file, so the rule survives a daemon restart (C1.8.3).
+// arriving again, named by its own identity — a hook post's session plus
+// tool_use_id, an MCP call's session plus JSON-RPC request id, or a
+// client-supplied Idempotency-Key — never the event content. The store
+// checks the keys and appends in one transaction, so a retried request is
+// recorded once and a distinct request with identical content is recorded
+// again; the keys live in the ledger file, so the rule survives a daemon
+// restart (C1.8.3).
 // --------------------------------------------------------------------------
 
 func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...string) (*ledger.Event, bool, error) {

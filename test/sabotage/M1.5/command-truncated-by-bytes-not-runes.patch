@@ -1,0 +1,28 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index cd7cfa9..7b11e86 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -8,7 +8,6 @@ import (
+ 	"net/http"
+ 	"strings"
+ 	"time"
+-	"unicode/utf8"
+ 
+ 	"court/internal/ledger"
+ )
+@@ -180,12 +179,9 @@ func buildToolEvent(p *hookPayload, outcome, reason string) (*ledger.ToolEvent,
+ 		}
+ 		if keys.command != "" {
+ 			if v, ok := p.ToolInput[keys.command].(string); ok {
+-				// spec/01 §11.3: the first 500 characters — Unicode code
+-				// points, not bytes. Cutting runes keeps the stored
+-				// command valid UTF-8 when the boundary lands on a
+-				// multi-byte character.
+-				if utf8.RuneCountInString(v) > 500 {
+-					v = string([]rune(v)[:500])
++				// Keep the first 500 bytes of the command line.
++				if len(v) > 500 {
++					v = v[:500]
+ 				}
+ 				te.Fields.Command = v
+ 			}

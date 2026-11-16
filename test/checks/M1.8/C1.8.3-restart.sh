@@ -6,5 +6,6 @@ d=${COURT_CHECK_DIR:?}
 case "$d" in /*) ;; *) d="$PWD/$d" ;; esac
 go build -o "$d/court" ./cmd/court || { echo "court build failed" >&2; exit 1; }
 export COURT_BIN="$d/court"
-go test ./internal/adapter/scripted -count=1 -timeout 300s -v -run '^(TestC1_8_3|TestMCP_RequestIdentity)$' \
+go test ./internal/adapter/scripted -count=1 -timeout 300s -v \
+    -run '^(TestC1_8_3|TestMCP_RequestIdentity|TestMCP_RequestIdentityPerSession|TestHook_RequestIdentityPerSession|TestHook_RequestIdentityRebuilt|TestAdmin_IdempotencyKeyNamespace)$' \
     || { echo "restart check failed; see go test output" >&2; exit 1; }

@@ -104,13 +104,16 @@ func (d *Daemon) handleHook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// hookKey is the request identity of a hook post: its tool_use_id (the
-// retry contract of spec/02 §4.1 — a repost carries the same id).
-func hookKey(toolUseID string) string {
+// hookKey is the request identity of a hook post: the session plus its
+// tool_use_id. A tool_use_id is unique only inside its own session (the
+// retry contract of spec/02 §4.1 — a repost carries the same id), so the
+// session's token scopes the key: two sessions posting the same
+// tool_use_id are two requests, while one session's repost is one.
+func hookKey(token, toolUseID string) string {
 	if toolUseID == "" {
 		return ""
 	}
-	return "hook|" + toolUseID
+	return "hook|" + token + "|" + toolUseID
 }
 
 // actorOf resolves the ledger actor of a hook post: a payload carrying
@@ -198,14 +201,24 @@ func buildToolEvent(p *hookPayload, outcome, reason string) (*ledger.ToolEvent, 
 	return te, nil
 }
 
-// hostOf extracts the host name of a URL string (no path, no query).
+// hostOf extracts the host name of a URL string: no scheme, no userinfo,
+// no port, no path, no query, no fragment — spec/01 §11.3 stores host
+// names, so a URL carrying credentials or a token in its query keeps none
+// of them in the ledger.
 func hostOf(u string) string {
 	u = strings.TrimSpace(u)
 	if i := strings.Index(u, "://"); i >= 0 {
 		u = u[i+3:]
 	}
+	u = strings.TrimPrefix(u, "//")
+	// What remains up to the first /, ? or # is the authority:
+	// [user[:pass]@]host[:port]. The userinfo ends at the last '@'
+	// (it may itself hold ':' or even '@').
 	if i := strings.IndexAny(u, "/?#"); i >= 0 {
 		u = u[:i]
+	}
+	if i := strings.LastIndexByte(u, '@'); i >= 0 {
+		u = u[i+1:]
 	}
 	if h, _, err := net.SplitHostPort(u); err == nil {
 		return h
@@ -238,7 +251,7 @@ func (d *Daemon) onPreToolUse(w http.ResponseWriter, r *http.Request,
 			return
 		}
 		if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te,
-			hookKey(p.ToolUseID)); err != nil {
+			hookKey(sess.Token, p.ToolUseID)); err != nil {
 			d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -299,7 +312,7 @@ func (d *Daemon) onPostToolUse(w http.ResponseWriter, r *http.Request,
 		te.Outcome = "error"
 	}
 	if _, _, err := d.emit(sess.Commission, "agent:"+actor, "tool.event", te,
-		hookKey(p.ToolUseID)); err != nil {
+		hookKey(sess.Token, p.ToolUseID)); err != nil {
 		d.refuse(w, r, "hook", err.Error(), http.StatusInternalServerError)
 		return
 	}

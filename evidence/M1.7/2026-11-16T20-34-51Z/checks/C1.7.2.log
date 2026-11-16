@@ -1,0 +1,12 @@
+=== RUN   TestC1_7_2
+--- PASS: TestC1_7_2 (0.40s)
+PASS
+ok  	court/internal/adapter/scripted	0.468s
+=== RUN   TestOutwardDeny_EveryEntryEveryPosition
+--- PASS: TestOutwardDeny_EveryEntryEveryPosition (0.01s)
+=== RUN   TestOutwardDeny_Allowed
+--- PASS: TestOutwardDeny_Allowed (0.00s)
+=== RUN   TestOutwardDeny_Nested
+--- PASS: TestOutwardDeny_Nested (0.00s)
+PASS
+ok  	court/internal/adapter/claude	0.038s

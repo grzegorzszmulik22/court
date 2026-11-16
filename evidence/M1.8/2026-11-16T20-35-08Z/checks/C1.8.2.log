@@ -1,0 +1,5 @@
+=== RUN   TestC1_8_2
+    load18_test.go:154: paired p99 = 3.009103ms (median 39.24µs)
+--- PASS: TestC1_8_2 (0.37s)
+PASS
+ok  	court/internal/adapter/scripted	0.406s

@@ -1,0 +1,25 @@
+=== RUN   TestC1_7_1
+--- PASS: TestC1_7_1 (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.072s
+CHECK C1.7.1 PASS
+=== RUN   TestC1_7_2
+--- PASS: TestC1_7_2 (0.40s)
+PASS
+ok  	court/internal/adapter/scripted	0.468s
+=== RUN   TestOutwardDeny_EveryEntryEveryPosition
+--- PASS: TestOutwardDeny_EveryEntryEveryPosition (0.01s)
+=== RUN   TestOutwardDeny_Allowed
+--- PASS: TestOutwardDeny_Allowed (0.00s)
+=== RUN   TestOutwardDeny_Nested
+--- PASS: TestOutwardDeny_Nested (0.00s)
+PASS
+ok  	court/internal/adapter/claude	0.038s
+CHECK C1.7.2 PASS
+=== RUN   TestC1_7_3
+{"type":"system","subtype":"init"}
+--- PASS: TestC1_7_3 (0.03s)
+PASS
+ok  	court/internal/adapter/scripted	0.110s
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-16T20-34-51Z

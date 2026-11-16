@@ -5,6 +5,7 @@ package scripted_test
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -147,16 +148,18 @@ func TestC1_5_1(t *testing.T) {
 
 // TestToolEvent_CommandTruncatesRunes: spec/01 §11.3 — the stored
 // command is the first 500 Unicode characters, always valid UTF-8.
-// Boundary cases: 499 ASCII characters followed by a 2-, 3- and 4-byte
-// character (501 bytes — a byte cut would split the character and store
-// corrupt UTF-8; the rune cut stores all 500 characters whole), exactly
-// 500 characters, 501, and a cut landing inside a multi-byte character.
+// The table holds commands longer than 500 characters whose byte 500
+// falls inside a multi-byte character — a byte cut (v[:500]) would store
+// fewer than 500 characters or corrupt UTF-8 and fails every one. Cases
+// at or under 500 characters defend the other direction: nothing may be
+// cut early.
 func TestToolEvent_CommandTruncatesRunes(t *testing.T) {
 	h := newHarness(t)
 	c, err := h.AddAgent(&scripted.AgentSpec{ID: "w1", Parent: "human"})
 	if err != nil {
 		t.Fatal(err)
 	}
+	ascii498 := strings.Repeat("a", 498)
 	ascii499 := strings.Repeat("a", 499)
 	ascii500 := strings.Repeat("a", 500)
 	cases := []struct {
@@ -164,10 +167,24 @@ func TestToolEvent_CommandTruncatesRunes(t *testing.T) {
 		command string
 		want    string // expected stored command
 	}{
+		// More than 500 characters; byte 500 lands inside the multi-byte
+		// character, so a byte cut loses or corrupts it while the rune
+		// cut keeps all 500 characters whole.
+		{"499+2byte+tail", ascii499 + "é" + "x", ascii499 + "é"},
+		{"499+3byte+tail", ascii499 + "€" + "x", ascii499 + "€"},
+		{"498+4byte+tail", ascii498 + "\U0001f600" + "xy", ascii498 + "\U0001f600" + "x"},
+		{"600-all-2byte", strings.Repeat("é", 600), strings.Repeat("é", 500)},
+		{"600-all-3byte", strings.Repeat("€", 600), strings.Repeat("€", 500)},
+		{"600-all-4byte", strings.Repeat("\U0001f600", 600), strings.Repeat("\U0001f600", 500)},
+		{"mixed-501", ascii499 + "é" + strings.Repeat("€", 100), ascii499 + "é"},
+		{"leading-multi", "é" + ascii500, "é" + ascii499},
+		// At or under 500 characters nothing is cut, however many bytes.
 		{"499+2byte", ascii499 + "é", ascii499 + "é"},
 		{"499+3byte", ascii499 + "€", ascii499 + "€"},
 		{"499+4byte", ascii499 + "\U0001f600", ascii499 + "\U0001f600"},
 		{"exactly500", ascii499 + "x", ascii499 + "x"},
+		// ASCII boundary cuts: byte and rune cuts agree; the stored
+		// command must be exactly 500 characters either way.
 		{"501", ascii499 + "xy", ascii499 + "x"},
 		{"cut-inside-2byte", ascii500 + "é", ascii500},
 	}
@@ -197,8 +214,12 @@ func TestToolEvent_CommandTruncatesRunes(t *testing.T) {
 			}
 		}
 		if cmd != tc.want {
-			t.Fatalf("%s: stored command is %d runes, want %d", tc.name,
-				len([]rune(cmd)), len([]rune(tc.want)))
+			t.Fatalf("%s: stored command is %q (%d runes), want %q (%d runes)",
+				tc.name, cmd, utf8.RuneCountInString(cmd),
+				tc.want, utf8.RuneCountInString(tc.want))
+		}
+		if n := utf8.RuneCountInString(cmd); n != 500 && len(tc.command) > 500 {
+			t.Fatalf("%s: stored %d characters, want 500", tc.name, n)
 		}
 		if !utf8.ValidString(cmd) {
 			t.Fatalf("%s: stored command is not valid UTF-8", tc.name)
@@ -354,6 +375,89 @@ func TestC1_5_3(t *testing.T) {
 			"tool_response", "stdout", "SECRET"} {
 			if strings.Contains(s, bad) {
 				t.Fatalf("tool.event leaks %q: %s", bad, s)
+			}
+		}
+	}
+}
+
+// TestToolEvent_StoresHostOnly: spec/01 §11.3 — a URL input stores only
+// the host name. Every URL part that is not the host — scheme, userinfo,
+// port, path, query, fragment — must be absent from the event body
+// entirely: a URL is an easy place to smuggle a token, so the assertion
+// scans the serialized ledger line, not just the hosts field.
+func TestToolEvent_StoresHostOnly(t *testing.T) {
+	h := newHarness(t)
+	c, err := h.AddAgent(&scripted.AgentSpec{ID: "w1", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	cases := []struct {
+		name   string
+		url    string
+		want   string   // the one stored host
+		forbid []string // substrings that must never reach the ledger
+	}{
+		{"supervisor", "https://user:pw@api.example.com:8443/v1/x?token=SECRET#frag",
+			"api.example.com",
+			[]string{"https", "user", "pw", "8443", "v1/x", "token", "SECRET", "frag", "@"}},
+		{"all-parts", "httpx://uuSec9r:ppSec9w@safe-host.example:8437/ppSec9x?qqSec9y=ttSec9z#ffSec9w",
+			"safe-host.example",
+			[]string{"httpx", "uuSec9r", "ppSec9w", "8437", "ppSec9x", "qqSec9y", "ttSec9z", "ffSec9w", "@"}},
+		{"schemeless", "safe-host.example:8437/ppSec9x?qqSec9y",
+			"safe-host.example", []string{"8437", "ppSec9x", "qqSec9y"}},
+		{"scheme-relative", "//safe-host.example/ppSec9x",
+			"safe-host.example", []string{"ppSec9x"}},
+		{"path-only", "https://safe-host.example/ppSec9x",
+			"safe-host.example", []string{"https", "ppSec9x"}},
+		{"multi-at", "https://uuSec9r:pp@x@safe-host.example/",
+			"safe-host.example", []string{"uuSec9r", "pp", "x@"}},
+		{"bare", "safe-host.example",
+			"safe-host.example", []string{}},
+		{"upper-scheme", "HTTPS://safe-host.example:443/",
+			"safe-host.example", []string{"HTTPS", ":443"}},
+		{"ipv6", "https://[2001:db8::1]:8443/ppSec9x",
+			"2001:db8::1", []string{"8443", "ppSec9x"}},
+	}
+	for _, tc := range cases {
+		in := map[string]any{"url": tc.url}
+		if _, _, err := c.PreToolUse("WebFetch", in, "", ""); err != nil {
+			t.Fatalf("%s: %v", tc.name, err)
+		}
+	}
+	evs := toolEvents(t, h)
+	if len(evs) != len(cases) {
+		t.Fatalf("tool.events = %d, want %d", len(evs), len(cases))
+	}
+	for i, tc := range cases {
+		e := evs[i]
+		v := bodyField(t, e, "fields")
+		if v == nil {
+			t.Fatalf("%s: no fields", tc.name)
+		}
+		var hosts []string
+		for _, m := range v.Obj {
+			if m.Key == "hosts" {
+				for _, it := range m.Val.Arr {
+					hosts = append(hosts, it.Str)
+				}
+			}
+			if m.Key == "paths" && len(m.Val.Arr) > 0 {
+				t.Fatalf("%s: URL leaked into paths: %v", tc.name, m.Val.Arr)
+			}
+			if m.Key == "command" && m.Val.Str != "" {
+				t.Fatalf("%s: URL leaked into command: %q", tc.name, m.Val.Str)
+			}
+		}
+		if len(hosts) != 1 || hosts[0] != tc.want {
+			t.Fatalf("%s: hosts = %v, want [%q]", tc.name, hosts, tc.want)
+		}
+		line, err := e.Line()
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, bad := range tc.forbid {
+			if strings.Contains(string(line), bad) {
+				t.Fatalf("%s: event stores %q: %s", tc.name, bad, line)
 			}
 		}
 	}
@@ -731,5 +835,248 @@ func TestDaemon_RestartKeepsDedupe(t *testing.T) {
 	post(strings.Replace(c.HookURL, h.Daemon.URL(), d2.URL(), 1))
 	if n := len(toolEvents(t, h)); n != 1 {
 		t.Fatalf("post-restart duplicate recorded %d events", n)
+	}
+}
+
+// TestHook_RequestIdentityPerSession: a hook post's request identity is
+// its session plus tool_use_id (C1.8.3). Two sessions posting the same
+// tool_use_id are two requests — both recorded under their own agents —
+// while one session reposting the same payload stays one event. The
+// pairing survives a daemon restart through the persisted idem table,
+// and through the rebuild's backfill even when the table itself is gone.
+func TestHook_RequestIdentityPerSession(t *testing.T) {
+	h := newHarness(t)
+	a, err := h.AddAgent(&scripted.AgentSpec{ID: "ha", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := h.AddAgent(&scripted.AgentSpec{ID: "hb", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	in := map[string]any{"command": "true"}
+	post := func(c *scripted.Client, tuid string) {
+		p, err := c.PayloadFor("PostToolUse", tuid, "Bash", in, "", "")
+		if err != nil {
+			t.Fatal(err)
+		}
+		raw, _ := json.Marshal(p)
+		resp, err := http.Post(c.HookURL, "application/json", bytes.NewReader(raw))
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+		if resp.StatusCode != 200 {
+			t.Fatalf("%s post %s: %s", c.Agent, tuid, resp.Status)
+		}
+	}
+	// The same tool_use_id on two sessions is two requests, one each.
+	post(a, "toolu_shared")
+	post(b, "toolu_shared")
+	if n := len(toolEvents(t, h)); n != 2 {
+		t.Fatalf("same tool_use_id on two sessions recorded %d events, want 2", n)
+	}
+	actors := map[string]bool{}
+	for _, e := range toolEvents(t, h) {
+		actors[e.Actor] = true
+	}
+	if !actors["agent:ha"] || !actors["agent:hb"] {
+		t.Fatalf("cross-session posts attributed to %v", actors)
+	}
+	// Session A reposting the same payload is a retry: still two.
+	post(a, "toolu_shared")
+	if n := len(toolEvents(t, h)); n != 2 {
+		t.Fatalf("A's repost recorded %d events, want 2", n)
+	}
+	// A fresh id on A is a new request even with identical content.
+	post(a, "toolu_other")
+	if n := len(toolEvents(t, h)); n != 3 {
+		t.Fatalf("distinct post recorded %d events, want 3", n)
+	}
+
+	// Restart over the same ledger and sessions; the per-session dedupe
+	// must come from durable state, not memory.
+	oldURL := h.Daemon.URL()
+	h.Daemon.Close()
+	d2, err := daemon.New(h.Store, daemon.Options{
+		DataDir: h.DataDir, CourtBin: h.CourtBin})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := d2.Start(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(d2.Close)
+	for _, c := range []*scripted.Client{a, b} {
+		c.HookURL = strings.Replace(c.HookURL, oldURL, d2.URL(), 1)
+		c.MCPURL = strings.Replace(c.MCPURL, oldURL, d2.URL(), 1)
+	}
+	post(a, "toolu_shared")
+	if n := len(toolEvents(t, h)); n != 3 {
+		t.Fatalf("post-restart repost recorded %d events, want 3", n)
+	}
+	post(b, "toolu_b_new")
+	if n := len(toolEvents(t, h)); n != 4 {
+		t.Fatalf("B's fresh post after restart recorded %d events, want 4", n)
+	}
+}
+
+// TestHook_RequestIdentityRebuilt: with the durable idem table itself
+// erased (a ledger written before it existed), the daemon's rebuild
+// still answers a retried request — the backfill re-derives each event's
+// per-session request identity from the chain.
+func TestHook_RequestIdentityRebuilt(t *testing.T) {
+	h := newHarness(t)
+	a, err := h.AddAgent(&scripted.AgentSpec{ID: "ha", Parent: "human"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	in := map[string]any{"command": "true"}
+	post := func(c *scripted.Client, tuid string) {
+		p, err := c.PayloadFor("PostToolUse", tuid, "Bash", in, "", "")
+		if err != nil {
+			t.Fatal(err)
+		}
+		raw, _ := json.Marshal(p)
+		resp, err := http.Post(c.HookURL, "application/json", bytes.NewReader(raw))
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+		if resp.StatusCode != 200 {
+			t.Fatalf("post %s: %s", tuid, resp.Status)
+		}
+	}
+	post(a, "toolu_rebuilt")
+	if n := len(toolEvents(t, h)); n != 1 {
+		t.Fatalf("setup: %d events", n)
+	}
+	// Stop the daemon, erase every remembered request identity, restart:
+	// only the rebuild backfill can dedupe the repost now.
+	oldURL := h.Daemon.URL()
+	h.Daemon.Close()
+	wipeIdem(t, h.DataDir)
+	d2, err := daemon.New(h.Store, daemon.Options{
+		DataDir: h.DataDir, CourtBin: h.CourtBin})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := d2.Start(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(d2.Close)
+	a.HookURL = strings.Replace(a.HookURL, oldURL, d2.URL(), 1)
+	a.MCPURL = strings.Replace(a.MCPURL, oldURL, d2.URL(), 1)
+	post(a, "toolu_rebuilt")
+	if n := len(toolEvents(t, h)); n != 1 {
+		t.Fatalf("rebuilt dedupe recorded %d events, want 1", n)
+	}
+}
+
+// TestAdmin_IdempotencyKeyNamespace: a client-supplied Idempotency-Key
+// names its request — the same key on the same endpoint is one request
+// even with a different body, and the same key on a different endpoint is
+// unrelated (the key is namespaced, never a global cancel). The admin
+// API holds a single credential, so there is no second client identity
+// for the key to be scoped against; the endpoint is the namespace.
+func TestAdmin_IdempotencyKeyNamespace(t *testing.T) {
+	h := newHarness(t)
+	post := func(path, body, key string) int {
+		req, err := http.NewRequest("POST", h.Daemon.URL()+path,
+			strings.NewReader(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+h.Daemon.AdminToken())
+		if key != "" {
+			req.Header.Set("Idempotency-Key", key)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+		return resp.StatusCode
+	}
+	commissionBody := func(id string) string {
+		raw, _ := json.Marshal(map[string]any{
+			"commission": id, "goal": "g", "done_checks": []string{},
+			"territory": []string{}, "exemptions": []string{},
+			"defaults":  []string{},
+			"budgets":   map[string]any{"tokens": 0, "minutes": 0, "speculation": 0},
+			"attention": 0,
+		})
+		return string(raw)
+	}
+	opened := func(id string) int {
+		n := 0
+		evs, err := h.Events()
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, e := range evs {
+			if e.Type == "commission.opened" && e.Commission == id {
+				n++
+			}
+		}
+		return n
+	}
+	if st := post("/admin/commission", commissionBody("ck-a"), "K1"); st != 200 {
+		t.Fatalf("commission ck-a: %d", st)
+	}
+	// Same endpoint, same key, different body: the key says this is the
+	// first request retried, so it dedupes — ck-b is NOT opened.
+	if st := post("/admin/commission", commissionBody("ck-b"), "K1"); st != 200 {
+		t.Fatalf("commission ck-b with K1: %d", st)
+	}
+	if n := opened("ck-b"); n != 0 {
+		t.Fatalf("reused key opened a second commission: %d", n)
+	}
+	// A different key is a different request: ck-b now records.
+	if st := post("/admin/commission", commissionBody("ck-b"), "K2"); st != 200 {
+		t.Fatalf("commission ck-b with K2: %d", st)
+	}
+	if n := opened("ck-b"); n != 1 {
+		t.Fatalf("distinct key did not record ck-b: %d", n)
+	}
+	// The same key K1 on a different endpoint is a different request —
+	// the session registers and agent.started records.
+	sessBody, _ := json.Marshal(map[string]any{
+		"commission": "ck-b", "agent": "k-agent", "parent": "human",
+		"tool": "scripted", "version": "2.1.325", "session_id": "sess-k1",
+		"world": "w-k1", "base": "", "branch": "b",
+		"worktree": filepath.Join(h.DataDir, "wt-k1"), "writ": "",
+	})
+	if st := post("/admin/session", string(sessBody), "K1"); st != 200 {
+		t.Fatalf("session with K1 on another endpoint: %d", st)
+	}
+	found := false
+	evs, _ := h.Events()
+	for _, e := range evs {
+		if e.Type == "agent.started" && strOf(bodyField(t, e, "agent")) == "k-agent" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("K1 on a different endpoint was deduped; agent.started missing")
+	}
+}
+
+// wipeIdem deletes the store's remembered request identities so a check
+// can isolate the daemon's rebuild backfill from the persisted table.
+func wipeIdem(t *testing.T, dataDir string) {
+	t.Helper()
+	db, err := sql.Open("sqlite",
+		"file:"+filepath.Join(dataDir, "ledger.db")+"?_pragma=busy_timeout(30000)")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if _, err := db.Exec("DELETE FROM idem"); err != nil {
+		t.Fatalf("wipe idem: %v", err)
 	}
 }

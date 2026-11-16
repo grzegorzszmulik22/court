@@ -1,0 +1,57 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (15.26s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.42s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.29s)
+PASS
+ok  	court/internal/adapter/scripted	16.055s
+CHECK C1.5.1 PASS
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.24s)
+=== RUN   TestHook_TokenIsIdentity
+--- PASS: TestHook_TokenIsIdentity (0.31s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.26s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.15s)
+=== RUN   TestHook_RequestIdentityPerSession
+--- PASS: TestHook_RequestIdentityPerSession (0.43s)
+=== RUN   TestHook_RequestIdentityRebuilt
+--- PASS: TestHook_RequestIdentityRebuilt (0.28s)
+PASS
+ok  	court/internal/adapter/scripted	1.759s
+CHECK C1.5.2 PASS
+=== RUN   TestToolEvent_CommandTruncatesRunes
+--- PASS: TestToolEvent_CommandTruncatesRunes (0.27s)
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.22s)
+=== RUN   TestToolEvent_StoresHostOnly
+--- PASS: TestToolEvent_StoresHostOnly (0.25s)
+PASS
+ok  	court/internal/adapter/scripted	0.793s
+=== RUN   TestHostOf
+--- PASS: TestHostOf (0.00s)
+=== RUN   TestBuildToolEvent_HostsOnly
+--- PASS: TestBuildToolEvent_HostsOnly (0.00s)
+PASS
+ok  	court/internal/daemon	0.049s
+CHECK C1.5.3 PASS
+=== RUN   TestC1_5_4
+--- PASS: TestC1_5_4 (0.29s)
+PASS
+ok  	court/internal/adapter/scripted	0.323s
+CHECK C1.5.4 PASS
+=== RUN   TestC1_5_5
+--- PASS: TestC1_5_5 (0.22s)
+PASS
+ok  	court/internal/adapter/scripted	0.283s
+CHECK C1.5.5 PASS
+=== RUN   TestC1_5_6
+--- PASS: TestC1_5_6 (0.01s)
+=== RUN   TestC1_5_6_PayloadShapes
+--- PASS: TestC1_5_6_PayloadShapes (0.01s)
+PASS
+ok  	court/internal/adapter/scripted	0.080s
+CHECK C1.5.6 PASS
+check.sh: evidence: evidence/M1.5/2026-11-16T20-34-07Z

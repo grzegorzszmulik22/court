@@ -156,8 +156,11 @@ func (c *Client) doMCPTool(name string, args map[string]any, agentID, agentType 
 	_, err = c.CallTool(name, args)
 	if err != nil {
 		// The call failed; the Post still fires with a failure outcome
-		// like a real tool error.
-		_ = c.PostToolUse(tuid, toolName, args, true, agentID, agentType)
+		// like a real tool error — and a failure of that post is a failed
+		// step too (the tool call would never reach the ledger).
+		if perr := c.PostToolUse(tuid, toolName, args, true, agentID, agentType); perr != nil {
+			return fmt.Errorf("%w (and the failure PostToolUse failed: %v)", err, perr)
+		}
 		return err
 	}
 	return c.PostToolUse(tuid, toolName, args, false, agentID, agentType)
