@@ -50,6 +50,9 @@ type Options struct {
 	// writes daemon.json, sessions.json, refusals.log and hooks/post-commit
 	// into it.
 	DataDir string
+	// Repo is the repository under commission; the spawn tool forks worlds
+	// from it (M2.4). Empty disables spawn.
+	Repo string
 	// Policy is the PreToolUse deny evaluator (nil abstains from everything).
 	Policy DenyPolicy
 	// CourtBin is the court binary the generated git hook script execs.
@@ -82,6 +85,12 @@ type Session struct {
 	Branch     string `json:"branch"`
 	Worktree   string `json:"worktree"`
 	Writ       string `json:"writ"`
+	// RequireBackbrief gates this agent's non-read-only tool calls on its
+	// backbrief.submitted being in the ledger (M2.2).
+	RequireBackbrief bool `json:"require_backbrief,omitempty"`
+	// AwaitClerk additionally gates them on the commission's clerk list
+	// being recorded (M2.3); only sessions the commissioner opens carry it.
+	AwaitClerk bool `json:"await_clerk,omitempty"`
 }
 
 // preEntry is one parked PreToolUse: a call the policy abstained from and

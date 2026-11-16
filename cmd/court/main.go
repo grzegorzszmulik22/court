@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"reflect"
@@ -24,7 +25,10 @@ import (
 
 	_ "modernc.org/sqlite"
 
+	"court/internal/adapter"
 	"court/internal/adapter/claude"
+	"court/internal/adapter/scripted"
+	"court/internal/commission"
 	"court/internal/daemon"
 	"court/internal/ledger"
 )
@@ -47,6 +51,10 @@ func main() {
 		err = cmdDaemon(os.Args[2:])
 	case "gate":
 		err = cmdGate(os.Args[2:])
+	case "commission":
+		err = cmdCommission(os.Args[2:])
+	case "agent":
+		err = cmdAgent(os.Args[2:])
 	default:
 		usage()
 	}
@@ -68,7 +76,8 @@ func usage() {
   court ledger verify FILE...
   court ledger mutate --in FILE --out DIR [--per K] [--seed S] [--kinds a,b,...]
   court ledger goldens --out DIR
-  court daemon --data-dir DIR --ledger DB [--admin-token T]
+  court commission "<goal>" [--done CMD]... [--territory GLOB]... [--tokens N] [--minutes N] [--attention N]
+  court daemon --data-dir DIR --ledger DB [--repo REPO] [--admin-token T]
   court gate --url U --world W --commit C [--parents a,b]`)
 	os.Exit(2)
 }
@@ -588,6 +597,7 @@ func cmdDaemon(args []string) error {
 	fs := flag.NewFlagSet("daemon", flag.ContinueOnError)
 	dataDir := fs.String("data-dir", "", "Court data directory")
 	ledgerPath := fs.String("ledger", "", "ledger database path")
+	repo := fs.String("repo", "", "repository path (for world forks on spawn)")
 	adminTok := fs.String("admin-token", "", "admin bearer token (default: generated)")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -607,6 +617,7 @@ func cmdDaemon(args []string) error {
 	}
 	d, err := daemon.New(store, daemon.Options{
 		DataDir:     *dataDir,
+		Repo:        *repo,
 		Policy:      claude.Policy{DataDir: *dataDir},
 		AdminToken:  *adminTok,
 		AppendDelay: appendDelay,
@@ -671,6 +682,136 @@ func cmdGate(args []string) error {
 	io.Copy(io.Discard, resp.Body)
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("gate post: %s", resp.Status)
+	}
+	return nil
+}
+
+// --------------------------------------------------------------------------
+// court commission / court agent
+// --------------------------------------------------------------------------
+
+// cmdCommission is the human command of M2: fix the expectation set, open
+// the commission and start the orchestrator.
+func cmdCommission(args []string) error {
+	fs := flag.NewFlagSet("commission", flag.ContinueOnError)
+	fs.Usage = usage
+	o := &commission.Options{In: os.Stdin, Out: os.Stdout}
+	fs.Func("done", "done-check command (repeatable)", func(v string) error {
+		o.Done = append(o.Done, v)
+		return nil
+	})
+	fs.Func("territory", "territory glob (repeatable)", func(v string) error {
+		o.Territory = append(o.Territory, v)
+		return nil
+	})
+	fs.Int64Var(&o.Tokens, "tokens", 0, "token budget")
+	fs.Int64Var(&o.Minutes, "minutes", 0, "agent-minutes budget")
+	fs.Int64Var(&o.Attention, "attention", 0, "human attention, minutes per day")
+	fs.StringVar(&o.DataDir, "data-dir", "", "Court data directory")
+	fs.StringVar(&o.Script, "script", "", "orchestrator script.yaml (scripted adapter)")
+	fs.StringVar(&o.Clerk, "clerk", "", "recorded clerk output file")
+	fs.StringVar(&o.ClerkCmd, "clerk-cmd", "", "command producing the clerk's list")
+	// The goal may sit anywhere among the flags, but Go's flag package
+	// stops at the first positional: split positionals out first. Every
+	// flag defined above takes a value, so a bare "-x" consumes args[i+1].
+	var positional, flagArgs []string
+	for i := 0; i < len(args); i++ {
+		a := args[i]
+		if strings.HasPrefix(a, "-") && a != "-" {
+			flagArgs = append(flagArgs, a)
+			if !strings.Contains(a, "=") && i+1 < len(args) {
+				i++
+				flagArgs = append(flagArgs, args[i])
+			}
+			continue
+		}
+		positional = append(positional, a)
+	}
+	if err := fs.Parse(flagArgs); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		return fmt.Errorf("commission: unexpected flag args %v", fs.Args())
+	}
+	if len(positional) != 1 {
+		return fmt.Errorf("commission wants one goal sentence")
+	}
+	o.Goal = positional[0]
+	o.Given = map[string]bool{}
+	fs.Visit(func(f *flag.Flag) { o.Given[f.Name] = true })
+	return commission.Run(o)
+}
+
+// cmdAgent is the internal process the commissioner detaches per agent
+// session; the session file tells it which adapter to run.
+func cmdAgent(args []string) error {
+	fs := flag.NewFlagSet("agent", flag.ContinueOnError)
+	sessPath := fs.String("session", "", "agent session file")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *sessPath == "" {
+		return fmt.Errorf("agent wants --session")
+	}
+	var sf commission.AgentSession
+	raw, err := os.ReadFile(*sessPath)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(raw, &sf); err != nil {
+		return fmt.Errorf("session file: %w", err)
+	}
+	switch sf.Adapter {
+	case "scripted":
+		sc, err := scripted.Parse(sf.Script)
+		if err != nil {
+			return err
+		}
+		var spec *scripted.AgentSpec
+		for _, a := range sc.Agents {
+			if a.ID == sf.Agent {
+				spec = a
+			}
+		}
+		if spec == nil {
+			return fmt.Errorf("script has no agent %q", sf.Agent)
+		}
+		c := &scripted.Client{
+			HookURL: sf.HookURL, MCPURL: sf.MCPURL,
+			Worktree: sf.Worktree, SessionID: sf.SessionID,
+			PromptID: sf.PromptID, Agent: sf.Agent,
+			Transcript: sf.Transcript, GitEnv: sf.GitEnv,
+			Log: os.Stderr,
+		}
+		return c.Run(spec.Steps)
+	case "claude":
+		return runClaudeAgent(&sf)
+	}
+	return fmt.Errorf("unknown adapter %q", sf.Adapter)
+}
+
+// runClaudeAgent generates the session's settings and MCP config under the
+// data directory and execs the claude binary in the world.
+func runClaudeAgent(sf *commission.AgentSession) error {
+	settings, mcpCfg, err := claude.WriteConfig(adapter.Session{
+		Agent: sf.Agent, Commission: sf.Commission, Token: sf.Token,
+		World: sf.World, Writ: sf.Writ,
+		HookURL: sf.HookURL, MCPURL: sf.MCPURL,
+		DataDir: sf.DataDir, Tool: "claude-code", Version: "",
+	})
+	if err != nil {
+		return err
+	}
+	bin := "claude"
+	if v := os.Getenv("COURT_CLAUDE_BIN"); v != "" {
+		bin = v
+	}
+	cmd := exec.Command(bin, claude.Args(sf.SessionID, settings, mcpCfg, sf.Prompt)...)
+	cmd.Dir = sf.Worktree
+	cmd.Env = append(os.Environ(), sf.GitEnv...)
+	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("claude session: %w", err)
 	}
 	return nil
 }
