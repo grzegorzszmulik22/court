@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"unicode/utf8"
 )
 
 // Event types of spec/01 section 11.2, in table order.
@@ -389,7 +390,7 @@ func ValidateBody(typ string, body any) error {
 		if !reDigest.MatchString(b.InputDigest) {
 			return fmt.Errorf("input_digest is not sha256 hex")
 		}
-		if len(b.Fields.Command) > 500 {
+		if utf8.RuneCountInString(b.Fields.Command) > 500 {
 			return fmt.Errorf("command exceeds 500 characters")
 		}
 		switch b.Outcome {

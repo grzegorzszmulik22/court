@@ -1,0 +1,14 @@
+=== RUN   TestHook_RequestIdentityPerSession
+--- PASS: TestHook_RequestIdentityPerSession (0.32s)
+=== RUN   TestHook_RequestIdentityRebuilt
+--- PASS: TestHook_RequestIdentityRebuilt (0.32s)
+=== RUN   TestAdmin_IdempotencyKeyNamespace
+--- PASS: TestAdmin_IdempotencyKeyNamespace (0.22s)
+=== RUN   TestC1_8_3
+--- PASS: TestC1_8_3 (2.99s)
+=== RUN   TestMCP_RequestIdentity
+--- PASS: TestMCP_RequestIdentity (0.79s)
+=== RUN   TestMCP_RequestIdentityPerSession
+--- PASS: TestMCP_RequestIdentityPerSession (0.33s)
+PASS
+ok  	court/internal/adapter/scripted	5.036s

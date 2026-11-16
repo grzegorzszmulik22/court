@@ -1,0 +1,8 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (15.65s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.24s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.26s)
+PASS
+ok  	court/internal/adapter/scripted	16.209s

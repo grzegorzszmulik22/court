@@ -1,0 +1,6 @@
+=== RUN   TestC1_8_3
+--- PASS: TestC1_8_3 (3.15s)
+=== RUN   TestMCP_RequestIdentity
+--- PASS: TestMCP_RequestIdentity (0.24s)
+PASS
+ok  	court/internal/adapter/scripted	3.472s

@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
+index 9ca28d2..323ca4f 100644
+--- a/internal/daemon/mcp.go
++++ b/internal/daemon/mcp.go
+@@ -53,7 +53,7 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
+ 				// MCP retry identity: the session plus the JSON-RPC
+ 				// request id (spec/02 §5). The raw id bytes go in the
+ 				// key so a string "5" and a number 5 stay distinct.
+-				keys = append(keys, "mcp|"+sess.Token+"|"+id)
++				keys = append(keys, "mcp|"+id)
+ 			}
+ 			_, _, err := d.emit(sess.Commission, "agent:"+actor, typ, body, keys...)
+ 			return err

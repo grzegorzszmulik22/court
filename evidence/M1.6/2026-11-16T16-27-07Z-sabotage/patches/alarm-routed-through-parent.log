@@ -1,0 +1,2 @@
+error: patch failed: test/sabotage/M1.6/alarm-routed-through-parent.patch:1
+error: test/sabotage/M1.6/alarm-routed-through-parent.patch: patch does not apply

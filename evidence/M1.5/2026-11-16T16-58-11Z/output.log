@@ -1,0 +1,41 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (7.22s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.12s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.10s)
+PASS
+ok  	court/internal/adapter/scripted	7.479s
+CHECK C1.5.1 PASS
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.10s)
+=== RUN   TestHook_TokenIsIdentity
+--- PASS: TestHook_TokenIsIdentity (0.19s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.15s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.24s)
+PASS
+ok  	court/internal/adapter/scripted	0.706s
+CHECK C1.5.2 PASS
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.33s)
+PASS
+ok  	court/internal/adapter/scripted	0.418s
+CHECK C1.5.3 PASS
+=== RUN   TestC1_5_4
+--- PASS: TestC1_5_4 (0.31s)
+PASS
+ok  	court/internal/adapter/scripted	0.340s
+CHECK C1.5.4 PASS
+=== RUN   TestC1_5_5
+--- PASS: TestC1_5_5 (0.13s)
+PASS
+ok  	court/internal/adapter/scripted	0.174s
+CHECK C1.5.5 PASS
+=== RUN   TestC1_5_6
+--- PASS: TestC1_5_6 (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.162s
+CHECK C1.5.6 PASS
+check.sh: evidence: evidence/M1.5/2026-11-16T16-58-11Z

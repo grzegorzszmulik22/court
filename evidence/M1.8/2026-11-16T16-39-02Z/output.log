@@ -1,0 +1,22 @@
+=== RUN   TestC1_8_1
+--- PASS: TestC1_8_1 (84.53s)
+PASS
+ok  	court/internal/adapter/scripted	84.906s
+CHECK C1.8.1 PASS
+=== RUN   TestC1_8_2
+    load18_test.go:151: paired p99 = 3.572186ms (median 49.241µs)
+--- PASS: TestC1_8_2 (0.65s)
+PASS
+ok  	court/internal/adapter/scripted	0.775s
+CHECK C1.8.2 PASS
+=== RUN   TestC1_8_3
+--- PASS: TestC1_8_3 (3.87s)
+PASS
+ok  	court/internal/adapter/scripted	3.993s
+CHECK C1.8.3 PASS
+=== RUN   TestC1_8_4
+--- PASS: TestC1_8_4 (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.146s
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-16T16-39-02Z

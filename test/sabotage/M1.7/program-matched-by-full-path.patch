@@ -1,0 +1,13 @@
+diff --git a/internal/adapter/claude/policy.go b/internal/adapter/claude/policy.go
+index b9164c5..f5345e1 100644
+--- a/internal/adapter/claude/policy.go
++++ b/internal/adapter/claude/policy.go
+@@ -305,7 +305,7 @@ func (p Policy) scanSeg(words []string, depth int) string {
+ // checkCommand checks words[0] as a program against the outward lists and
+ // the recursion points it opens (shell -c, eval, find -exec).
+ func (p Policy) checkCommand(words []string, depth int) string {
+-	prog := base(words[0])
++	prog := words[0]
+ 	args := words[1:]
+ 	if reason, ok := outwardProgs[prog]; ok {
+ 		return reason + " is an outward action and is denied"

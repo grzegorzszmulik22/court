@@ -1,0 +1,14 @@
+UNCAUGHT test/sabotage/M1.8/ack-before-durable-write.patch
+CHECK C1.8.1 PASS
+CHECK C1.8.2 PASS
+CHECK C1.8.3 PASS
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-16T16-45-28Z
+SABOTAGE retry-creates-duplicate-event caught by C1.8.1,C1.8.3
+CHECK C1.8.1 FAIL completeness check failed; see go test output 
+CHECK C1.8.2 PASS
+CHECK C1.8.3 FAIL restart check failed; see go test output 
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-16T16-46-23Z
+make[1]: *** [Makefile:33: check-M1.8] Error 1
+1 uncaught

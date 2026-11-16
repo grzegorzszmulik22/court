@@ -1,0 +1,36 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (15.65s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.24s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.26s)
+PASS
+ok  	court/internal/adapter/scripted	16.209s
+CHECK C1.5.1 PASS
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.22s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.30s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.18s)
+PASS
+ok  	court/internal/adapter/scripted	0.735s
+CHECK C1.5.2 PASS
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.38s)
+PASS
+ok  	court/internal/adapter/scripted	0.425s
+CHECK C1.5.3 PASS
+=== RUN   TestC1_5_4
+--- PASS: TestC1_5_4 (0.28s)
+PASS
+ok  	court/internal/adapter/scripted	0.325s
+CHECK C1.5.4 PASS
+=== RUN   TestC1_5_5
+--- PASS: TestC1_5_5 (0.15s)
+PASS
+ok  	court/internal/adapter/scripted	0.181s
+CHECK C1.5.5 PASS
+recorded hook fixtures not on main yet
+CHECK C1.5.6 BLOCKED recorded hook fixtures not on main yet 
+check.sh: evidence: evidence/M1.5/2026-11-16T16-13-43Z

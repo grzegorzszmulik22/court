@@ -1,0 +1,20 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index cd7cfa9..72fc136 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -211,15 +211,9 @@ func hostOf(u string) string {
+ 		u = u[i+3:]
+ 	}
+ 	u = strings.TrimPrefix(u, "//")
+-	// What remains up to the first /, ? or # is the authority:
+-	// [user[:pass]@]host[:port]. The userinfo ends at the last '@'
+-	// (it may itself hold ':' or even '@').
+ 	if i := strings.IndexAny(u, "/?#"); i >= 0 {
+ 		u = u[:i]
+ 	}
+-	if i := strings.LastIndexByte(u, '@'); i >= 0 {
+-		u = u[i+1:]
+-	}
+ 	if h, _, err := net.SplitHostPort(u); err == nil {
+ 		return h
+ 	}

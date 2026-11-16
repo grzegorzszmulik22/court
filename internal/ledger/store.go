@@ -77,6 +77,9 @@ CREATE TABLE IF NOT EXISTS ledger(
   body       TEXT NOT NULL,
   hash       TEXT NOT NULL
 ) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS idem(
+  key        TEXT PRIMARY KEY
+) WITHOUT ROWID;
 ` + derivedDDL
 
 func (s *Store) initSchema() error {
@@ -119,21 +122,70 @@ func (s *Store) Head() (seq int64, hash string, err error) {
 // seq and prev are allocated inside the write transaction, so a retried or
 // racing append can never reuse a seq that failed (spec/01 section 11.1).
 func (s *Store) Append(commission, actor, typ string, body any) (*Event, error) {
+	ev, _, err := s.AppendIdem(commission, actor, typ, body, nil)
+	return ev, err
+}
+
+// AppendIdem is Append plus request idempotency. Every non-empty idemKeys
+// entry names the request this append belongs to (a hook post's
+// tool_use_id, an MCP call's session+request id, a client idempotency key)
+// — never the event content. When a key already exists the request was
+// recorded before: AppendIdem returns (nil, true, nil) and appends nothing,
+// so a retried request is answered as recorded exactly once. The check and
+// the append live in the same immediate transaction, so the dedupe
+// survives restart and races; with no keys nothing is deduplicated —
+// identical content sent as distinct requests appends every time.
+func (s *Store) AppendIdem(commission, actor, typ string, body any, idemKeys []string) (*Event, bool, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	var last error
 	for attempt := 0; attempt < 100; attempt++ {
-		ev, err := s.appendOnce(commission, actor, typ, body)
-		if err == nil {
-			return ev, nil
+		ev, dup, err := s.appendOnce(commission, actor, typ, body, idemKeys)
+		if err == nil || dup {
+			return ev, dup, err
 		}
 		last = err
 		if !isBusy(err) {
-			return nil, err
+			return nil, false, err
 		}
 		time.Sleep(time.Duration(1+attempt%10) * time.Millisecond)
 	}
-	return nil, last
+	return nil, false, last
+}
+
+// AddIdemKeys records request identities that existing events already
+// answer for (rebuild backfill, so ledgers written before the idem table
+// existed still deduplicate retried requests).
+func (s *Store) AddIdemKeys(keys []string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ctx := context.Background()
+	if err := s.exec(ctx, "BEGIN IMMEDIATE"); err != nil {
+		return err
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			s.exec(ctx, "ROLLBACK")
+		}
+	}()
+	st, err := s.stmt(ctx, "INSERT OR IGNORE INTO idem(key) VALUES(?)")
+	if err != nil {
+		return err
+	}
+	for _, k := range keys {
+		if k == "" {
+			continue
+		}
+		if _, err := st.ExecContext(ctx, k); err != nil {
+			return err
+		}
+	}
+	if err := s.exec(ctx, "COMMIT"); err != nil {
+		return err
+	}
+	committed = true
+	return nil
 }
 
 func isBusy(err error) bool {
@@ -148,8 +200,11 @@ func isBusy(err error) bool {
 
 // appendOnce runs the whole append inside BEGIN IMMEDIATE ... COMMIT on the
 // dedicated connection. The immediate transaction serializes writers and
-// makes the head read below see the newest committed row.
-func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, error) {
+// makes the head read below see the newest committed row. idemKeys are
+// checked and recorded inside the same transaction: a key already present
+// means this request's event is in the chain, so nothing is appended and
+// (nil, true, nil) comes back.
+func (s *Store) appendOnce(commission, actor, typ string, body any, idemKeys []string) (*Event, bool, error) {
 	ctx := context.Background()
 	// The upcoming-seq label for the pre-transaction fault points comes
 	// from nextSeqHint (one real read on the first append only); the
@@ -161,7 +216,7 @@ func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, err
 	pseq := s.nextSeqHint - 1
 	fault("begin", pseq+1)
 	if err := s.exec(ctx, "BEGIN IMMEDIATE"); err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	committed := false
 	defer func() {
@@ -172,15 +227,32 @@ func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, err
 	fault("began", pseq+1)
 	seq, prevHash, err := s.headInTx()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	fault("head", seq+1)
+	for _, k := range idemKeys {
+		if k == "" {
+			continue
+		}
+		st, err := s.stmt(ctx, "SELECT 1 FROM idem WHERE key=?")
+		if err != nil {
+			return nil, false, err
+		}
+		var one int
+		err = st.QueryRowContext(ctx, k).Scan(&one)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return nil, false, err
+		}
+		if err == nil {
+			return nil, true, nil
+		}
+	}
 	bodyVal, err := BodyFrom(body)
 	if err != nil {
-		return nil, fmt.Errorf("marshal body: %w", err)
+		return nil, false, fmt.Errorf("marshal body: %w", err)
 	}
 	if err := ValidateBody(typ, body); err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	ev := &Event{
 		Seq: seq + 1, Prev: prevHash, At: Now(),
@@ -191,35 +263,47 @@ func (s *Store) appendOnce(commission, actor, typ string, body any) (*Event, err
 		ev.Prev = ZeroPrev
 	}
 	if _, err := ev.ComputeHash(); err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	fault("envelope", ev.Seq)
 	bodyCanon, err := Canonical(ev.Body)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	fault("pre-insert", ev.Seq)
 	st, err := s.stmt(ctx,
 		"INSERT INTO ledger(seq,prev,at,commission,actor,type,body,hash) VALUES(?,?,?,?,?,?,?,?)")
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if _, err := st.ExecContext(ctx,
 		ev.Seq, ev.Prev, ev.At, ev.Commission, ev.Actor, ev.Type, string(bodyCanon), ev.Hash); err != nil {
-		return nil, err
+		return nil, false, err
+	}
+	for _, k := range idemKeys {
+		if k == "" {
+			continue
+		}
+		st, err := s.stmt(ctx, "INSERT INTO idem(key) VALUES(?)")
+		if err != nil {
+			return nil, false, err
+		}
+		if _, err := st.ExecContext(ctx, k); err != nil {
+			return nil, false, err
+		}
 	}
 	fault("inserted", ev.Seq)
 	if err := s.project(ctx, ev); err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	fault("projected", ev.Seq)
 	fault("commit", ev.Seq)
 	if err := s.exec(ctx, "COMMIT"); err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	committed = true
 	s.nextSeqHint = ev.Seq + 1
-	return ev, nil
+	return ev, false, nil
 }
 
 // Import loads canonical event lines (an exported JSONL ledger) into the

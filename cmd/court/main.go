@@ -2,19 +2,30 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"context"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
+	"syscall"
+	"time"
 
 	_ "modernc.org/sqlite"
 
+	"court/internal/adapter/claude"
+	"court/internal/daemon"
 	"court/internal/ledger"
 )
 
@@ -32,6 +43,10 @@ func main() {
 		err = cmdReplay(os.Args[2:])
 	case "ledger":
 		err = cmdLedger(os.Args[2:])
+	case "daemon":
+		err = cmdDaemon(os.Args[2:])
+	case "gate":
+		err = cmdGate(os.Args[2:])
 	default:
 		usage()
 	}
@@ -52,7 +67,9 @@ func usage() {
   court ledger loadgen <db> [--agents 8] [--tools N] [--commits N] [--seed S]
   court ledger verify FILE...
   court ledger mutate --in FILE --out DIR [--per K] [--seed S] [--kinds a,b,...]
-  court ledger goldens --out DIR`)
+  court ledger goldens --out DIR
+  court daemon --data-dir DIR --ledger DB [--admin-token T]
+  court gate --url U --world W --commit C [--parents a,b]`)
 	os.Exit(2)
 }
 
@@ -558,6 +575,104 @@ func writeLines(path string, lines [][]byte) error {
 		b.WriteByte('\n')
 	}
 	return os.WriteFile(path, []byte(b.String()), 0o644)
+}
+
+// --------------------------------------------------------------------------
+// court daemon / court gate
+// --------------------------------------------------------------------------
+
+// cmdDaemon runs the endpoint process (spec/02 §2). It is the only writer
+// of the ledger; it binds loopback on an OS-chosen port and writes
+// <data-dir>/daemon.json with its URL and admin token.
+func cmdDaemon(args []string) error {
+	fs := flag.NewFlagSet("daemon", flag.ContinueOnError)
+	dataDir := fs.String("data-dir", "", "Court data directory")
+	ledgerPath := fs.String("ledger", "", "ledger database path")
+	adminTok := fs.String("admin-token", "", "admin bearer token (default: generated)")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *dataDir == "" || *ledgerPath == "" {
+		return fmt.Errorf("daemon wants --data-dir and --ledger")
+	}
+	var appendDelay time.Duration
+	if v := os.Getenv("COURT_DAEMON_APPEND_DELAY_MS"); v != "" {
+		if ms, err := strconv.Atoi(v); err == nil && ms > 0 {
+			appendDelay = time.Duration(ms) * time.Millisecond
+		}
+	}
+	store, err := ledger.Open(*ledgerPath)
+	if err != nil {
+		return err
+	}
+	d, err := daemon.New(store, daemon.Options{
+		DataDir:     *dataDir,
+		Policy:      claude.Policy{DataDir: *dataDir},
+		AdminToken:  *adminTok,
+		AppendDelay: appendDelay,
+		Logger:      log.New(os.Stderr, "court daemon: ", 0),
+	})
+	if err != nil {
+		store.Close()
+		return err
+	}
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	if err := d.Start(ctx); err != nil {
+		store.Close()
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "court daemon: listening %s data %s\n", d.URL(), *dataDir)
+	<-ctx.Done()
+	d.Close()
+	store.Close()
+	return nil
+}
+
+// cmdGate posts one commit notification to the gate endpoint. The
+// generated post-commit hook execs it, so no curl is required inside a
+// world (spec/02 §2).
+func cmdGate(args []string) error {
+	fs := flag.NewFlagSet("gate", flag.ContinueOnError)
+	url := fs.String("url", "", "gate endpoint URL")
+	worldPath := fs.String("world", "", "world working directory")
+	commit := fs.String("commit", "", "new HEAD commit")
+	parents := fs.String("parents", "", "space-separated parent commits")
+	timeout := fs.Duration("timeout", 10*time.Second, "post timeout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *url == "" || *worldPath == "" || *commit == "" {
+		return fmt.Errorf("gate wants --url --world --commit")
+	}
+	var plist []string
+	for _, p := range strings.Fields(*parents) {
+		plist = append(plist, p)
+	}
+	if plist == nil {
+		plist = []string{}
+	}
+	raw, err := json.Marshal(map[string]any{
+		"world_path": *worldPath, "commit": *commit, "parents": plist,
+	})
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", *url, bytes.NewReader(raw))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := (&http.Client{Timeout: *timeout}).Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	io.Copy(io.Discard, resp.Body)
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("gate post: %s", resp.Status)
+	}
+	return nil
 }
 
 func readAllStdin() ([]byte, error) {

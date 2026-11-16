@@ -1,0 +1,13 @@
+diff --git a/internal/adapter/claude/policy.go b/internal/adapter/claude/policy.go
+index b9164c5..19a8853 100644
+--- a/internal/adapter/claude/policy.go
++++ b/internal/adapter/claude/policy.go
+@@ -287,7 +287,7 @@ func (p Policy) scanSeg(words []string, depth int) string {
+ 			}
+ 			continue
+ 		}
+-		if arity, ok := wrappers[base(w)]; ok {
++		if arity, ok := wrappers[w]; ok {
+ 			lastWrapper = base(w)
+ 			bare += arity
+ 			i++

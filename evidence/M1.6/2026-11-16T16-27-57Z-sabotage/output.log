@@ -1,0 +1,25 @@
+SABOTAGE alarm-routed-through-parent caught by C1.6.3
+CHECK C1.6.1 PASS
+CHECK C1.6.2 PASS
+CHECK C1.6.3 FAIL child alarm check failed; see go test output 
+CHECK C1.6.4 PASS
+CHECK C1.6.5 PASS
+check.sh: evidence: evidence/M1.6/2026-11-16T16-27-57Z
+make[1]: *** [Makefile:33: check-M1.6] Error 1
+SABOTAGE category-not-validated caught by C1.6.1
+CHECK C1.6.1 FAIL tool validation check failed; see go test output 
+CHECK C1.6.2 PASS
+CHECK C1.6.3 PASS
+CHECK C1.6.4 PASS
+CHECK C1.6.5 PASS
+check.sh: evidence: evidence/M1.6/2026-11-16T16-28-21Z
+make[1]: *** [Makefile:33: check-M1.6] Error 1
+SABOTAGE tools-share-one-endpoint-without-token caught by C1.6.2
+CHECK C1.6.1 PASS
+CHECK C1.6.2 FAIL token attribution check failed; see go test output 
+CHECK C1.6.3 PASS
+CHECK C1.6.4 PASS
+CHECK C1.6.5 PASS
+check.sh: evidence: evidence/M1.6/2026-11-16T16-28-44Z
+make[1]: *** [Makefile:33: check-M1.6] Error 1
+0 uncaught

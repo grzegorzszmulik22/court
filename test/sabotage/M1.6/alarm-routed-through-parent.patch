@@ -1,0 +1,23 @@
+diff --git a/internal/daemon/mcp.go b/internal/daemon/mcp.go
+--- a/internal/daemon/mcp.go
++++ b/internal/daemon/mcp.go
+@@ -5,7 +5,6 @@ import (
+ 	"encoding/json"
+ 	"io"
+ 	"net/http"
+-	"strings"
+ 
+ 	"github.com/modelcontextprotocol/go-sdk/mcp"
+ 
+@@ -71,11 +70,4 @@ func (d *Daemon) actorForMCP(sess *Session, tool string) string {
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+-	list := d.pending[sess.Token]
+-	for i, e := range list {
+-		if e.tool == tool || strings.HasSuffix(e.tool, "__"+tool) {
+-			d.pending[sess.Token] = append(list[:i], list[i+1:]...)
+-			return e.actor
+-		}
+-	}
+ 	return sess.Agent
+ }

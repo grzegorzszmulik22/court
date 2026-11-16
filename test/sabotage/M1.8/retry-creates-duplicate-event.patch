@@ -1,0 +1,12 @@
+diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -425,5 +425,7 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
+ 	// AppendIdem marshals canonically, validates, deduplicates on the
+ 	// request-identity keys and commits in one write transaction; the
+ 	// response goes out only after COMMIT.
+-	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
++	ev, err := d.store.Append(commission, actor, typ, body)
++	_ = idemKeys
++	return ev, false, err
+ }

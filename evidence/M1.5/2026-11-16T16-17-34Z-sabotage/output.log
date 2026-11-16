@@ -1,0 +1,28 @@
+SABOTAGE hook-attributes-by-session-id-not-token caught by C1.5.2,C1.5.6
+CHECK C1.5.1 PASS
+CHECK C1.5.2 FAIL unknown-token/idempotency check failed; see go test output 
+CHECK C1.5.3 PASS
+CHECK C1.5.4 PASS
+CHECK C1.5.5 PASS
+CHECK C1.5.6 BLOCKED recorded hook fixtures not on main yet 
+check.sh: evidence: evidence/M1.5/2026-11-16T16-17-35Z
+make[1]: *** [Makefile:33: check-M1.5] Error 1
+SABOTAGE subagent-recorded-as-parent caught by C1.5.4,C1.5.6
+CHECK C1.5.1 PASS
+CHECK C1.5.2 PASS
+CHECK C1.5.3 PASS
+CHECK C1.5.4 FAIL subagent check failed; see go test output 
+CHECK C1.5.5 PASS
+CHECK C1.5.6 BLOCKED recorded hook fixtures not on main yet 
+check.sh: evidence: evidence/M1.5/2026-11-16T16-18-16Z
+make[1]: *** [Makefile:33: check-M1.5] Error 1
+SABOTAGE tool-event-stores-full-input caught by C1.5.3,C1.5.6
+CHECK C1.5.1 PASS
+CHECK C1.5.2 PASS
+CHECK C1.5.3 FAIL no-contents check failed; see go test output 
+CHECK C1.5.4 PASS
+CHECK C1.5.5 PASS
+CHECK C1.5.6 BLOCKED recorded hook fixtures not on main yet 
+check.sh: evidence: evidence/M1.5/2026-11-16T16-18-57Z
+make[1]: *** [Makefile:33: check-M1.5] Error 1
+0 uncaught

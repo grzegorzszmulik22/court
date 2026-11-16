@@ -1,0 +1,13 @@
+diff --git a/internal/daemon/hook.go b/internal/daemon/hook.go
+index 40b9af1..acc369a 100644
+--- a/internal/daemon/hook.go
++++ b/internal/daemon/hook.go
+@@ -180,6 +180,8 @@ func buildToolEvent(p *hookPayload, outcome, reason string) (*ledger.ToolEvent,
+ 			}
+ 		}
+ 	}
++	raw, _ := json.Marshal(p.ToolInput)
++	te.Fields.Command = string(raw)
+ 	return te, nil
+ }
+ 
