@@ -17,6 +17,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -73,7 +74,7 @@ func usage() {
   court ledger export <db>
   court ledger gen    --out DIR [--count N] [--seed S]
   court ledger loadgen <db> [--agents 8] [--tools N] [--commits N] [--seed S]
-  court ledger verify FILE...
+  court ledger verify [--head <seq>:<hash>] FILE...
   court ledger mutate --in FILE --out DIR [--per K] [--seed S] [--kinds a,b,...]
   court ledger goldens --out DIR
   court commission "<goal>" [--done CMD]... [--territory GLOB]... [--tokens N] [--minutes N] [--attention N]
@@ -135,8 +136,9 @@ func cmdReplay(args []string) error {
 	if !rep.StoredDerived {
 		stored = "no-stored-derived"
 	}
-	fmt.Printf("REPLAY %s PASS events=%d tables=%d reconciled=%d %s\n",
-		path, rep.Events, len(rep.Tables), rep.ReconciledChecked, stored)
+	fmt.Printf("REPLAY %s PASS events=%d tables=%d reconciled=%d %s head seq=%d hash=%s\n",
+		path, rep.Events, len(rep.Tables), rep.ReconciledChecked, stored,
+		rep.HeadSeq, rep.HeadHash)
 	return nil
 }
 
@@ -243,6 +245,13 @@ func cmdLedgerExport(args []string) error {
 		return err
 	}
 	defer s.Close()
+	// Export never launders a tamper (B3-02): the stored rows must verify
+	// before they are written out, so a blank hash or a rewritten event
+	// aborts the export instead of producing a clean-looking file.
+	if v := ledger.VerifyFile(args[0]); v.Class != ledger.ClassOK {
+		return fmt.Errorf("export: %s does not verify (%s seq=%d %s)",
+			args[0], v.Class, v.Seq, v.Detail)
+	}
 	events, err := s.Events()
 	if err != nil {
 		return err
@@ -319,6 +328,8 @@ func cmdLedgerLoadgen(args []string) error {
 
 func cmdLedgerVerify(args []string) error {
 	fs := flag.NewFlagSet("verify", flag.ContinueOnError)
+	head := fs.String("head", "",
+		"kept chain head <seq>:<hash>; each file must hold exactly that event at that seq")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -326,19 +337,52 @@ func cmdLedgerVerify(args []string) error {
 	if len(files) == 0 {
 		return fmt.Errorf("verify wants files")
 	}
+	var hseq int64 = -1
+	var hhash string
+	if *head != "" {
+		s, h, ok := strings.Cut(*head, ":")
+		n, err := strconv.ParseInt(s, 10, 64)
+		if !ok || err != nil || n < 0 || !reHex64.MatchString(h) {
+			return fmt.Errorf("--head wants <seq>:<64 lowercase hex>, got %q", *head)
+		}
+		hseq, hhash = n, h
+	}
 	if err := ledger.LoadSchemas(""); err != nil {
 		return err
 	}
 	bad := 0
 	for _, f := range files {
-		v := ledger.VerifyFile(f)
-		if v.Seq >= 0 {
+		lines, ver := ledger.ReadLedgerFile(f)
+		v := ver
+		if v.Class == ledger.ClassOK {
+			v = ledger.VerifyLineBytes(lines)
+		}
+		// A verified ledger prints its head: (seq, hash) of the newest
+		// event is the pair a reader keeps, since the chain alone covers
+		// only events that have a successor (CR-004).
+		switch {
+		case v.Class == ledger.ClassOK:
+			fmt.Printf("VERIFY %s ok head seq=%d hash=%s\n", f, v.HeadSeq, v.HeadHash)
+		case v.Seq >= 0:
 			fmt.Printf("VERIFY %s %s seq=%d %s\n", f, v.Class, v.Seq, v.Detail)
-		} else {
+		default:
 			fmt.Printf("VERIFY %s %s\n", f, v.Class)
 		}
 		if v.Class != ledger.ClassOK {
 			bad++
+			continue
+		}
+		if hseq >= 0 {
+			hc := ledger.CheckHead(lines, hseq, hhash)
+			if hc.Fail != "" {
+				fmt.Printf("HEAD %s FAIL seq=%d %s\n", f, hseq, hc.Fail)
+				bad++
+				continue
+			}
+			fmt.Printf("HEAD %s ok seq=%d appended=%d\n", f, hseq, len(hc.Appended))
+			for _, ev := range hc.Appended {
+				fmt.Printf("APPENDED %s seq=%d type=%s\n", f, ev.Seq, ev.Type)
+			}
 		}
 	}
 	if bad > 0 {
@@ -815,6 +859,8 @@ func runClaudeAgent(sf *commission.AgentSession) error {
 	}
 	return nil
 }
+
+var reHex64 = regexp.MustCompile(`^[0-9a-f]{64}$`)
 
 func readAllStdin() ([]byte, error) {
 	var b strings.Builder

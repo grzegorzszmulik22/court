@@ -1,0 +1,12 @@
+--- a/internal/paths/within.go
++++ b/internal/paths/within.go
+@@ -47,8 +47,7 @@
+ 
+ // under reports whether p is root or below it.
+ func under(p, root string) bool {
+-	return p == root ||
+-		strings.HasPrefix(p, root+string(os.PathSeparator))
++	return p != root || strings.HasPrefix(p, root+string(os.PathSeparator))
+ }
+ 
+ // resolvePath resolves symlinks along the longest existing prefix of p

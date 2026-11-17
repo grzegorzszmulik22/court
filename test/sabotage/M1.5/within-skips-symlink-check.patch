@@ -1,0 +1,20 @@
+--- a/internal/paths/within.go
++++ b/internal/paths/within.go
+@@ -31,17 +31,6 @@
+ 	if !under(clean, cleanRoot) {
+ 		return false, "path leaves the directory"
+ 	}
+-	rroot, err := resolvePath(cleanRoot)
+-	if err != nil {
+-		return false, "cannot resolve directory: " + err.Error()
+-	}
+-	rtarget, err := resolvePath(target)
+-	if err != nil {
+-		return false, "cannot resolve path: " + err.Error()
+-	}
+-	if !under(filepath.Clean(rtarget), rroot) {
+-		return false, "path leaves the directory through a symlink"
+-	}
+ 	return true, ""
+ }
+ 

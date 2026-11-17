@@ -83,6 +83,16 @@ func (c *Client) doEdit(e *EditStep) error {
 		c.logf("edit %s denied", e.Path)
 		return nil
 	}
+	// B3-09: the adapter itself confines the write to the world — the
+	// endpoint's abstention is not permission. The parked call is closed
+	// out as a failure first so the attempt is recorded.
+	if reason := editConfineReason(c.Worktree, e.Path); reason != "" {
+		if perr := c.PostToolUse(tuid, "Edit", input, true, "", ""); perr != nil {
+			return fmt.Errorf("edit %s: %s (and the failure PostToolUse failed: %v)",
+				e.Path, reason, perr)
+		}
+		return fmt.Errorf("edit %s: %s", e.Path, reason)
+	}
 	if err := os.MkdirAll(filepath.Dir(abs), 0o755); err != nil {
 		return err
 	}

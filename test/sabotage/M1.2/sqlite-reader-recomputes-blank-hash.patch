@@ -1,0 +1,27 @@
+--- a/internal/ledger/verify.go
++++ b/internal/ledger/verify.go
+@@ -232,10 +232,6 @@
+ 		if err := rows.Scan(&seq, &prev, &at, &commission, &actor, &typ, &body, &h); err != nil {
+ 			return nil, Verdict{Class: ClassIO, Seq: -1, Detail: err.Error()}
+ 		}
+-		if !reHex64.MatchString(h) {
+-			return nil, Verdict{Class: ClassEnvelope, Seq: seq,
+-				Detail: "stored hash is blank or not sha256 hex"}
+-		}
+ 		bv, err := ParseStrict([]byte(body))
+ 		if err != nil {
+ 			return nil, Verdict{Class: ClassEnvelope, Seq: seq, Detail: "stored body invalid JSON"}
+@@ -250,6 +246,13 @@
+ 		}
+ 		ev := &Event{Seq: seq, Prev: prev, At: at, Commission: commission,
+ 			Actor: actor, Type: typ, Body: bv, Hash: h}
++		// Repair a missing or malformed stored hash from the row's
++		// contents — the reader "knows" the right value.
++		if !reHex64.MatchString(ev.Hash) {
++			cb, _ := ev.CanonicalBytes()
++			s := sha256.Sum256(cb)
++			ev.Hash = hex.EncodeToString(s[:])
++		}
+ 		line, err := ev.Line()
+ 		if err != nil {
+ 			return nil, Verdict{Class: ClassEnvelope, Seq: seq, Detail: err.Error()}
