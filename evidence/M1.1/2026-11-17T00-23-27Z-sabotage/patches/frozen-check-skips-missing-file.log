@@ -1,0 +1,10 @@
+CHECK C1.1.1 PASS
+CHECK C1.1.2 PASS
+CHECK C1.1.3 PASS
+CHECK C1.1.4 PASS
+CHECK C1.1.5 FAIL frozen verify passed with a listed file missing 
+CHECK C1.1.6 PASS
+CHECK C1.1.7 PASS
+CHECK C1.1.8 PASS
+check.sh: evidence: evidence/M1.1/2026-11-17T00-40-58Z
+make[1]: *** [Makefile:33: check-M1.1] Error 1

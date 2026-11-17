@@ -1,0 +1,18 @@
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.1.d/stderr.log: No such file or directory
+CHECK C1.1.1 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.2.d/stderr.log: No such file or directory
+CHECK C1.1.2 FAIL exit 1
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.3.d/stderr.log: No such file or directory
+CHECK C1.1.3 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.4.d/stderr.log: No such file or directory
+CHECK C1.1.4 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.5.d/stderr.log: No such file or directory
+CHECK C1.1.5 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.6.d/stderr.log: No such file or directory
+CHECK C1.1.6 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.7.d/stderr.log: No such file or directory
+CHECK C1.1.7 PASS
+cat: evidence/M1.1/2026-11-17T00-30-59Z/checks/C1.1.8.d/stderr.log: No such file or directory
+CHECK C1.1.8 FAIL exit 1
+check.sh: evidence: evidence/M1.1/2026-11-17T00-30-59Z
+make[1]: *** [Makefile:33: check-M1.1] Error 1

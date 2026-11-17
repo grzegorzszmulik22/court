@@ -16,7 +16,8 @@
 #   exit 77  -> SKIP   (first stderr line is the reason)
 #   exit 78  -> BLOCKED (first stderr line is the reason)
 #   other    -> FAIL   (first stderr line is the reason, else "exit <rc>")
-#   A check runs under `timeout` ($COURT_CHECK_TIMEOUT seconds, default 240);
+#   A check runs under `timeout` ($COURT_CHECK_TIMEOUT seconds, default 240;
+#   900 on Windows, where scratch-tree I/O is slower);
 #   a kill is a FAIL. A check's own scratch area is $COURT_CHECK_DIR; its
 #   output is captured to checks/<id>.log in the run's evidence folder.
 #   A check must never print a `CHECK <its own id> ...` line itself: the
@@ -59,6 +60,14 @@ export COURT_CHECK_DEPTH=$(( ${COURT_CHECK_DEPTH:-0} + 1 ))
 
 say() { echo "check.sh: $*" | tee -a "$ev/output.log" >&2; }
 
+# A per-check hang guard, not a spec threshold. Windows I/O (Defender scanning
+# the scratch trees C1.1.3/C1.1.7 create) makes a fresh-clone suite take
+# minutes, so the guard is longer there; Linux keeps its original 240 s.
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) default_timeout=900 ;;
+    *) default_timeout=240 ;;
+esac
+
 start=$(date +%s%N)
 ran=0; failed=0
 for f in "$dir"/*; do
@@ -69,12 +78,12 @@ for f in "$dir"/*; do
     ran=$((ran+1))
     d="$ev/checks/$id.d"; mkdir -p "$d"
     log="$ev/checks/$id.log"; err="$d/stderr.log"
-    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-240}" bash "$f" >"$log" 2>"$err"
+    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-$default_timeout}" bash "$f" >"$log" 2>"$err"
     rc=$?
     cat "$err" >>"$log"          # the check's log holds stdout then stderr
     cat "$log" >>"$ev/output.log"
     reason=$(head -1 "$err" 2>/dev/null | tr '\n' ' ' | cut -c1-200)
-    [ "$rc" -eq 124 ] && reason="timeout after ${COURT_CHECK_TIMEOUT:-240}s"
+    [ "$rc" -eq 124 ] && reason="timeout after ${COURT_CHECK_TIMEOUT:-$default_timeout}s"
     # A check reporting its own CHECK line forges the result namespace; only
     # the runner may emit `CHECK <id>` lines for this run.
     forged=$(grep -cE "^CHECK ${id//./\\.}(\.[^ ]+)?( |$)" "$log" || true)

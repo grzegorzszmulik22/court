@@ -14,9 +14,26 @@ trap 'rm -rf "$tmp"' EXIT
 git clone -q . "$tmp/clone" || { echo "git clone of HEAD failed" >&2; exit 1; }
 ln -s "$repo/.tools" "$tmp/clone/.tools"
 
-# Prove the namespace really has no network before trusting the run.
-if unshare -Un curl -fsS -m 3 -o /dev/null https://go.dev/ 2>/dev/null; then
-    echo "unshare -Un did not disable the network; cannot claim an offline run" >&2
+# Prove the run really has no network before trusting it. Linux gets an
+# unprivileged network namespace; Windows has no unshare(CLONE_NEWNET), so the
+# run gets the portability offline form CR-002 allows: Go module fetches are
+# off and every HTTP(S)/Git proxy points at a closed loopback port. The probe
+# below uses that same environment, so it fails exactly when a tool in the run
+# would reach the network by the ordinary paths.
+offline=()
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*)
+        offline=(env GOPROXY=off GOSUMDB=off GOFLAGS=-mod=mod
+            http_proxy=http://127.0.0.1:9 https_proxy=http://127.0.0.1:9
+            HTTP_PROXY=http://127.0.0.1:9 HTTPS_PROXY=http://127.0.0.1:9
+            ALL_PROXY=http://127.0.0.1:9 no_proxy= NO_PROXY=)
+        ;;
+    *)
+        offline=(unshare -Un)
+        ;;
+esac
+if "${offline[@]}" curl -fsS -m 3 -o /dev/null https://go.dev/ 2>/dev/null; then
+    echo "the offline environment still reached the network; cannot claim an offline run" >&2
     exit 1
 fi
 
@@ -50,8 +67,12 @@ exit 0
 EOF
 chmod +x "$tmp/shim/make"
 
-out=$(unshare -Un env "PATH=$tmp/shim:$PATH" COURT_CHECK_EXCLUDE=C1.1.1 \
-        make --no-print-directory check-M1.1 2>&1)
+inner=(env "PATH=$tmp/shim:$PATH" COURT_CHECK_EXCLUDE=C1.1.1 \
+        make --no-print-directory check-M1.1)
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) inner=(env COURT_CHECK_EXCLUDE=C1.1.1 make --no-print-directory check-M1.1) ;;
+esac
+out=$("${offline[@]}" "${inner[@]}" 2>&1)
 rc=$?
 printf '%s\n' "$out" >&2   # inner run output, kept in this check's evidence log
 
