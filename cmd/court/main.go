@@ -78,7 +78,8 @@ func usage() {
   court ledger goldens --out DIR
   court commission "<goal>" [--done CMD]... [--territory GLOB]... [--tokens N] [--minutes N] [--attention N]
   court daemon --data-dir DIR --ledger DB [--repo REPO] [--admin-token T]
-  court gate --url U --world W --commit C [--parents a,b]`)
+  court gate --url U --world W --commit C [--parents a,b]
+  court gate pre --url U --world W [--head H] [--tree T]`)
 	os.Exit(2)
 }
 
@@ -642,8 +643,12 @@ func cmdDaemon(args []string) error {
 
 // cmdGate posts one commit notification to the gate endpoint. The
 // generated post-commit hook execs it, so no curl is required inside a
-// world (spec/02 §2).
+// world (spec/02 §2). `court gate pre` asks the declaration gate; it exits
+// 3 when the commit is refused so the hook can print the exact message.
 func cmdGate(args []string) error {
+	if len(args) > 0 && args[0] == "pre" {
+		return cmdGatePre(args[1:])
+	}
 	fs := flag.NewFlagSet("gate", flag.ContinueOnError)
 	url := fs.String("url", "", "gate endpoint URL")
 	worldPath := fs.String("world", "", "world working directory")
@@ -684,6 +689,49 @@ func cmdGate(args []string) error {
 		return fmt.Errorf("gate post: %s", resp.Status)
 	}
 	return nil
+}
+
+// cmdGatePre asks the declaration gate whether the commit about to be
+// created may proceed. A refusal exits 3 with no output of its own: the
+// generated pre-commit hook prints the exact one-line message of spec/03
+// §4, so the message has a single source.
+func cmdGatePre(args []string) error {
+	fs := flag.NewFlagSet("gate pre", flag.ContinueOnError)
+	url := fs.String("url", "", "gate pre endpoint URL")
+	worldPath := fs.String("world", "", "world working directory")
+	head := fs.String("head", "", "current HEAD (empty on an unborn branch)")
+	tree := fs.String("tree", "", "index tree of the pending commit")
+	timeout := fs.Duration("timeout", 10*time.Second, "post timeout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if *url == "" || *worldPath == "" {
+		return fmt.Errorf("gate pre wants --url --world")
+	}
+	raw, err := json.Marshal(map[string]any{
+		"world_path": *worldPath, "head": *head, "tree": *tree,
+	})
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", *url, bytes.NewReader(raw))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := (&http.Client{Timeout: *timeout}).Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	io.Copy(io.Discard, resp.Body)
+	switch resp.StatusCode {
+	case 200:
+		return nil
+	case http.StatusForbidden:
+		os.Exit(3)
+	}
+	return fmt.Errorf("gate pre: %s", resp.Status)
 }
 
 // --------------------------------------------------------------------------

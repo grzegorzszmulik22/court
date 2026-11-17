@@ -340,8 +340,8 @@ func TestMCP_RequestIdentityPerSession(t *testing.T) {
 
 // TestC1_6_5: every tool description is one sentence of at most 200
 // characters, and tools/list offers exactly the spec'd set — the M1.6
-// three (record_decision, claim_done, alarm) plus M2's backbrief and
-// spawn.
+// three (record_decision, claim_done, alarm), M2's backbrief and spawn,
+// and M3.2's no_decisions.
 func TestC1_6_5(t *testing.T) {
 	h := newHarness(t)
 	c, err := h.AddAgent(&scripted.AgentSpec{ID: "d1", Parent: "human"})
@@ -354,7 +354,7 @@ func TestC1_6_5(t *testing.T) {
 	}
 	want := map[string]bool{
 		"record_decision": true, "claim_done": true, "alarm": true,
-		"backbrief": true, "spawn": true,
+		"backbrief": true, "spawn": true, "no_decisions": true,
 	}
 	if len(list) != len(want) {
 		t.Fatalf("tools/list = %d tools, want %d", len(list), len(want))

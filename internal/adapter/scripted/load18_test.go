@@ -70,6 +70,8 @@ func TestC1_8_1(t *testing.T) {
 					Path:  fmt.Sprintf("f%02d.txt", j%64),
 					Write: fmt.Sprintf("agent %d generation %d\n", i, j),
 				}},
+				// M3.2's declaration gate: one declaration per commit.
+				&scripted.Step{NoDecisions: &scripted.EmptyStep{}},
 				&scripted.Step{Commit: &scripted.CommitStep{
 					Message: fmt.Sprintf("a%d gen %d", i, j),
 				}})

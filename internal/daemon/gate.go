@@ -12,12 +12,13 @@ import (
 	"sync"
 	"time"
 
+	"court/internal/gate"
 	"court/internal/ledger"
 )
 
-// This file implements /gate: the internal endpoint the generated
-// post-commit git hook calls from inside a world (spec/02 §2). The hook is
-// written by the daemon into <DataDir>/hooks/, the directory the world's
+// This file implements /gate and /gate/pre: the internal endpoints the
+// generated git hooks call from inside a world (spec/02 §2). The hooks are
+// written by internal/gate into <DataDir>/hooks, the directory the world's
 // per-world git config (core.hooksPath via GIT_CONFIG_*) points at.
 
 // gatePost is the body of a post-commit hook call.
@@ -27,51 +28,51 @@ type gatePost struct {
 	Parents   []string `json:"parents"`
 }
 
-// writeGateHook writes <DataDir>/hooks/post-commit: a /bin/sh script that
-// posts the new commit to the daemon. git for Windows runs hooks through
-// its bundled sh, so one script covers both platforms.
-func (d *Daemon) writeGateHook() error {
-	dir := filepath.Join(d.opts.DataDir, "hooks")
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		return err
+// gatePre is the body of a pre-commit hook call: the world, the current
+// HEAD (empty on an unborn branch) and the index tree the commit would
+// record.
+type gatePre struct {
+	WorldPath string `json:"world_path"`
+	Head      string `json:"head"`
+	Tree      string `json:"tree"`
+}
+
+// handleGatePre serves POST /gate/pre: the declaration query of spec/03
+// §4.2. A world whose gate is closed refuses with the exact one-line
+// message; an open gate records the pass so the post-commit observation can
+// mark the commit gated. A path that is not a registered Court world is not
+// gated (there is no agent to declare).
+func (d *Daemon) handleGatePre(w http.ResponseWriter, r *http.Request) {
+	var gp gatePre
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&gp); err != nil {
+		d.refuse(w, r, "gate", "bad gate pre body", http.StatusBadRequest)
+		return
 	}
-	url := d.URL() + "/gate"
-	script := "#!/bin/sh\n" +
-		"# Written by the Court daemon; do not edit.\n" +
-		"# Reports the new HEAD commit to the gate endpoint, then exits 0 so a\n" +
-		"# commit never fails on a ledger problem: a post that cannot be\n" +
-		"# delivered is picked up by the next post's parent scan (spec/02 §2).\n" +
-		"top=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0\n" +
-		"head=$(git rev-parse HEAD 2>/dev/null) || exit 0\n" +
-		"parents=$(git rev-list --parents -n 1 HEAD 2>/dev/null | cut -d' ' -f2-)\n"
-	if d.opts.CourtBin != "" {
-		// The preferred path needs no curl or wget: `court gate` posts
-		// the commit itself.
-		script += "'" + d.opts.CourtBin + "' gate --url '" + url +
-			"' --world \"$top\" --commit \"$head\" --parents \"$parents\" || true\n"
-	} else {
-		script += "pj='['; first=1\n" +
-			"for p in $parents; do\n" +
-			"  if [ $first -eq 1 ]; then first=0; else pj=\"$pj,\"; fi\n" +
-			"  pj=\"$pj\\\"$p\\\"\"\n" +
-			"done\n" +
-			"pj=\"$pj]\"\n" +
-			"tw=$(printf '%s' \"$top\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g')\n" +
-			"body=\"{\\\"world_path\\\":\\\"$tw\\\",\\\"commit\\\":\\\"$head\\\",\\\"parents\\\":$pj}\"\n" +
-			"if command -v curl >/dev/null 2>&1; then\n" +
-			"  curl -s -o /dev/null -m 10 -X POST -H 'Content-Type: application/json' \\\n" +
-			"    --data-binary \"$body\" '" + url + "' || true\n" +
-			"elif command -v wget >/dev/null 2>&1; then\n" +
-			"  wget -q -O /dev/null -T 10 --post-data \"$body\" \\\n" +
-			"    --header='Content-Type: application/json' '" + url + "' || true\n" +
-			"fi\n"
+	if gp.WorldPath == "" {
+		d.refuse(w, r, "gate", "gate pre post lacks world_path", http.StatusBadRequest)
+		return
 	}
-	script += "exit 0\n"
-	path := filepath.Join(dir, "post-commit")
-	if err := os.WriteFile(path, []byte(script), 0o755); err != nil {
-		return err
+	d.mu.Lock()
+	sess, ok := d.byTree[normPath(gp.WorldPath)]
+	if ok {
+		key := gate.WorldKey(sess.Commission, sess.World)
+		if !d.gateState.Open(key) {
+			d.mu.Unlock()
+			writeJSON(w, http.StatusForbidden, map[string]any{"error": gate.Message})
+			return
+		}
+		d.gatePasses[key] = gate.Pass{Parent: gp.Head, Tree: gp.Tree}
+		err := d.saveGatePassesLocked()
+		d.mu.Unlock()
+		if err != nil {
+			d.refuse(w, r, "gate", err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeJSON(w, 200, map[string]any{})
+		return
 	}
-	return os.Chmod(path, 0o755)
+	d.mu.Unlock()
+	writeJSON(w, 200, map[string]any{})
 }
 
 // handleGate serves POST /gate. The commit is attributed to the session
@@ -163,7 +164,10 @@ func (d *Daemon) recordCommits(sess *Session, head, key string) error {
 }
 
 // recordOne emits one world.commit with parents and the numstat change
-// list, resolved inside the world's own worktree.
+// list, resolved inside the world's own worktree. Gated is true only when
+// the pre-commit hook passed for this commit's parent and tree (spec/03
+// §4.5): a commit that bypassed the hook is recorded gated:false, and every
+// detector hit in it is then undeclared.
 func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 	pout, err := gitOut(sess.Worktree, "rev-list", "--parents", "-n", "1", commit)
 	if err != nil {
@@ -171,6 +175,10 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 	}
 	parts := strings.Fields(pout)
 	parents := append([]string{}, parts[1:]...)
+	parent := ""
+	if len(parents) > 0 {
+		parent = parents[0]
+	}
 	var changes []ledger.PathChange
 	diffArgs := []string{"diff", "--numstat", "-z", "--no-renames"}
 	if len(parents) == 0 {
@@ -199,10 +207,11 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 		}
 		changes = append(changes, pc)
 	}
+	gated := d.takeGatePass(sess, parent, commit)
 	ev, _, err := d.emit(sess.Commission, "agent:"+sess.Agent, "world.commit",
 		&ledger.WorldCommit{
 			World: sess.World, Commit: commit, Parents: parents,
-			Changes: changes, Gated: false, Assumes: []string{},
+			Changes: changes, Gated: gated, Assumes: []string{},
 		}, "world.commit|"+commit, key)
 	if err != nil {
 		return err
@@ -214,6 +223,154 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 		d.mu.Unlock()
 	}
 	return nil
+}
+
+// takeGatePass reports whether the pre-commit hook authorized this commit
+// and consumes the pass. A pass is bound to the pending commit's parent and
+// index tree, so a commit made with --no-verify after the gate passed for a
+// different tree is still ungated.
+func (d *Daemon) takeGatePass(sess *Session, parent, commit string) bool {
+	key := gate.WorldKey(sess.Commission, sess.World)
+	d.mu.Lock()
+	p, ok := d.gatePasses[key]
+	d.mu.Unlock()
+	if !ok || p.Parent != parent {
+		return false
+	}
+	if p.Tree != "" {
+		tree, err := gitOut(sess.Worktree, "rev-parse", commit+"^{tree}")
+		if err != nil || strings.TrimSpace(tree) != p.Tree {
+			return false
+		}
+	}
+	d.mu.Lock()
+	delete(d.gatePasses, key)
+	d.saveGatePassesLocked()
+	d.mu.Unlock()
+	return true
+}
+
+// --------------------------------------------------------------------------
+// Gate-pass persistence: a daemon restart between the pre-commit gate and
+// the commit must not turn an authorized commit ungated.
+// --------------------------------------------------------------------------
+
+func (d *Daemon) gatePassPath() string {
+	return filepath.Join(d.opts.DataDir, "gate-passes.json")
+}
+
+func (d *Daemon) loadGatePasses() error {
+	raw, err := os.ReadFile(d.gatePassPath())
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	var m map[string]gate.Pass
+	if err := json.Unmarshal(raw, &m); err != nil {
+		return fmt.Errorf("daemon: gate-passes.json: %w", err)
+	}
+	if m != nil {
+		d.gatePasses = m
+	}
+	return nil
+}
+
+func (d *Daemon) saveGatePassesLocked() error {
+	raw, err := json.Marshal(d.gatePasses)
+	if err != nil {
+		return err
+	}
+	path := d.gatePassPath()
+	tmp := path + ".tmp"
+	if err := os.WriteFile(tmp, raw, 0o600); err != nil {
+		return err
+	}
+	return os.Rename(tmp, path)
+}
+
+// --------------------------------------------------------------------------
+// Head scanner: commits that bypassed the post-commit hook (hooks disabled)
+// are recorded gated:false at the next ledger write (spec/03 §4.5).
+// --------------------------------------------------------------------------
+
+// requestSyncLocked wakes the scanner; callers hold d.mu. Bursts coalesce.
+func (d *Daemon) requestSyncLocked() {
+	select {
+	case d.syncCh <- struct{}{}:
+	default:
+	}
+}
+
+func (d *Daemon) syncLoop() {
+	var last time.Time
+	for {
+		select {
+		case <-d.closed:
+			return
+		case <-d.syncCh:
+		}
+		if wait := d.syncMin - time.Since(last); wait > 0 {
+			t := time.NewTimer(wait)
+			select {
+			case <-d.closed:
+				t.Stop()
+				return
+			case <-t.C:
+			}
+		}
+		for drained := false; !drained; {
+			select {
+			case <-d.syncCh:
+			default:
+				drained = true
+			}
+		}
+		last = time.Now()
+		d.syncWorlds()
+	}
+}
+
+// syncWorlds compares every registered world's HEAD with the last commit in
+// the ledger and records the difference. It is the fallback path for a
+// commit that reached a world with no hook at all.
+func (d *Daemon) syncWorlds() {
+	d.mu.Lock()
+	seen := map[string]bool{}
+	var sessions []*Session
+	for _, sess := range d.sessions {
+		if sess.World == "" || sess.Worktree == "" {
+			continue
+		}
+		key := sess.Commission + "/" + sess.World
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		sessions = append(sessions, sess)
+	}
+	d.mu.Unlock()
+	for _, sess := range sessions {
+		if _, err := os.Stat(sess.Worktree); err != nil {
+			continue
+		}
+		out, err := gitOut(sess.Worktree, "rev-parse", "--verify", "HEAD")
+		if err != nil {
+			continue
+		}
+		head := strings.TrimSpace(out)
+		d.mu.Lock()
+		last := d.lastCommit[sess.World]
+		d.mu.Unlock()
+		if head == "" || head == last {
+			continue
+		}
+		wl := d.worldMuFor(sess.World)
+		wl.Lock()
+		_ = d.recordCommits(sess, head, "")
+		wl.Unlock()
+	}
 }
 
 // gitOut runs a read-only git command inside a worktree.

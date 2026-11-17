@@ -1,6 +1,7 @@
 // Package tools builds the MCP server served at /mcp/<token>: the agent
-// tools of spec/02 §5 (record_decision, claim_done, alarm) on the official
-// Go SDK, and nothing else — no prompts, resources or sampling.
+// tools of spec/02 §5 (backbrief, spawn, record_decision, no_decisions,
+// claim_done, alarm) on the official Go SDK, and nothing else — no prompts,
+// resources or sampling.
 package tools
 
 import (
@@ -73,6 +74,11 @@ func New(deps Deps) *mcp.Server {
 		Description: "Declare each decision you make with record_decision before you commit, " +
 			"with its question, category, options and chosen option.",
 	}, recordDecision(deps))
+	mcp.AddTool(s, &mcp.Tool{
+		Name: "no_decisions",
+		Description: "Call no_decisions before a commit that contains no decisions; " +
+			"it opens the gate for that next commit.",
+	}, noDecisions(deps))
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "claim_done",
 		Description: "Claim your task done with claim_done and name the done-checks you ran.",
@@ -174,6 +180,20 @@ func recordDecision(deps Deps) mcp.ToolHandlerFor[decisionIn, any] {
 			return bad("not recorded: %v", err)
 		}
 		return ok("decision recorded")
+	}
+}
+
+// noDecisions records decision.none: the agent's explicit statement that
+// its next commit contains no decisions (spec/03 §4). It opens the gate
+// exactly like record_decision does.
+func noDecisions(deps Deps) mcp.ToolHandlerFor[struct{}, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in struct{}) (*mcp.CallToolResult, any, error) {
+		err := deps.Emit(ctx, deps.Actor("no_decisions"), "decision.none",
+			&ledger.DecisionNone{})
+		if err != nil {
+			return bad("not recorded: %v", err)
+		}
+		return ok("no decisions recorded")
 	}
 }
 

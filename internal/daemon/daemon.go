@@ -32,6 +32,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"court/internal/gate"
 	"court/internal/ledger"
 )
 
@@ -137,6 +138,16 @@ type Daemon struct {
 	mcpHTTP     http.Handler
 	refusalMu   sync.Mutex
 
+	// gateState is the declaration window per world (M3.2), derived from
+	// ledger order; gatePasses holds pre-commit authorizations awaiting
+	// their commit. syncCh wakes the head scanner that records commits
+	// which reached a world without the post-commit hook.
+	gateState  *gate.State
+	gatePasses map[string]gate.Pass
+	syncCh     chan struct{}
+	syncMin    time.Duration
+	lastSync   time.Time
+
 	adminToken string
 	closed     chan struct{}
 	closeOnce  sync.Once
@@ -163,7 +174,11 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		spent:       map[string]ledger.Budgets{},
 		pending:     map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
 		mcpSrv: map[*Session]*mcp.Server{},
-		closed: make(chan struct{}),
+		gateState:  gate.NewState(),
+		gatePasses: map[string]gate.Pass{},
+		syncCh:     make(chan struct{}, 1),
+		syncMin:    200 * time.Millisecond,
+		closed:     make(chan struct{}),
 	}
 	d.mcpHTTP = d.newMCPHandler()
 	if err := os.MkdirAll(opts.DataDir, 0o755); err != nil {
@@ -173,6 +188,9 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	// each recorded event's session so retried requests keep their
 	// per-session request identity across restarts.
 	if err := d.loadSessions(); err != nil {
+		return nil, err
+	}
+	if err := d.loadGatePasses(); err != nil {
 		return nil, err
 	}
 	if err := d.rebuildFromLedger(); err != nil {
@@ -185,6 +203,7 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	d.mux.HandleFunc("POST /hook/{token}", d.handleHook)
 	d.mux.HandleFunc("POST /mcp/{token}", d.handleMCP)
 	d.mux.HandleFunc("POST /gate", d.handleGate)
+	d.mux.HandleFunc("POST /gate/pre", d.handleGatePre)
 	d.mux.HandleFunc("POST /admin/commission", d.adminCommission)
 	d.mux.HandleFunc("POST /admin/session", d.adminSession)
 	d.mux.HandleFunc("GET /admin/info", d.adminInfo)
@@ -208,7 +227,9 @@ func (d *Daemon) Start(ctx context.Context) error {
 		Handler:           d.mux,
 		ReadHeaderTimeout: 10 * time.Second,
 	}
-	if err := d.writeGateHook(); err != nil {
+	if err := gate.Install(gate.InstallOptions{
+		DataDir: d.opts.DataDir, URL: d.URL() + "/gate", CourtBin: d.opts.CourtBin,
+	}); err != nil {
 		ln.Close()
 		return err
 	}
@@ -216,6 +237,7 @@ func (d *Daemon) Start(ctx context.Context) error {
 		ln.Close()
 		return err
 	}
+	go d.syncLoop()
 	go func() {
 		<-ctx.Done()
 		d.Close()
@@ -307,7 +329,12 @@ func (d *Daemon) rebuildFromLedger() error {
 			c := s(b["commit"])
 			d.recorded[c] = true
 			d.lastCommit[w] = c
+			d.gateState.Committed(gate.WorldKey(ev.Commission, w), ev.Seq)
 			idemKeys = append(idemKeys, "world.commit|"+c)
+		case "decision.declared", "decision.none":
+			if sess := d.sessionForActor(ev.Commission, ev.Actor); sess != nil {
+				d.gateState.Declared(gate.WorldKey(ev.Commission, sess.World), ev.Seq)
+			}
 		case "tool.event":
 			if tuid := s(b["tool_use_id"]); tuid != "" {
 				// The key is per session (hookKey), so the rebuild must
@@ -457,6 +484,13 @@ func (d *Daemon) sessionOf(r *http.Request) (*Session, bool) {
 // Longest agent id wins, so a literal ':' inside an agent id still finds
 // its own session first.
 func (d *Daemon) sessionForActor(commission, actor string) *Session {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.sessionForActorLocked(commission, actor)
+}
+
+// sessionForActorLocked is sessionForActor for callers already holding d.mu.
+func (d *Daemon) sessionForActorLocked(commission, actor string) *Session {
 	a := strings.TrimPrefix(actor, "agent:")
 	for a != "" {
 		if sess, ok := d.byAgent[commission+"/"+a]; ok {
@@ -491,11 +525,31 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
 	// AppendIdem marshals canonically, validates, deduplicates on the
 	// request-identity keys and commits in one write transaction; the
 	// response goes out only after COMMIT.
-	ev, appended, err := d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+	ev, dup, err := d.store.AppendIdem(commission, actor, typ, body, idemKeys)
 	if err == nil && typ == "backbrief.submitted" {
 		d.backbriefed[commission+"/"+actor] = true
 	}
-	return ev, appended, err
+	// The declaration window moves with the ledger (M3.2): a declaration
+	// opens its world's gate, an observed commit closes it. Attribution
+	// uses the session the actor belongs to, so a subagent's declaration
+	// counts for the world it shares.
+	if err == nil && !dup {
+		switch b := body.(type) {
+		case *ledger.DecisionDeclared, *ledger.DecisionNone:
+			if sess := d.sessionForActorLocked(commission, actor); sess != nil {
+				d.gateState.Declared(gate.WorldKey(commission, sess.World), ev.Seq)
+			}
+		case *ledger.WorldCommit:
+			d.gateState.Committed(gate.WorldKey(commission, b.World), ev.Seq)
+		}
+	}
+	// Every new ledger write is a point at which a commit that bypassed the
+	// post-commit hook can be discovered (spec/03 §4.5); the scanner runs
+	// asynchronously and coalesces bursts.
+	if err == nil && !dup {
+		d.requestSyncLocked()
+	}
+	return ev, dup, err
 }
 
 // hasBackbrief reports whether the actor's backbrief.submitted is in the
