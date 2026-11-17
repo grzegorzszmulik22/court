@@ -1,0 +1,8 @@
+=== RUN   TestC2_5_2
+=== RUN   TestC2_5_2/full_order
+=== RUN   TestC2_5_2/cap_drops_lowest
+--- PASS: TestC2_5_2 (4.18s)
+    --- PASS: TestC2_5_2/full_order (2.09s)
+    --- PASS: TestC2_5_2/cap_drops_lowest (2.09s)
+PASS
+ok  	court/internal/commission	4.244s

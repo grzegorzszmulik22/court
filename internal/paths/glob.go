@@ -180,13 +180,12 @@ func compile(elems []any) *nfa {
 					state = to
 				}
 			}
-			for j, a := range v {
+			for _, a := range v {
 				if a.kind == '*' {
 					star(state)
 					continue
 				}
 				state = segChar(state, a)
-				_ = j
 			}
 		}
 	}

@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"path/filepath"
 
 	"court/internal/ledger"
 	"court/internal/world"
@@ -224,5 +223,3 @@ func (d *Daemon) adminWrit(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, 200, map[string]any{"writ": req.Writ.ID})
 }
-
-var _ = filepath.Join

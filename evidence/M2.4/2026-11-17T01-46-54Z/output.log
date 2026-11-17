@@ -1,0 +1,57 @@
+=== RUN   TestC2_4_1
+--- PASS: TestC2_4_1 (50.20s)
+=== RUN   TestWritVectors
+--- PASS: TestWritVectors (0.22s)
+PASS
+ok  	court/internal/writ	50.471s
+CHECK C2.4.1 PASS
+=== RUN   TestC2_4_2
+--- PASS: TestC2_4_2 (0.20s)
+PASS
+ok  	court/internal/adapter/scripted	0.289s
+CHECK C2.4.2 PASS
+=== RUN   TestC2_4_3
+=== RUN   TestC2_4_3/tokens/above_total
+=== RUN   TestC2_4_3/tokens/above_remaining
+=== RUN   TestC2_4_3/tokens/together_exceed
+=== RUN   TestC2_4_3/tokens/boundary
+=== RUN   TestC2_4_3/minutes/above_total
+=== RUN   TestC2_4_3/minutes/above_remaining
+=== RUN   TestC2_4_3/minutes/together_exceed
+=== RUN   TestC2_4_3/minutes/boundary
+=== RUN   TestC2_4_3/speculation/above_total
+=== RUN   TestC2_4_3/speculation/above_remaining
+=== RUN   TestC2_4_3/speculation/together_exceed
+=== RUN   TestC2_4_3/speculation/boundary
+--- PASS: TestC2_4_3 (5.68s)
+    --- PASS: TestC2_4_3/tokens/above_total (0.44s)
+    --- PASS: TestC2_4_3/tokens/above_remaining (0.64s)
+    --- PASS: TestC2_4_3/tokens/together_exceed (0.43s)
+    --- PASS: TestC2_4_3/tokens/boundary (0.61s)
+    --- PASS: TestC2_4_3/minutes/above_total (0.27s)
+    --- PASS: TestC2_4_3/minutes/above_remaining (0.46s)
+    --- PASS: TestC2_4_3/minutes/together_exceed (0.50s)
+    --- PASS: TestC2_4_3/minutes/boundary (0.52s)
+    --- PASS: TestC2_4_3/speculation/above_total (0.25s)
+    --- PASS: TestC2_4_3/speculation/above_remaining (0.64s)
+    --- PASS: TestC2_4_3/speculation/together_exceed (0.45s)
+    --- PASS: TestC2_4_3/speculation/boundary (0.47s)
+PASS
+ok  	court/internal/adapter/scripted	5.755s
+CHECK C2.4.3 PASS
+=== RUN   TestC2_4_4
+--- PASS: TestC2_4_4 (0.25s)
+PASS
+ok  	court/internal/adapter/scripted	0.317s
+CHECK C2.4.4 PASS
+=== RUN   TestC2_4_5
+--- PASS: TestC2_4_5 (0.29s)
+PASS
+ok  	court/internal/adapter/scripted	0.401s
+CHECK C2.4.5 PASS
+=== RUN   TestC2_4_6
+--- PASS: TestC2_4_6 (0.84s)
+PASS
+ok  	court/internal/adapter/scripted	0.916s
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T01-46-54Z

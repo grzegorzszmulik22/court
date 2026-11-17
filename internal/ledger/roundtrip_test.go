@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
-	"reflect"
 	"strings"
 	"testing"
 
@@ -323,6 +322,5 @@ func TestBodyFieldShapes(t *testing.T) {
 				t.Fatalf("%s: schema field %q has no Go field", typ, w)
 			}
 		}
-		_ = reflect.TypeOf // silence if unused
 	}
 }

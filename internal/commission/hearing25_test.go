@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"time"
 
 	"court/internal/ledger"
 )
@@ -118,74 +117,146 @@ func TestC2_5_6(t *testing.T) {
 	}
 }
 
-// TestC2_5_2: more than seven candidates shows seven and reports the
-// rest open, in the guarantee / single-list / both ordering.
+// TestC2_5_2: the hearing order and the seven-question cap. Guarantee
+// categories come first whichever list foresaw them — orchestrator-only,
+// clerk-only or both — then the decisions only one list foresaw (the
+// orchestrator's, then the clerk's), then those both lists foresaw. The
+// cap shows the first seven of that order, so the candidates it drops
+// are always from the lowest group.
 func TestC2_5_2(t *testing.T) {
-	f := newFixture(t, map[string]string{
-		"go.mod": "module x\n", "x.go": "package x\n",
-	})
-	var b strings.Builder
-	b.WriteString(`      - backbrief:
+	// scriptExpected renders the orchestrator's backbrief step.
+	scriptExpected := func(lines ...string) string {
+		return `      - backbrief:
           goal: "restated"
           plan: {files: ["x.go"], lines: 10}
           expected:
-`)
-	// 10 candidates: one guarantee, five singles (four orchestrator-only
-	// plus the clerk's own) and four foreseen by both lists.
-	b.WriteString(`            - {question: "g-guard?", category: guardrail, paths: ["x.go"], intended_default: "y"}
-            - {question: "o-only-1?", category: schema, paths: ["a"], intended_default: "y"}
-            - {question: "o-only-2?", category: interface, paths: ["b"], intended_default: "y"}
-            - {question: "o-only-3?", category: dependency, paths: ["c"], intended_default: "y"}
-            - {question: "o-only-4?", category: outbound, paths: ["d"], intended_default: "y"}
-            - {question: "shared-1?", category: behaviour, paths: ["s"], intended_default: "y"}
-            - {question: "shared-2?", category: structure, paths: ["t"], intended_default: "y"}
-            - {question: "shared-3?", category: scope, paths: ["u"], intended_default: "y"}
-            - {question: "shared-4?", category: dependency, paths: ["v"], intended_default: "y"}
-`)
-	b.WriteString("      - sleep: {ms: 1500}\n")
-	script := f.writeScript(b.String())
-	// The clerk foresees all four "shared" ones plus one of its own.
-	clerk := writeClerk(t, filepath.Dir(f.data), `{"expected_decisions":[
- {"question":"shared-1?","category":"behaviour","paths":["s"],"intended_default":"y"},
- {"question":"shared-2?","category":"structure","paths":["t"],"intended_default":"y"},
- {"question":"shared-3?","category":"scope","paths":["u"],"intended_default":"y"},
- {"question":"shared-4?","category":"dependency","paths":["v"],"intended_default":"y"},
- {"question":"c-only?","category":"territory","paths":["q"],"intended_default":"y"}]}`)
-	// Answer every shown question yes.
-	out, err := f.commissionPTY(strings.Repeat("y\n\n", 7), "g",
-		"--data-dir", f.data, "--script", script, "--clerk", clerk)
-	if err != nil {
-		t.Fatalf("%v\n%s", err, out)
+` + strings.Join(lines, "\n") + `
+      - sleep: {ms: 1500}
+`
 	}
-	// Question prompts and the change prompt both end in "[y/n]" — the
-	// shown count is questions asked, not prompts printed.
-	asked := strings.Count(out, "[y/n]") - strings.Count(out, "change? [y/n]")
-	if asked != 7 {
-		t.Fatalf("want 7 questions shown, saw %d:\n%s", asked, out)
+	// runCase runs one hearing over the pty, answering every shown
+	// question yes, and returns the output.
+	runCase := func(t *testing.T, f *fixture, script, clerk string) string {
+		t.Helper()
+		out, err := f.commissionPTY(strings.Repeat("y\n\n", 10), "g",
+			"--data-dir", f.data, "--script", script, "--clerk", clerk)
+		if err != nil {
+			t.Fatalf("%v\n%s", err, out)
+		}
+		return out
 	}
-	if !strings.Contains(out, "3 more stay open") {
-		t.Fatalf("want the open count printed:\n%s", out)
-	}
-	// Ordering: the guarantee question is first, single-list entries
-	// precede the both-lists ones.
-	gi := strings.Index(out, "g-guard?")
-	ci := strings.Index(out, "c-only?")
-	si := strings.Index(out, "shared-1?")
-	if !(gi >= 0 && gi < ci && ci < si) {
-		t.Fatalf("ordering guarantee<single<both broken:\n%s", out)
-	}
-	if n := len(ruledEvents(t, f)); n != 7 {
-		t.Fatalf("want 7 rulings, got %d", n)
-	}
-	// Only the seven shown were ruled — the orchestrator's D1..D6 (the
-	// guarantee + four singles + shared-1) and the clerk-only D14.
-	for _, e := range ruledEvents(t, f) {
-		switch id := bodyStr(e, "decision"); id {
-		case "D1", "D2", "D3", "D4", "D5", "D6", "D14":
-		default:
-			t.Fatalf("unshown candidate %s was ruled", id)
+	// assertOrder asserts the shown questions appear in exactly the want
+	// order and none of absent appear at all.
+	assertOrder := func(t *testing.T, out string, want, absent []string, open int) {
+		t.Helper()
+		asked := strings.Count(out, "[y/n]") - strings.Count(out, "change? [y/n]")
+		if asked != 7 {
+			t.Fatalf("want 7 questions shown, saw %d:\n%s", asked, out)
+		}
+		prev := -1
+		for _, q := range want {
+			i := strings.Index(out, q)
+			if i < 0 {
+				t.Fatalf("shown question %q missing:\n%s", q, out)
+			}
+			if i < prev {
+				t.Fatalf("question %q out of order:\n%s", q, out)
+			}
+			prev = i
+		}
+		for _, q := range absent {
+			if strings.Contains(out, q) {
+				t.Fatalf("question %q should have stayed open, was shown:\n%s", q, out)
+			}
+		}
+		if !strings.Contains(out, fmt.Sprintf("%d more stay open", open)) {
+			t.Fatalf("want %q in output:\n%s",
+				fmt.Sprintf("%d more stay open", open), out)
 		}
 	}
+	// assertRuled asserts the decision ids of every ruling.
+	assertRuled := func(t *testing.T, f *fixture, want map[string]bool) {
+		t.Helper()
+		evs := ruledEvents(t, f)
+		if len(evs) != len(want) {
+			t.Fatalf("want %d rulings, got %d", len(want), len(evs))
+		}
+		for _, e := range evs {
+			if !want[bodyStr(e, "decision")] {
+				t.Fatalf("unshown candidate %s was ruled", bodyStr(e, "decision"))
+			}
+		}
+	}
+
+	t.Run("full_order", func(t *testing.T) {
+		f := newFixture(t, map[string]string{
+			"go.mod": "module x\n", "x.go": "package x\n",
+		})
+		// Orchestrator D1..D7: orch-only guarantee, both-lists guarantee,
+		// three orch-only singles, two both-lists.
+		script := f.writeScript(scriptExpected(
+			`            - {question: "g-orch?", category: guardrail, paths: ["g1"], intended_default: "y"}`,
+			`            - {question: "shared-g?", category: test-strength, paths: ["sg"], intended_default: "y"}`,
+			`            - {question: "o-only-1?", category: schema, paths: ["a"], intended_default: "y"}`,
+			`            - {question: "o-only-2?", category: interface, paths: ["b"], intended_default: "y"}`,
+			`            - {question: "o-only-3?", category: dependency, paths: ["c"], intended_default: "y"}`,
+			`            - {question: "shared-1?", category: behaviour, paths: ["s1"], intended_default: "y"}`,
+			`            - {question: "shared-2?", category: structure, paths: ["s2"], intended_default: "y"}`,
+		))
+		// Clerk D8..D12: clerk-only guarantee, the two shared matches,
+		// clerk-only single — order: g first, then the shared entries.
+		clerk := writeClerk(t, filepath.Dir(f.data), `{"expected_decisions":[
+ {"question":"g-clerk?","category":"authority","paths":["ga"],"intended_default":"y"},
+ {"question":"shared-g?","category":"test-strength","paths":["sg"],"intended_default":"y"},
+ {"question":"shared-1?","category":"behaviour","paths":["s1"],"intended_default":"y"},
+ {"question":"shared-2?","category":"structure","paths":["s2"],"intended_default":"y"},
+ {"question":"c-only-1?","category":"territory","paths":["q"],"intended_default":"y"}]}`)
+		out := runCase(t, f, script, clerk)
+		// Order: guarantees D1(orch-only), D2(both), D8(clerk-only);
+		// singles D3..D5 (orch), D12 (clerk); open: boths D6, D7.
+		assertOrder(t, out,
+			[]string{"g-orch?", "shared-g?", "g-clerk?", "o-only-1?",
+				"o-only-2?", "o-only-3?", "c-only-1?"},
+			[]string{"shared-1?", "shared-2?"}, 2)
+		assertRuled(t, f, map[string]bool{
+			"D1": true, "D2": true, "D3": true, "D4": true,
+			"D5": true, "D8": true, "D12": true})
+	})
+
+	t.Run("cap_drops_lowest", func(t *testing.T) {
+		f := newFixture(t, map[string]string{
+			"go.mod": "module x\n", "x.go": "package x\n",
+		})
+		// Four guarantees (three orchestrator, one clerk-only) plus four
+		// singles plus one both = nine candidates; the cap drops the
+		// tail — one clerk single and the both-lists entry, never a
+		// guarantee.
+		script := f.writeScript(scriptExpected(
+			`            - {question: "g-o-1?", category: guardrail, paths: ["p1"], intended_default: "y"}`,
+			`            - {question: "g-o-2?", category: test-strength, paths: ["p2"], intended_default: "y"}`,
+			`            - {question: "g-b-1?", category: failure-handling, paths: ["gb1"], intended_default: "y"}`,
+			`            - {question: "o-s-1?", category: schema, paths: ["a"], intended_default: "y"}`,
+			`            - {question: "o-s-2?", category: interface, paths: ["b"], intended_default: "y"}`,
+			`            - {question: "pair-1?", category: behaviour, paths: ["bb"], intended_default: "y"}`,
+		))
+		clerk := writeClerk(t, filepath.Dir(f.data), `{"expected_decisions":[
+ {"question":"g-c-1?","category":"authority","paths":["pc"],"intended_default":"y"},
+ {"question":"g-b-1?","category":"failure-handling","paths":["gb1"],"intended_default":"y"},
+ {"question":"c-s-1?","category":"territory","paths":["q1"],"intended_default":"y"},
+ {"question":"c-s-2?","category":"outbound","paths":["q2"],"intended_default":"y"},
+ {"question":"pair-1?","category":"behaviour","paths":["bb"],"intended_default":"y"}]}`)
+		out := runCase(t, f, script, clerk)
+		// Order: D1,D2,D3 (orch guarantees), D7 (clerk guarantee),
+		// singles D4,D5 (orch) + D9,D10 (clerk), both D6 — shown are the
+		// first seven; the last clerk single and the both stay open.
+		assertOrder(t, out,
+			[]string{"g-o-1?", "g-o-2?", "g-b-1?", "g-c-1?",
+				"o-s-1?", "o-s-2?", "c-s-1?"},
+			[]string{"c-s-2?", "pair-1?"}, 2)
+		assertRuled(t, f, map[string]bool{
+			"D1": true, "D2": true, "D3": true, "D4": true,
+			"D5": true, "D7": true, "D9": true})
+	})
 }
 
 // TestC2_5_3: standard input not a terminal skips the hearing with a
@@ -259,7 +330,3 @@ func TestC2_5_5(t *testing.T) {
 		t.Fatalf("hearing output differs across identical replays:\n%s\n---\n%s", a, b)
 	}
 }
-
-// waitFor polls the ledger for a matching event (helper shared with
-// the M2.3 tests).
-var _ = time.Second

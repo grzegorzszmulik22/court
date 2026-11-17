@@ -4,7 +4,6 @@ package scripted_test
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -83,31 +82,121 @@ func TestC2_4_2(t *testing.T) {
 	}
 }
 
-// TestC2_4_3: child budgets deduct from the parent's remaining; two
-// spawns together exceeding it refuse the second.
+// TestC2_4_3: every budget narrows (spec/01 §9). For each of tokens,
+// minutes and speculation the check covers a request above the parent's
+// total, a request inside the total but above the parent's remaining
+// after earlier children, two spawns whose sum exceeds it (the second
+// refused) and the exact boundary — equal to the remaining issues, one
+// more refuses. The refusal must name the budget that bound, so a writ
+// path that never checks one budget fails here.
 func TestC2_4_3(t *testing.T) {
-	h, wid := writHarness(t)
-	c, err := h.AddSession("cw", &scripted.AgentSpec{ID: "orch", Writ: wid})
-	if err != nil {
-		t.Fatal(err)
+	// The harness root writ is {tokens:100, minutes:50, speculation:10}.
+	type budget struct {
+		name  string
+		key   string
+		total int64
 	}
-	mk := func(agent string, tok int64) map[string]any {
+	budgets := []budget{
+		{"tokens", "tokens", 100},
+		{"minutes", "minutes", 50},
+		{"speculation", "speculation", 10},
+	}
+	// mk builds a spawn call asking v of budget b (and 1 of each other,
+	// safely inside every limit).
+	mk := func(b budget, agent string, v int64) map[string]any {
+		bs := map[string]any{"tokens": int64(1), "minutes": int64(1),
+			"speculation": int64(1)}
+		bs[b.key] = v
 		return map[string]any{
 			"agent": agent, "task": "t", "categories": []string{"interface"},
-			"territory": []string{"src/**"},
-			"budgets":   map[string]any{"tokens": tok, "minutes": 5, "speculation": 1},
+			"territory": []string{"src/**"}, "budgets": bs,
 		}
 	}
-	if _, err := spawnCall(c, mk("k1", 60)); err != nil {
-		t.Fatalf("first spawn refused: %v", err)
+	orch := func(t *testing.T, h *scripted.Harness, wid string) *scripted.Client {
+		c, err := h.AddSession("cw", &scripted.AgentSpec{ID: "orch", Writ: wid})
+		if err != nil {
+			t.Fatal(err)
+		}
+		return c
 	}
-	// 60 + 50 = 110 > 100: the second must be refused.
-	if _, err := spawnCall(c, mk("k2", 50)); err == nil {
-		t.Fatal("second spawn exceeding remaining budget was issued")
+	// refuse asserts one refused spawn: the tool call fails, a
+	// writ.refused on rule "budgets" names the field, and no writ.issued
+	// names the child.
+	refuse := func(t *testing.T, h *scripted.Harness, c *scripted.Client,
+		b budget, args map[string]any) {
+		t.Helper()
+		if _, err := spawnCall(c, args); err == nil {
+			t.Fatalf("%s: spawn that breaks the %s budget was issued", b.name, b.name)
+		}
+		issuedFor := func(agent string) bool {
+			for _, e := range ofType(evs(t, h), "writ.issued") {
+				if field(e, "agent") == agent {
+					return true
+				}
+			}
+			return false
+		}
+		ref := ofType(evs(t, h), "writ.refused")
+		var last *ledger.Event
+		if len(ref) > 0 {
+			last = ref[len(ref)-1]
+		}
+		if last == nil || field(last, "rule") != "budgets" ||
+			!strings.Contains(field(last, "detail"), b.name) {
+			t.Fatalf("%s: want writ.refused on budgets naming %q, got %v",
+				b.name, b.name, ref)
+		}
+		if issuedFor(args["agent"].(string)) {
+			t.Fatalf("%s: refused spawn %s has a writ.issued", b.name, args["agent"])
+		}
 	}
-	iss := ofType(evs(t, h), "writ.issued")
-	if len(iss) != 2 { // root + k1
-		t.Fatalf("want 2 writ.issued (root+k1), got %d", len(iss))
+	for _, b := range budgets {
+		t.Run(b.name+"/above_total", func(t *testing.T) {
+			h, wid := writHarness(t)
+			c := orch(t, h, wid)
+			refuse(t, h, c, b, mk(b, "k1", b.total+1))
+		})
+		t.Run(b.name+"/above_remaining", func(t *testing.T) {
+			h, wid := writHarness(t)
+			c := orch(t, h, wid)
+			// Two earlier children spend 60% of the total between them;
+			// the next request is inside the total but above the 40% left.
+			if _, err := spawnCall(c, mk(b, "k1", b.total*3/10)); err != nil {
+				t.Fatalf("first spawn refused: %v", err)
+			}
+			if _, err := spawnCall(c, mk(b, "k2", b.total*3/10)); err != nil {
+				t.Fatalf("second spawn refused: %v", err)
+			}
+			// remaining = total - 0.6*total = 0.4*total; total/2 exceeds it
+			// while staying under the total itself.
+			refuse(t, h, c, b, mk(b, "k3", b.total/2))
+		})
+		t.Run(b.name+"/together_exceed", func(t *testing.T) {
+			h, wid := writHarness(t)
+			c := orch(t, h, wid)
+			// Each request fits alone; their sum is over the total.
+			if _, err := spawnCall(c, mk(b, "k1", b.total*6/10)); err != nil {
+				t.Fatalf("first spawn refused: %v", err)
+			}
+			refuse(t, h, c, b, mk(b, "k2", b.total*5/10))
+		})
+		t.Run(b.name+"/boundary", func(t *testing.T) {
+			h, wid := writHarness(t)
+			c := orch(t, h, wid)
+			if _, err := spawnCall(c, mk(b, "k1", b.total*4/10)); err != nil {
+				t.Fatalf("first spawn refused: %v", err)
+			}
+			// Exactly the remaining budget issues.
+			if _, err := spawnCall(c, mk(b, "k2", b.total*6/10)); err != nil {
+				t.Fatalf("spawn at the exact remaining budget refused: %v", err)
+			}
+			// One more unit is over.
+			refuse(t, h, c, b, mk(b, "k3", 1))
+			// And only the two issued children have writs.
+			if n := len(ofType(evs(t, h), "writ.issued")); n != 3 { // root+k1+k2
+				t.Fatalf("want 3 writ.issued (root+k1+k2), got %d", n)
+			}
+		})
 	}
 }
 
@@ -142,7 +231,6 @@ func TestC2_4_4(t *testing.T) {
 	if m, _ := filepath.Glob(glob); len(m) > 0 {
 		t.Fatalf("refused spawn left a worktree: %v", m)
 	}
-	_ = os.RemoveAll
 }
 
 // TestC2_4_5: a declared decision outside the agent's writ is marked

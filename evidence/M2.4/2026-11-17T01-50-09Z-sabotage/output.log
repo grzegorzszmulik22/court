@@ -1,0 +1,37 @@
+SABOTAGE budget-not-deducted caught by C2.4.3
+CHECK C2.4.1 PASS
+CHECK C2.4.2 PASS
+CHECK C2.4.3 FAIL check failed; see go test output 
+CHECK C2.4.4 PASS
+CHECK C2.4.5 PASS
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T01-50-10Z
+make[1]: *** [Makefile:33: check-M2.4] Error 1
+SABOTAGE glob-containment-by-string-prefix caught by C2.4.1
+CHECK C2.4.1 FAIL check failed; see go test output 
+CHECK C2.4.2 PASS
+CHECK C2.4.3 PASS
+CHECK C2.4.4 PASS
+CHECK C2.4.5 PASS
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T01-51-49Z
+make[1]: *** [Makefile:33: check-M2.4] Error 1
+SABOTAGE guarantee-category-grantable caught by C2.4.2,C2.4.5
+CHECK C2.4.1 PASS
+CHECK C2.4.2 FAIL check failed; see go test output 
+CHECK C2.4.3 PASS
+CHECK C2.4.4 PASS
+CHECK C2.4.5 FAIL check failed; see go test output 
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T01-52-22Z
+make[1]: *** [Makefile:33: check-M2.4] Error 1
+SABOTAGE refused-spawn-leaves-world caught by C2.4.4
+CHECK C2.4.1 PASS
+CHECK C2.4.2 PASS
+CHECK C2.4.3 PASS
+CHECK C2.4.4 FAIL check failed; see go test output 
+CHECK C2.4.5 PASS
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T01-53-19Z
+make[1]: *** [Makefile:33: check-M2.4] Error 1
+0 uncaught

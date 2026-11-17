@@ -560,7 +560,6 @@ func TestC1_5_4(t *testing.T) {
 func TestC1_5_5(t *testing.T) {
 	h := newHarness(t)
 	host, port, _ := net.SplitHostPort(h.Daemon.Addr())
-	_ = host
 	// Every non-loopback local address must refuse the connection.
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -816,7 +815,6 @@ func TestDaemon_RestartKeepsDedupe(t *testing.T) {
 	}
 	post(c.HookURL)
 	// Restart: same store, new daemon.
-	url := c.HookURL
 	h.Daemon.Close()
 	d2, err := daemon.New(h.Store, daemon.Options{
 		DataDir: h.DataDir, CourtBin: h.CourtBin})
@@ -827,7 +825,6 @@ func TestDaemon_RestartKeepsDedupe(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(d2.Close)
-	_ = url
 	// Same token, new daemon: session was persisted.
 	if d2.AdminToken() == "" {
 		t.Fatal("admin token not persisted")

@@ -5,6 +5,7 @@ package commission_test
 import (
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -92,13 +93,16 @@ func readOnlyToolName(tool string) bool {
 	return false
 }
 
-// TestC2_3_3: an invalid clerk output is recorded as invalid and the
-// commission proceeds on the orchestrator's list with one line.
+// TestC2_3_3: an invalid clerk output is recorded as invalid with its
+// raw output kept, and the commission proceeds on the orchestrator's
+// list with one line. The recorded event must satisfy the ledger
+// schema — `court ledger verify` checks every stored body against it.
 func TestC2_3_3(t *testing.T) {
 	f := newFixture(t, map[string]string{
 		"go.mod": "module x\n", "x.go": "package x\n",
 	})
-	clerk := writeClerk(t, filepath.Dir(f.data), "this is not json at all")
+	const clerkRaw = "this is not json at all"
+	clerk := writeClerk(t, filepath.Dir(f.data), clerkRaw)
 	script := f.writeScript(orchBackbrief + `      - sleep: {ms: 400}
       - tool: {name: Edit, input: {file_path: "x.go"}}
 `)
@@ -124,6 +128,17 @@ func TestC2_3_3(t *testing.T) {
 	}
 	if !found {
 		t.Fatal("clerk event is not marked invalid")
+	}
+	if got := bodyStr(ev, "output"); got != clerkRaw {
+		t.Fatalf("recorded output %q, want the raw clerk output %q", got, clerkRaw)
+	}
+	// The stored event must verify against the schema: an undeclared
+	// body field fails `court ledger verify` (additionalProperties).
+	db := filepath.Join(f.data, "ledger.db")
+	vout, verr := exec.Command(f.bin, "ledger", "verify", db).CombinedOutput()
+	if verr != nil || !strings.Contains(string(vout), " ok") {
+		t.Fatalf("ledger verify failed on the invalid clerk event: %v\n%s",
+			verr, vout)
 	}
 }
 

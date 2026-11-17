@@ -166,11 +166,6 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		closed: make(chan struct{}),
 	}
 	d.mcpHTTP = d.newMCPHandler()
-	if opts.CourtBin == "" {
-		if exe, err := os.Executable(); err == nil {
-			opts.CourtBin = exe
-		}
-	}
 	if err := os.MkdirAll(opts.DataDir, 0o755); err != nil {
 		return nil, err
 	}

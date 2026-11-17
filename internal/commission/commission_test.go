@@ -39,7 +39,7 @@ func newFixture(t *testing.T, files map[string]string) *fixture {
 	}
 	bin := os.Getenv("COURT_BIN")
 	if bin == "" {
-		t.Fatal("COURT_BIN is not set (check scripts build the binary)")
+		t.Fatal("COURT_BIN is not set and TestMain could not build ./cmd/court")
 	}
 	f := &fixture{t: t, repo: repo, data: filepath.Join(root, "data"), bin: bin}
 	t.Cleanup(f.shutdown)

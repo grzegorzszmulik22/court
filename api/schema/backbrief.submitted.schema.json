@@ -73,6 +73,15 @@
           "items": {
             "type": "string"
           }
+        },
+        "invalid": {
+          "type": "boolean",
+          "description": "true when the clerk's output failed schema validation: the raw output is kept in 'output' and the commission proceeds on the orchestrator's list (spec/02 section 7)"
+        },
+        "output": {
+          "type": "string",
+          "description": "the clerk's raw model output, recorded when invalid is true (truncated at 2000 characters)",
+          "maxLength": 2000
         }
       }
     },

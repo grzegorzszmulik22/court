@@ -1,0 +1,35 @@
+=== RUN   TestC2_5_1
+--- PASS: TestC2_5_1 (0.61s)
+PASS
+ok  	court/internal/commission	0.670s
+CHECK C2.5.1 PASS
+=== RUN   TestC2_5_2
+=== RUN   TestC2_5_2/full_order
+=== RUN   TestC2_5_2/cap_drops_lowest
+--- PASS: TestC2_5_2 (4.18s)
+    --- PASS: TestC2_5_2/full_order (2.09s)
+    --- PASS: TestC2_5_2/cap_drops_lowest (2.09s)
+PASS
+ok  	court/internal/commission	4.244s
+CHECK C2.5.2 PASS
+=== RUN   TestC2_5_3
+--- PASS: TestC2_5_3 (0.48s)
+PASS
+ok  	court/internal/commission	0.554s
+CHECK C2.5.3 PASS
+=== RUN   TestC2_5_4
+--- PASS: TestC2_5_4 (0.56s)
+PASS
+ok  	court/internal/commission	0.614s
+CHECK C2.5.4 PASS
+=== RUN   TestC2_5_5
+--- PASS: TestC2_5_5 (4.14s)
+PASS
+ok  	court/internal/commission	4.199s
+CHECK C2.5.5 PASS
+=== RUN   TestC2_5_6
+--- PASS: TestC2_5_6 (0.63s)
+PASS
+ok  	court/internal/commission	0.696s
+CHECK C2.5.6 PASS
+check.sh: evidence: evidence/M2.5/2026-11-17T01-48-20Z
