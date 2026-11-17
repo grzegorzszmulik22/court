@@ -4,6 +4,12 @@ package commission_test
 // not: the check scripts under test/checks/ export COURT_BIN themselves,
 // but plain `go test ./...` must work too. The build lands in a temp
 // directory, court.exe on Windows (CR-001).
+//
+// It also owns the leak barrier the M2.1 chunk needed: every fixture
+// records the pid of the daemon it started in a run-scoped registry, and
+// after all tests have run TestMain fails when any recorded daemon is
+// still alive. A test that asks a daemon to stop but does not wait for it
+// is therefore a failing test, on Linux and Windows alike.
 
 import (
 	"fmt"
@@ -11,26 +17,130 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
+	"strings"
 	"testing"
 )
 
 func TestMain(m *testing.M) {
-	if os.Getenv("COURT_BIN") != "" {
-		os.Exit(m.Run())
+	registry, err := os.MkdirTemp("", "court-test-daemons-")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "commission_test: daemon registry: %v\n", err)
+		os.Exit(1)
+	}
+	if err := os.Setenv("COURT_TEST_DAEMON_REGISTRY", registry); err != nil {
+		fmt.Fprintf(os.Stderr, "commission_test: daemon registry: %v\n", err)
+		os.Exit(1)
+	}
+	code := runTests(m)
+	code = reportLeakedDaemons(registry, code)
+	if err := os.RemoveAll(registry); err != nil && code == 0 {
+		fmt.Fprintf(os.Stderr, "commission_test: remove daemon registry: %v\n", err)
+		code = 1
+	}
+	os.Exit(code)
+}
+
+func runTests(m *testing.M) int {
+	if bin := os.Getenv("COURT_BIN"); bin != "" {
+		// The check scripts build the binary as ".../court". Windows
+		// CreateProcess may append .exe, but os/exec's LookPath does not
+		// for a path-qualified name; use a sibling copy that carries the
+		// extension so every test and the daemon child agree (CR-002).
+		if runtime.GOOS == "windows" && filepath.Ext(bin) == "" {
+			if _, err := os.Stat(bin); err == nil {
+				exe := bin + ".exe"
+				if err := copyExecutable(bin, exe); err != nil {
+					fmt.Fprintf(os.Stderr, "commission_test: COURT_BIN copy: %v\n", err)
+					return 1
+				}
+				if err := os.Setenv("COURT_BIN", exe); err != nil {
+					fmt.Fprintf(os.Stderr, "commission_test: COURT_BIN: %v\n", err)
+					return 1
+				}
+			}
+		}
+		return m.Run()
 	}
 	bin, dir, err := buildCourt()
 	if err != nil {
 		// Tests that need the binary report the missing COURT_BIN
 		// themselves; a build failure only warns here.
 		fmt.Fprintf(os.Stderr, "commission_test: %v\n", err)
-		os.Exit(m.Run())
+		return m.Run()
 	}
-	os.Setenv("COURT_BIN", bin)
+	if err := os.Setenv("COURT_BIN", bin); err != nil {
+		fmt.Fprintf(os.Stderr, "commission_test: COURT_BIN: %v\n", err)
+		return 1
+	}
 	code := m.Run()
-	// A daemon still running keeps its binary open on Windows; either way
-	// the temp dir is expendable.
+	// The test run is over; nothing this package started may still hold
+	// the binary. RemoveAll failing is reported by reportLeakedDaemons
+	// through the daemons it names, so the removal itself is best-effort.
 	_ = os.RemoveAll(dir)
-	os.Exit(code)
+	return code
+}
+
+// copyExecutable copies src to dst and makes the copy executable.
+func copyExecutable(src, dst string) error {
+	raw, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(dst, raw, 0o755); err != nil {
+		return err
+	}
+	return nil
+}
+
+// recordDaemonPID writes pid into the run-scoped registry before a test
+// asks the daemon to stop, so TestMain can prove after the run that it
+// did stop. Writing is idempotent: a fixture shutdown may run twice.
+func recordDaemonPID(t *testing.T, pid int) {
+	t.Helper()
+	dir := os.Getenv("COURT_TEST_DAEMON_REGISTRY")
+	if dir == "" {
+		t.Fatalf("COURT_TEST_DAEMON_REGISTRY is not set")
+	}
+	if pid <= 0 {
+		t.Fatalf("cannot record daemon pid %d", pid)
+	}
+	if err := os.WriteFile(filepath.Join(dir, strconv.Itoa(pid)), nil, 0o644); err != nil {
+		t.Fatalf("record daemon pid %d: %v", pid, err)
+	}
+}
+
+// reportLeakedDaemons fails the run when a daemon recorded by a test is
+// still alive after every test and its cleanup have finished.
+func reportLeakedDaemons(registry string, code int) int {
+	entries, err := os.ReadDir(registry)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return code
+		}
+		fmt.Fprintf(os.Stderr, "commission_test: read daemon registry: %v\n", err)
+		return 1
+	}
+	var leaked []string
+	for _, e := range entries {
+		pid, err := strconv.Atoi(strings.TrimSpace(e.Name()))
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "commission_test: bad daemon record %q: %v\n",
+				e.Name(), err)
+			code = 1
+			continue
+		}
+		if processAlive(pid) {
+			leaked = append(leaked, e.Name())
+		}
+	}
+	if len(leaked) > 0 {
+		fmt.Fprintf(os.Stderr,
+			"commission_test: %d court daemon process(es) from this run are still alive: %s\n",
+			len(leaked), strings.Join(leaked, " "))
+		return 1
+	}
+	return code
 }
 
 // buildCourt compiles ./cmd/court from the repository root (two dirs up

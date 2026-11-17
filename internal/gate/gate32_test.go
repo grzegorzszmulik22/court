@@ -683,5 +683,66 @@ func TestC3_2_6(t *testing.T) {
 	}
 }
 
+// A repository that configures its own core.hooksPath: Court's per-world
+// GIT_CONFIG_* override must not hide it, and its hooks still run after
+// Court's.
+func TestC3_2_6ConfiguredHooksPath(t *testing.T) {
+	root := t.TempDir()
+	repo := filepath.Join(root, "repo")
+	if err := scripted.InitRepo(repo, map[string]string{"app.txt": "one\n"}); err != nil {
+		t.Fatal(err)
+	}
+	custom := filepath.Join(root, "custom-hooks")
+	if err := os.MkdirAll(custom, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	order := filepath.Join(root, "order.log")
+	for name, line := range map[string]string{
+		"pre-commit":  "repo-pre",
+		"post-commit": "repo-post",
+	} {
+		body := "#!/bin/sh\necho " + line + " >> " + shPath(order) + "\nexit 0\n"
+		if err := os.WriteFile(filepath.Join(custom, name), []byte(body), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if out, err := exec.Command("git", "-C", repo, "config", "core.hooksPath",
+		filepath.ToSlash(custom)).CombinedOutput(); err != nil {
+		t.Fatalf("git config core.hooksPath: %v: %s", err, out)
+	}
+	h, err := scripted.NewHarness(scripted.Options{
+		Repo: repo, DataDir: filepath.Join(root, "data"), Commission: "c32c",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := h.Start(); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(h.Close)
+	if err := h.OpenCommission("configured hooks", nil); err != nil {
+		t.Fatal(err)
+	}
+	c := addAgent(t, h, "w1")
+	writeFile(t, c, "app.txt", "one\nconfigured\n")
+	if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+		t.Fatal(err)
+	}
+	if out, err := commitRaw(t, c, "configured"); err != nil {
+		t.Fatalf("commit with a configured hooks path failed: %v\n%s", err, out)
+	}
+	head := revParse(t, c)
+	waitFor(t, h, "world.commit", 5*time.Second,
+		func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
+	raw, err := os.ReadFile(order)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := string(raw)
+	if !strings.Contains(got, "repo-pre") || !strings.Contains(got, "repo-post") {
+		t.Fatalf("configured repository hooks did not both run: %q", got)
+	}
+}
+
 // shPath single-quotes a path for /bin/sh.
 func shPath(p string) string { return "'" + strings.ReplaceAll(p, "'", `'"'"'`) + "'" }

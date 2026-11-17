@@ -151,6 +151,8 @@ type Daemon struct {
 	adminToken string
 	closed     chan struct{}
 	closeOnce  sync.Once
+	srvDone    chan struct{}
+	srvOnce    sync.Once
 }
 
 // New opens a daemon over the given store. It re-derives its in-memory
@@ -173,12 +175,13 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		writByAgent: map[string]string{},
 		spent:       map[string]ledger.Budgets{},
 		pending:     map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
-		mcpSrv: map[*Session]*mcp.Server{},
+		mcpSrv:     map[*Session]*mcp.Server{},
 		gateState:  gate.NewState(),
 		gatePasses: map[string]gate.Pass{},
 		syncCh:     make(chan struct{}, 1),
 		syncMin:    200 * time.Millisecond,
 		closed:     make(chan struct{}),
+		srvDone:    make(chan struct{}),
 	}
 	d.mcpHTTP = d.newMCPHandler()
 	if err := os.MkdirAll(opts.DataDir, 0o755); err != nil {
@@ -243,11 +246,49 @@ func (d *Daemon) Start(ctx context.Context) error {
 		d.Close()
 	}()
 	go d.srv.Serve(ln)
+	go d.watchDaemonFile()
 	go func() {
 		<-d.closed
 		d.srv.Shutdown(context.Background())
+		d.srvOnce.Do(func() { close(d.srvDone) })
 	}()
 	return nil
+}
+
+// A daemon whose data directory has been removed can never be found again:
+// daemon.json is the only discovery record. Such a process must not run
+// forever untracked, so Start watches that file and closes the daemon after
+// it has been continuously absent for dataDirGoneLimit.
+const (
+	dataDirPollInterval = 250 * time.Millisecond
+	dataDirGoneLimit    = 5 * time.Second
+)
+
+func (d *Daemon) watchDaemonFile() {
+	ticker := time.NewTicker(dataDirPollInterval)
+	defer ticker.Stop()
+	var missingSince time.Time
+	for {
+		select {
+		case <-d.closed:
+			return
+		case now := <-ticker.C:
+			_, err := os.Stat(d.daemonPath())
+			if err == nil || !os.IsNotExist(err) {
+				missingSince = time.Time{}
+				continue
+			}
+			if missingSince.IsZero() {
+				missingSince = now
+				continue
+			}
+			if now.Sub(missingSince) >= dataDirGoneLimit {
+				d.logf("data directory record %s is gone; exiting", d.daemonPath())
+				d.Close()
+				return
+			}
+		}
+	}
 }
 
 // URL is the daemon's base URL (http://127.0.0.1:<port>).
@@ -278,6 +319,17 @@ func (d *Daemon) Close() {
 		}
 	})
 }
+
+// Done is closed when Close has been called (or a signal asked to stop).
+// It lets the foreground `court daemon` process learn that an
+// /admin/shutdown arrived; without it the process would keep running with
+// daemon.log and the ledger open after saying it stopped.
+func (d *Daemon) Done() <-chan struct{} { return d.closed }
+
+// Wait blocks until the HTTP server has finished shutting down, so the
+// process that owns the log and the ledger exits only after the shutdown
+// response has been written.
+func (d *Daemon) Wait() { <-d.srvDone }
 
 func (d *Daemon) logf(format string, a ...any) {
 	if d.opts.Logger != nil {

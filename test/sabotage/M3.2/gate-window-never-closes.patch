@@ -1,0 +1,16 @@
+diff --git a/internal/gate/gate.go b/internal/gate/gate.go
+index 43d9d78..16327cb 100644
+--- a/internal/gate/gate.go
++++ b/internal/gate/gate.go
+@@ -59,9 +59,8 @@ func (s *State) Declared(key string, seq int64) {
+ func (s *State) Committed(key string, seq int64) {
+ 	s.mu.Lock()
+ 	defer s.mu.Unlock()
+-	if seq > s.commit[key] {
+-		s.commit[key] = seq
+-	}
++	_ = key
++	_ = seq
+ }
+ 
+ // Open reports whether the world's gate is open: a declaration was made

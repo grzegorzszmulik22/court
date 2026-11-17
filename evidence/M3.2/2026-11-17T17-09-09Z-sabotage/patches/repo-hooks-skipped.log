@@ -1,0 +1,9 @@
+warning: in the working copy of 'test/checks/M3.2/C3.2.6.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C3.2.1 PASS
+CHECK C3.2.2 PASS
+CHECK C3.2.3 PASS
+CHECK C3.2.4 PASS
+CHECK C3.2.5 PASS
+CHECK C3.2.6 FAIL check failed; see go test output 
+check.sh: evidence: evidence/M3.2/2026-11-17T17-13-27Z
+make[1]: *** [Makefile:33: check-M3.2] Error 1

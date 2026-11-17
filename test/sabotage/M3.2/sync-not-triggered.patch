@@ -1,0 +1,17 @@
+diff --git a/internal/daemon/daemon.go b/internal/daemon/daemon.go
+index 5adbdd7..ac62626 100644
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -543,12 +543,6 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
+ 			d.gateState.Committed(gate.WorldKey(commission, b.World), ev.Seq)
+ 		}
+ 	}
+-	// Every new ledger write is a point at which a commit that bypassed the
+-	// post-commit hook can be discovered (spec/03 §4.5); the scanner runs
+-	// asynchronously and coalesces bursts.
+-	if err == nil && !dup {
+-		d.requestSyncLocked()
+-	}
+ 	return ev, dup, err
+ }
+ 

@@ -25,6 +25,13 @@ const orchBackbrief = `      - backbrief:
             - {question: "which api shape?", category: interface, paths: ["src/api"], intended_default: "rest"}
 `
 
+// shQuote renders s as one POSIX shell word, so a path keeps every
+// character (a Windows path's backslashes included) when the product
+// runs a --clerk-cmd through sh.
+func shQuote(s string) string {
+	return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'"
+}
+
 func writeClerk(t *testing.T, dir, content string) string {
 	t.Helper()
 	p := filepath.Join(dir, "clerk.json")
@@ -165,7 +172,10 @@ func TestC2_3_1(t *testing.T) {
 	sink := filepath.Join(filepath.Dir(f.data), "clerk-stdin.json")
 	canned := writeClerk(t, filepath.Dir(f.data), clerkFixture)
 	script := f.writeScript(orchBackbrief)
-	cmd := "cat > " + sink + "; cat " + canned
+	// The clerk command is a shell command line, so the fixture quotes
+	// the paths it embeds: an unquoted Windows path loses its
+	// backslashes in sh (CR-002).
+	cmd := "cat > " + shQuote(sink) + "; cat " + shQuote(canned)
 	out, err := f.commission(nil, "my commission goal", "--data-dir", f.data,
 		"--script", script, "--clerk-cmd", cmd)
 	if err != nil {
