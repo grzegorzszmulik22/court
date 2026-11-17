@@ -118,6 +118,17 @@ for path, gcls in go.items():
 missing = set(py) - set(go)
 for path in missing:
     bad.append(f"{os.path.basename(path)}: go verifier did not report")
+# The verifiers run in batches, so a crashed batch would drop its files from
+# both outputs at once. Every corpus file must have a result from both.
+# Keyed by <subdir>/<name>: on Windows the two sides may spell the scratch
+# root differently (/tmp/... versus C:/...).
+def key(p):
+    return '/'.join(norm(p).split('/')[-2:])
+reported = {key(p) for p in go} & {key(p) for p in py}
+for sub in ('gen', 'mut', 'edge'):
+    for f in sorted(os.listdir(os.path.join(d, sub))):
+        if f.endswith('.jsonl') and f"{sub}/{f}" not in reported:
+            bad.append(f"{sub}/{f}: not reported by both verifiers")
 print(f"agreement: {n_gen} ledgers, {n_mut} mutants, {len(bad)} disagreements")
 if n_gen < 200 or n_mut < 1000:
     print(f"counts below spec: {n_gen} ledgers {n_mut} mutants"); sys.exit(1)
