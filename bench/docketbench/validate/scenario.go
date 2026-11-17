@@ -8,6 +8,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"fmt"
 	"os"
 	"os/exec"
@@ -45,16 +46,16 @@ var subsetMin = map[string][2]int{"A": {60, 60}, "C": {20, 20}, "D": {20, 20}}
 var scenarioFiles = []string{"commission.yaml", "script.yaml", "registry.yaml", "twin", "final.txt"}
 
 type scenario struct {
-	Subset string
-	ID     string
-	Dir    string
-	Comm   *commissionFile
-	Script *scriptFile
-	Reg    *registryFile
-	Twin   string
-	Final  string
+	Subset    string
+	ID        string
+	Dir       string
+	Comm      *commissionFile
+	Script    *scriptFile
+	Reg       *registryFile
+	Twin      string
+	Final     string
 	repoFiles map[string][]byte
-	agents  map[string]*scriptAgent
+	agents    map[string]*scriptAgent
 }
 
 func (s *scenario) planted() bool { return len(s.Reg.Entries) > 0 }
@@ -1153,9 +1154,10 @@ func checkRepoTests(all []*scenario, opts options, v *violations) {
 	jobs := make(chan *scenario)
 	var mu sync.Mutex
 	var wg sync.WaitGroup
+	cache := repoTestCache{}
 	worker := func() {
 		for s := range jobs {
-			runScenarioTests(s, v, &mu)
+			runScenarioTests(s, v, &mu, cache)
 		}
 		wg.Done()
 	}
@@ -1176,10 +1178,40 @@ func checkRepoTests(all []*scenario, opts options, v *violations) {
 	wg.Wait()
 }
 
+// repoTestCache dedupes done-check runs by the exact post-edit tree plus
+// the done-check command list: a subset-A twin replays the planted
+// scenario's edits, so its resulting tree is byte-identical and re-running
+// `go test` would cost one process spawn for no new information. The map
+// stores the per-command failure brief ("" = the check passed).
+type repoTestCache map[string]map[string]string
+
+// treeDigest hashes a post-edit tree and the command list so a shared
+// result is only reused when both match exactly.
+func treeDigest(files map[string][]byte, cmds []string) string {
+	h := sha256.New()
+	paths := make([]string, 0, len(files))
+	for p := range files {
+		paths = append(paths, p)
+	}
+	sort.Strings(paths)
+	for _, p := range paths {
+		h.Write([]byte(p))
+		h.Write([]byte{0})
+		h.Write(files[p])
+		h.Write([]byte{1})
+	}
+	h.Write([]byte{2})
+	for _, c := range cmds {
+		h.Write([]byte(c))
+		h.Write([]byte{3})
+	}
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
 // runScenarioTests copies repo/ once per editing agent, applies that
 // agent's edits and runs every done-check in the resulting tree
 // (spec/04 §2 rule 3: the suite still passes with the planted failure).
-func runScenarioTests(s *scenario, v *violations, mu *sync.Mutex) {
+func runScenarioTests(s *scenario, v *violations, mu *sync.Mutex, cache repoTestCache) {
 	where := s.Subset + "/" + s.ID
 	if s.Script == nil || s.Comm == nil {
 		return
@@ -1201,17 +1233,53 @@ func runScenarioTests(s *scenario, v *violations, mu *sync.Mutex) {
 		if err == nil {
 			_, err = applyAgentEdits(dir, a)
 		}
+		var key string
+		var files map[string][]byte
+		cmds := make([]string, 0, len(s.Comm.DoneChecks))
+		for _, dc := range s.Comm.DoneChecks {
+			cmds = append(cmds, dc.Cmd)
+		}
+		if err == nil {
+			files, err = treeFiles(dir)
+		}
+		if err == nil {
+			key = treeDigest(files, cmds)
+			mu.Lock()
+			cached, hit := cache[key]
+			mu.Unlock()
+			if hit {
+				for _, dc := range s.Comm.DoneChecks {
+					if brief := cached[dc.Cmd]; brief != "" {
+						mu.Lock()
+						v.addf("repo-tests", where, "agent %s: done-check %q failed post-edit: %s",
+							a.ID, dc.Cmd, brief)
+						mu.Unlock()
+					}
+				}
+				os.RemoveAll(tmp)
+				continue
+			}
+		}
+		results := map[string]string{}
 		for _, dc := range s.Comm.DoneChecks {
 			if err != nil {
 				break
 			}
 			res := runCmd(dir, dc.Cmd)
 			if !res.ok {
+				results[dc.Cmd] = res.brief()
 				mu.Lock()
 				v.addf("repo-tests", where, "agent %s: done-check %q failed post-edit: %s",
 					a.ID, dc.Cmd, res.brief())
 				mu.Unlock()
+			} else {
+				results[dc.Cmd] = ""
 			}
+		}
+		if err == nil {
+			mu.Lock()
+			cache[key] = results
+			mu.Unlock()
 		}
 		if err != nil {
 			mu.Lock()

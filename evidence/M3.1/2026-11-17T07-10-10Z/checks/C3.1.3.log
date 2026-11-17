@@ -1,0 +1,4 @@
+=== RUN   TestC3_1_3
+--- PASS: TestC3_1_3 (6.08s)
+PASS
+ok  	court/bench/docketbench/validate	6.124s

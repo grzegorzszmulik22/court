@@ -30,11 +30,11 @@ type rtrace struct {
 	ID      string `json:"id"`
 	Comment string `json:"comment"`
 	Inputs  struct {
-		Expected  []rExpected `json:"expected"`
-		Decisions []rDecision `json:"decisions"`
+		Expected  []rExpected      `json:"expected"`
+		Decisions []rDecision      `json:"decisions"`
 		Writs     map[string]rWrit `json:"writs"`
-		Bypassed  []rBypass  `json:"bypassed"`
-		Contested [][]string `json:"contested"`
+		Bypassed  []rBypass        `json:"bypassed"`
+		Contested [][]string       `json:"contested"`
 	} `json:"inputs"`
 	Events []rEvent  `json:"events"`
 	Expect []rExpect `json:"expect"`

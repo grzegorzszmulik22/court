@@ -9,6 +9,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -46,6 +47,16 @@ func collectScenarios(t *testing.T, root string, opts options) *violations {
 	v := &violations{}
 	validateScenarios(root, opts, v)
 	return v
+}
+
+// testWorkers oversubscribes hard: a done-check run is nearly all wait
+// on the 2-CPU box (23s real vs 0.5s user under contention), so wider
+// overlap matters more than CPU fairness.
+func testWorkers() int {
+	if n := runtime.NumCPU() * 4; n > 16 {
+		return n
+	}
+	return 16
 }
 
 func hasCode(v *violations, code string) bool {
@@ -108,9 +119,12 @@ func mutatePair(t *testing.T, subset string, mut func(dir string)) string {
 
 // expectViolation runs validateScenarios over the mutated root and fails
 // unless code appears.
+// wantRepoTests marks the legs whose assertion is the repo-test run
+// itself; the others skip the subprocess cost.
 func expectViolation(t *testing.T, root, code string) *violations {
 	t.Helper()
-	v := collectScenarios(t, root, options{runTests: true, workers: 4})
+	run := code == "repo-tests"
+	v := collectScenarios(t, root, options{runTests: run, workers: 4})
 	if !hasCode(v, code) {
 		t.Fatalf("expected violation %q; got: %v", code, v.list)
 	}
@@ -172,7 +186,7 @@ func TestC3_1_1_broken_backref(t *testing.T) {
 func TestC3_1_2(t *testing.T) {
 	repo := repoRoot(t)
 	v := collectScenarios(t, filepath.Join(repo, "bench/docketbench/scenarios"),
-		options{runTests: true, workers: 8})
+		options{runTests: true, workers: testWorkers()})
 	if len(v.list) != 0 {
 		t.Fatalf("real corpus has violations:\n%s", strings.Join(v.list, "\n"))
 	}
