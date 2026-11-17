@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c2() {}\n"
+      "before": "package svc\n\nvar n = 1\n\nfunc c() {}\n",
+      "after": "package svc\n\nvar n = 2\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "var-value",
+  "note": "var-value"
 }

@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('perf', () => {\n  expect(ms()).toBeLessThan(100);\n});\n",
-      "after": "test('perf', () => {\n  expect(ms()).toBeLessThan(500);\n});\n"
+      "before": "test('perf', () => {\n  expect(ms()).toBeLessThan(100);\n  expect(runs).toBe(3);\n});\n",
+      "after": "test('perf', () => {\n  expect(ms()).toBeLessThan(500);\n  expect(runs).toBe(3);\n});\n"
     }
   },
   "expect": [

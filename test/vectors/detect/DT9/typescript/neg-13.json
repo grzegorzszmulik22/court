@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "scripts/setup.sh": {
-      "before": "#!/bin/sh\nchmod 700 bin/run\n",
-      "after": "#!/bin/sh\nchmod 755 bin/run\n"
+    "config/app.yml": {
+      "before": "x: 1\n",
+      "after": "x: 2\n"
     }
   },
   "expect": [],
-  "near_miss": "mode-755",
-  "note": "mode-755"
+  "note": "unrelated-yml"
 }

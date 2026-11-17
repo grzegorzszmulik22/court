@@ -4,10 +4,10 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0\npydantic==2.5.0\n",
-      "after": "pydantic==2.5.0\nrequests==2.31.0\n"
+      "before": "",
+      "after": "# nothing yet\n"
     }
   },
   "expect": [],
-  "note": "dependency-reordered"
+  "note": "empty-file"
 }

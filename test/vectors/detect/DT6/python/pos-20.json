@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n        continue-on-error: true\n      - run: go vet ./...\n"
+    ".pre-commit-config.yaml": {
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n",
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "subkind": "hook",
+      "path": ".pre-commit-config.yaml",
       "lines": [
-        7,
-        7
+        5,
+        5
       ],
-      "side": "after",
-      "evidence": "continue-on-error: true",
-      "rule": "dt6-python-ci"
+      "side": "before",
+      "evidence": "- id: vet",
+      "rule": "dt6-python-hook"
     }
   ],
-  "note": "a CI step became non-blocking"
+  "note": "a pre-commit hook entry was removed"
 }

@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export function f() { return 1; }\n",
-      "after": "export function f() {\n  const x = 1;\n  if (x > 2) {\n  }\n  return x;\n}\n"
+    "src/f.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    if (e instanceof A) throw e;\n    throw e;\n  }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "empty-if-b",
-  "note": "empty-if-b"
+  "note": "two-catch"
 }

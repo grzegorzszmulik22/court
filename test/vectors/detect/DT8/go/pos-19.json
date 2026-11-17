@@ -6,13 +6,24 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
       "after": "package svc\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl https://m1.cache.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"telnet relay.ops.example 23\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "ping -c1 stats.collector.example"
+        "command": "curl https://m1.cache.example/x"
+      },
+      "outcome": "ok"
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "telnet relay.ops.example 23"
       },
       "outcome": "ok"
     }
@@ -27,15 +38,28 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "stats.collector.example",
+      "evidence": "m1.cache.example",
+      "rule": "dt8-go-tool-event"
+    },
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "events",
+      "evidence": "relay.ops.example",
       "rule": "dt8-go-tool-event"
     }
   ],
-  "note": "host contacted by a tool event"
+  "note": "two events each contacted a non-allowed host"
 }

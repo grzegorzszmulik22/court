@@ -3,33 +3,29 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/extra.py": {
+    "tools/x/y.py": {
       "before": "",
-      "after": "x = 1\n"
-    },
-    "shop/cart.py": {
-      "before": "x = 1\n",
-      "after": "x = 1\ny\n"
+      "after": "import sys\nz = 1\nw = 2\n"
     }
   },
   "commission": {
     "plan_files": [
       "shop/cart.py"
     ],
-    "plan_lines": 20
+    "plan_lines": 5
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.py",
+      "path": "tools/x/y.py",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "w = 2",
       "rule": "dt12-python-unplanned-file"
     }
   ]

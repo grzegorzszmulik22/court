@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "pkg/token/mint.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+      "before": "def mint():\n    return 1\n",
+      "after": "def mint():\n    x = 2\n    return x\n"
     }
   },
   "expect": [
@@ -19,9 +19,9 @@
         2
       ],
       "side": "after",
-      "evidence": "return False",
+      "evidence": "x = 2",
       "rule": "dt9-python-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "token mint changed"
 }

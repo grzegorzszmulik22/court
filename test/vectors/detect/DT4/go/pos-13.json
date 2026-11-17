@@ -4,7 +4,7 @@
   "language": "go",
   "files": {
     "shop/cart_test.go": {
-      "before": "package shop\n\nfunc TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}\n",
+      "before": "package shop\n\nfunc TestB(t *testing.T) {\n\tif B() != 1 {\n\t\tt.Fatalf(\"got %d\", B())\n\t}\n}\n",
       "after": "package shop\n"
     }
   },
@@ -16,10 +16,10 @@
       "path": "shop/cart_test.go",
       "lines": [
         3,
-        5
+        7
       ],
       "side": "before",
-      "evidence": "func TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}",
+      "evidence": "func TestB(t *testing.T) {\n\tif B() != 1 {\n\t\tt.Fatalf(\"got %d\", B())\n\t}\n}",
       "rule": "dt4-go-deleted_test"
     }
   ]

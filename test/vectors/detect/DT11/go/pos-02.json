@@ -5,13 +5,12 @@
   "files": {
     "docs/guide.md": {
       "before": "",
-      "after": "package x\n"
+      "after": "# guide\n\ntext\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [
@@ -25,8 +24,9 @@
         1
       ],
       "side": "after",
-      "evidence": "package x",
+      "evidence": "# guide",
       "rule": "dt11-go-outside"
     }
-  ]
+  ],
+  "note": "outside a single-glob territory"
 }

@@ -3,8 +3,8 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "svc/old.py": {
-      "before": "x\n",
+    "svc/legacy/old.py": {
+      "before": "x=1\n",
       "after": ""
     }
   },

@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
-      "before": "test('x', () => {\n  expect(x()).toBe(1);\n  expect(x()).not.toBe(0);\n});\n",
-      "after": "test('x', () => {\n  expect(x()).toBe(1);\n});\n"
+    "src/desc.test.ts": {
+      "before": "describe('g', () => {\n  test('x', () => {\n    expect(1).toBe(1);\n  });\n});\n",
+      "after": "describe.only('g', () => {\n  test('x', () => {\n    expect(1).toBe(1);\n  });\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "fewer_assertions",
-      "path": "src/cart.test.ts",
+      "subkind": "skip_or_focus",
+      "path": "src/desc.test.ts",
       "lines": [
-        3,
-        3
+        1,
+        1
       ],
-      "side": "before",
-      "evidence": "expect(x()).not.toBe(0);",
-      "rule": "dt4-typescript-fewer_assertions"
+      "side": "after",
+      "evidence": "describe.only('g'",
+      "rule": "dt4-typescript-skip_or_focus"
     }
   ]
 }

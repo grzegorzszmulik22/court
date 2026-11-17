@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/cart_test.go": {
-      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n > 5 { t.Fatal(n) }\n}\n",
-      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n > 50 { t.Fatal(n) }\n}\n"
+    "shop/sub/n_test.go": {
+      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tt.Run(\"n\", func(t *testing.T) {\n\t\tif n > 5 { t.Fatal(n) }\n\t})\n}\n",
+      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tt.Run(\"n\", func(t *testing.T) {\n\t\tif n > 50 { t.Fatal(n) }\n\t})\n}\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "loosened_threshold",
-      "path": "shop/cart_test.go",
+      "path": "shop/sub/n_test.go",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
       "evidence": "n > 50",

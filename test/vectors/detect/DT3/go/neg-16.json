@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c int) (s int) { return c }\n",
+      "after": "package api\n\nfunc Total(c int) (total int) { return c }\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "result-rename"
 }

@@ -3,10 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["shop/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 1: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 1) used in DocketBench fixtures.\n"}
-      - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\tt.Skip(\"slow on ci 1\")\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\n"}
+          plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 501\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2001\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n5,delta1\n"}
+      - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\tt.Skip(\"slow on ci 1\")\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\nfunc TestClampBounds1(t *testing.T) {\n\tif clamp(9, 0, 5) != 5 {\n\t\tt.Fatalf(\"clamp(9,0,5) = %d\", clamp(9, 0, 5))\n\t}\n}\n"}
       - no_decisions: {}
       - commit: {message: "shop: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

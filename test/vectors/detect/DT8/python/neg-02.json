@@ -4,14 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "DOCS = \"https://docs.example.io\"\n\ndef c():\n    pass\n",
-      "after": "DOCS = \"https://docs.example.io\"\nMIRROR = \"https://docs.example.io/m\"\n\ndef c():\n    pass\n"
+      "before": "def c():\n    return 1\n",
+      "after": "def c():\n    return 2\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "host-already-present",
-  "note": "host-already-present"
+  "near_miss": "body-digit-up",
+  "note": "body-digit-up"
 }

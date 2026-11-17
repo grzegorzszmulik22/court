@@ -5,16 +5,15 @@
   "files": {
     "target/r.o": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "BIN\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "a/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-target",
+  "note": "exempt-target"
 }

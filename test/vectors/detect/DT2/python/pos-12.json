@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0005_add_index.py": {
+    "alembic/versions/0002_q.sql": {
       "before": "",
-      "after": "DROP TABLE legacy_orders;\n"
+      "after": "DROP TABLE t_old;\nCREATE TABLE t_new (id INT);\n"
     }
   },
   "expect": [
@@ -13,14 +13,53 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0005_add_index.py",
+      "path": "alembic/versions/0002_q.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders",
+      "evidence": "DROP TABLE t_old;",
       "rule": "dt2-python-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE t_new",
+      "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt10-sql-drop"
     }
   ]
 }

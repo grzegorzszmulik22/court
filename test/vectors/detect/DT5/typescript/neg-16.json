@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc15.ts": {
-      "before": "export const s = 'x';\n",
-      "after": "export const s = 'any';\n"
+    "src/calc.ts": {
+      "before": "export function s(f: (x: number) => number) { return 0; }\n",
+      "after": "export function s(f: (x: number) => string) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "string-any-b",
-  "note": "string-any-b"
+  "near_miss": "fn-type",
+  "note": "fn-type"
 }

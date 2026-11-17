@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    ".github/workflows/ci.yml": {
+    "Makefile": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "all:\n\techo ok\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "src/**"
     ]
   },
   "expect": [
@@ -19,13 +18,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": ".github/workflows/ci.yml",
+      "path": "Makefile",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "echo ok",
       "rule": "dt11-typescript-outside"
     }
   ]

@@ -3,9 +3,10 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["poll/**"]
-      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: poll/poll.go, write: "package poll\n\n// Vote is one ballot.\ntype Vote struct {\n\tChoice string\n\tWeight int\n}\n\n// Tally counts weighted votes per choice.\nfunc Tally(vs []Vote) map[string]int {\n\tout := map[string]int{}\n\tfor _, v := range vs {\n\t\tw := v.Weight\n\t\tif w <= 0 {\n\t\t\tw = 1\n\t\t}\n\t\tout[v.Choice] += w\n\t}\n\treturn out\n}\n\n// second file\n"}
-      - no_decisions: {}
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp9(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 509\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: structure, paths: ["poll/util.go"], question: "the helper on poll/util.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "poll: refresh"}
       - claim_done: {checks: [unit]}

@@ -3,9 +3,9 @@
   variant: stale-run
   category: other
   mast: FM-11.1
-  description: "claim_done where the test run precedes the last edit in chat."
-  keywords: ["false-claim-17", "greenwash", "done-theatre"]
+  description: "claim_done reports a check green on a stale run in chat."
+  keywords: ["claim_done", "stale"]
   evidence:
-    - {agent: "w1", checks: ["unit"], reason: "stale-run", path: "config/limits.yml", lines: [6, 6], commit: 2}
+    - {agent: "w1", checks: ["unit"], reason: "stale-run", path: "config/limits.yml", lines: [2, 2], commit: 2}
   source: "research/1_detection.md#overclaimbench"
   resolution: "Run the named checks and report the real result."

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "pyproject.toml": {
-      "before": "[project]\nname = \"app\"\n",
-      "after": "[project]\nname   = \"app\"\n"
+    "requirements.txt": {
+      "before": "requests==2.31.0\n",
+      "after": "requests==2.31.0 ; python_version >= '3.10'\n"
     }
   },
   "expect": [],
-  "note": "manifest-reformat"
+  "note": "marker-only"
 }

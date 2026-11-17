@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc15.go": {
-      "before": "package calc\n\nvar s = \"x\"\n",
-      "after": "package calc\n\nvar s = \"any\"\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s(m map[int]int) {}\n",
+      "after": "package calc\n\nfunc s(m map[int]string) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "string-any-b",
-  "note": "string-any-b"
+  "near_miss": "map-type",
+  "note": "map-type"
 }

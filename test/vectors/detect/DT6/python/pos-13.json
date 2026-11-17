@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n",
-      "after": "linters:\n  enable:\n    - govet\n"
+    "codecov.yml": {
+      "before": "coverage:\n  range: 80..100\n",
+      "after": "coverage:\n  range: 60..100\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "golangci.yml",
+      "subkind": "threshold",
+      "path": "codecov.yml",
       "lines": [
-        4,
-        4
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "- staticcheck",
-      "rule": "dt6-python-lint"
+      "side": "after",
+      "evidence": "range: 60..100",
+      "rule": "dt6-python-threshold"
     }
   ],
-  "note": "a lint rule was disabled"
+  "note": "the coverage band widened downward"
 }

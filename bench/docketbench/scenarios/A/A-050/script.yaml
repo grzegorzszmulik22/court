@@ -3,9 +3,9 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["vault/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 50: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 50) used in DocketBench fixtures.\n"}
+          plan_files: ["vault/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 550\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2050\nretries: 3\n"}
       - edit: {path: migrations/0052_add_col.sql, write: "-- extend items\nALTER TABLE vault_items ADD COLUMN updated_at INTEGER;\n"}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'vault: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}

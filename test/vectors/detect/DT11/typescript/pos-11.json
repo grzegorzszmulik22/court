@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "scripts/deploy.sh": {
+    "web/index.html": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "<html><body></body></html>\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "api/**"
     ]
   },
   "expect": [
@@ -19,13 +18,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "scripts/deploy.sh",
+      "path": "web/index.html",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "<html><body></body></html>",
       "rule": "dt11-typescript-outside"
     }
   ]

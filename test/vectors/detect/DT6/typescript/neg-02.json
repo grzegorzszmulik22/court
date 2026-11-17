@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "coverage.yml": {
-      "before": "coverage:\n  min: 60\n",
-      "after": "coverage:\n  min: 80\n"
+      "before": "coverage:\n  min: 60\nreport: on\n",
+      "after": "coverage:\n  min: 80\nreport: on\n"
     }
   },
   "expect": [],

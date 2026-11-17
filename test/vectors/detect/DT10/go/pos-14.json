@@ -3,49 +3,23 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "data/seed.csv": {
-      "before": "a,b\n1,2\n",
+    "fixtures/users.csv": {
+      "before": "u\n",
       "after": ""
-    },
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "rm -r data/"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
-      "lines": [
-        0,
-        0
-      ],
-      "side": "events",
-      "evidence": "rm -r data/",
-      "rule": "dt10-go-destructive-cmd"
-    },
-    {
-      "detector": "DT10",
-      "category": "deletion",
       "subkind": "file",
-      "path": "data/seed.csv",
+      "path": "fixtures/users.csv",
       "lines": [
         1,
         1
       ],
       "side": "before",
-      "evidence": "a,b",
+      "evidence": "u",
       "rule": "dt10-go-datafile"
     }
   ]

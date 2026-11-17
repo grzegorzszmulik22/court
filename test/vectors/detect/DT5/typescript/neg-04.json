@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: any) { return x; }\n",
-      "after": "export function s(x: number) { return x; }\n"
+      "before": "export function s(x: any, y: any) { return x; }\n",
+      "after": "export function s(x: number, y: any) { return x; }\n"
     }
   },
   "expect": [],

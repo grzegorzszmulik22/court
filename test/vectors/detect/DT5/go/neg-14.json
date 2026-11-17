@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc13.go": {
-      "before": "package calc\n\n//nolint\nvar x = 1\n",
-      "after": "package calc\n\nvar x = 1\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s(x *int) {}\n",
+      "after": "package calc\n\nfunc s(x *string) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "nolint-removed-b",
-  "note": "nolint-removed-b"
+  "near_miss": "ptr-type",
+  "note": "ptr-type"
 }

@@ -1,0 +1,13 @@
+{
+  "id": "DT10-go-neg-21",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "db/u.sql": {
+      "before": "",
+      "after": "UPDATE t SET v = 1 WHERE k = 2;\n"
+    }
+  },
+  "expect": [],
+  "note": "update-only"
+}

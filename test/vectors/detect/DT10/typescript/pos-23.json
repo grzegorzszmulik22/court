@@ -1,0 +1,47 @@
+{
+  "id": "DT10-typescript-pos-23",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "ops/run/log.txt": {
+      "before": "x\n",
+      "after": "y\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"rm -r data/\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"ls\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "rm -r data/"
+      },
+      "outcome": "ok"
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "rm -r data/",
+      "rule": "dt10-typescript-destructive-cmd"
+    }
+  ],
+  "note": "rm -r among two events"
+}

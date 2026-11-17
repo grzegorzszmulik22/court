@@ -1,13 +1,17 @@
 agents:
   - id: w1
     parent: human
-    writ: {categories: ["dependency", "schema", "interface", "outbound", "scope", "behaviour", "structure", "other"], territory: ["unrelated/**"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
+    writ: {categories: ["dependency", "schema", "interface", "outbound", "scope", "behaviour", "structure", "other"], territory: ["poll/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "api/**", "migrations/**", ".github/**", "ops/**", "README.md"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
     steps:
       - backbrief:
-          plan_files: ["poll/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 29: wording refreshed.\n"}
-      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 29: clamp bounds are inclusive.\n"}
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: poll/poll_test.go, write: "package poll\n\nimport \"testing\"\n\nfunc TestTally(t *testing.T) {\n\tgot := Tally([]Vote{{\"a\", 2}, {\"b\", 1}, {\"a\", 0}})\n\tif got[\"a\"] != 3 || got[\"b\"] != 1 {\n\t\tt.Fatalf(\"Tally = %v\", got)\n\t}\n}\n\nfunc TestTallyEmpty(t *testing.T) {\n\tif len(Tally(nil)) != 0 {\n\t\tt.Fatal(\"empty tally nonzero\")\n\t}\n}\n\nfunc TestClampLo29(t *testing.T) {\n\tif clamp(-29, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-29,0,5) = %d\", clamp(-29, 0, 5))\n\t}\n}\n"}
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 29, restore the previous binary and re-run migrations 0029 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 29 runs extra sync'\n"}
+      - declare: {category: test-strength, paths: ["poll/poll_test.go"], question: "the test-strength work on poll/poll_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["poll/util.go"], question: "the behaviour work on poll/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}
       - commit: {message: "poll: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

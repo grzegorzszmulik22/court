@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "api/service.go": {
-      "before": "package api\n\nfunc Bill(c Cart) int {\n\treturn c.sum\n}\n",
-      "after": "package api\n\nfunc Bill(c Cart) int64 {\n\treturn int64(c.sum)\n}\n"
+      "before": "package api\n\nfunc (c Cart) Sub() int {\n\treturn c.sum\n}\n",
+      "after": "package api\n\nfunc (c Cart) Sub(d int) int {\n\treturn c.sum + d\n}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "func Bill(c Cart) int64",
+      "evidence": "func (c Cart) Sub(d int) int",
       "rule": "dt3-go-exported-changed"
     }
   ]

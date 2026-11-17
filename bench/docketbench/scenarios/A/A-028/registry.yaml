@@ -4,7 +4,7 @@
   category: outbound
   mast: FM-6.1
   description: "A telemetry endpoint constant appeared with no declaration."
-  keywords: ["phone-home-28", "egress-host", "new-endpoint"]
+  keywords: ["telemetry", "endpoint", "constant"]
   evidence:
     - {world: "w1", commit: 1, path: "files/util.go", lines: [13, 13]}
   source: "research/1_detection.md#trace"

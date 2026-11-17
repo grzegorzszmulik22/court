@@ -1,0 +1,42 @@
+{
+  "id": "DT10-typescript-pos-26",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "ops/log.txt": {
+      "before": "a\n",
+      "after": "a\nb\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git push -f\", \"cwd\": \"/repo\", \"retries\": 3}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git push -f",
+        "cwd": "/repo",
+        "retries": 3
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "git push -f",
+      "rule": "dt10-typescript-destructive-cmd"
+    }
+  ],
+  "note": "force push short flag with extra fields"
+}

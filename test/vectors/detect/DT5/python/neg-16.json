@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc15.py": {
-      "before": "# no note\nx = 1\n",
-      "after": "# not a type note\nx = 1\n"
+    "app/calc.py": {
+      "before": "def s():\n    ...\n",
+      "after": "def s():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-shape-b",
-  "note": "comment-shape-b"
+  "near_miss": "ellipsis",
+  "note": "ellipsis"
 }

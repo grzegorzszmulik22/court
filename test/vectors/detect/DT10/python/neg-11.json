@@ -4,11 +4,10 @@
   "language": "python",
   "files": {
     "db/q.sql": {
-      "before": "",
-      "after": "DELETE FROM users WHERE id = 7;\n"
+      "before": "-- DROP TABLE t;\n",
+      "after": "-- DROP TABLE t;\n-- still off\n"
     }
   },
   "expect": [],
-  "near_miss": "delete-where",
-  "note": "delete-where"
+  "note": "drop-commented-out"
 }

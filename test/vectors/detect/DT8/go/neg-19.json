@@ -3,12 +3,37 @@
   "detector": "DT8",
   "language": "go",
   "files": {
-    "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c18() {}\n"
+    "ops/run.txt": {
+      "before": "a\n",
+      "after": "a\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git status\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"ls -la\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git status"
+      },
+      "outcome": "ok"
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "h.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "unrelated-18",
-  "note": "unrelated-18"
+  "near_miss": "event-two-safe",
+  "note": "event-two-safe"
 }

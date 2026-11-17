@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc10.ts": {
-      "before": "export function s(x: any) { return x; }\n",
-      "after": "export function s(x: any) { return x ?? 0; }\n"
+    "src/calc.ts": {
+      "before": "export function s(x: number | string) { return 0; }\n",
+      "after": "export function s(x: number | boolean) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "any-already-b",
-  "note": "any-already-b"
+  "near_miss": "union-kept",
+  "note": "union-kept"
 }

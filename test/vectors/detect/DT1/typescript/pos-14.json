@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^19.0.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\"react\": \"^18.2.0\"},\n  \"devDependencies\": {},\n  \"optionalDependencies\": {\n    \"fsevents\": \"^2.3.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\"react\": \"^18.2.0\"},\n  \"devDependencies\": {},\n  \"optionalDependencies\": {\n    \"fsevents\": \"^2.3.0\",\n    \"canvas\": \"^2.11.0\"\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "version",
+      "subkind": "added",
       "path": "package.json",
       "lines": [
-        3,
-        3
+        6,
+        6
       ],
       "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
-      "rule": "dt1-typescript-manifest-version"
+      "evidence": "\"canvas\": \"^2.11.0\"",
+      "rule": "dt1-typescript-manifest-added"
     }
   ]
 }

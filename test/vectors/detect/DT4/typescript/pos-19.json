@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
-      "before": "test('x', () => {});\n",
-      "after": "test.skip('x', () => {});\n"
+    "src/shop.test.ts": {
+      "before": "test('flag', () => {\n  expect(flag()).toBe(true);\n  expect(flag2()).toBe(true);\n});\n",
+      "after": "test('flag', () => {\n  expect(flag()).toBe(false);\n  expect(flag2()).toBe(true);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "src/cart.test.ts",
+      "subkind": "changed_expectation",
+      "path": "src/shop.test.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "test.skip('x'",
-      "rule": "dt4-typescript-skip_or_focus"
+      "evidence": "toBe(false)",
+      "rule": "dt4-typescript-changed_expectation"
     }
   ]
 }

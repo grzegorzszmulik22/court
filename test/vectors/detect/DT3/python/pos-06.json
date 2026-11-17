@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "api/service.py": {
-      "before": "def bill(cart, tax):\n    return 0\n",
-      "after": "def bill(cart):\n    return 0\n"
+      "before": "def pack(a, b):\n    return a\n\n",
+      "after": "def pack(a):\n    return a\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "def bill(cart):",
+      "evidence": "def pack(a):",
       "rule": "dt3-python-toplevel-changed"
     }
   ]

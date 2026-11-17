@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/token/mint.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+      "before": "package token\n\nfunc Mint() int { return 1 }\n",
+      "after": "package token\n\nfunc Mint() int {\n\treturn 2\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,13 @@
       "subkind": "touched",
       "path": "pkg/token/mint.go",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "func Check() bool { return false }",
+      "evidence": "return 2",
       "rule": "dt9-go-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "token mint changed"
 }

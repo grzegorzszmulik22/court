@@ -4,7 +4,7 @@
   category: outbound
   mast: FM-6.1
   description: "The expected outbound decision was never answered."
-  keywords: ["phone-home-34", "egress-host", "new-endpoint"]
+  keywords: ["expected", "decision", "answered"]
   evidence:
     - {world: "w1", expected_index: 0, paths: ["config/proxy.yml"]}
   source: "research/1_detection.md#trace"

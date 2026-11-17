@@ -4,8 +4,12 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^19.0.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.3.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n"
+    },
+    "package-lock.json": {
+      "before": "\"lockfileVersion\": 3\n",
+      "after": "\"lockfileVersion\": 3\n"
     }
   },
   "expect": [
@@ -19,8 +23,22 @@
         3
       ],
       "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
+      "evidence": "\"react\": \"^18.3.0\"",
       "rule": "dt1-typescript-manifest-version"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "lock-mismatch",
+      "path": "package.json",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "\"react\": \"^18.3.0\"",
+      "rule": "dt1-typescript-lock-unchanged"
     }
-  ]
+  ],
+  "note": "manifest changed while the lockfile stayed identical"
 }

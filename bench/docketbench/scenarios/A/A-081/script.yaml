@@ -3,10 +3,14 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["shop/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 21: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 21) used in DocketBench fixtures.\n"}
-      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
+          plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 21, restore the previous binary and re-run migrations 0021 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: README.md, write: "# shop\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 21).\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["shop/util.go"], question: "the behaviour work on shop/util.go?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

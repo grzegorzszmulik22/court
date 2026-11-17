@@ -3,9 +3,9 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "svc/q.py": {
-      "before": "",
-      "after": "WIPE = \"DELETE FROM audit\"\n"
+    "db/drops/idx.sql": {
+      "before": "-- x\n",
+      "after": "-- x\nDROP INDEX idx_old;\n"
     }
   },
   "expect": [
@@ -13,14 +13,27 @@
       "detector": "DT10",
       "category": "deletion",
       "subkind": "sql",
-      "path": "svc/q.py",
+      "path": "db/drops/idx.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "DELETE FROM audit",
+      "evidence": "DROP INDEX idx_old;",
       "rule": "dt10-python-sql"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/drops/idx.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "DROP INDEX idx_old;",
+      "rule": "dt2-python-ddl"
     }
   ]
 }

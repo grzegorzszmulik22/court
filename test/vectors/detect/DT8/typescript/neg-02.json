@@ -4,14 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
-      "after": "const docs = \"https://docs.example.io\";\nconst mirror = \"https://docs.example.io/m\";\n\nexport function c() {}\n"
+      "before": "export function c() { return 1; }\n",
+      "after": "export function c() { return 2; }\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "host-already-present",
-  "note": "host-already-present"
+  "near_miss": "body-digit-up",
+  "note": "body-digit-up"
 }

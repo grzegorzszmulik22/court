@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc12.go": {
-      "before": "package calc\n\nfunc s(x interface{}) int { return 0 }\n",
-      "after": "package calc\n\nfunc s(x int) int { return x }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nvar ch chan int\n",
+      "after": "package calc\n\nvar ch chan string\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "near_miss": "chan-type",
+  "note": "chan-type"
 }

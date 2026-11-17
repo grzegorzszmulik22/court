@@ -1,0 +1,18 @@
+{
+  "id": "DT11-python-neg-21",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "shop2/x.go": {
+      "before": "",
+      "after": "s2 = 1\nclass T:\n    pass\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop2/**"
+    ]
+  },
+  "expect": [],
+  "note": "sibling"
+}

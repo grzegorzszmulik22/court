@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc pick(v int) int { return v }\n",
-      "after": "package calc\n\nfunc pick(v any) any { return v }\n"
+      "before": "package calc\n\nfunc load(k string) (int, error) { return 0, nil }\n",
+      "after": "package calc\n\nfunc load(k string) (any, error) { return nil, nil }\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "func pick(v any) any",
+      "evidence": "(any, error)",
       "rule": "dt5-go-widened"
     }
   ]

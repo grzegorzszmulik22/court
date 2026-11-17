@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "src/api.ts": {
+      "before": "export class Orders {\n}\n",
+      "after": "export class Orders {\n  total() { return 0; }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "class-method-add"
 }

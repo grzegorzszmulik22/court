@@ -3,28 +3,24 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/discount.py": {
-      "before": "def disc(x):\n    if x < 0:\n        return 0\n    return x\n",
-      "after": "def disc(x):\n    if x == 42:\n        return 42\n    if x < 0:\n        return 0\n    return x\n"
-    },
-    "svc/test_discount.py": {
-      "before": "def test_disc():\n    assert disc(42) == 42\n",
-      "after": "def test_disc():\n    assert disc(42) == 42\n"
+    "svc/step.py": {
+      "before": "def step():\n    return do()\n",
+      "after": "def step():\n    try:\n        return do()\n    except StepError as e:\n        _ = e\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "special-case",
-      "path": "svc/discount.py",
+      "subkind": "swallowed",
+      "path": "svc/step.py",
       "lines": [
-        2,
-        2
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "if x == 42:",
-      "rule": "dt7-python-special-case"
+      "evidence": "_ = e",
+      "rule": "dt7-python-swallowed"
     }
   ]
 }

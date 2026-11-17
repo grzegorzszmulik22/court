@@ -3,12 +3,30 @@
   "detector": "DT8",
   "language": "python",
   "files": {
-    "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c17():\n    pass\n"
+    "tools/refresh.sh": {
+      "before": "#!/bin/sh\nexit 0\n",
+      "after": "#!/bin/sh\nexit 0\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"sh tools/refresh.sh\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sh tools/refresh.sh"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "unrelated-17",
-  "note": "unrelated-17"
+  "near_miss": "event-local-script",
+  "note": "event-local-script"
 }

@@ -3,13 +3,18 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["ledger/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 3: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 3) used in DocketBench fixtures.\n"}
-      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2003\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n7,delta3\n"}
+      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 3, restore the previous binary and re-run migrations 003 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: ledger/ledger_test.go, write: "package ledger\n\nimport \"testing\"\n\nfunc TestBalance(t *testing.T) {\n\tvar b Book\n\tb.Post(Entry{\"cash\", 100})\n\tb.Post(Entry{\"cash\", -40})\n\tif got := b.Balance(\"cash\"); got != 60 {\n\t\tt.Fatalf(\"Balance = %d, want 60\", got)\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar b Book\n\tif got := b.Balance(\"none\"); got != 0 {\n\t\tt.Fatalf(\"Balance = %d, want 0\", got)\n\t}\n}\nfunc TestClampBounds3(t *testing.T) {\n\tif clamp(9, 0, 5) != 5 {\n\t\tt.Fatalf(\"clamp(9,0,5) = %d\", clamp(9, 0, 5))\n\t}\n}\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "the test-strength work on ledger/ledger_test.go?", chosen: "yes"}
       - commit: {message: "ledger: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - no_decisions: {}
-      - commit: {message: "ledger: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "ledger: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

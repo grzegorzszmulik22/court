@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('x', () => {\n  expect(x()).toBe(7);\n});\n",
-      "after": "test('x', () => {\n  expect(x()).toBe(8);\n});\n"
+      "before": "test('x', () => {\n  expect(x()).toBe(7);\n  expect(x()).toBeTruthy();\n});\n",
+      "after": "test('x', () => {\n  expect(x()).toBe(8);\n  expect(x()).toBeTruthy();\n});\n"
     }
   },
   "expect": [

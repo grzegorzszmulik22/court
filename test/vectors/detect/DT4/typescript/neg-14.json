@@ -5,7 +5,7 @@
   "files": {
     "src/shop.test.ts": {
       "before": "test('m', () => {\n  expect(m()).toBe(1);\n});\n",
-      "after": "test('m', () => {\n  expect(m()).toBe(1);\n  expect(m()).toBe(1);\n});\n"
+      "after": "test('m', () => {\n  expect(m()).toBe(1);\n  expect(m()).toBe(1);\n  expect(m()).toBe(1);\n});\n"
     }
   },
   "expect": [],

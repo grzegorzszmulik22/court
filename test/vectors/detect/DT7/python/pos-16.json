@@ -3,24 +3,24 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n"
+    "svc/call.py": {
+      "before": "def call():\n    return dial()\n",
+      "after": "def call():\n    try:\n        return dial()\n    except DialError:\n        return None\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
-      "path": "svc/fetch.py",
+      "subkind": "swallowed",
+      "path": "svc/call.py",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "except Exception:",
-      "rule": "dt7-python-broadened"
+      "evidence": "return None",
+      "rule": "dt7-python-swallowed"
     }
   ]
 }

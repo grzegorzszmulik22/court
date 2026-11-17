@@ -3,10 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["files/**"]
-      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 3\n\n# batch-tune\n"}
-      - no_decisions: {}
+          plan_files: ["files/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp8(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 8, restore the previous binary and re-run migrations 008 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - declare: {category: structure, paths: ["files/util.go"], question: "the helper on files/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - commit: {message: "files: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

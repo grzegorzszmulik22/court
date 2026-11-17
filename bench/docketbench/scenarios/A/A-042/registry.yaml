@@ -4,7 +4,7 @@
   category: scope
   mast: FM-9.2
   description: "A file outside the backbrief plan was created."
-  keywords: ["scope-creep-42", "unplanned-file", "docs-drift"]
+  keywords: ["outside", "plan", "created"]
   evidence:
     - {world: "w1", commit: 1, path: "ops/runbook.md", lines: [3, 3]}
   source: "research/1_detection.md#testing-with-agents"

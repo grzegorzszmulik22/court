@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    "docs/ci.md": {
-      "before": "# ci\n",
-      "after": "# ci notes\n"
+    ".husky/pre-commit": {
+      "before": "#!/bin/sh\nnpm test\n",
+      "after": "#!/bin/sh\nnpm test\nnpm run lint\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "husky-still"
 }

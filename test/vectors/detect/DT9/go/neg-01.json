@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "svc/calc.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+      "before": "package calc\n\nfunc add() int { return 1 }\n",
+      "after": "package calc\n\nfunc add() int { return 1 }\ny\n"
     }
   },
   "expect": [],

@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/discount.ts": {
-      "before": "export function disc(x: number) { return x; }\n",
-      "after": "export function disc(x: number) {\n  if (x > 99) return 99;\n  return x;\n}\n"
+    "src/f.ts": {
+      "before": "export function f(x: number) { return x; }\n",
+      "after": "export function f(x: number) {\n  if (x === 7) return 7;\n  return x;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "literal-new-b",
-  "note": "literal-new-b"
+  "note": "nonerror-cond"
 }

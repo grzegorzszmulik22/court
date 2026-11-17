@@ -3,14 +3,18 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["sched/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\nMaintenance note 55: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# scheduler\n\nA small Go service (rev 55) used in DocketBench fixtures.\n"}
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero55(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: sched/sched_test.go, write: "package sched\n\nimport \"testing\"\n\nfunc TestDue(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif !Due(j, 1100) {\n\t\tt.Fatal(\"job should be due\")\n\t}\n\tif Due(j, 1030) {\n\t\tt.Fatal(\"job should not be due\")\n\t}\n}\n\nfunc TestNext(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif Next(j) != 1060 {\n\t\tt.Fatalf(\"Next = %d\", Next(j))\n\t}\n}\n\nfunc TestClampLo55(t *testing.T) {\n\tif clamp(-55, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-55,0,5) = %d\", clamp(-55, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 555\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.55\"\n  }\n}\n"}
-      - no_decisions: {}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "scheduler: routine refresh"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - commit: {message: "scheduler: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "scheduler: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

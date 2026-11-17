@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc19.go": {
-      "before": "package calc\n\nfunc s(x interface{}) {}\n",
-      "after": "package calc\n\nfunc s(x interface{}) { _ = x }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s(x ...int) {}\n",
+      "after": "package calc\n\nfunc s(x ...string) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "interface-already-b",
-  "note": "interface-already-b"
+  "near_miss": "variadic-type",
+  "note": "variadic-type"
 }

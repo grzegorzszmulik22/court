@@ -3,22 +3,18 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "src/cart.ts": {
+    "src/sub/x.ts": {
       "before": "",
       "after": "export const x = 1;\n"
-    },
-    "src/extra.ts": {
-      "before": "seed\n",
-      "after": "seed\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts"
+      "src/**"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "near_miss": "subdir-in-top",
+  "note": "subdir-in-top"
 }

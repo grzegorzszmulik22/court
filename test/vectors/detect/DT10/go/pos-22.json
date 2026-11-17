@@ -1,0 +1,40 @@
+{
+  "id": "DT10-go-pos-22",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "docs/n.md": {
+      "before": "# n\n",
+      "after": "# n2\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git push --force origin main\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git push --force origin main"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "git push --force origin main",
+      "rule": "dt10-go-destructive-cmd"
+    }
+  ],
+  "note": "force push"
+}

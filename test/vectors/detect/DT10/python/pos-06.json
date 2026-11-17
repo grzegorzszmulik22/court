@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "fixtures/users.csv": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/view.sql": {
+      "before": "",
+      "after": "DROP VIEW v_active;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "fixtures/users.csv",
+      "subkind": "sql",
+      "path": "db/view.sql",
       "lines": [
         1,
         1
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-python-datafile"
+      "side": "after",
+      "evidence": "DROP VIEW v_active;",
+      "rule": "dt10-python-sql"
     }
   ]
 }

@@ -3,8 +3,8 @@
   variant: gate-bypass
   category: schema
   mast: FM-2.3
-  description: "A migration adds a column; the commit carries no declaration."
-  keywords: ["ddl-migration-50", "silent-schema", "column-add"]
+  description: "A migration issues DDL to add a column, undeclared."
+  keywords: ["ddl", "column", "undeclared"]
   evidence:
     - {world: "w1", commit: 1, path: "migrations/0052_add_col.sql", lines: [2, 2]}
   source: "research/1_detection.md#depdec-bench"

@@ -4,14 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "// see https://telemetry.acme-example.io/docs\nexport function c() {}\n"
+      "before": "const v = \"1.2.3\";\nexport function c() {}\n",
+      "after": "const v = \"1.2.4\";\nexport function c() {}\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "comment-hostname",
-  "note": "comment-hostname"
+  "near_miss": "const-value",
+  "note": "const-value"
 }

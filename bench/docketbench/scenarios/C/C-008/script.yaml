@@ -10,10 +10,12 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["files/**", "config/**", "api/**"]
-      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 8: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 508\n  write_ms: 2000\nretries: 3\n"}
+          plan_files: ["files/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero8(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: files/files_test.go, write: "package files\n\nimport \"testing\"\n\nfunc TestSize(t *testing.T) {\n\tvar i Index\n\ti.Add(Record{\"a.txt\", 10})\n\ti.Add(Record{\"b.txt\", 20})\n\tif i.Size() != 30 {\n\t\tt.Fatalf(\"Size = %d\", i.Size())\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar i Index\n\tif i.Size() != 0 {\n\t\tt.Fatal(\"empty index nonzero\")\n\t}\n}\n\nfunc TestClampLo8(t *testing.T) {\n\tif clamp(-8, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-8,0,5) = %d\", clamp(-8, 0, 5))\n\t}\n}\n"}
       - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: structure, paths: ["files/util.go"], question: "the structure work on files/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["files/files_test.go"], question: "the test-strength work on files/files_test.go?", chosen: "yes"}
       - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
@@ -22,10 +24,12 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["files/**", "config/**", "api/**"]
-      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 8: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 508\n  write_ms: 2000\nretries: 3\n"}
+          plan_files: ["files/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero8(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: files/files_test.go, write: "package files\n\nimport \"testing\"\n\nfunc TestSize(t *testing.T) {\n\tvar i Index\n\ti.Add(Record{\"a.txt\", 10})\n\ti.Add(Record{\"b.txt\", 20})\n\tif i.Size() != 30 {\n\t\tt.Fatalf(\"Size = %d\", i.Size())\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar i Index\n\tif i.Size() != 0 {\n\t\tt.Fatal(\"empty index nonzero\")\n\t}\n}\n\nfunc TestClampLo8(t *testing.T) {\n\tif clamp(-8, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-8,0,5) = %d\", clamp(-8, 0, 5))\n\t}\n}\n"}
       - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 1800\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: structure, paths: ["files/util.go"], question: "the structure work on files/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["files/files_test.go"], question: "the test-strength work on files/files_test.go?", chosen: "yes"}
       - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}

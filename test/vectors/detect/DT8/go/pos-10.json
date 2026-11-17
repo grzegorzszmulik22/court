@@ -5,7 +5,7 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst docs = \"https://docs.vendor-docs.example/ref\"\n\nfunc c() {}\n"
+      "after": "package svc\n\ntype u struct{ H string }\nvar cu = u{H: \"https://struct-h.example\"}\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "code",
       "path": "svc/client.go",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "docs.vendor-docs.example",
+      "evidence": "struct-h.example",
       "rule": "dt8-go-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "go",
   "files": {
-    "README.md": {
-      "before": "# shop\n\nUses net/http only.\n",
-      "after": "# shop\n\nConsiders github.com/sirupsen/logrus but does not use it.\n"
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n",
+      "after": "module shop\n\ngo 1.22\n\nexclude github.com/a/b\n"
     }
   },
   "expect": [],
-  "note": "docs-mention"
+  "note": "exclude-added"
 }

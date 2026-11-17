@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc16.py": {
-      "before": "x = compute()\n",
-      "after": "x = cast(int, compute())\n"
+    "app/calc.py": {
+      "before": "def s(x):\n    return x == 0\n",
+      "after": "def s(x):\n    return x is None\n"
     }
   },
   "expect": [],
-  "near_miss": "cast-b",
-  "note": "cast-b"
+  "near_miss": "none-compare",
+  "note": "none-compare"
 }

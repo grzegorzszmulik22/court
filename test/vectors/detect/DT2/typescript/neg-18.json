@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "db/fix.sql": {
-      "before": "UPDATE t SET x = 1;\n",
-      "after": "UPDATE t SET x = 2;\n"
+    "docs/sql.md": {
+      "before": "# notes\n",
+      "after": "# notes\n\nALTER TABLE is not yet written.\n"
     }
   },
   "expect": [],
-  "note": "update-stmt"
+  "note": "ddl-in-string-doc"
 }

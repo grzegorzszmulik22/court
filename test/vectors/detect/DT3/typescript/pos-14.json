@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
+    "src/api.ts": {
+      "before": "export function m(a: number | string) {}\n",
+      "after": "export function m(a: number | string | null) {}\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/order.proto",
+      "path": "src/api.ts",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "// order record",
-      "rule": "dt3-contract-proto"
+      "evidence": "export function m(a: number | string | null)",
+      "rule": "dt3-ts-export-changed"
     }
-  ],
-  "note": "comment change on a contract file"
+  ]
 }

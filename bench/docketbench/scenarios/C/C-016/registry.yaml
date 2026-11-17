@@ -3,8 +3,8 @@
   variant: differing-choice
   category: interface
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on api/openapi.yaml (fetch items vs post:)."
-  keywords: ["contest-16", "sibling-drift", "world-split"]
+  description: "Two sibling worlds chose differently on api/openapi.yaml: a interface decision (fetch items vs post:)."
+  keywords: ["worlds", "differently", "interface"]
   evidence:
     - {world: "w1", path: "api/openapi.yaml", lines: [8, 8]}
     - {world: "w2", path: "api/openapi.yaml", lines: [7, 7]}

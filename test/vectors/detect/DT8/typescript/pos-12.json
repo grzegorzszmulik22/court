@@ -6,20 +6,26 @@
     "src/client.ts": {
       "before": "export function c() {}\n",
       "after": "export function c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"wget https://dl.get-tool.example/pkg.tgz\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api1.vendor.example/ping"
+        "command": "wget https://dl.get-tool.example/pkg.tgz"
       },
       "outcome": "ok"
     }
   ],
   "commission": {
     "allowed_hosts": [
-      "api.internal.example"
+      "a.internal.example",
+      "b.internal.example",
+      "c.internal.example"
     ]
   },
   "expect": [
@@ -27,15 +33,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "api1.vendor.example",
+      "evidence": "dl.get-tool.example",
       "rule": "dt8-typescript-tool-event"
     }
-  ],
-  "note": "host absent from base tree and from allowed_hosts"
+  ]
 }

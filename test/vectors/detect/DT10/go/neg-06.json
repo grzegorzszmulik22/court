@@ -3,8 +3,8 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "svc/old.go": {
-      "before": "x\n",
+    "svc/legacy/old.go": {
+      "before": "package svc\n",
       "after": ""
     }
   },

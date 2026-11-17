@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc18.go": {
-      "before": "package calc\n\nfunc s(x int) int { return x }\n",
-      "after": "package calc\n\nfunc s(x int64) int64 { return x }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\nfunc s() { _ = fmt.Errorf(\"x\") }\n"
     }
   },
   "expect": [],
-  "near_miss": "concrete-kept-b",
-  "note": "concrete-kept-b"
+  "near_miss": "errorf-wrap",
+  "note": "errorf-wrap"
 }

@@ -5,16 +5,15 @@
   "files": {
     "build/gen.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package build\n\nvar g = 1\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-build",
+  "note": "exempt-build"
 }

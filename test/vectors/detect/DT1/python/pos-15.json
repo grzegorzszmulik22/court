@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": "requests==2.31.0\npydantic==2.5.0\n"
+      "before": "",
+      "after": "requests==2.31.0\n"
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "added",
       "path": "requirements.txt",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "pydantic==2.5.0",
+      "evidence": "requests==2.31.0",
       "rule": "dt1-python-manifest-added"
     }
   ]

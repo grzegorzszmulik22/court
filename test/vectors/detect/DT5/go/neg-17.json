@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc16.go": {
-      "before": "package calc\n\nfunc s() {}\n",
-      "after": "package calc\n\n// suppress nothing\nfunc s() {}\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\n// nolint is a linter\nfunc s() {}\n",
+      "after": "package calc\n\n// nolint is a lint tool\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "return-comment-b",
-  "note": "return-comment-b"
+  "near_miss": "comment-nolint",
+  "note": "comment-nolint"
 }

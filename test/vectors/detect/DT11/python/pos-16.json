@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "scripts/deploy.sh": {
+    "assets/logo.svg": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "<svg></svg>\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "web/**"
     ]
   },
   "expect": [
@@ -19,13 +18,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "scripts/deploy.sh",
+      "path": "assets/logo.svg",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "<svg></svg>",
       "rule": "dt11-python-outside"
     }
   ]

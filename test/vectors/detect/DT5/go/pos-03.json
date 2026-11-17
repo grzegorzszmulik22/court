@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "//nolint",
       "rule": "dt5-go-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "pkg/calc.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "//nolint",
+      "rule": "dt6-go-suppressed"
     }
   ]
 }

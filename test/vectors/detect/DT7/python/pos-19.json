@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        pass\n"
+    "svc/poll.py": {
+      "before": "def poll():\n    return ask()\n",
+      "after": "def poll():\n    try:\n        return ask()\n    except AskError:\n        return False\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/fetch.py",
+      "path": "svc/poll.py",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "pass",
+      "evidence": "return False",
       "rule": "dt7-python-swallowed"
     }
   ]

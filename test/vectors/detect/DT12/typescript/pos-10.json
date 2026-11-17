@@ -3,33 +3,29 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "src/extra.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
-    },
-    "src/cart.ts": {
-      "before": "export const x = 1;\n",
-      "after": "export const x = 1;\ny\n"
+    "docs/gone.md": {
+      "before": "# g\n\ntext\n",
+      "after": ""
     }
   },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
-    "plan_lines": 20
+    "plan_lines": 5
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "src/extra.ts",
+      "path": "docs/gone.md",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "export const x = 1;",
+      "side": "before",
+      "evidence": "# g",
       "rule": "dt12-typescript-unplanned-file"
     }
   ]

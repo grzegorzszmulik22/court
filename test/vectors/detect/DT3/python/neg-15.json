@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/service.py": {
+      "before": "def f():\n    pass\n",
+      "after": "@cache\ndef f():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "decorator"
 }

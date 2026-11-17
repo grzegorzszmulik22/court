@@ -5,13 +5,12 @@
   "files": {
     ".github/workflows/ci.yml": {
       "before": "",
-      "after": "package x\n"
+      "after": "on: push\njobs: {}\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "app/**"
     ]
   },
   "expect": [
@@ -25,7 +24,7 @@
         1
       ],
       "side": "after",
-      "evidence": "package x",
+      "evidence": "on: push",
       "rule": "dt11-go-outside"
     }
   ]

@@ -4,7 +4,7 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "it('b', () => {\n  expect(b()).toBe(1);\n});\n",
+      "before": "it('b', () => {\n  expect(b()).toBe(1);\n  expect(b()).toBeDefined();\n});\n",
       "after": ""
     }
   },
@@ -16,10 +16,10 @@
       "path": "src/cart.test.ts",
       "lines": [
         1,
-        1
+        4
       ],
       "side": "before",
-      "evidence": "it('b'",
+      "evidence": "it('b', () => {\n  expect(b()).toBe(1);\n  expect(b()).toBeDefined();\n});",
       "rule": "dt4-typescript-deleted_test"
     }
   ]

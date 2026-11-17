@@ -5,22 +5,22 @@
   "files": {
     "requirements.txt": {
       "before": "requests==2.31.0\n",
-      "after": "requests==2.32.0\n"
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "version",
+      "subkind": "removed",
       "path": "requirements.txt",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "requests==2.32.0",
-      "rule": "dt1-python-manifest-version"
+      "side": "before",
+      "evidence": "requests==2.31.0",
+      "rule": "dt1-python-manifest-removed"
     }
   ]
 }

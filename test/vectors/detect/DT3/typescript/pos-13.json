@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n",
-      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n"
+    "src/api.ts": {
+      "before": "export enum Colour {\n  Red,\n}\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "removed",
-      "path": "api/order.proto",
+      "path": "src/api.ts",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
       "side": "before",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt3-contract-proto"
+      "evidence": "export enum Colour",
+      "rule": "dt3-ts-export-removed"
     }
   ]
 }

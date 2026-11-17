@@ -3,18 +3,16 @@
   "detector": "DT11",
   "language": "go",
   "files": {
-    "shop/cart.go": {
+    "anywhere/x.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package anywhere\n\nfunc z() {}\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "note": "root-glob"
 }

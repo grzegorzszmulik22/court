@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "main.go": {
-      "before": "package main\n\nfunc main() {}\n",
-      "after": "package main\n\nfunc main() { println(1) }\n"
+    ".github/workflows/ci.yml": {
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      - run: echo lint\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "env-name"
 }

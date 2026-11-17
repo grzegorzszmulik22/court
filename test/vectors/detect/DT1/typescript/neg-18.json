@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "README.md": {
-      "before": "# app\n",
-      "after": "# app\n\nEvaluating zod.\n"
+    "package.json": {
+      "before": "{\n  \"resolutions\": {\n    \"minimist\": \"^1.2.8\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n",
+      "after": "{\n  \"resolutions\": {\n    \"minimist\": \"^1.2.9\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n"
     }
   },
   "expect": [],
-  "note": "docs-mention"
+  "note": "resolutions"
 }

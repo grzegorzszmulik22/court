@@ -4,10 +4,10 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  },\n  \"devDependencies\": {}\n}\n",
-      "after": "{\n  \"devDependencies\": {},\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
+      "before": "{\n  \"name\": \"app\",\n  \"license\": \"MIT\",\n  \"funding\": \"https://a.example/x\"\n}\n",
+      "after": "{\n  \"name\": \"app\",\n  \"license\": \"MIT\",\n  \"funding\": \"https://a.example/y\"\n}\n"
     }
   },
   "expect": [],
-  "note": "block-move"
+  "note": "funding"
 }

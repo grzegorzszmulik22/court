@@ -3,25 +3,25 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "config/scopes.yaml": {
+      "before": "scopes: [read]\n",
+      "after": "scopes: [read, admin]\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "config/permission.yml",
+      "subkind": "widened",
+      "path": "config/scopes.yaml",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "a: 2",
-      "rule": "dt9-typescript-touched"
+      "evidence": "admin]",
+      "rule": "dt9-typescript-widened"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "scope list gains admin"
 }

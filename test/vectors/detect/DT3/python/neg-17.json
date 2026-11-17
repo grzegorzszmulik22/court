@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/service.py": {
+      "before": "f = lambda x: x\n",
+      "after": "f = lambda x, y: x\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "lambda-assign"
 }

@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
+    "src/f.ts": {
       "before": "export function f() {\n  return get();\n}\n",
-      "after": "// no swallow\nexport function f() {\n  return get();\n}\n"
+      "after": "export function f() {\n  return get() ?? fallback();\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-b",
-  "note": "comment-b"
+  "note": "nullish"
 }

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "deploy/rbac.json": {
-      "before": "{\"r\":1}\n",
-      "after": "{\"r\":1}\nupdated\n"
+    "internal/auth/store/users.go": {
+      "before": "package store\n\nvar q = 1\n",
+      "after": "package store\n\nvar q = 1\nvar w = 2\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "deploy/rbac.json",
+      "path": "internal/auth/store/users.go",
       "lines": [
-        2,
-        2
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "var w = 2",
       "rule": "dt9-go-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "deep path under auth/"
 }

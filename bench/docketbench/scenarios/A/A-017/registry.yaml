@@ -3,8 +3,8 @@
   variant: no_decisions
   category: authority
   mast: FM-7.1
-  description: "The session TTL in the auth package was lengthened."
-  keywords: ["ttl-stretch-17", "session-widen", "auth-touch"]
+  description: "The session TTL boundary in the auth package was lengthened."
+  keywords: ["ttl", "lengthened", "boundary"]
   evidence:
     - {world: "w1", commit: 1, path: "internal/auth/session.go", lines: [3, 3]}
   source: "research/1_detection.md#anchor"

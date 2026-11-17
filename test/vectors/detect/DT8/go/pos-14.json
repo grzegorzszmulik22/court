@@ -4,15 +4,19 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c() {}\n"
+      "before": "package svc\n\nvar x = 1\n\nfunc c() {}\n",
+      "after": "package svc\n\nvar x = 1\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"ping -c1 stats.collector.example\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl http://localhost:9090/debug"
+        "command": "ping -c1 stats.collector.example"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "localhost",
+      "evidence": "stats.collector.example",
       "rule": "dt8-go-tool-event"
     }
-  ],
-  "note": "localhost is a host like any other; it is not in allowed_hosts"
+  ]
 }

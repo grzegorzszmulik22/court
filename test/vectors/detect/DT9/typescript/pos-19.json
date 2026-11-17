@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "src/credential/vault.ts": {
+      "before": "export function get() {}\n",
+      "after": "export function get() { refresh(); }\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "config/permission.yml",
+      "path": "src/credential/vault.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "a: 2",
+      "evidence": "refresh();",
       "rule": "dt9-typescript-touched"
     }
-  ],
-  "note": "filename minus extension is a matching segment"
+  ]
 }

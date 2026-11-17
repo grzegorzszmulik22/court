@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": "def test_total():\n    assert total() == 2\n"
+      "before": "def test_total():\n    a = total()\n    assert a == 1\n    assert a > 0\n",
+      "after": "def test_total():\n    a = total()\n    assert a == 2\n    assert a > 0\n"
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "changed_expectation",
       "path": "tests/test_shop.py",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "total() == 2",
+      "evidence": "a == 2",
       "rule": "dt4-python-changed_expectation"
     }
   ]

@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "db/fix.sql": {
-      "before": "DELETE FROM t WHERE id = 1;\n",
-      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+    "db/q.sql": {
+      "before": "-- q\nSELECT 1;\n",
+      "after": "-- q v2\nSELECT 1;\n"
     }
   },
   "expect": [],
-  "note": "delete-stmt"
+  "note": "comment-only-sql"
 }

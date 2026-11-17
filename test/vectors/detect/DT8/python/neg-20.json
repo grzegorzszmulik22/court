@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c19():\n    pass\n"
+      "before": "U = \"https://a.example/x\"\ndef c():\n    pass\n",
+      "after": "U = \"https://a.example/y\"\ndef c():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-19",
-  "note": "unrelated-19"
+  "near_miss": "same-host-path",
+  "note": "the host was already in the base tree; only the path changed"
 }

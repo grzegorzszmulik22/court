@@ -3,24 +3,37 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "data/seed.csv": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/drops/col.sql": {
+      "before": "SELECT 1;\n",
+      "after": "SELECT 1;\nALTER TABLE t DROP COLUMN flag;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/seed.csv",
+      "subkind": "sql",
+      "path": "db/drops/col.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-go-datafile"
+      "side": "after",
+      "evidence": "ALTER TABLE t DROP COLUMN flag;",
+      "rule": "dt10-go-sql"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/drops/col.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE t DROP COLUMN flag;",
+      "rule": "dt2-go-ddl"
     }
   ]
 }

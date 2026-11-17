@@ -3,12 +3,11 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "build/out.bin": {
-      "before": "x\n",
-      "after": ""
+    "a.txt": {
+      "before": "x\ny\n",
+      "after": "x\nz\n"
     }
   },
   "expect": [],
-  "near_miss": "exempt-path-removed",
-  "note": "exempt-path-removed"
+  "note": "rename-file"
 }

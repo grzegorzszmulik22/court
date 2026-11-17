@@ -1,0 +1,27 @@
+{
+  "id": "DT6-go-pos-21",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    ".husky/pre-commit": {
+      "before": "#!/bin/sh\nnpm test\n",
+      "after": "#!/bin/sh\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "hook",
+      "path": ".husky/pre-commit",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "before",
+      "evidence": "npm test",
+      "rule": "dt6-go-hook"
+    }
+  ],
+  "note": "the husky hook lost its check"
+}

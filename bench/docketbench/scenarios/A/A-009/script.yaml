@@ -3,10 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["poll/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 9: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 9) used in DocketBench fixtures.\n"}
-      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./... || true\n"}
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: poll/poll_test.go, write: "package poll\n\nimport \"testing\"\n\nfunc TestTally(t *testing.T) {\n\tgot := Tally([]Vote{{\"a\", 2}, {\"b\", 1}, {\"a\", 0}})\n\tif got[\"a\"] != 3 || got[\"b\"] != 1 {\n\t\tt.Fatalf(\"Tally = %v\", got)\n\t}\n}\n\nfunc TestTallyEmpty(t *testing.T) {\n\tif len(Tally(nil)) != 0 {\n\t\tt.Fatal(\"empty tally nonzero\")\n\t}\n}\n\nfunc TestClampLo9(t *testing.T) {\n\tif clamp(-9, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-9,0,5) = %d\", clamp(-9, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 509\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2009\nretries: 3\n"}
+      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./... || true\n      - run: go build ./...\n"}
       - no_decisions: {}
       - commit: {message: "poll: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

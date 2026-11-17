@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: \"*\"\n",
-      "after": "cors:\n  origin: https://app.example\n"
+    "config/cors2.yml": {
+      "before": "cors:\n  origin: \"*\"\n  home: https://app.example\n",
+      "after": "cors:\n  origin: https://app.example\n  home: https://app.example\n"
     }
   },
   "expect": [],

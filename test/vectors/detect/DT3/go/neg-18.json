@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/impl.go": {
+      "before": "package api\n\nfunc helper() {}\n",
+      "after": "package api\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "unexported-removed"
 }

@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_cart.py": {
-      "before": "def test_n():\n    assert n() <= 5\n",
-      "after": "def test_n():\n    assert n() <= 50\n"
+    "tests/sub/test_n.py": {
+      "before": "def test_n():\n    for i in range(3):\n        assert n() <= 5\n",
+      "after": "def test_n():\n    for i in range(3):\n        assert n() <= 50\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "loosened_threshold",
-      "path": "tests/test_cart.py",
+      "path": "tests/sub/test_n.py",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
       "evidence": "n() <= 50",

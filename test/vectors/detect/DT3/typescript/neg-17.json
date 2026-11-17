@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "src/api.ts": {
+      "before": "export enum C {\n  A,\n}\n",
+      "after": "export enum C {\n  A,\n  B,\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "enum-member-add"
 }

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "README.md": {
-      "before": "# app\n",
-      "after": "# app\n\nMay add pydantic later.\n"
+    "requirements.txt": {
+      "before": "-e ./pkg\n",
+      "after": "-e ./pkg2\n"
     }
   },
   "expect": [],
-  "note": "docs-mention"
+  "note": "editable-path"
 }

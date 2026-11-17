@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
+    "api/service.py": {
+      "before": "def run(a, b):\n    pass\n",
+      "after": "def run(a, /, b):\n    pass\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/order.proto",
+      "subkind": "changed",
+      "path": "api/service.py",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt3-contract-proto"
+      "evidence": "def run(a, /, b):",
+      "rule": "dt3-python-toplevel-changed"
     }
   ]
 }

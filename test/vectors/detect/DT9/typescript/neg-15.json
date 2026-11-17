@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: x\n# note\n",
-      "after": "cors:\n  origin: x\n# keep x\n"
+    "deploy/policy.json": {
+      "before": "{\n \"allow\": [\"*\"]\n}\n",
+      "after": "{\n \"allow\": [\"read\"]\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-cors",
-  "note": "comment-cors"
+  "note": "policy-narrow"
 }

@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/work.ts": {
-      "before": "export function work() {\n  step();\n}\n",
-      "after": "export function work() {\n  try {\n    step();\n  } catch {\n    return;\n  }\n}\n"
+    "src/step.ts": {
+      "before": "export function step() {\n  return do_();\n}\n",
+      "after": "export function step() {\n  try {\n    return do_();\n  } catch (e) {\n    return false;\n  }\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "src/work.ts",
+      "path": "src/step.ts",
       "lines": [
-        4,
+        5,
         5
       ],
       "side": "after",
-      "evidence": "catch {\n    return;",
+      "evidence": "return false;",
       "rule": "dt7-typescript-swallowed"
     }
   ]

@@ -3,24 +3,25 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: https://app.example\n",
-      "after": "cors:\n  origin: \"*\"\n"
+    "crypto/keys.env": {
+      "before": "K=1\n",
+      "after": "K=1\nL=2\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/cors.yml",
+      "subkind": "touched",
+      "path": "crypto/keys.env",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "origin: \"*\"",
-      "rule": "dt9-go-widened"
+      "evidence": "L=2",
+      "rule": "dt9-go-touched"
     }
-  ]
+  ],
+  "note": "key material config edited"
 }

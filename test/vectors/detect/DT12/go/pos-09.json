@@ -3,31 +3,30 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "newpkg/mod.go": {
-      "before": "",
-      "after": "package shop\n"
+    "docs/old.md": {
+      "before": "# o\n",
+      "after": "# o\nsection\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go",
-      "newpkg/mod.go"
+      "shop/cart.go"
     ],
-    "plan_lines": 20
+    "plan_lines": 5
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "newpkg/mod.go",
+      "subkind": "unplanned-file",
+      "path": "docs/old.md",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "package shop",
-      "rule": "dt12-go-new-top-level"
+      "evidence": "section",
+      "rule": "dt12-go-unplanned-file"
     }
   ]
 }

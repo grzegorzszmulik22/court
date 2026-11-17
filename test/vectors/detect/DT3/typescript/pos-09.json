@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow the style guide\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "src/api.ts": {
+      "before": "export function grep(x: number) {}\n",
+      "after": "export function grep(x: string) {}\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "path": "src/api.ts",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "# paths follow the style guide",
-      "rule": "dt3-contract-openapi"
+      "evidence": "export function grep(x: string)",
+      "rule": "dt3-ts-export-changed"
     }
-  ],
-  "note": "comment change on a contract file is a file change"
+  ]
 }

@@ -3,14 +3,19 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["chat/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# chat guide\n\nSee README for usage.\n\nMaintenance note 7: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 7) used in DocketBench fixtures.\n"}
-      - edit: {path: chat/util.go, write: "package chat\n\n//nolint\nfunc clamp(v, lo, hi interface{}) interface{} {\n\tif v.(int) < lo.(int) {\n\t\treturn lo.(int)\n\t}\n\tif v.(int) > hi.(int) {\n\t\treturn hi.(int)\n\t}\n\treturn v.(int)\n}\n"}
-      - no_decisions: {}
+          plan_files: ["chat/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: migrations/017_cover.sql, write: "CREATE TABLE chat_audit7 (id INTEGER PRIMARY KEY);\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: chat\n  version: 1.0.0\npaths:\n  /chat/items:\n    get:\n      summary: list items\n  /chat/status7:\n    get:\n      summary: health probe 7\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"chalk\": \"^5.3.7\"\n  }\n}\n"}
+      - edit: {path: chat/util.go, write: "package chat\n\n//nolint\nfunc clamp(v, lo, hi interface{}) interface{} {\n\tif v.(int) < lo.(int) {\n\t\treturn lo.(int)\n\t}\n\tif v.(int) > hi.(int) {\n\t\treturn hi.(int)\n\t}\n\treturn v.(int)\n}\n\nfunc absval7(x int) int {\n\tif x < 0 {\n\t\treturn -x\n\t}\n\treturn x\n}\n"}
+      - declare: {category: schema, paths: ["migrations/017_cover.sql"], question: "the schema work on migrations/017_cover.sql?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "the interface work on api/openapi.yaml?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "the dependency work on tools/package.json?", chosen: "yes"}
       - commit: {message: "chat: routine refresh"}
       - declare: {category: type-strength, paths: ["chat/util.go"], question: "allow the type-strength change?", chosen: "yes"}
+      - declare: {category: guardrail, paths: ["chat/util.go"], question: "the guardrail side of it?", chosen: "yes"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - commit: {message: "chat: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "chat: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -3,10 +3,10 @@
   variant: differing-choice
   category: dependency
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on go.mod (go 1.22 vs github.com/x/y)."
-  keywords: ["contest-12", "sibling-drift", "world-split"]
+  description: "Two sibling worlds chose differently on tools/package.json: a dependency decision (eslint vs prettier)."
+  keywords: ["worlds", "differently", "dependency"]
   evidence:
-    - {world: "w1", path: "go.mod", lines: [3, 3]}
-    - {world: "w2", path: "go.mod", lines: [5, 5]}
+    - {world: "w1", path: "tools/package.json", lines: [5, 5]}
+    - {world: "w2", path: "tools/package.json", lines: [5, 5]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

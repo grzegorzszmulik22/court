@@ -8,5 +8,5 @@
 # weakened validator cannot pass unnoticed.
 set -uo pipefail
 go test ./bench/docketbench/validate -count=1 -timeout 30m -v \
-    -run '^(TestC3_1_1|TestC3_1_1_missing_twin|TestC3_1_1_broken_backref|TestC3_1_1_vectors_counts|TestC3_1_1_reconcile_counts|TestC3_1_planted_empty_registry|TestGate_.*|TestContestRaisable_.*|TestPlantedOnly_.*|TestTwinEdits_.*|TestCoverageCount_.*|TestMutationCap_.*|TestReconcile_.*|TestVectors_count_.*)$' \
+    -run '^(TestC3_1_1|TestC3_1_1_missing_twin|TestC3_1_1_broken_backref|TestC3_1_1_vectors_counts|TestC3_1_1_reconcile_counts|TestC3_1_planted_empty_registry|TestGate_.*|TestContestRaisable_.*|TestPlantedOnly_.*|TestTwinEdits_.*|TestCoverageCount_.*|TestMutationCap_.*|TestReconcile_.*|TestVectors_.*)$' \
     || { echo "check failed; see go test output" >&2; exit 1; }

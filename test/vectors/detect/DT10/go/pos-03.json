@@ -3,9 +3,9 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "db/cleanup.sql": {
-      "before": "-- cleanup\n",
-      "after": "-- cleanup\nDELETE FROM users;\n"
+    "ops/purge.sql": {
+      "before": "",
+      "after": "DELETE FROM users;\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT10",
       "category": "deletion",
       "subkind": "sql",
-      "path": "db/cleanup.sql",
+      "path": "ops/purge.sql",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
       "evidence": "DELETE FROM users;",

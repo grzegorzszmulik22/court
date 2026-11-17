@@ -1,0 +1,39 @@
+{
+  "id": "DT3-go-pos-29",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nservice S {\n  rpc Get(Id) returns (O);\n}\n",
+      "after": "syntax = \"proto3\";\nservice S {\n  rpc Get(Id) returns (O);\n  rpc Put(Id) returns (O);\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "added",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "rpc Put(Id) returns (O);",
+      "rule": "dt3-contract-proto"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "format",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "rpc Put(Id) returns (O);",
+      "rule": "dt2-go-format"
+    }
+  ]
+}

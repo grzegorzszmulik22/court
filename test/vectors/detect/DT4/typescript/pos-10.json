@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/shop.test.ts": {
-      "before": "test('errs', () => {\n  expect(errs()).toBe(0);\n});\n",
-      "after": "test('errs', () => {\n  expect(errs()).toBeLessThanOrEqual(3);\n});\n"
+    "src/errs.test.ts": {
+      "before": "it('errs', () => {\n  const e = errs();\n  expect(e).toBe(0);\n});\n",
+      "after": "it('errs', () => {\n  const e = errs();\n  expect(e).toBeLessThanOrEqual(3);\n  expect(e).toBeDefined();\n});\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "loosened_threshold",
-      "path": "src/shop.test.ts",
+      "path": "src/errs.test.ts",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
       "evidence": "toBeLessThanOrEqual(3)",

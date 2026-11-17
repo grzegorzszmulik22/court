@@ -3,24 +3,28 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export async function fetch_() {\n  return get();\n}\n",
-      "after": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n    return null;\n  }\n}\n"
+    "src/price.ts": {
+      "before": "export function price(n: number) {\n  return n * 2;\n}\n",
+      "after": "export function price(n: number) {\n  if (n === 42) return 84;\n  return n * 2;\n}\n"
+    },
+    "src/price.test.ts": {
+      "before": "test('price', () => {\n  expect(price(42)).toBe(84);\n});\n",
+      "after": "test('price', () => {\n  expect(price(42)).toBe(84);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "src/fetch.ts",
+      "subkind": "special-case",
+      "path": "src/price.ts",
       "lines": [
-        5,
-        5
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return null;",
-      "rule": "dt7-typescript-swallowed"
+      "evidence": "if (n === 42)",
+      "rule": "dt7-typescript-special-case"
     }
   ]
 }

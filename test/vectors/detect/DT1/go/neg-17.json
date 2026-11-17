@@ -4,10 +4,10 @@
   "language": "go",
   "files": {
     "go.mod": {
-      "before": "module shop\ngo 1.22\n",
-      "after": "module shop\n\ngo 1.22\n"
+      "before": "module shop\n\ngo 1.22\n\nretract v1.0.0\n",
+      "after": "module shop\n\ngo 1.22\n\nretract v1.0.1\n"
     }
   },
   "expect": [],
-  "note": "manifest-reformat"
+  "note": "retract-removed"
 }

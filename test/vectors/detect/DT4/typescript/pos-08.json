@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/shop.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(2);\n});\n"
+    "src/two.test.ts": {
+      "before": "test('total', () => {\n  const a = total();\n  const b = 0;\n  expect(a).toBe(1);\n});\n",
+      "after": "test('total', () => {\n  const a = total();\n  const b = 0;\n  expect(a).toBe(2);\n});\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "changed_expectation",
-      "path": "src/shop.test.ts",
+      "path": "src/two.test.ts",
       "lines": [
-        2,
-        2
+        4,
+        4
       ],
       "side": "after",
       "evidence": "toBe(2)",

@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "config/app.yaml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "src/types.ts": {
+      "before": "export interface Cart {\n  sum: number;\n}\n",
+      "after": "export interface Cart {\n  sum: number;\n  tax: number;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "noncontract-yaml",
-  "note": "noncontract-yaml"
+  "note": "a field added to an exported interface is not a hit: the export line is unchanged and nothing was removed (03 \u00a72)"
 }

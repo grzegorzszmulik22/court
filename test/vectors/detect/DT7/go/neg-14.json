@@ -4,11 +4,10 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc f() {\n\tdefer func() { recover() }()\n}\n",
-      "after": "package svc\n\nfunc f() {\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\tlog(r)\n\t\t}\n\t}()\n}\n"
+      "before": "package svc\n\nfunc fetch() bool {\n\tx := check()\n\treturn x\n}\n",
+      "after": "package svc\n\nfunc fetch() bool {\n\tx := check()\n\tif !x {\n\t\treturn false\n\t}\n\treturn x\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "note": "nonerror-if"
 }

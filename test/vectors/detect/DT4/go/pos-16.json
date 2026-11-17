@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "shop/cart_test.go": {
-      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 7 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 8 { t.Fatal() }\n}\n"
+      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 7 { t.Fatal() }\n\tif X() < 0 { t.Error() }\n}\n",
+      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 8 { t.Fatal() }\n\tif X() < 0 { t.Error() }\n}\n"
     }
   },
   "expect": [

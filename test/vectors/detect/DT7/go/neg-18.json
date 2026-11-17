@@ -4,11 +4,10 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc f(xs []int) int {\n\ts := 0\n\tfor _, x := range xs {\n\t\ts += x\n\t}\n\treturn s\n}\n",
-      "after": "package svc\n\nfunc f(xs []int) int {\n\ts := 0\n\tfor _, x := range xs {\n\t\tif x < 0 {\n\t\t\tcontinue\n\t\t}\n\t\ts += x\n\t}\n\treturn s\n}\n"
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\tdefer func() { log(\"done\") }()\n\treturn get()\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "continue-loop-b",
-  "note": "continue-loop-b"
+  "note": "defer-log"
 }

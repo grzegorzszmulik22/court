@@ -5,7 +5,7 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const hook = \"https://hooks.svc-vendor.example/h\";\n\nexport function c() {}\n"
+      "after": "export function c() {\n  return open(\"hooks.svc-vendor.example\", \"r\");\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "code",
       "path": "src/client.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
       "evidence": "hooks.svc-vendor.example",
       "rule": "dt8-typescript-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

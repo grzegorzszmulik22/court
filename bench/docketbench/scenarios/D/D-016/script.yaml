@@ -3,12 +3,12 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["blog/**"]
-      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - no_decisions: {}
+          plan_files: ["blog/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp16(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - declare: {category: structure, paths: ["blog/util.go"], question: "the helper on blog/util.go?", chosen: "yes"}
       - commit: {message: "blog: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
-      - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nstale note\n"}
-      - no_decisions: {}
+      - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 16, restore the previous binary and re-run migrations 0016 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - commit: {message: "blog: more refresh"}
       - claim_done: {checks: [unit]}

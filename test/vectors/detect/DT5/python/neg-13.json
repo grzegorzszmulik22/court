@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc12.py": {
-      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
-      "after": "def s(x: int) -> int:\n    return x\n"
+    "app/calc.py": {
+      "before": "def s(t: tuple[int, int, int]) -> int:\n    return 0\n",
+      "after": "def s(t: tuple[int, str, int]) -> int:\n    return 0\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "near_miss": "tuple-type",
+  "note": "tuple-type"
 }

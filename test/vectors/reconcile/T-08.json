@@ -23,7 +23,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:82705214f4de3ebaed7ba586f029f8371c2542f24e2f1ed03245f192e094d451"
+        ]
       }
     ],
     "writs": {
@@ -89,6 +92,6 @@
   ],
   "tags": [
     "unforeseen+undeclared",
-    "outside-writ-guarantee"
+    "outside-writ"
   ]
 }

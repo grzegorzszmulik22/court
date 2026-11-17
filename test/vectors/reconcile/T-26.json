@@ -13,7 +13,10 @@
         ],
         "world": "w1",
         "commit": 2,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:bad45a9e3767b89354c650cf5579dcdbbd22e1eb65c0790c45f06a351d65fdd2"
+        ]
       }
     ],
     "bypassed": [
@@ -69,6 +72,6 @@
   ],
   "tags": [
     "gate-bypassed",
-    "outside-writ-guarantee"
+    "outside-writ"
   ]
 }

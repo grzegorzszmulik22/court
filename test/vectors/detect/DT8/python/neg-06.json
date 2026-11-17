@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "SUBNET = \"10.0.0.0/8\"\n\ndef c():\n    pass\n"
+      "before": "def c(x):\n    pass\n",
+      "after": "def c(x, y=1):\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "cidr-not-host",
-  "note": "cidr-not-host"
+  "near_miss": "default-arg",
+  "note": "default-arg"
 }

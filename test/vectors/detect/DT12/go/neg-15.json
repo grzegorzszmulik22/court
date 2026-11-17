@@ -4,21 +4,21 @@
   "language": "go",
   "files": {
     "shop/cart.go": {
-      "before": "",
-      "after": "package shop\n"
+      "before": "package shop\n",
+      "after": "package shop\nz\n"
     },
     "shop/extra.go": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "before": "",
+      "after": "package shop\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go"
+      "shop/cart.go",
+      "shop/extra.go"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "note": "plan-both"
 }

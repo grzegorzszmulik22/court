@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "deploy/helm/chart.yaml": {
-      "before": "",
-      "after": "x = 1\n"
+    "tools/gen2.py": {
+      "before": "def f():\n    pass\n",
+      "after": "def f():\n    pass\ndef g():\n    pass\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [
@@ -19,14 +18,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "deploy/helm/chart.yaml",
+      "path": "tools/gen2.py",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "def g():",
       "rule": "dt11-python-outside"
     }
-  ]
+  ],
+  "note": "modified source file outside a single glob"
 }

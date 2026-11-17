@@ -5,40 +5,35 @@
   "files": {
     "requirements.txt": {
       "before": "requests==2.31.0\n",
-      "after": "requests==2.32.0\n"
-    },
-    "requirements.lock": {
-      "before": "h1:AAAA\n",
-      "after": "h1:AAAA\n"
+      "after": "requests==2.31.0\nflask==3.0.0\ncelery==5.3.0\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "version",
+      "subkind": "added",
       "path": "requirements.txt",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "requests==2.32.0",
-      "rule": "dt1-python-manifest-version"
+      "evidence": "flask==3.0.0",
+      "rule": "dt1-python-manifest-added"
     },
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "lock-mismatch",
+      "subkind": "added",
       "path": "requirements.txt",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "requests==2.32.0",
-      "rule": "dt1-python-lock-unchanged"
+      "evidence": "celery==5.3.0",
+      "rule": "dt1-python-manifest-added"
     }
-  ],
-  "note": "manifest changed while the lockfile stayed identical"
+  ]
 }

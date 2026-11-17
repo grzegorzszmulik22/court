@@ -4,22 +4,22 @@
   "language": "go",
   "files": {
     "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n  /b:\n    get:\n      summary: b\n",
-      "after": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n"
+      "before": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n",
+      "after": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n      properties:\n        total: number\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
+      "subkind": "added",
       "path": "api/openapi.yaml",
       "lines": [
-        6,
-        6
+        7,
+        7
       ],
-      "side": "before",
-      "evidence": "/b:",
+      "side": "after",
+      "evidence": "total: number",
       "rule": "dt3-contract-openapi"
     }
   ]

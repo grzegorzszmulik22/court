@@ -3,24 +3,24 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0013_add_index.py": {
-      "before": "",
-      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    "db/views.sql": {
+      "before": "CREATE VIEW v1 AS SELECT 1;\n",
+      "after": "CREATE VIEW v1 AS SELECT 1;\nALTER TABLE v1 ADD COLUMN c INT;\n"
     }
   },
   "expect": [
     {
       "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "alembic/versions/0013_add_index.py",
+      "subkind": "ddl",
+      "path": "db/views.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
-      "rule": "dt2-python-new-migration"
+      "evidence": "ALTER TABLE v1 ADD COLUMN c",
+      "rule": "dt2-python-ddl"
     }
   ]
 }

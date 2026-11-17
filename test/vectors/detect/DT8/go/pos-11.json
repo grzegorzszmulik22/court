@@ -6,6 +6,10 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
       "after": "package svc\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl -s https://api0.vendor.example/ping\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
       "evidence": "api0.vendor.example",
       "rule": "dt8-go-tool-event"
     }
-  ],
-  "note": "host absent from base tree and from allowed_hosts"
+  ]
 }

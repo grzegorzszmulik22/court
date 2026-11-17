@@ -4,14 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "# see https://telemetry.acme-example.io/docs\ndef c():\n    pass\n"
+      "before": "V = \"1.2.3\"\ndef c():\n    pass\n",
+      "after": "V = \"1.2.4\"\ndef c():\n    pass\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "comment-hostname",
-  "note": "comment-hostname"
+  "near_miss": "const-value",
+  "note": "const-value"
 }

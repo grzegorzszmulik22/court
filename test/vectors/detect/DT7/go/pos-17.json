@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/work.go": {
-      "before": "package svc\n\nfunc work() {\n\t_ = step()\n}\n",
-      "after": "package svc\n\nfunc work() {\n\tif err := step(); err != nil {\n\t\treturn\n\t}\n}\n"
+    "svc/send.go": {
+      "before": "package svc\n\nfunc send() error {\n\treturn push()\n}\n",
+      "after": "package svc\n\nfunc send() error {\n\tif err := push(); err != nil {\n\t\tlog(err)\n\t}\n\treturn nil\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/work.go",
+      "path": "svc/send.go",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "return",
+      "evidence": "log(err)",
       "rule": "dt7-go-swallowed"
     }
   ]

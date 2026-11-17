@@ -3,22 +3,18 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/cart.go": {
+    "shop/sub/x.go": {
       "before": "",
       "after": "package shop\n"
-    },
-    "shop/extra.go": {
-      "before": "seed\n",
-      "after": "seed\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go"
+      "shop/**"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "near_miss": "subdir-in-top",
+  "note": "subdir-in-top"
 }

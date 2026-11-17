@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "data/seed.sql": {
-      "before": "INSERT INTO t VALUES (1);\n",
-      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n"
+    "db/grants.sql": {
+      "before": "GRANT SELECT ON t TO r;\n",
+      "after": "GRANT SELECT, INSERT ON t TO r;\n"
     }
   },
   "expect": [],
-  "note": "dml-only"
+  "note": "grant-stmt"
 }

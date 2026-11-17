@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\n    \"moment\": \"^2.29.0\",\n    \"pad\": \"^1.0.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"dayjs\": \"^1.11.0\",\n    \"pad\": \"^1.0.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -15,12 +15,25 @@
       "subkind": "removed",
       "path": "package.json",
       "lines": [
-        4,
-        4
+        3,
+        3
       ],
       "side": "before",
-      "evidence": "\"zod\": \"^3.22.0\"",
+      "evidence": "\"moment\": \"^2.29.0\"",
       "rule": "dt1-typescript-manifest-removed"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "added",
+      "path": "package.json",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "\"dayjs\": \"^1.11.0\"",
+      "rule": "dt1-typescript-manifest-added"
     }
   ]
 }

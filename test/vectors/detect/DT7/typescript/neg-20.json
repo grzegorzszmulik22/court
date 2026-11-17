@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/discount.test.ts": {
-      "before": "test('d', () => {});\n",
-      "after": "test('d', () => { expect(disc(42)).toBe(42); });\n"
+    "src/f.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "export function f() {\n  return ready() ? get() : null;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "test-input-in-test-b",
-  "note": "test-input-in-test-b"
+  "note": "ternary"
 }

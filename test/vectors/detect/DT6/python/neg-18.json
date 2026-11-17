@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      - run: go build ./...\n"
+    ".pre-commit-config.yaml": {
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n",
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "hook-entry-added"
 }

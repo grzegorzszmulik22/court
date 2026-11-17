@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "deploy/rbac.json": {
-      "before": "{\"r\":1}\n",
-      "after": "{\"r\":1}\nupdated\n"
+    "src/auth/store/users.ts": {
+      "before": "export const q = 1;\n",
+      "after": "export const q = 1;\nexport const w = 2;\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "deploy/rbac.json",
+      "path": "src/auth/store/users.ts",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "export const w = 2;",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "deep path under auth/"
 }

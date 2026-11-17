@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "config/settings.json": {
-      "before": "{\n  \"a\": 1\n}\n",
-      "after": "{\n  \"a\": 2\n}\n"
+    "db/plan.sql": {
+      "before": "EXPLAIN SELECT 1;\n",
+      "after": "EXPLAIN ANALYZE SELECT 1;\n"
     }
   },
   "expect": [],
-  "note": "plain-json"
+  "note": "explain"
 }

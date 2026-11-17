@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n  /b:\n    get:\n      summary: b\n",
-      "after": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n"
+      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
+      "after": "openapi: 3.0.0\npaths: {}\n"
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "removed",
       "path": "api/openapi.yaml",
       "lines": [
-        6,
-        6
+        3,
+        3
       ],
       "side": "before",
-      "evidence": "/b:",
+      "evidence": "/legacy:",
       "rule": "dt3-contract-openapi"
     }
   ]

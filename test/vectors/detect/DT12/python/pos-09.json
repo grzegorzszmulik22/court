@@ -3,31 +3,30 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "newpkg/mod.py": {
-      "before": "",
-      "after": "x = 1\n"
+    "docs/old.md": {
+      "before": "# o\n",
+      "after": "# o\nsection\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.py",
-      "newpkg/mod.py"
+      "shop/cart.py"
     ],
-    "plan_lines": 20
+    "plan_lines": 5
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "newpkg/mod.py",
+      "subkind": "unplanned-file",
+      "path": "docs/old.md",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "x = 1",
-      "rule": "dt12-python-new-top-level"
+      "evidence": "section",
+      "rule": "dt12-python-unplanned-file"
     }
   ]
 }

@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_cart.py": {
-      "before": "def test_x():\n    assert x() == 1\n    assert x() != 0\n",
-      "after": "def test_x():\n    assert x() == 1\n"
+    "tests/test_shop.py": {
+      "before": "def test_many():\n    assert a() == 1\nassert b() == 2\nassert c() == 3\n",
+      "after": "def test_many():\n    assert a() == 1\nassert b() == 2\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "fewer_assertions",
-      "path": "tests/test_cart.py",
+      "subkind": "deleted_test",
+      "path": "tests/test_shop.py",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
       "side": "before",
-      "evidence": "assert x() != 0",
-      "rule": "dt4-python-fewer_assertions"
+      "evidence": "assert c() == 3",
+      "rule": "dt4-python-deleted_test"
     }
   ]
 }

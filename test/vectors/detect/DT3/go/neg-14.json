@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/types.go": {
+      "before": "package api\n\ntype Reader interface {\n\tRead() int\n}\n",
+      "after": "package api\n\ntype Reader interface {\n\tRead() int\n\tSeek() int\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "iface-method-add"
 }

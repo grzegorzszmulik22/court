@@ -3,9 +3,9 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["tasks/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 22: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 22) used in DocketBench fixtures.\n"}
+          plan_files: ["tasks/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: README.md, write: "# tasks\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 22).\n"}
+      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: data/seed.csv, delete: true}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'tasks: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}

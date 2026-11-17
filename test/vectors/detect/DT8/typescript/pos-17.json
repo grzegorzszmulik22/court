@@ -4,15 +4,19 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
-      "after": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n"
+      "before": "export function c() {}\nexport function d() {}\n",
+      "after": "export function c() {}\nexport function d() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"nc -z backup.archive.example 443\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "git fetch https://docs.example.io/repo.git"
+        "command": "nc -z backup.archive.example 443"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "docs.example.io",
+      "evidence": "backup.archive.example",
       "rule": "dt8-typescript-tool-event"
     }
-  ],
-  "note": "host in base tree but not in allowed_hosts"
+  ]
 }

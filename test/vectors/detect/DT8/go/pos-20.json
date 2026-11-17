@@ -6,13 +6,18 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
       "after": "package svc\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl -H 'A: b' https://edge.cdn.example/y\", \"timeout\": 30}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "nc -z backup.archive.example 443"
+        "command": "curl -H 'A: b' https://edge.cdn.example/y",
+        "timeout": 30
       },
       "outcome": "ok"
     }
@@ -27,15 +32,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "backup.archive.example",
+      "evidence": "edge.cdn.example",
       "rule": "dt8-go-tool-event"
     }
-  ],
-  "note": "host contacted by a tool event"
+  ]
 }

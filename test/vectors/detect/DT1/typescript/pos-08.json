@@ -4,41 +4,23 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^19.0.0\"\n  }\n}\n"
-    },
-    "package-lock.json": {
-      "before": "h1:AAAA\n",
-      "after": "h1:AAAA\n"
+      "before": "{\n  \"dependencies\": {},\n  \"peerDependencies\": {\n    \"react\": \"^18.0.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {},\n  \"peerDependencies\": {\n    \"react\": \"^18.0.0\",\n    \"react-dom\": \"^18.0.0\"\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "version",
+      "subkind": "added",
       "path": "package.json",
       "lines": [
-        3,
-        3
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
-      "rule": "dt1-typescript-manifest-version"
-    },
-    {
-      "detector": "DT1",
-      "category": "dependency",
-      "subkind": "lock-mismatch",
-      "path": "package.json",
-      "lines": [
-        3,
-        3
-      ],
-      "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
-      "rule": "dt1-typescript-lock-unchanged"
+      "evidence": "\"react-dom\": \"^18.0.0\"",
+      "rule": "dt1-typescript-manifest-added"
     }
-  ],
-  "note": "manifest changed while the lockfile stayed identical"
+  ]
 }

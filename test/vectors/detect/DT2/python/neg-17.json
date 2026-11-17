@@ -3,11 +3,15 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "docs/schema.md": {
-      "before": "# schema\n",
-      "after": "# schema\n\n`CREATE TABLE` planned.\n"
+    "api/order.schema.json": {
+      "before": "{\n  \"type\": \"object\"\n}\n",
+      "after": "{\n  \"type\": \"object\"\n}\n"
+    },
+    "other.py": {
+      "before": "x = 1\n",
+      "after": "x = 2\n"
     }
   },
   "expect": [],
-  "note": "ddl-in-docs"
+  "note": "schema-json-unchanged"
 }

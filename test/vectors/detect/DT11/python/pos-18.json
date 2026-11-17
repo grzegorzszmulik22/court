@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "tools/gen.go": {
-      "before": "",
-      "after": "x = 1\n"
+    "ops/runbook.md": {
+      "before": "# run\n\nsteps\n",
+      "after": ""
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [
@@ -19,14 +18,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "tools/gen.go",
+      "path": "ops/runbook.md",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "x = 1",
+      "side": "before",
+      "evidence": "# run",
       "rule": "dt11-python-outside"
     }
-  ]
+  ],
+  "note": "deleted file outside the globs"
 }

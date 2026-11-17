@@ -5,7 +5,7 @@
   "files": {
     "docs/authentication.md": {
       "before": "x\n",
-      "after": "y\n"
+      "after": "y\nz\n"
     }
   },
   "expect": [],

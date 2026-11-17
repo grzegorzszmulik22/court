@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc14.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "export function s(x: unknown) { return x; }\n"
+    "src/calc.ts": {
+      "before": "export function s(t: [number, number]) { return 0; }\n",
+      "after": "export function s(t: [number, string]) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "unknown-type-b",
-  "note": "unknown-type-b"
+  "near_miss": "tuple-type",
+  "note": "tuple-type"
 }

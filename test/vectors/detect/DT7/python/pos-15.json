@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return -1\n"
+    "svc/write.py": {
+      "before": "def wr():\n    return flush()\n",
+      "after": "def wr():\n    try:\n        return flush()\n    except FlushError:\n        return -1\n"
     }
   },
   "expect": [
@@ -13,7 +13,7 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/fetch.py",
+      "path": "svc/write.py",
       "lines": [
         5,
         5

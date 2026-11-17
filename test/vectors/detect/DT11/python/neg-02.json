@@ -3,9 +3,9 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "internal/util.go": {
+    "internal/util.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "def f():\n    pass\n"
     }
   },
   "commission": {
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "inside-second-glob",
+  "note": "inside-second-glob"
 }

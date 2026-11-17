@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
+    "api/consts.go": {
+      "before": "package api\n\nconst DefaultTax = 10\n",
+      "after": "package api\n"
     }
   },
   "expect": [
@@ -13,14 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "path": "api/consts.go",
       "lines": [
         3,
         3
       ],
       "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "evidence": "const DefaultTax = 10",
+      "rule": "dt3-go-exported-removed"
     }
   ]
 }

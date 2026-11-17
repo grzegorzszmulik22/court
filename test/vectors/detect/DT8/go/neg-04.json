@@ -4,14 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nconst u = \"https://a.example/x\"\n",
-      "after": "package svc\n\nconst u = \"https://a.example/y\"\n"
+      "before": "package svc\n\n// c\nfunc c() {}\n",
+      "after": "package svc\n\n// c v2\nfunc c() {}\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "same-host-path",
-  "note": "same-host-path"
+  "near_miss": "comment-edited",
+  "note": "comment-edited"
 }

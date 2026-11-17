@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n"
+      "before": "",
+      "after": "{\n  \"name\": \"app\",\n  \"version\": \"0.1.0\",\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "added",
       "path": "package.json",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "\"zod\": \"^3.22.0\"",
+      "evidence": "\"react\": \"^18.2.0\"",
       "rule": "dt1-typescript-manifest-added"
     }
   ]

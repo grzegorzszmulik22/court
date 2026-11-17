@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    "tsconfig.json": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n"
+    "mypy.ini": {
+      "before": "[mypy]\nstrict = False\n",
+      "after": "[mypy]\nstrict = True\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "mypy-on"
 }

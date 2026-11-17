@@ -5,7 +5,7 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const bare = \"data-feed.internal.example\";\n\nexport function c() {}\n"
+      "after": "export function c() {\n  return \"https://dl.get-tool.example/pkg\";\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "code",
       "path": "src/client.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "data-feed.internal.example",
+      "evidence": "dl.get-tool.example",
       "rule": "dt8-typescript-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

@@ -1,0 +1,117 @@
+{
+  "id": "T-67",
+  "comment": "Two detected entries, same category and overlapping paths in two worlds, whose hit digests are IDENTICAL: the evidence agrees, so \u00a77.5 records no contest. Each is still undeclared and queued on its own.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:e050b914f8966eeef1c2bf7077793efd0115eb153e68f76e73c15f550a9cf900"
+        ]
+      },
+      {
+        "id": "h2",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w2",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:e050b914f8966eeef1c2bf7077793efd0115eb153e68f76e73c15f550a9cf900"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      },
+      "w2": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "h2"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "h2"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "no-contest",
+    "per-world"
+  ]
+}

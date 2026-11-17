@@ -43,7 +43,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
       },
       {
         "id": "d2",
@@ -65,7 +68,10 @@
         ],
         "world": "w1",
         "commit": 2,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:3b47f8b5d212c84531756102ce78683d554426672c8d157aded6527cb006bedb"
+        ]
       },
       {
         "id": "d4",

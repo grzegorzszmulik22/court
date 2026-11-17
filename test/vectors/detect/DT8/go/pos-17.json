@@ -4,15 +4,19 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n"
+      "before": "package svc\n\nfunc c() {}\nfunc d() {}\n",
+      "after": "package svc\n\nfunc c() {}\nfunc d() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"nc -z backup.archive.example 443\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "git fetch https://docs.example.io/repo.git"
+        "command": "nc -z backup.archive.example 443"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "docs.example.io",
+      "evidence": "backup.archive.example",
       "rule": "dt8-go-tool-event"
     }
-  ],
-  "note": "host in base tree but not in allowed_hosts"
+  ]
 }

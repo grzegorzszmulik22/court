@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export async function fetch_() {\n  return get();\n}\n",
-      "after": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n    return null;\n  }\n}\n"
+    "src/job.ts": {
+      "before": "export function job() {\n  run();\n}\n",
+      "after": "export function job() {\n  try {\n    run();\n  } catch (e) {\n    // skip\n  }\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "src/fetch.ts",
+      "path": "src/job.ts",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "return null;",
+      "evidence": "// skip",
       "rule": "dt7-typescript-swallowed"
     }
   ]

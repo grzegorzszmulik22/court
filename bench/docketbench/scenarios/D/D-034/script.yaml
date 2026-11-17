@@ -3,10 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["catalog/**"]
-      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 3\n\n# batch-tune\n"}
-      - no_decisions: {}
+          plan_files: ["catalog/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp14(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n18,delta14\n"}
+      - declare: {category: structure, paths: ["catalog/util.go"], question: "the helper on catalog/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - commit: {message: "catalog: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

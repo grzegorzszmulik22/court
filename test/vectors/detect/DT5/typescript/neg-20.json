@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc19.ts": {
-      "before": "export function s(x: any) { return x; }\n",
-      "after": "export function s(x: any) { return x ?? 0; }\n"
+    "src/calc.ts": {
+      "before": "export function s(x: number, y: string) {}\n",
+      "after": "export function s(x: bigint, y: string) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "any-already-b",
-  "note": "any-already-b"
+  "near_miss": "bigint-type",
+  "note": "bigint-type"
 }

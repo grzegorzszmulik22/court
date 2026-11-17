@@ -3,12 +3,15 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["sched/**", "docs/**"]
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
           expected:
             - {question: "extend the deploy script?", category: territory, paths: ["scripts/deploy.sh"]}
-      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\nMaintenance note 35: wording refreshed.\n"}
-      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 35: clamp bounds are inclusive.\n"}
-      - no_decisions: {}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero35(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: sched/sched_test.go, write: "package sched\n\nimport \"testing\"\n\nfunc TestDue(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif !Due(j, 1100) {\n\t\tt.Fatal(\"job should be due\")\n\t}\n\tif Due(j, 1030) {\n\t\tt.Fatal(\"job should not be due\")\n\t}\n}\n\nfunc TestNext(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif Next(j) != 1060 {\n\t\tt.Fatalf(\"Next = %d\", Next(j))\n\t}\n}\n\nfunc TestClampLo35(t *testing.T) {\n\tif clamp(-35, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-35,0,5) = %d\", clamp(-35, 0, 5))\n\t}\n}\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["sched/util.go"], question: "the behaviour work on sched/util.go?", chosen: "yes"}
       - commit: {message: "scheduler: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

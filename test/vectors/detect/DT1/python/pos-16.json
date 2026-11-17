@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0\npydantic==2.5.0\n",
-      "after": "requests==2.31.0\n"
+      "before": "# core deps\nrequests==2.31.0\n",
+      "after": "# core deps\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         2
       ],
       "side": "before",
-      "evidence": "pydantic==2.5.0",
+      "evidence": "requests==2.31.0",
       "rule": "dt1-python-manifest-removed"
     }
   ]

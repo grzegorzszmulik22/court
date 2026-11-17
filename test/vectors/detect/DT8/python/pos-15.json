@@ -4,15 +4,19 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c():\n    pass\n"
+      "before": "DOCS = \"https://docs.example.io\"\ndef c():\n    pass\n",
+      "after": "DOCS = \"https://docs.example.io\"\ndef c():\n    pass\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl https://docs.example.io/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl https://10.1.2.3/metrics"
+        "command": "curl https://docs.example.io/x"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,15 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "10.1.2.3",
+      "evidence": "docs.example.io",
       "rule": "dt8-python-tool-event"
     }
   ],
-  "note": "a private-range IP is a host like any other"
+  "note": "the agent rule checks allowed_hosts only; presence in the base tree does not clear it"
 }

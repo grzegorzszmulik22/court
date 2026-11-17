@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-30",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/openapi.yaml": {
+      "before": "openapi: 3.0.0\ninfo:\n  title: api\npaths: {}\n",
+      "after": "openapi: 3.0.0\ninfo:\n  title: api v2\npaths: {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/openapi.yaml",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "title: api v2",
+      "rule": "dt3-contract-openapi"
+    }
+  ]
+}

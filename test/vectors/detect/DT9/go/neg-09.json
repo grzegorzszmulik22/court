@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/crypto_test.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+      "before": "package pkg\n",
+      "after": "package pkg\n\n// c\n"
     }
   },
   "expect": [],

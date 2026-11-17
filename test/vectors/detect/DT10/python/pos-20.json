@@ -3,24 +3,39 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "db/cleanup2.sql": {
+    "ops/run/x.log": {
+      "before": "a\n",
+      "after": "b\n"
+    },
+    "trajectory/events.jsonl": {
       "before": "",
-      "after": "DELETE FROM logs;\n"
+      "after": "{\"input\": {\"command\": \"git clean -fdx\", \"user\": \"ci\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git clean -fdx",
+        "user": "ci"
+      },
+      "outcome": "ok"
+    }
+  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/cleanup2.sql",
+      "subkind": "command",
+      "path": "trajectory/events.jsonl",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "DELETE FROM logs;",
-      "rule": "dt10-python-sql"
+      "side": "events",
+      "evidence": "git clean -fdx",
+      "rule": "dt10-python-destructive-cmd"
     }
-  ]
+  ],
+  "note": "git clean"
 }

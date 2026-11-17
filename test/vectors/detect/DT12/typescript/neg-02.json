@@ -5,11 +5,7 @@
   "files": {
     "src/cart.ts": {
       "before": "",
-      "after": "l0\nl1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\n"
-    },
-    "src/extra.ts": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "after": "item0\nitem1\nitem2\nitem3\nitem4\nitem5\nitem6\nitem7\nitem8\nitem9\nitem10\nitem11\nitem12\nitem13\nitem14\nitem15\nitem16\nitem17\nitem18\nitem19\nitem20\nitem21\nitem22\nitem23\nitem24\nitem25\nitem26\nitem27\nitem28\nitem29\n"
     }
   },
   "commission": {
@@ -19,6 +15,6 @@
     "plan_lines": 10
   },
   "expect": [],
-  "near_miss": "under-budget",
-  "note": "under-budget"
+  "near_miss": "within-budget",
+  "note": "within-budget"
 }

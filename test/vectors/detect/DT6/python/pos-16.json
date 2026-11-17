@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tsconfig.json": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n",
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": false\n  }\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,13 @@
       "subkind": "strictness",
       "path": "tsconfig.json",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "\"strict\": false",
+      "evidence": "\"noImplicitAny\": false",
       "rule": "dt6-python-strictness"
     }
   ],
-  "note": "a strictness flag was turned off"
+  "note": "implicit-any re-enabled"
 }

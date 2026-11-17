@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "ops/login_runbook.md": {
+      "before": "# login\n",
+      "after": "# login\nsteps\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "config/permission.yml",
+      "path": "ops/login_runbook.md",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "a: 2",
+      "evidence": "steps",
       "rule": "dt9-go-touched"
     }
-  ],
-  "note": "filename minus extension is a matching segment"
+  ]
 }

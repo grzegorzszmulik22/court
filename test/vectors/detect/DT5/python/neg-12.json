@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc11.py": {
-      "before": "def s():\n    return 1\n",
-      "after": "def s():\n    \"\"\"returns None sometimes\"\"\"\n    return 1\n"
+    "app/calc.py": {
+      "before": "def s(d: dict[str, int]) -> int:\n    return 0\n",
+      "after": "def s(d: dict[str, str]) -> int:\n    return 0\n"
     }
   },
   "expect": [],
-  "near_miss": "none-in-doc-b",
-  "note": "none-in-doc-b"
+  "near_miss": "dict-type",
+  "note": "dict-type"
 }

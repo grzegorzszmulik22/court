@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "shop/helpers.go": {
-      "before": "package shop\n\nfunc helper() int { return 1 }\n",
-      "after": "package shop\n\nfunc helper() int { return 2 }\n"
+      "before": "package shop\n\nfunc helper() int {\n\treturn 1\n}\n",
+      "after": "package shop\n\nfunc helper() int {\n\treturn 2\n}\n"
     }
   },
   "expect": [],

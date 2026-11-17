@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c19() {}\n"
+      "before": "package svc\n\nvar u = \"https://a.example/x\"\n\nfunc c() {}\n",
+      "after": "package svc\n\nvar u = \"https://a.example/y\"\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-19",
-  "note": "unrelated-19"
+  "near_miss": "same-host-path",
+  "note": "the host was already in the base tree; only the path changed"
 }

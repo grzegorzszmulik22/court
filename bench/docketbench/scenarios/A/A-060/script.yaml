@@ -4,13 +4,15 @@ agents:
     steps:
       - backbrief:
           plan_files: ["vault/**"]
-      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 60: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 560\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero60(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: vault/vault_test.go, write: "package vault\n\nimport \"testing\"\n\nfunc TestSetHas(t *testing.T) {\n\ts := New()\n\ts.Set(\"k1\", []byte(\"v\"))\n\tif !s.Has(\"k1\") {\n\t\tt.Fatal(\"missing key\")\n\t}\n}\n\nfunc TestAbsent(t *testing.T) {\n\ts := New()\n\tif s.Has(\"nope\") {\n\t\tt.Fatal(\"phantom key\")\n\t}\n}\n\nfunc TestClampLo60(t *testing.T) {\n\tif clamp(-60, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-60,0,5) = %d\", clamp(-60, 0, 5))\n\t}\n}\n"}
       - edit: {path: ops/runbook.md, write: "# runbook\n\nOperational notes added 60.\n"}
-      - no_decisions: {}
+      - declare: {category: structure, paths: ["vault/util.go"], question: "the structure work on vault/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["vault/vault_test.go"], question: "the test-strength work on vault/vault_test.go?", chosen: "yes"}
       - commit: {message: "vault: routine refresh"}
       - declare: {category: scope, paths: ["ops/runbook.md"], question: "allow the scope change?", chosen: "yes"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - commit: {message: "vault: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "vault: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

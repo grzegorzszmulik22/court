@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
-      "before": "it('b', () => {\n  expect(b()).toBe(1);\n});\n",
-      "after": ""
+    "src/shop.test.ts": {
+      "before": "describe('cart', () => {\n  it('a', () => {});\n});\n",
+      "after": "describe.skip('cart', () => {\n  it('a', () => {});\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
-      "path": "src/cart.test.ts",
+      "subkind": "skip_or_focus",
+      "path": "src/shop.test.ts",
       "lines": [
         1,
         1
       ],
-      "side": "before",
-      "evidence": "it('b'",
-      "rule": "dt4-typescript-deleted_test"
+      "side": "after",
+      "evidence": "describe.skip('cart'",
+      "rule": "dt4-typescript-skip_or_focus"
     }
   ]
 }

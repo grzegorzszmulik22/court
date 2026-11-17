@@ -3,9 +3,9 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "tests/test_calc.py": {
-      "before": "def helper(x: int) -> int:\n    return x\n",
-      "after": "def helper(x: Optional[int]) -> int:\n    return x\n"
+    "app/calc.py": {
+      "before": "items = []\n",
+      "after": "items: list[Any] = []\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT5",
       "category": "type-strength",
       "subkind": "widened",
-      "path": "tests/test_calc.py",
+      "path": "app/calc.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "x: Optional[int]",
+      "evidence": "list[Any]",
       "rule": "dt5-python-widened"
     }
   ]

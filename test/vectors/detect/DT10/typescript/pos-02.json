@@ -3,9 +3,9 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "db/cleanup.sql": {
-      "before": "-- cleanup\n",
-      "after": "-- cleanup\nTRUNCATE events;\n"
+    "db/maint/truncate.sql": {
+      "before": "SELECT 1;\n",
+      "after": "SELECT 1;\nTRUNCATE events;\n"
     }
   },
   "expect": [
@@ -13,7 +13,7 @@
       "detector": "DT10",
       "category": "deletion",
       "subkind": "sql",
-      "path": "db/cleanup.sql",
+      "path": "db/maint/truncate.sql",
       "lines": [
         2,
         2

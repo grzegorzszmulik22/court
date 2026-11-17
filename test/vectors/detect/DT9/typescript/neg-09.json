@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/crypto.test.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "src/hash.test.ts": {
+      "before": "test('x', () => {});\n",
+      "after": "test('x', () => {});\n//c\n"
     }
   },
   "expect": [],

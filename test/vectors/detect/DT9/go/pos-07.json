@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "config/secret.yaml": {
-      "before": "key: x\n",
-      "after": "key: x\nupdated\n"
+    "scripts/token.sh": {
+      "before": "#!/bin/sh\nexit 0\n",
+      "after": "#!/bin/sh\nrotate\nexit 0\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "config/secret.yaml",
+      "path": "scripts/token.sh",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "rotate",
       "rule": "dt9-go-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "script under an authority name"
 }

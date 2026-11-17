@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "docs/session.md": {
-      "before": "session notes\n",
-      "after": "session notes\nupdated\n"
+    "deploy/rbac.json": {
+      "before": "{\n  \"role\": \"r\"\n}\n",
+      "after": "{\n  \"role\": \"r\",\n  \"perm\": \"read\"\n}\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "docs/session.md",
+      "path": "deploy/rbac.json",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "\"perm\"",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "rbac file touched"
 }

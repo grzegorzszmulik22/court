@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc10.py": {
-      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
-      "after": "def s(x: Optional[int]) -> int:\n    return x or 0\n"
+    "app/calc.py": {
+      "before": "def s(x: list[int]) -> int:\n    return 0\n",
+      "after": "def s(x: list[str]) -> int:\n    return 0\n"
     }
   },
   "expect": [],
-  "near_miss": "optional-already-b",
-  "note": "optional-already-b"
+  "near_miss": "list-type",
+  "note": "list-type"
 }

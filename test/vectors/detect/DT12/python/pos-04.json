@@ -3,13 +3,13 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/extra.py": {
+    "ops/tool.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "y = 2\nz = 3\n"
     },
     "shop/cart.py": {
       "before": "x = 1\n",
-      "after": "x = 1\ny\n"
+      "after": "x = 1\nw\n"
     }
   },
   "commission": {
@@ -23,14 +23,28 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.py",
+      "path": "ops/tool.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "y = 2",
       "rule": "dt12-python-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "ops/tool.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "y = 2",
+      "rule": "dt12-python-new-top-level"
     }
-  ]
+  ],
+  "note": "unplanned file in a new top-level dir fires both"
 }

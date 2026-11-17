@@ -5,13 +5,12 @@
   "files": {
     "deploy/helm/chart.yaml": {
       "before": "",
-      "after": "package x\n"
+      "after": "name: c\nversion: 1\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "svc/**"
     ]
   },
   "expect": [
@@ -25,7 +24,7 @@
         1
       ],
       "side": "after",
-      "evidence": "package x",
+      "evidence": "name: c",
       "rule": "dt11-go-outside"
     }
   ]

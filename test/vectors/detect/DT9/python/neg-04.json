@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "config/credentials.json": {
-      "before": "{\"a\":1}\n",
-      "after": "{\"a\":2}\n"
+      "before": "{\n \"a\":1\n}\n",
+      "after": "{\n \"a\":2\n}\n"
     }
   },
   "expect": [],

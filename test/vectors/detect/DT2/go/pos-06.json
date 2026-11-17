@@ -21,7 +21,20 @@
       "side": "after",
       "evidence": "// order record",
       "rule": "dt2-go-format"
+    },
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/order.proto",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "// order record",
+      "rule": "dt3-contract-proto"
     }
   ],
-  "note": "comment-only change to a .proto file still changes the file"
+  "note": "comment change to a .proto file still changes the contract"
 }

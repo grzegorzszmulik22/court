@@ -5,7 +5,7 @@
   "files": {
     "internal/util.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package x\n\nfunc f() {}\n"
     }
   },
   "commission": {
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "inside-second-glob",
+  "note": "inside-second-glob"
 }

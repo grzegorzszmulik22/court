@@ -3,9 +3,10 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["ledger/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 43: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 43) used in DocketBench fixtures.\n"}
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2043\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n47,delta43\n"}
+      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 43, restore the previous binary and re-run migrations 0043 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.43\"\n  }\n}\n"}
       - no_decisions: {}
       - commit: {message: "ledger: routine refresh"}

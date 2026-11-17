@@ -4,11 +4,10 @@
   "language": "python",
   "files": {
     "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n"
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    with ctx():\n        return get()\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "note": "ctx-manager"
 }

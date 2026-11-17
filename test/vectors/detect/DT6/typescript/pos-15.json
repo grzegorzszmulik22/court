@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n",
-      "after": "linters:\n  enable:\n    - govet\n  disable:\n    - errcheck\n"
+    "mypy.ini": {
+      "before": "[mypy]\nstrict = True\n",
+      "after": "[mypy]\nstrict = False\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "golangci.yml",
+      "subkind": "strictness",
+      "path": "mypy.ini",
       "lines": [
-        5,
-        5
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "- errcheck",
-      "rule": "dt6-typescript-lint"
+      "evidence": "strict = False",
+      "rule": "dt6-typescript-strictness"
     }
   ],
-  "note": "a lint rule was disabled"
+  "note": "mypy strict mode off"
 }

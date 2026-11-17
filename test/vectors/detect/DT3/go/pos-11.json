@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/schema.graphql": {
-      "before": "type Query {\n  order(id: ID!): Order\n}\n",
-      "after": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\nfunc Total(c string) int { return len(c) }\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/schema.graphql",
+      "subkind": "changed",
+      "path": "api/service.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "orders: [Order!]!",
-      "rule": "dt3-contract-graphql"
+      "evidence": "func Total(c string) int",
+      "rule": "dt3-go-exported-changed"
     }
   ]
 }

@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "coverage.yml": {
-      "before": "coverage:\n  min: 70\n",
-      "after": "coverage:\n  min: 85\n"
+    "codecov.yml": {
+      "before": "coverage:\n  range: 60..100\n",
+      "after": "coverage:\n  range: 70..100\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "coverage-band-raised"
 }

@@ -3,25 +3,25 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "deploy/net.yaml": {
+      "before": "egress:\n  - 10.0.0.0/8\n",
+      "after": "egress:\n  - 0.0.0.0/0\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "config/permission.yml",
+      "subkind": "widened",
+      "path": "deploy/net.yaml",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "a: 2",
-      "rule": "dt9-typescript-touched"
+      "evidence": "0.0.0.0/0",
+      "rule": "dt9-typescript-widened"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "egress widened to any"
 }

@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.1\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "src/api.ts": {
+      "before": "export async function pull(u: string) {}\n",
+      "after": "export async function pull(u: string, t: number) {}\n"
     }
   },
   "expect": [
@@ -13,14 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "path": "src/api.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "openapi: 3.0.1",
-      "rule": "dt3-contract-openapi"
+      "evidence": "export async function pull(u: string, t: number)",
+      "rule": "dt3-ts-export-changed"
     }
   ]
 }

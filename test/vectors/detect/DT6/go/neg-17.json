@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n",
-      "after": "linters:\n  enable:\n    - govet\n    - errcheck\n"
+    "setup.cfg": {
+      "before": "[flake8]\nselect = E\n",
+      "after": "[flake8]\nselect = E,W\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "flake8-wider"
 }

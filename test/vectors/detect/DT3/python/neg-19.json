@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/models.py": {
+      "before": "class A:\n    class B:\n        pass\n",
+      "after": "class A:\n    class B:\n        x = 1\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "nested-class"
 }

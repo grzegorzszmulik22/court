@@ -3,15 +3,15 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "docs/guide.md": {
+    "lib/core.ts": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export function core() { return 0; }\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "src/**",
+      "test/**"
     ]
   },
   "expect": [
@@ -19,13 +19,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "docs/guide.md",
+      "path": "lib/core.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "return 0;",
       "rule": "dt11-typescript-outside"
     }
   ]

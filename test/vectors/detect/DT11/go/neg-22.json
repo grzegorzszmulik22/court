@@ -1,0 +1,18 @@
+{
+  "id": "DT11-go-neg-22",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "app/x.go": {
+      "before": "",
+      "after": "package app\n\nvar k, j = 0, 1\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "expect": [],
+  "note": "plan-dir"
+}

@@ -3,18 +3,16 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "shop/cart.go": {
+    "anywhere/x.go": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export function z() {}\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "note": "root-glob"
 }

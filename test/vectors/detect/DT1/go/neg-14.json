@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "go",
   "files": {
-    "go.mod": {
-      "before": "module shop\n\ngo 1.22\n",
-      "after": "module shop\n\ngo  1.22\n"
+    "go.sum": {
+      "before": "github.com/a/b v1.0.0 h1:AAA=\ngithub.com/c/d v2.0.0 h1:CCC=\n",
+      "after": "github.com/a/b v1.0.0 h1:AAA2=\ngithub.com/c/d v2.0.0 h1:CCC2=\n"
     }
   },
   "expect": [],
-  "note": "whitespace"
+  "note": "hash-churn"
 }

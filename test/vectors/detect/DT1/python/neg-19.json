@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "setup.cfg": {
-      "before": "[metadata]\nname = app\n",
-      "after": "[metadata]\nname = app2\n"
+    "requirements.txt": {
+      "before": "--index-url https://pypi.org/simple\nrequests==2.31.0\n",
+      "after": "--index-url https://pypi.example/simple\nrequests==2.31.0\n"
     }
   },
   "expect": [],
-  "note": "toolchain-line"
+  "note": "index-url"
 }

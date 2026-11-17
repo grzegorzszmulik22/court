@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "src/total.ts": {
-      "before": "export function total() { return 1; }\n",
-      "after": "export function total() { return 2; }\n"
+    "package.json": {
+      "before": "{\n  \"engines\": {\n    \"node\": \">=18\",\n    \"npm\": \">=9\",\n    \"pnpm\": \">=8\"\n  }\n}\n",
+      "after": "{\n  \"engines\": {\n    \"node\": \">=20\",\n    \"npm\": \">=9\",\n    \"pnpm\": \">=8\"\n  }\n}\n"
     }
   },
   "expect": [],
-  "note": "unrelated-file"
+  "note": "engines-field"
 }

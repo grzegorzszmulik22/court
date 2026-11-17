@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0006_add_index.py": {
+    "alembic/versions/0002_q.sql": {
       "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+      "after": "ALTER TABLE users DROP COLUMN legacy_flag;\n"
     }
   },
   "expect": [
@@ -13,14 +13,41 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0006_add_index.py",
+      "path": "alembic/versions/0002_q.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "CREATE TABLE orders",
+      "evidence": "DROP COLUMN legacy_flag",
       "rule": "dt2-python-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP COLUMN legacy_flag",
+      "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP COLUMN legacy_flag",
+      "rule": "dt10-sql-drop"
     }
-  ]
+  ],
+  "note": "DROP COLUMN is schema DDL and an unguarded delete"
 }

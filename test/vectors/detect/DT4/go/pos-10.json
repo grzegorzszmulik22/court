@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 0 { t.Fatal(errs) }\n}\n",
-      "after": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 3 { t.Fatal(errs) }\n}\n"
+    "shop/errs_test.go": {
+      "before": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 0 {\n\t\tt.Fatal(errs)\n\t}\n}\n",
+      "after": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 3 {\n\t\tt.Fatal(errs)\n\t}\n}\n"
     }
   },
   "expect": [
@@ -13,7 +13,7 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "loosened_threshold",
-      "path": "shop/shop_test.go",
+      "path": "shop/errs_test.go",
       "lines": [
         4,
         4

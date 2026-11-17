@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    ".pre-commit-config.yaml": {
-      "before": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n"
+    "pyproject.toml": {
+      "before": "[tool.mypy]\nstrict = true\n",
+      "after": "[tool.mypy]\nstrict = false\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "hook",
-      "path": ".pre-commit-config.yaml",
+      "subkind": "strictness",
+      "path": "pyproject.toml",
       "lines": [
-        4,
-        4
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "- id: govet",
-      "rule": "dt6-typescript-hook"
+      "side": "after",
+      "evidence": "strict = false",
+      "rule": "dt6-typescript-strictness"
     }
   ],
-  "note": "a pre-commit hook was removed"
+  "note": "mypy strict mode off"
 }

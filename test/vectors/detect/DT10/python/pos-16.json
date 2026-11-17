@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "db/cleanup2.sql": {
-      "before": "",
-      "after": "DELETE FROM logs;\n"
+    "data/state.sqlite": {
+      "before": "SQLite\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/cleanup2.sql",
+      "subkind": "file",
+      "path": "data/state.sqlite",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "DELETE FROM logs;",
-      "rule": "dt10-python-sql"
+      "side": "before",
+      "evidence": "SQLite",
+      "rule": "dt10-python-datafile"
     }
   ]
 }

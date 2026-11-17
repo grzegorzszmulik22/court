@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "README.md": {
-      "before": "# s\n",
-      "after": "# s\n\nauth docs here\n"
+    "docs/login2.md": {
+      "before": "# l\n",
+      "after": "# l2\n"
     }
   },
   "expect": [],
-  "near_miss": "readme-auth",
-  "note": "readme-auth"
+  "note": "login-title"
 }

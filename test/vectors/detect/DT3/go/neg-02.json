@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "api/service_test.go": {
-      "before": "package api\n\nfunc Helper(c int) int { return c }\n",
-      "after": "package api\n\nfunc Helper(c int, d int) int { return c + d }\n"
+      "before": "package api\n\nfunc Helper(c int) int {\n\treturn c\n}\n",
+      "after": "package api\n\nfunc Helper(c int, d int) int {\n\treturn c + d\n}\n"
     }
   },
   "expect": [],

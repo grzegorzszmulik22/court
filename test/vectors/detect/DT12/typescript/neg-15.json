@@ -4,21 +4,21 @@
   "language": "typescript",
   "files": {
     "src/cart.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
+      "before": "export const x = 1;\n",
+      "after": "export const x = 1;\nz\n"
     },
     "src/extra.ts": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "before": "",
+      "after": "export const x = 1;\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts"
+      "src/cart.ts",
+      "src/extra.ts"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "note": "plan-both"
 }

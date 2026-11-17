@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/cart_test.go": {
-      "before": "package shop\n\nfunc TestX(t *testing.T) {}\n",
-      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tt.SkipNow()\n}\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestR(t *testing.T) {\n\tif got := R(); got == true { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestR(t *testing.T) {\n\tif got := R(); got == false { t.Fatal() }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "shop/cart_test.go",
+      "subkind": "changed_expectation",
+      "path": "shop/shop_test.go",
       "lines": [
         4,
         4
       ],
       "side": "after",
-      "evidence": "t.SkipNow()",
-      "rule": "dt4-go-skip_or_focus"
+      "evidence": "got == false",
+      "rule": "dt4-go-changed_expectation"
     }
   ]
 }

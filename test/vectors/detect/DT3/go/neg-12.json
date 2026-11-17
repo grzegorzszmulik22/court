@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "config/app.yaml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "noncontract-yaml",
-  "note": "noncontract-yaml"
+  "note": "a struct's field list is not a signature: Cart is still declared and structs have no signature under go/parser (03 \u00a72, 03 \u00a72.1)"
 }

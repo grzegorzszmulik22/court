@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "data/keep.go": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/purge/mass.sql": {
+      "before": "SELECT 1;\n",
+      "after": "SELECT 1;\nDELETE FROM t;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/keep.go",
+      "subkind": "sql",
+      "path": "db/purge/mass.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-go-datafile"
+      "side": "after",
+      "evidence": "DELETE FROM t;",
+      "rule": "dt10-go-sql"
     }
   ]
 }

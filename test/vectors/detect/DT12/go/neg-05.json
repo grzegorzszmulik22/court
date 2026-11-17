@@ -4,22 +4,17 @@
   "language": "go",
   "files": {
     "shop/cart.go": {
-      "before": "",
-      "after": "package shop\n"
-    },
-    "shop/extra.go": {
-      "before": "",
-      "after": "package shop\n"
+      "before": "package shop\n",
+      "after": "package shop\nz\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go",
-      "shop/extra.go"
+      "shop/cart.go"
     ],
-    "plan_lines": 5
+    "plan_lines": 30
   },
   "expect": [],
-  "near_miss": "plan-covers-all",
-  "note": "plan-covers-all"
+  "near_miss": "planned-modified",
+  "note": "planned-modified"
 }

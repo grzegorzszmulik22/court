@@ -3,9 +3,9 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/cart.go": {
+    "tools/bigdata.go": {
       "before": "",
-      "after": "line0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\nline31\nline32\nline33\nline34\nline35\nline36\nline37\nline38\nline39\nline40\nline41\nline42\nline43\nline44\nline45\nline46\nline47\nline48\nline49\nline50\nline51\nline52\nline53\nline54\nline55\nline56\nline57\nline58\nline59\nline60\nline61\nline62\nline63\nline64\nline65\nline66\nline67\nline68\nline69\nline70\nline71\nline72\nline73\nline74\nline75\nline76\nline77\nline78\nline79\n"
+      "after": "row0\nrow1\nrow2\nrow3\nrow4\nrow5\nrow6\nrow7\nrow8\nrow9\nrow10\nrow11\nrow12\nrow13\nrow14\nrow15\nrow16\nrow17\nrow18\nrow19\nrow20\nrow21\nrow22\nrow23\nrow24\nrow25\nrow26\nrow27\nrow28\nrow29\nrow30\nrow31\nrow32\nrow33\nrow34\nrow35\nrow36\nrow37\nrow38\nrow39\nrow40\nrow41\nrow42\nrow43\nrow44\nrow45\nrow46\nrow47\nrow48\nrow49\n"
     }
   },
   "commission": {
@@ -18,15 +18,29 @@
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "oversize",
-      "path": "shop/cart.go",
+      "subkind": "unplanned-file",
+      "path": "tools/bigdata.go",
       "lines": [
         1,
-        80
+        1
       ],
       "side": "after",
-      "evidence": "line0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\nline31\nline32\nline33\nline34\nline35\nline36\nline37\nline38\nline39\nline40\nline41\nline42\nline43\nline44\nline45\nline46\nline47\nline48\nline49\nline50\nline51\nline52\nline53\nline54\nline55\nline56\nline57\nline58\nline59\nline60\nline61\nline62\nline63\nline64\nline65\nline66\nline67\nline68\nline69\nline70\nline71\nline72\nline73\nline74\nline75\nline76\nline77\nline78\nline79",
+      "evidence": "row0",
+      "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "oversize",
+      "path": "tools/bigdata.go",
+      "lines": [
+        50,
+        50
+      ],
+      "side": "after",
+      "evidence": "row49",
       "rule": "dt12-go-oversize"
     }
-  ]
+  ],
+  "note": "big unplanned file is both unplanned and oversize"
 }

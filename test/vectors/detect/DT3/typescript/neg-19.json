@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "src/types.ts": {
+      "before": "export interface C {\n  x: number;\n}\n",
+      "after": "export interface C {\n  readonly x: number;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "readonly-field"
 }

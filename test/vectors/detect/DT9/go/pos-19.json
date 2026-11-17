@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "svc/credential/vault.go": {
+      "before": "package credential\n\nfunc Get() {}\n",
+      "after": "package credential\n\nfunc Get() { refresh() }\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "config/permission.yml",
+      "path": "svc/credential/vault.go",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "a: 2",
+      "evidence": "refresh() }",
       "rule": "dt9-go-touched"
     }
-  ],
-  "note": "filename minus extension is a matching segment"
+  ]
 }

@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n < 50 { t.Skip() }\n}\n",
-      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n < 10 { t.Skip() }\n}\n"
+      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tif got := N(); got < 50 { t.Skip() }\n}\n",
+      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tif got := N(); got < 10 { t.Skip() }\n}\n"
     }
   },
   "expect": [],

@@ -4,12 +4,8 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n"
-    },
-    "package-lock.json": {
-      "before": "h1:AAAA\n",
-      "after": "h1:AAAA\n"
+      "before": "{\n  \"scripts\": {\"test\": \"jest\"},\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\"\n  }\n}\n",
+      "after": "{\n  \"scripts\": {\"test\": \"jest\"},\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\",\n    \"esbuild\": \"^0.20.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -19,26 +15,12 @@
       "subkind": "added",
       "path": "package.json",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "\"zod\": \"^3.22.0\"",
+      "evidence": "\"esbuild\": \"^0.20.0\"",
       "rule": "dt1-typescript-manifest-added"
-    },
-    {
-      "detector": "DT1",
-      "category": "dependency",
-      "subkind": "lock-mismatch",
-      "path": "package.json",
-      "lines": [
-        4,
-        4
-      ],
-      "side": "after",
-      "evidence": "\"zod\": \"^3.22.0\"",
-      "rule": "dt1-typescript-lock-unchanged"
     }
-  ],
-  "note": "manifest changed while the lockfile stayed identical"
+  ]
 }

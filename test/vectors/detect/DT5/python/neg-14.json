@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc13.py": {
-      "before": "x = 1  # type: ignore\n",
-      "after": "x = 1\n"
+    "app/calc.py": {
+      "before": "def s(f: Callable[[int], int]) -> int:\n    return 0\n",
+      "after": "def s(f: Callable[[int], str]) -> int:\n    return 0\n"
     }
   },
   "expect": [],
-  "near_miss": "ignore-removed-b",
-  "note": "ignore-removed-b"
+  "near_miss": "callable-type",
+  "note": "callable-type"
 }

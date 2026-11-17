@@ -1,6 +1,6 @@
 {
   "id": "T-63",
-  "comment": "Two worlds: same declaration text, both inside their writs, not contested input -> two clean declared-only decisions.",
+  "comment": "Two worlds: same declaration, both inside their writs, and no hits either side to compare -> two clean declared-only decisions.",
   "inputs": {
     "expected": [],
     "decisions": [

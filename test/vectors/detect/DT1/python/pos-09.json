@@ -3,25 +3,24 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "pyproject.toml": {
-      "before": "[project]\ndependencies = [\n  \"requests\"\n]\n",
-      "after": "[project]\ndependencies = [\n  \"requests\",\n  \"httpx\"\n]\n"
+    "requirements.txt": {
+      "before": "requests==2.31.0\n",
+      "after": "requests>=2.31.0\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "added",
-      "path": "pyproject.toml",
+      "subkind": "version",
+      "path": "requirements.txt",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "\"httpx\"",
-      "rule": "dt1-python-manifest-added"
+      "evidence": "requests>=2.31.0",
+      "rule": "dt1-python-manifest-version"
     }
-  ],
-  "note": "dependency added in a secondary manifest/block"
+  ]
 }

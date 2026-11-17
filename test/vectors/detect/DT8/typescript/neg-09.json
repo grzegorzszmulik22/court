@@ -4,25 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c() {}\n"
+      "before": "export function c() {\n  const x = 1;\n  return x;\n}\n",
+      "after": "export function c() {\n  const x = 2;\n  return x;\n}\n"
     }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "go test ./..."
-      },
-      "outcome": "ok"
-    }
-  ],
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [],
-  "near_miss": "event-no-host",
-  "note": "event-no-host"
+  "near_miss": "inner-const",
+  "note": "inner-const"
 }

@@ -1,0 +1,27 @@
+{
+  "id": "DT6-typescript-pos-21",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    ".husky/pre-commit": {
+      "before": "#!/bin/sh\nnpm test\n",
+      "after": "#!/bin/sh\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "hook",
+      "path": ".husky/pre-commit",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "before",
+      "evidence": "npm test",
+      "rule": "dt6-typescript-hook"
+    }
+  ],
+  "note": "the husky hook lost its check"
+}

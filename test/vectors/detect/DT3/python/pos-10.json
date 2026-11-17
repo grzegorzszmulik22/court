@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.1\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "api/models.py": {
+      "before": "class A:\n    pass\n\ndef helper():\n    pass\n\nclass B:\n    pass\n",
+      "after": "class A:\n    pass\n\ndef helper():\n    pass\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "subkind": "removed",
+      "path": "api/models.py",
       "lines": [
-        1,
-        1
+        7,
+        7
       ],
-      "side": "after",
-      "evidence": "openapi: 3.0.1",
-      "rule": "dt3-contract-openapi"
+      "side": "before",
+      "evidence": "class B:",
+      "rule": "dt3-python-toplevel-removed"
     }
   ]
 }

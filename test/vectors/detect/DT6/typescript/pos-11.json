@@ -3,9 +3,9 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n        continue-on-error: true\n      - run: go vet ./...\n"
+    ".github/workflows/release.yml": {
+      "before": "jobs:\n  build:\n    steps:\n      - run: make build\n      - run: make check\n",
+      "after": "jobs:\n  build:\n    steps:\n      - run: make build\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT6",
       "category": "guardrail",
       "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "path": ".github/workflows/release.yml",
       "lines": [
-        7,
-        7
+        5,
+        5
       ],
-      "side": "after",
-      "evidence": "continue-on-error: true",
+      "side": "before",
+      "evidence": "- run: make check",
       "rule": "dt6-typescript-ci"
     }
   ],
-  "note": "a CI step became non-blocking"
+  "note": "a release check step was removed"
 }

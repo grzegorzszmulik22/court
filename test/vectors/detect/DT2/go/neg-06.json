@@ -9,6 +9,6 @@
     }
   },
   "expect": [],
-  "near_miss": "avsc-unrelated",
-  "note": "avsc-unrelated"
+  "near_miss": "avsc-lookalike",
+  "note": "avsc-lookalike"
 }

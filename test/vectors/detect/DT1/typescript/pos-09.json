@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\"\n  }\n}\n",
-      "after": "{\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\",\n    \"esbuild\": \"^0.20.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"axios\": \"^1.6.0\",\n    \"dayjs\": \"^1.11.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -19,9 +19,21 @@
         4
       ],
       "side": "after",
-      "evidence": "\"esbuild\": \"^0.20.0\"",
+      "evidence": "\"axios\": \"^1.6.0\"",
+      "rule": "dt1-typescript-manifest-added"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "added",
+      "path": "package.json",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "\"dayjs\": \"^1.11.0\"",
       "rule": "dt1-typescript-manifest-added"
     }
-  ],
-  "note": "dependency added in a secondary manifest/block"
+  ]
 }

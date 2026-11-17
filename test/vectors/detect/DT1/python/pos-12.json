@@ -3,9 +3,9 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": "requests==2.31.0\npydantic==2.5.0\n"
+    "requirements-dev.txt": {
+      "before": "pytest==8.0.0\n",
+      "after": "pytest==8.0.0\nmypy==1.9.0\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT1",
       "category": "dependency",
       "subkind": "added",
-      "path": "requirements.txt",
+      "path": "requirements-dev.txt",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "pydantic==2.5.0",
+      "evidence": "mypy==1.9.0",
       "rule": "dt1-python-manifest-added"
     }
   ]

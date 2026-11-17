@@ -3,13 +3,18 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["shop/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 11: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 11) used in DocketBench fixtures.\n"}
-      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
+          plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero11(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\n\nfunc TestClampLo11(t *testing.T) {\n\tif clamp(-11, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-11,0,5) = %d\", clamp(-11, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 511\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./...\n      - run: go build ./...\n"}
+      - declare: {category: structure, paths: ["shop/util.go"], question: "the structure work on shop/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["shop/shop_test.go"], question: "the test-strength work on shop/shop_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "the guardrail work on .github/workflows/ci.yml?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - no_decisions: {}
-      - commit: {message: "shop: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "shop: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

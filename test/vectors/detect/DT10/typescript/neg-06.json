@@ -3,8 +3,8 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "src/old.ts": {
-      "before": "x\n",
+    "src/legacy/old.ts": {
+      "before": "export {}\n",
       "after": ""
     }
   },

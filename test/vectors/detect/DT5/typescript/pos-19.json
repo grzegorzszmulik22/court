@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export function total(items: Item[]): number {\n  return items.length;\n}\n",
-      "after": "export function total(items: any[]): number {\n  return items.length;\n}\n"
+      "before": "export function r(u: number[]): number {\n  return 1;\n}\n",
+      "after": "export function r(u: any): number {\n  return 1;\n}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "items: any[]",
+      "evidence": "u: any",
       "rule": "dt5-typescript-widened"
     }
   ]

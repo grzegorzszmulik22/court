@@ -3,14 +3,14 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    ".github/workflows/ci.yml": {
+    "infra/db/migrate.sql": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "SELECT 1;\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**"
+      "app/**"
     ]
   },
   "expect": [
@@ -18,13 +18,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": ".github/workflows/ci.yml",
+      "path": "infra/db/migrate.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "SELECT 1;",
       "rule": "dt11-typescript-outside"
     }
   ]

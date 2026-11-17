@@ -4,14 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst docs = \"https://docs.example.io\"\nconst mirror = \"https://docs.example.io/m\"\n\nfunc c() {}\n"
+      "before": "package svc\n\nfunc c() int { return 1 }\n",
+      "after": "package svc\n\nfunc c() int { return 2 }\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "host-already-present",
-  "note": "host-already-present"
+  "near_miss": "body-digit-up",
+  "note": "body-digit-up"
 }

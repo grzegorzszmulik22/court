@@ -5,7 +5,7 @@
   "files": {
     "scripts/x.sh": {
       "before": "",
-      "after": "package x\n"
+      "after": "#!/bin/sh\nx\n"
     }
   },
   "expect": [],

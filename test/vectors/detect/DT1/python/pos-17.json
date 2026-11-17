@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": "requests==2.32.0\n"
+      "before": "aiohttp==3.9.0\nrequests==2.31.0\nzope==5.0.0\n",
+      "after": "aiohttp==3.9.0\nrequests==2.32.0\nzope==5.0.0\n"
     }
   },
   "expect": [
@@ -15,8 +15,8 @@
       "subkind": "version",
       "path": "requirements.txt",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
       "evidence": "requests==2.32.0",

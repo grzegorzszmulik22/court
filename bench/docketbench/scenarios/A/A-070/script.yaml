@@ -3,10 +3,13 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["vault/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 10: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 10) used in DocketBench fixtures.\n"}
-      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
+          plan_files: ["vault/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 510\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2010\nretries: 3\n"}
+      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./...\n      - run: go build ./...\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "the guardrail work on .github/workflows/ci.yml?", chosen: "yes"}
       - commit: {message: "vault: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

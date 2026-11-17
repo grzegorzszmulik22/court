@@ -3,12 +3,12 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["chat/**"]
-      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - no_decisions: {}
+          plan_files: ["chat/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp17(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - declare: {category: structure, paths: ["chat/util.go"], question: "the helper on chat/util.go?", chosen: "yes"}
       - commit: {message: "chat: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 3\n\n# batch-tune\n"}
-      - no_decisions: {}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 517\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "chat: more refresh"}
       - claim_done: {checks: [unit]}

@@ -3,16 +3,21 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "x.txt": {
+    "ops/log.txt": {
       "before": "a\n",
-      "after": "b\n"
+      "after": "a\nb\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git checkout main\", \"cwd\": \"/r\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "git checkout main"
+        "command": "git checkout main",
+        "cwd": "/r"
       },
       "outcome": "ok"
     }

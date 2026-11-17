@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc18.py": {
-      "before": "def s(x: int) -> int:\n    return x\n",
-      "after": "def s(x: float) -> float:\n    return x\n"
+    "app/calc.py": {
+      "before": "s = \"opt\"\nt = 1\n",
+      "after": "s = \"Optional\"\nt = 1\n"
     }
   },
   "expect": [],
-  "near_miss": "concrete-kept-b",
-  "note": "concrete-kept-b"
+  "near_miss": "string-opt",
+  "note": "string-opt"
 }

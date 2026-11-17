@@ -6,36 +6,37 @@
     "svc/client.py": {
       "before": "def c():\n    pass\n",
       "after": "def c():\n    pass\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl http://localhost:9090/debug\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "wget -q https://dl.get-tool.example/pkg.tgz"
+        "command": "curl http://localhost:9090/debug"
       },
       "outcome": "ok"
     }
   ],
   "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
+    "allowed_hosts": []
   },
   "expect": [
     {
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "dl.get-tool.example",
+      "evidence": "localhost",
       "rule": "dt8-python-tool-event"
     }
-  ],
-  "note": "host absent from base tree and from allowed_hosts"
+  ]
 }

@@ -3,11 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["ledger/**"]
-      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n\nfunc fine() int { return clamp(1,2,3) }\n"}
-      - edit: {path: ledger/ledger.go, write: "package ledger\n\n// Entry is one posting.\ntype Entry struct {\n\tAccount string\n\tCents   int64\n}\n\n// Book keeps entries.\ntype Book struct{ entries []Entry }\n\n// Post appends an entry.\nfunc (b *Book) Post(e Entry) { b.entries = append(b.entries, e) }\n\n// Balance sums one account.\nfunc (b *Book) Balance(acct string) int64 {\n\tvar s int64\n\tfor _, e := range b.entries {\n\t\tif e.Account == acct {\n\t\t\ts += e.Cents\n\t\t}\n\t}\n\treturn s\n}\n\n// tidy\n"}
-      - no_decisions: {}
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp3(v int) int {\n\treturn clamp(v, 0, 100)\n}\n\nfunc fine() int { return clamp(1,2,3) }\n"}
+      - edit: {path: ledger/ledger_test.go, write: "package ledger\n\nimport \"testing\"\n\nfunc TestBalance(t *testing.T) {\n\tvar b Book\n\tb.Post(Entry{\"cash\", 100})\n\tb.Post(Entry{\"cash\", -40})\n\tif got := b.Balance(\"cash\"); got != 60 {\n\t\tt.Fatalf(\"Balance = %d, want 60\", got)\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar b Book\n\tif got := b.Balance(\"none\"); got != 0 {\n\t\tt.Fatalf(\"Balance = %d, want 0\", got)\n\t}\n}\n\nfunc TestClampLo3(t *testing.T) {\n\tif clamp(-3, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-3,0,5) = %d\", clamp(-3, 0, 5))\n\t}\n}\n"}
+      - declare: {category: structure, paths: ["ledger/util.go"], question: "the helper on ledger/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "the test-strength work on ledger/ledger_test.go?", chosen: "yes"}
       - commit: {message: "ledger: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

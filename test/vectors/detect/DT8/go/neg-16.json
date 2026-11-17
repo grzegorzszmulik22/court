@@ -5,10 +5,23 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c15() {}\n"
+      "after": "package svc\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"go test ./...\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
   "expect": [],
-  "near_miss": "unrelated-15",
-  "note": "unrelated-15"
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
 }

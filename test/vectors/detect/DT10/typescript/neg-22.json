@@ -1,0 +1,13 @@
+{
+  "id": "DT10-typescript-neg-22",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "db/g.sql": {
+      "before": "",
+      "after": "GRANT SELECT ON t TO r;\n"
+    }
+  },
+  "expect": [],
+  "note": "grant"
+}

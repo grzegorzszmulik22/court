@@ -3,13 +3,9 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/extra.py": {
+    "rootfile.py": {
       "before": "",
       "after": "x = 1\n"
-    },
-    "shop/cart.py": {
-      "before": "x = 1\n",
-      "after": "x = 1\ny\n"
     }
   },
   "commission": {
@@ -22,8 +18,21 @@
     {
       "detector": "DT12",
       "category": "scope",
+      "subkind": "new-top-level",
+      "path": "rootfile.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.py",
+      "path": "rootfile.py",
       "lines": [
         1,
         1
@@ -32,5 +41,6 @@
       "evidence": "x = 1",
       "rule": "dt12-python-unplanned-file"
     }
-  ]
+  ],
+  "note": "a new file at the root is new-top-level and unplanned"
 }

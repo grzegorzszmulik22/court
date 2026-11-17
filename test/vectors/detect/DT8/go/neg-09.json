@@ -4,25 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c() {}\n"
+      "before": "package svc\n\nfunc c() {\n\tx := 1\n\t_ = x\n}\n",
+      "after": "package svc\n\nfunc c() {\n\tx := 2\n\t_ = x\n}\n"
     }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "go test ./..."
-      },
-      "outcome": "ok"
-    }
-  ],
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [],
-  "near_miss": "event-no-host",
-  "note": "event-no-host"
+  "near_miss": "inner-walrus",
+  "note": "inner-walrus"
 }

@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc17.py": {
-      "before": "def s():\n    return 1\n",
-      "after": "def s():\n    return None\n"
+    "app/calc.py": {
+      "before": "x = 1  # type: int\n",
+      "after": "x = 1  # type: float\n"
     }
   },
   "expect": [],
-  "near_miss": "return-none-b",
-  "note": "return-none-b"
+  "near_miss": "type-comment-old",
+  "note": "type-comment-old"
 }

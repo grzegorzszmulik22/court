@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "deploy/helm/chart.yaml": {
-      "before": "",
-      "after": "export const x = 1;\n"
+    "tools/gen2.ts": {
+      "before": "export function f() {}\n",
+      "after": "export function f() {}\nexport function g() {}\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [
@@ -19,14 +18,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "deploy/helm/chart.yaml",
+      "path": "tools/gen2.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "export function g() {}",
       "rule": "dt11-typescript-outside"
     }
-  ]
+  ],
+  "note": "modified source file outside a single glob"
 }

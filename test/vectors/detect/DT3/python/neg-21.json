@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-21",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "config/app.yaml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
+    }
+  },
+  "expect": [],
+  "note": "noncontract-yaml"
+}

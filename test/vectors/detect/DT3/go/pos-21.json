@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-21",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/openapi.json": {
+      "before": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}}\n}\n",
+      "after": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}, \"/users\": {\"get\": {}}}\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "added",
+      "path": "api/openapi.json",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "\"/users\"",
+      "rule": "dt3-contract-openapi"
+    }
+  ]
+}

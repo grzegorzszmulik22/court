@@ -4,22 +4,17 @@
   "language": "typescript",
   "files": {
     "src/cart.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
-    },
-    "src/extra.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
+      "before": "export const x = 1;\n",
+      "after": "export const x = 1;\nz\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts",
-      "src/extra.ts"
+      "src/cart.ts"
     ],
-    "plan_lines": 5
+    "plan_lines": 30
   },
   "expect": [],
-  "near_miss": "plan-covers-all",
-  "note": "plan-covers-all"
+  "near_miss": "planned-modified",
+  "note": "planned-modified"
 }

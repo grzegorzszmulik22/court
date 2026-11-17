@@ -3,11 +3,11 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["tasks/**"]
-      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n\nfunc fine() int { return clamp(1,2,3) }\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 3\n\n# batch-tune\n"}
-      - no_decisions: {}
+          plan_files: ["tasks/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp2(v int) int {\n\treturn clamp(v, 0, 100)\n}\n\nfunc fine() int { return clamp(1,2,3) }\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n6,delta2\n"}
+      - declare: {category: structure, paths: ["tasks/util.go"], question: "the helper on tasks/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - commit: {message: "tasks: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

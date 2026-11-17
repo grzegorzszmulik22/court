@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0009_add_index/migration.sql": {
-      "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    "prisma/migrations/0001_init/migration.sql": {
+      "before": "-- step 1\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0009_add_index/migration.sql",
+      "path": "prisma/migrations/0001_init/migration.sql",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-typescript-new-migration"
+      "side": "before",
+      "evidence": "-- step 1",
+      "rule": "dt2-typescript-changed-migration"
     }
-  ]
+  ],
+  "note": "a file deleted under a migration directory is a changed migration"
 }

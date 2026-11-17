@@ -3,24 +3,37 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc_test.go": {
-      "before": "package calc\n\nfunc helper(x int) int { return x }\n",
-      "after": "package calc\n\nfunc helper(x interface{}) interface{} { return x.(int) }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc f() {}\n",
+      "after": "package calc\n\n//nolint:gocritic\nfunc f() {}\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "pkg/calc_test.go",
+      "subkind": "suppressed",
+      "path": "pkg/calc.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "func helper(x interface{}) interface{}",
-      "rule": "dt5-go-widened"
+      "evidence": "//nolint:gocritic",
+      "rule": "dt5-go-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "pkg/calc.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "//nolint:gocritic",
+      "rule": "dt6-go-suppressed"
     }
   ]
 }

@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c2():\n    pass\n"
+      "before": "n = 1\ndef c():\n    pass\n",
+      "after": "n = 2\ndef c():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "var-value",
+  "note": "var-value"
 }

@@ -6,6 +6,10 @@
     "go.mod": {
       "before": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.3\n",
       "after": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.4\n"
+    },
+    "go.sum": {
+      "before": "h1:AAAA\n",
+      "after": "h1:AAAA\n"
     }
   },
   "expect": [
@@ -21,6 +25,20 @@
       "side": "after",
       "evidence": "github.com/sirupsen/logrus v1.9.4",
       "rule": "dt1-go-manifest-version"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "lock-mismatch",
+      "path": "go.mod",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "github.com/sirupsen/logrus v1.9.4",
+      "rule": "dt1-go-lock-unchanged"
     }
-  ]
+  ],
+  "note": "manifest changed while the lockfile stayed identical"
 }

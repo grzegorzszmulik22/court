@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+      "before": "export function add() { return 1; }\n",
+      "after": "export function add() { return 1; }\ny\n"
     }
   },
   "expect": [],

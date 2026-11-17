@@ -5,7 +5,7 @@
   "files": {
     "vendor/x/y.go": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export function f() {}\n"
     }
   },
   "commission": {
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-vendor",
+  "note": "exempt-vendor"
 }

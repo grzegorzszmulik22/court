@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "typescript",
   "files": {
-    "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c13() {}\n"
+    "data/cfg.json": {
+      "before": "{\"a\": 1}\n",
+      "after": "{\"a\": 2}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-13",
-  "note": "unrelated-13"
+  "near_miss": "json-edit",
+  "note": "json-edit"
 }

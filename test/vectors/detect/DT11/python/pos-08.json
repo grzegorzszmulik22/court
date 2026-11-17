@@ -3,14 +3,14 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "tools/gen.go": {
+    "x.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "x = 1\ny = 2\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**"
+      "app/**"
     ]
   },
   "expect": [
@@ -18,7 +18,7 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "tools/gen.go",
+      "path": "x.py",
       "lines": [
         1,
         1

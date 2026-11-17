@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n    \"dependencies\": {\n        \"react\": \"^18.2.0\"\n    }\n}\n"
+    "package-lock.json": {
+      "before": "{\n  \"name\": \"app\",\n  \"lockfileVersion\": 3\n}\n",
+      "after": "{\n  \"name\": \"app2\",\n  \"lockfileVersion\": 3\n}\n"
     }
   },
   "expect": [],
-  "note": "whitespace"
+  "note": "lockfile-name"
 }

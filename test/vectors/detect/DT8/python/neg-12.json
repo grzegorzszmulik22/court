@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "python",
   "files": {
-    "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c11():\n    pass\n"
+    "docs/links.md": {
+      "before": "# links\n",
+      "after": "# links\n\nsee https://docs.vendor-docs.example\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-11",
-  "note": "unrelated-11"
+  "near_miss": "docs-url",
+  "note": "a URL in a doc file is prose, not a literal"
 }

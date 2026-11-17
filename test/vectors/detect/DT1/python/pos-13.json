@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0\npydantic==2.5.0\n",
-      "after": "requests==2.31.0\n"
+      "before": "requests==2.31.0\n",
+      "after": "requests~=2.31.0\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "removed",
+      "subkind": "version",
       "path": "requirements.txt",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
-      "side": "before",
-      "evidence": "pydantic==2.5.0",
-      "rule": "dt1-python-manifest-removed"
+      "side": "after",
+      "evidence": "requests~=2.31.0",
+      "rule": "dt1-python-manifest-version"
     }
   ]
 }

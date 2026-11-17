@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc16.ts": {
-      "before": "// note\nexport const x = 1;\n",
-      "after": "// not a suppression\nexport const x = 1;\n"
+    "src/calc.ts": {
+      "before": "export function s(x: number) { return 0; }\n",
+      "after": "/** x may be any */\nexport function s(x: number) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-shape-b",
-  "note": "comment-shape-b"
+  "near_miss": "doc-any",
+  "note": "doc-any"
 }

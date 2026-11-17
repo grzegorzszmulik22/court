@@ -3,18 +3,16 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "internal/util.go": {
+    "internal/a/b/c.go": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export const c = 1;\nexport const d = 2;\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
       "internal/**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "note": "deep-inside"
 }

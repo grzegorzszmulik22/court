@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "pkg/acl/acl.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "pkg/acl/rules.py": {
+      "before": "ALLOW = ['a']\n",
+      "after": "ALLOW = ['a', 'b']\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "pkg/acl/acl.py",
+      "path": "pkg/acl/rules.py",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "return False",
+      "evidence": "'b']",
       "rule": "dt9-python-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "acl rule list extended"
 }

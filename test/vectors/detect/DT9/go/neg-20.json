@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "docs/authentication.md": {
-      "before": "x\n",
-      "after": "y\n"
+    "config/permissions_old/y.txt": {
+      "before": "a\n",
+      "after": "a\nb\n"
     }
   },
   "expect": [],
-  "near_miss": "authword-filename",
-  "note": "authword-filename"
+  "note": "no-permission"
 }

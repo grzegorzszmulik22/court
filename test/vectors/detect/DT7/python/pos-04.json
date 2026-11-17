@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n"
+      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n    finally:\n        close()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n    finally:\n        close()\n"
     }
   },
   "expect": [

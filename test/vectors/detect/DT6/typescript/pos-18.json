@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "src/legacy.go": {
-      "before": "package src\n\nfunc f() {}\n",
-      "after": "package src\n\n//nolint\nfunc f() {}\n"
+    ".eslintrc.json": {
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"error\"\n  }\n}\n",
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"off\"\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "suppressed",
-      "path": "src/legacy.go",
+      "subkind": "lint",
+      "path": ".eslintrc.json",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "//nolint",
-      "rule": "dt6-typescript-suppressed"
+      "evidence": "\"no-console\": \"off\"",
+      "rule": "dt6-typescript-lint"
     }
   ],
-  "note": "an inline suppression was added"
+  "note": "an eslint rule was turned off"
 }

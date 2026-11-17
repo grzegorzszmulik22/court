@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "db/cleanup2.sql": {
-      "before": "",
-      "after": "DELETE FROM logs;\n"
+    "data/metrics.parquet": {
+      "before": "PAR1\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/cleanup2.sql",
+      "subkind": "file",
+      "path": "data/metrics.parquet",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "DELETE FROM logs;",
-      "rule": "dt10-typescript-sql"
+      "side": "before",
+      "evidence": "PAR1",
+      "rule": "dt10-typescript-datafile"
     }
   ]
 }

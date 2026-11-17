@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "tests/test_crypto.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "svc/calc.py": {
+      "before": "x := \"a\"\n",
+      "after": "x := \"b\"\n"
     }
   },
   "expect": [],
-  "near_miss": "crypto-in-test",
-  "note": "crypto-in-test"
+  "note": "secret-in-string"
 }

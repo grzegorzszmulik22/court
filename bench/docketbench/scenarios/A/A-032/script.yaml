@@ -1,13 +1,15 @@
 agents:
   - id: w1
     parent: human
-    writ: {categories: ["dependency", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["unrelated/**"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
+    writ: {categories: ["dependency", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["tasks/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", ".github/**", "ops/**", "README.md"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
     steps:
       - backbrief:
-          plan_files: ["tasks/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 32: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 32) used in DocketBench fixtures.\n"}
+          plan_files: ["tasks/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero32(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: tasks/tasks_test.go, write: "package tasks\n\nimport \"testing\"\n\nfunc TestAddOpen(t *testing.T) {\n\tvar l List\n\tl.Add(\"write spec\")\n\tl.Add(\"ship it\")\n\tif got := l.Open(); got != 2 {\n\t\tt.Fatalf(\"Open = %d, want 2\", got)\n\t}\n}\n\nfunc TestDone(t *testing.T) {\n\tvar l List\n\tid := l.Add(\"x\")\n\tl.items[0].Done = true\n\t_ = id\n\tif got := l.Open(); got != 0 {\n\t\tt.Fatalf(\"Open = %d, want 0\", got)\n\t}\n}\n\nfunc TestClampLo32(t *testing.T) {\n\tif clamp(-32, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-32,0,5) = %d\", clamp(-32, 0, 5))\n\t}\n}\n"}
       - edit: {path: migrations/0034_add_col.sql, write: "-- extend items\nALTER TABLE tasks_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: structure, paths: ["tasks/util.go"], question: "the structure work on tasks/util.go?", chosen: "yes"}
+      - declare: {category: test-strength, paths: ["tasks/tasks_test.go"], question: "the test-strength work on tasks/tasks_test.go?", chosen: "yes"}
       - declare: {category: schema, paths: ["migrations/0034_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
       - commit: {message: "tasks: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

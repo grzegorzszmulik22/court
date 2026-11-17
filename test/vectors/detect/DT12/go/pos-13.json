@@ -3,13 +3,9 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/extra.go": {
+    "rootfile.go": {
       "before": "",
       "after": "package shop\n"
-    },
-    "shop/cart.go": {
-      "before": "package shop\n",
-      "after": "package shop\ny\n"
     }
   },
   "commission": {
@@ -22,8 +18,21 @@
     {
       "detector": "DT12",
       "category": "scope",
+      "subkind": "new-top-level",
+      "path": "rootfile.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package shop",
+      "rule": "dt12-go-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.go",
+      "path": "rootfile.go",
       "lines": [
         1,
         1
@@ -32,5 +41,6 @@
       "evidence": "package shop",
       "rule": "dt12-go-unplanned-file"
     }
-  ]
+  ],
+  "note": "a new file at the root is new-top-level and unplanned"
 }

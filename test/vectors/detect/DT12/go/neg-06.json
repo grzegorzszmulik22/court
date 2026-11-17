@@ -3,13 +3,9 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/cart.go": {
+    "vendor/x/y.go": {
       "before": "",
-      "after": "package shop\n"
-    },
-    "shop/extra.go": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "after": "package shop\nv = 9\n"
     }
   },
   "commission": {
@@ -19,6 +15,6 @@
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "near_miss": "unplanned-exempt",
+  "note": "unplanned-exempt"
 }

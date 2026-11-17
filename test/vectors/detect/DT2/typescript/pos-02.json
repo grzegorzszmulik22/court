@@ -19,9 +19,21 @@
         1
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
       "rule": "dt2-typescript-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
+      "rule": "dt2-typescript-ddl"
     }
-  ],
-  "note": "new migration file under a recognised migration directory"
+  ]
 }

@@ -5,16 +5,14 @@
   "files": {
     ".venv/lib/x.py": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "v = 1\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "lib/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "note": "exempt-venv"
 }

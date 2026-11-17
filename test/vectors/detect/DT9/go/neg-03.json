@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "scripts/setup.sh": {
-      "before": "#!/bin/sh\nchmod 700 bin/run\n",
-      "after": "#!/bin/sh\nchmod 755 bin/run\n"
+    "scripts/prep.sh": {
+      "before": "#!/bin/sh\nchmod 770 k\n",
+      "after": "#!/bin/sh\nchmod 700 k\n"
     }
   },
   "expect": [],
-  "near_miss": "mode-755",
-  "note": "mode-755"
+  "near_miss": "mode-tightened",
+  "note": "mode-tightened"
 }

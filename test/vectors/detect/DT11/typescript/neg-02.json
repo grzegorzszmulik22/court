@@ -3,9 +3,9 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "internal/util.go": {
+    "internal/util.ts": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export function f() {}\n"
     }
   },
   "commission": {
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "inside-second-glob",
+  "note": "inside-second-glob"
 }

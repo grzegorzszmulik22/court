@@ -3,30 +3,31 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/cart.py": {
+    "infra/db/x.py": {
       "before": "",
-      "after": "line0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\nline31\nline32\nline33\nline34\nline35\nline36\nline37\nline38\nline39\nline40\nline41\nline42\nline43\nline44\nline45\nline46\nline47\nline48\nline49\nline50\nline51\nline52\nline53\nline54\nline55\nline56\nline57\nline58\nline59\nline60\nline61\nline62\nline63\nline64\nline65\nline66\nline67\nline68\nline69\nline70\nline71\nline72\nline73\nline74\nline75\nline76\nline77\nline78\nline79\n"
+      "after": "entry0\nentry1\nentry2\nentry3\nentry4\nentry5\nentry6\nentry7\nentry8\nentry9\nentry10\nentry11\nentry12\nentry13\nentry14\nentry15\nentry16\nentry17\nentry18\nentry19\nentry20\nentry21\nentry22\nentry23\nentry24\nentry25\nentry26\nentry27\nentry28\nentry29\nentry30\nentry31\nentry32\nentry33\nentry34\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.py"
+      "shop/cart.py",
+      "infra/db/x.py"
     ],
-    "plan_lines": 10
+    "plan_lines": 20
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "oversize",
-      "path": "shop/cart.py",
+      "subkind": "new-top-level",
+      "path": "infra/db/x.py",
       "lines": [
         1,
-        80
+        1
       ],
       "side": "after",
-      "evidence": "line0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\nline12\nline13\nline14\nline15\nline16\nline17\nline18\nline19\nline20\nline21\nline22\nline23\nline24\nline25\nline26\nline27\nline28\nline29\nline30\nline31\nline32\nline33\nline34\nline35\nline36\nline37\nline38\nline39\nline40\nline41\nline42\nline43\nline44\nline45\nline46\nline47\nline48\nline49\nline50\nline51\nline52\nline53\nline54\nline55\nline56\nline57\nline58\nline59\nline60\nline61\nline62\nline63\nline64\nline65\nline66\nline67\nline68\nline69\nline70\nline71\nline72\nline73\nline74\nline75\nline76\nline77\nline78\nline79",
-      "rule": "dt12-python-oversize"
+      "evidence": "entry0",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

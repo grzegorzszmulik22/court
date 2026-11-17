@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc14.go": {
-      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
-      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s(x []int) {}\n",
+      "after": "package calc\n\nfunc s(x []string) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "generic-b",
-  "note": "generic-b"
+  "near_miss": "slice-type",
+  "note": "slice-type"
 }

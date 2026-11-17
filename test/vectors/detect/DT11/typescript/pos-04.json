@@ -5,13 +5,12 @@
   "files": {
     ".github/workflows/ci.yml": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "on: push\njobs: {}\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "app/**"
     ]
   },
   "expect": [
@@ -25,7 +24,7 @@
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "on: push",
       "rule": "dt11-typescript-outside"
     }
   ]

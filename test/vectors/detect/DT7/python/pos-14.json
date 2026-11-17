@@ -3,24 +3,28 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return None\n"
+    "svc/price.py": {
+      "before": "def price(n):\n    return n * 2\n",
+      "after": "def price(n):\n    if n == 42:\n        return 84\n    return n * 2\n"
+    },
+    "svc/test_price.py": {
+      "before": "def test_disc():\n    assert disc(42) == 42\n",
+      "after": "def test_disc():\n    assert disc(42) == 42\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/fetch.py",
+      "subkind": "special-case",
+      "path": "svc/price.py",
       "lines": [
-        5,
-        5
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return None",
-      "rule": "dt7-python-swallowed"
+      "evidence": "if n == 42:",
+      "rule": "dt7-python-special-case"
     }
   ]
 }

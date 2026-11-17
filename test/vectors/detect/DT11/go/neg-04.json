@@ -5,7 +5,7 @@
   "files": {
     "shop/sub/deep.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package deep\n"
     }
   },
   "commission": {

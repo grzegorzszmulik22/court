@@ -5,7 +5,7 @@
   "files": {
     "shop/cart.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package shop\n"
     }
   },
   "commission": {

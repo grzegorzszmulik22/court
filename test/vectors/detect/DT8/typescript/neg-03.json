@@ -5,24 +5,10 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "export function c() {}\n"
+      "after": "export function c() {}\n// c does the call\n"
     }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "curl https://api.internal.example/x"
-      },
-      "outcome": "ok"
-    }
-  ],
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [],
-  "near_miss": "allowed-host",
-  "note": "allowed-host"
+  "near_miss": "comment-added",
+  "note": "comment-added"
 }

@@ -24,7 +24,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:963e95edd8983b25720fc9df48188e87812a943a96391dbbfdaa4599c51bc888"
+        ]
       }
     ],
     "writs": {

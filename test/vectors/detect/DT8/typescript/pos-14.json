@@ -4,15 +4,19 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c() {}\n"
+      "before": "const x = 1;\n\nexport function c() {}\n",
+      "after": "const x = 1;\n\nexport function c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"ping -c1 stats.collector.example\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl http://localhost:9090/debug"
+        "command": "ping -c1 stats.collector.example"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "localhost",
+      "evidence": "stats.collector.example",
       "rule": "dt8-typescript-tool-event"
     }
-  ],
-  "note": "localhost is a host like any other; it is not in allowed_hosts"
+  ]
 }

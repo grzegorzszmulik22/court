@@ -4,11 +4,30 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c16() {}\n"
+      "before": "const x = 1;\n\nexport function c() {}\n",
+      "after": "const x = 1;\n\nexport function c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl https://api.internal.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl https://api.internal.example/x"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example",
+      "b.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "unrelated-16",
-  "note": "unrelated-16"
+  "near_miss": "event-allowed",
+  "note": "event-allowed"
 }

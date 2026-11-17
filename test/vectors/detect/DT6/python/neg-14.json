@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    ".pre-commit-config.yaml": {
-      "before": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n      - id: fmt\n"
+    ".nycrc": {
+      "before": "{\n  \"lines\": 70\n}\n",
+      "after": "{\n  \"lines\": 80\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "nycrc-raised"
 }

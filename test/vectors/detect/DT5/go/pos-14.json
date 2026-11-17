@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc pick(v int) int { return v }\n",
-      "after": "package calc\n\nfunc pick(v any) any { return v }\n"
+      "before": "package calc\n\nfunc m(v float64) float64 { return v }\n",
+      "after": "package calc\n\nfunc m(v float64) any {\n\treturn v\n}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "func pick(v any) any",
+      "evidence": "func m(v float64) any {",
       "rule": "dt5-go-widened"
     }
   ]

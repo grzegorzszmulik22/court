@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "internal/authority_notes.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "config/c.yml": {
+      "before": "cors:\n  origin: a\n",
+      "after": "cors:\n  origin: b\n"
     }
   },
   "expect": [],
-  "near_miss": "substring-not-segment",
-  "note": "substring-not-segment"
+  "note": "origin-swap"
 }

@@ -3,33 +3,24 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "data/seed.csv": {
+      "before": "a,b\n1,2\n",
+      "after": ""
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git push --force origin main"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
+      "subkind": "file",
+      "path": "data/seed.csv",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
-      "side": "events",
-      "evidence": "git push --force origin main",
-      "rule": "dt10-go-destructive-cmd"
+      "side": "before",
+      "evidence": "a,b",
+      "rule": "dt10-go-datafile"
     }
   ]
 }

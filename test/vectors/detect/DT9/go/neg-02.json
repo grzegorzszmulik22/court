@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "internal/authority_notes.txt": {
-      "before": "a\n",
-      "after": "b\n"
+      "before": "note\n",
+      "after": "note updated\n"
     }
   },
   "expect": [],

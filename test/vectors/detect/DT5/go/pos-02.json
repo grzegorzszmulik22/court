@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc pick(v int) int { return v }\n",
-      "after": "package calc\n\nfunc pick(v any) any { return v }\n"
+      "before": "package calc\n\nfunc pick(v int) int {\n\treturn v\n}\n",
+      "after": "package calc\n\nfunc pick(v any) any {\n\treturn v\n}\n"
     }
   },
   "expect": [

@@ -3,22 +3,19 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "src/extra.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
-    },
     "src/cart.ts": {
-      "before": "export const x = 1;\n",
-      "after": "export const x = 1;\n"
+      "before": "",
+      "after": "a = 1\nb = 2\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts"
+      "src/cart.ts",
+      "src/extra.ts"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "existing-dir",
-  "note": "existing-dir"
+  "near_miss": "existing-top",
+  "note": "existing-top"
 }

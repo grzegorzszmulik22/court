@@ -5,7 +5,7 @@
   "files": {
     "scripts/deploy.sh": {
       "before": "",
-      "after": "package x\n"
+      "after": "#!/bin/sh\nrun\n"
     }
   },
   "commission": {

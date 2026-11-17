@@ -1,0 +1,40 @@
+{
+  "id": "DT10-go-pos-25",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "tools/x.txt": {
+      "before": "a\n",
+      "after": "a\nb\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"rm -rf build/\"}, \"name\": \"shell\", \"outcome\": \"fail\"}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "shell",
+      "input": {
+        "command": "rm -rf build/"
+      },
+      "outcome": "fail"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "rm -rf build/",
+      "rule": "dt10-go-destructive-cmd"
+    }
+  ],
+  "note": "rm -rf a scratch dir"
+}

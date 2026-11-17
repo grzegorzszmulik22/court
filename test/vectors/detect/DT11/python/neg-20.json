@@ -3,18 +3,16 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "internal/util.go": {
+    "internal/a/b/c.go": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "c = 1\nd = 2\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
       "internal/**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "note": "deep-inside"
 }

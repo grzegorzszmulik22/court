@@ -3,22 +3,18 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/cart.py": {
-      "before": "",
-      "after": "x = 1\n"
-    },
     "shop/extra.py": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "before": "",
+      "after": "x\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.py"
+      "shop/cart.py",
+      "shop/extra.py"
     ],
     "plan_lines": 20
   },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "note": "tiny-new"
 }

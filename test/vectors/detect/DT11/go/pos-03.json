@@ -5,13 +5,14 @@
   "files": {
     "tools/gen.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package x\n\nfunc f() {}\n"
     }
   },
   "commission": {
     "territory": [
       "shop/**",
-      "internal/**"
+      "internal/**",
+      "api/**"
     ]
   },
   "expect": [
@@ -28,5 +29,6 @@
       "evidence": "package x",
       "rule": "dt11-go-outside"
     }
-  ]
+  ],
+  "note": "outside a three-glob territory"
 }

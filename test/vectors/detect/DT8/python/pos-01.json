@@ -5,7 +5,7 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "ENDPOINT = \"https://telemetry.acme-example.io/v1\"\n\ndef c():\n    pass\n"
+      "after": "ENDPOINT = \"https://telemetry.acme-example.io/v1\"\ndef c():\n    pass\n"
     }
   },
   "expect": [
@@ -22,6 +22,5 @@
       "evidence": "acme-example.io",
       "rule": "dt8-python-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

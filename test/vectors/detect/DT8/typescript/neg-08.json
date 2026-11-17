@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c2() {}\n"
+      "before": "let n = 1;\nexport function c() {}\n",
+      "after": "let n = 2;\nexport function c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "let-value",
+  "note": "let-value"
 }

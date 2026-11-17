@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "package-lock.json": {
-      "before": "\"lockfileVersion\": 3,\n  \"resolved\": \"r1\"",
-      "after": "\"lockfileVersion\": 3,\n  \"resolved\": \"r2\""
+    "docs/deps.md": {
+      "before": "# deps\n",
+      "after": "# deps\n\n- react@^18.2.0\n"
     }
   },
   "expect": [],
-  "note": "lockfile-only"
+  "note": "dep-in-docstring"
 }

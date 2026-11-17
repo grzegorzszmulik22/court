@@ -3,25 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow the style guide\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "api/vars.go": {
+      "before": "package api\n\nvar Registry = map[string]int{}\n",
+      "after": "package api\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "subkind": "removed",
+      "path": "api/vars.go",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
-      "side": "after",
-      "evidence": "# paths follow the style guide",
-      "rule": "dt3-contract-openapi"
+      "side": "before",
+      "evidence": "var Registry",
+      "rule": "dt3-go-exported-removed"
     }
-  ],
-  "note": "comment change on a contract file is a file change"
+  ]
 }

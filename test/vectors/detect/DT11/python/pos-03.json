@@ -3,15 +3,16 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "tools/gen.go": {
+    "tools/gen.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "def f():\n    pass\n"
     }
   },
   "commission": {
     "territory": [
       "shop/**",
-      "internal/**"
+      "internal/**",
+      "api/**"
     ]
   },
   "expect": [
@@ -19,14 +20,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "tools/gen.go",
+      "path": "tools/gen.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "def f():",
       "rule": "dt11-python-outside"
     }
-  ]
+  ],
+  "note": "outside a three-glob territory"
 }

@@ -3,12 +3,11 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    "src/legacy.go": {
-      "before": "package src\n\n//nolint\nfunc f() {}\n",
-      "after": "package src\n\nfunc f() {}\n"
+    ".eslintrc.json": {
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"off\",\n    \"no-alert\": \"off\"\n  }\n}\n",
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"error\",\n    \"no-alert\": \"off\"\n  }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "eslint-enabled"
 }

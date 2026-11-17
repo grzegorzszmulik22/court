@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/order.proto.md": {
-      "before": "# proto notes\n\nfields: id\n",
-      "after": "# proto notes\n\nfields: id, total\n"
+    "api/service.py": {
+      "before": "def f(a):\n    return a\n",
+      "after": "def f(a) -> int:\n    return a\n"
     }
   },
   "expect": [],
-  "near_miss": "proto-lookalike",
-  "note": "proto-lookalike"
+  "note": "return-annot"
 }

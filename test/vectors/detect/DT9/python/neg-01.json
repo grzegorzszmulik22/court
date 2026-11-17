@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "svc/calc.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+      "before": "def add():\n    return 1\n",
+      "after": "def add():\n    return 1\ny\n"
     }
   },
   "expect": [],

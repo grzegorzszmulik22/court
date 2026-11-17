@@ -5,7 +5,7 @@
   "files": {
     "shop/shop_test.go": {
       "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif M() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tt.Helper()\n\tif M() != 1 { t.Fatal() }\n}\n"
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tt.Helper()\n\tt.Helper()\n\tif M() != 1 { t.Fatal() }\n}\n"
     }
   },
   "expect": [],

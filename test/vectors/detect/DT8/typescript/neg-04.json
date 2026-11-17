@@ -4,14 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "const u = \"https://a.example/x\";\n",
-      "after": "const u = \"https://a.example/y\";\n"
+      "before": "// c\nexport function c() {}\n",
+      "after": "// c v2\nexport function c() {}\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "same-host-path",
-  "note": "same-host-path"
+  "near_miss": "comment-edited",
+  "note": "comment-edited"
 }

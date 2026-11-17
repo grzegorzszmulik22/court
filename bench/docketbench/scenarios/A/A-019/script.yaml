@@ -3,14 +3,18 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["poll/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 19: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 19) used in DocketBench fixtures.\n"}
-      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 72000\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
-      - no_decisions: {}
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: migrations/029_cover.sql, write: "CREATE TABLE poll_audit19 (id INTEGER PRIMARY KEY);\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: poll\n  version: 1.0.0\npaths:\n  /poll/items:\n    get:\n      summary: list items\n  /poll/status19:\n    get:\n      summary: health probe 19\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"chalk\": \"^5.3.19\"\n  }\n}\n"}
+      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 72000\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n\n// MinTTLSeconds is the smallest legal session ttl.\nfunc MinTTLSeconds() int {\n\treturn 60\n}\n"}
+      - declare: {category: schema, paths: ["migrations/029_cover.sql"], question: "the schema work on migrations/029_cover.sql?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "the interface work on api/openapi.yaml?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "the dependency work on tools/package.json?", chosen: "yes"}
       - commit: {message: "poll: routine refresh"}
       - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - commit: {message: "poll: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "poll: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

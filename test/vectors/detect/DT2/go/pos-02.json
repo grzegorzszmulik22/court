@@ -19,9 +19,21 @@
         1
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
       "rule": "dt2-go-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
+      "rule": "dt2-go-ddl"
     }
-  ],
-  "note": "new migration file under a recognised migration directory"
+  ]
 }

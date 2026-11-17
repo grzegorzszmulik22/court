@@ -5,16 +5,15 @@
   "files": {
     "node_modules/pkg/i.js": {
       "before": "",
-      "after": "package x\n"
+      "after": "module.exports = 1\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-node",
+  "note": "exempt-node"
 }

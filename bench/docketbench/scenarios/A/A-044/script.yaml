@@ -3,9 +3,9 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["catalog/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# catalog guide\n\nSee README for usage.\n\nMaintenance note 44: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# catalog\n\nA small Go service (rev 44) used in DocketBench fixtures.\n"}
+          plan_files: ["catalog/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n48,delta44\n"}
+      - edit: {path: docs/guide.md, write: "# catalog guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 44, restore the previous binary and re-run migrations 0044 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: migrations/0046_add_col.sql, write: "-- extend items\nALTER TABLE catalog_items ADD COLUMN updated_at INTEGER;\n"}
       - no_decisions: {}
       - commit: {message: "catalog: routine refresh"}

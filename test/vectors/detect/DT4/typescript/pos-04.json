@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/shop.test.ts": {
+    "src/only.test.ts": {
       "before": "it('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "it.only('total', () => {\n  expect(total()).toBe(1);\n});\n"
+      "after": "describe('g', () => {\n  it.only('total', () => {\n    expect(total()).toBe(1);\n  });\n});\n"
     }
   },
   "expect": [
@@ -13,10 +13,10 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "skip_or_focus",
-      "path": "src/shop.test.ts",
+      "path": "src/only.test.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
       "evidence": "it.only('total'",

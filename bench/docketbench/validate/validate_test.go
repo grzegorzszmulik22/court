@@ -7,6 +7,7 @@ package main
 // named sabotage patches for this chunk try to break.
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -361,6 +362,55 @@ func TestC3_1_3_goal_names_category(t *testing.T) {
 	}
 }
 
+func TestC3_1_3_finaltxt_case(t *testing.T) {
+	// E.1: necessity must be case-insensitive — "Skip" in final.txt must
+	// be found against the lowercase registry keyword "skip" (and the
+	// upper-case form too).
+	for _, form := range []func(string) string{
+		func(k string) string { return strings.ToUpper(k[:1]) + k[1:] },
+		func(k string) string { return strings.ToUpper(k) },
+	} {
+		root := t.TempDir()
+		repo := repoRoot(t)
+		p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+		copyScenarioTree(t, p, root)
+		copyScenarioTree(t, tw, root)
+		kw := form(keywordOf(t, p))
+		if err := os.WriteFile(filepath.Join(root, p.Subset, p.ID, "final.txt"),
+			[]byte("Done. By the way: "+kw), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		expectViolation(t, root, "necessity")
+	}
+}
+
+func TestC3_1_3_nearword_boundary(t *testing.T) {
+	// E.1 boundary: a final.txt containing the keyword's letters
+	// transposed is not a leak — must pass.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	kw := keywordOf(t, p)
+	r := []rune(kw)
+	for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
+	}
+	near := string(r)
+	if near == kw {
+		near = kw + "-different-word-that-is-not-it"
+	}
+	if err := os.WriteFile(filepath.Join(root, p.Subset, p.ID, "final.txt"),
+		[]byte("Done. "+near+" was the plan."), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "necessity") {
+		t.Fatalf("non-keyword text tripped necessity; got: %v", v.list)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // C3.1.4 research citation — an unknown slug fails even when well-formed
 // ---------------------------------------------------------------------------
@@ -384,6 +434,67 @@ func TestC3_1_4(t *testing.T) {
 		t.Fatal(err)
 	}
 	expectViolation(t, root, "registry-source")
+}
+
+func TestC3_1_4_row_text(t *testing.T) {
+	// E.2: a source whose slug is known but whose row text does not
+	// exist in the research file must fail. The research file is an
+	// input the test can replace (researchFilePath).
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	var slug, anchor string
+	for _, e := range p.Reg.Entries {
+		if strings.HasPrefix(e.Source, "research/1_detection.md#") {
+			slug = strings.TrimPrefix(e.Source, "research/1_detection.md#")
+			anchor = researchSources[slug]
+			if anchor != "" {
+				break
+			}
+		}
+	}
+	if anchor == "" {
+		t.Fatalf("no cited research row found in %s registry", p.ID)
+	}
+
+	real, err := os.ReadFile(filepath.Join(repo, "research/1_detection.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	prev := researchFilePath
+	t.Cleanup(func() { researchFilePath = prev })
+
+	// violating fixture: the real file with the row text removed — the
+	// slug is still known, but the row text no longer exists.
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	stripped := strings.ReplaceAll(string(real), anchor, "")
+	if stripped == string(real) {
+		t.Fatalf("anchor %q not present in the real research file", anchor)
+	}
+	bad := filepath.Join(t.TempDir(), "research.md")
+	if err := os.WriteFile(bad, []byte(stripped), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	researchFilePath = bad
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "registry-source") {
+		t.Fatalf("missing row text in the research file was accepted; got: %v", v.list)
+	}
+
+	// boundary: the real research file, copied — every cited row resolves.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	good := filepath.Join(t.TempDir(), "research.md")
+	if err := os.WriteFile(good, real, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	researchFilePath = good
+	v = collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "registry-source") {
+		t.Fatalf("research file with the row text tripped registry-source; got: %v", v.list)
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -479,6 +590,24 @@ func TestGate_declared_commit_passes(t *testing.T) {
 	}
 }
 
+func TestGate_one_declaration_two_commits(t *testing.T) {
+	// E.3: one declaration opens the gate for the next commit only.
+	// Appending a second commit step with no new declaration must fail
+	// on the second commit.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), func(raw string) string {
+		return raw + "      - commit: {message: \"extra undeclared commit\"}\n"
+	})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "gate") {
+		t.Fatalf("second commit after one declaration was accepted; got: %v", v.list)
+	}
+}
+
 func mustRead(t *testing.T, p string) []byte {
 	t.Helper()
 	raw, err := os.ReadFile(p)
@@ -493,17 +622,48 @@ func mustRead(t *testing.T, p string) []byte {
 // decision in at least two worlds
 // ---------------------------------------------------------------------------
 
-var nodetCats = map[string]bool{"behaviour": true, "structure": true, "other": true}
+// contestEntry returns the planted scenario's contest registry entry.
+func contestEntry(t *testing.T, s *scenario) registryEntry {
+	t.Helper()
+	for _, e := range s.Reg.Entries {
+		if e.Type == "contest" {
+			return e
+		}
+	}
+	t.Fatalf("%s has no contest registry entry", s.ID)
+	return registryEntry{}
+}
+
+// dropAgentDeclaresFor returns a script mutator that removes the
+// `- declare:` lines matching category cat inside agentID's block only,
+// leaving every other agent's declarations in place.
+func dropAgentDeclaresFor(agentID, cat string) func(string) string {
+	return func(raw string) string {
+		lines := strings.Split(raw, "\n")
+		inAgent := false
+		var keep []string
+		for _, l := range lines {
+			if strings.Contains(l, "- id:") {
+				inAgent = strings.Contains(l, "- id: "+agentID)
+			}
+			if inAgent && strings.Contains(l, "- declare:") && strings.Contains(l, "category: "+cat) {
+				continue
+			}
+			keep = append(keep, l)
+		}
+		return strings.Join(keep, "\n")
+	}
+}
 
 func TestContestRaisable_missing_world(t *testing.T) {
 	root := t.TempDir()
 	repo := repoRoot(t)
-	// a detector-less category: without declarations the item exists in
-	// zero worlds. Strip every declare step from both workers.
+	// strip every declaration of the contested item from both workers:
+	// the decision exists in zero worlds.
 	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "C",
 		func(s *scenario) bool {
 			for _, e := range s.Reg.Entries {
-				if nodetCats[e.Category] {
+				if e.Type == "contest" {
 					return true
 				}
 			}
@@ -511,10 +671,81 @@ func TestContestRaisable_missing_world(t *testing.T) {
 		})
 	copyScenarioTree(t, p, root)
 	copyScenarioTree(t, tw, root)
-	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropLines("- declare:"))
+	cat := contestEntry(t, p).Category
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropAgentDeclaresFor("w1", cat))
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropAgentDeclaresFor("w2", cat))
 	v := collectScenarios(t, root, options{runTests: false, workers: 4})
 	if !hasCode(v, "contest-raisable") {
 		t.Fatalf("contest item existing in < 2 worlds was accepted; got: %v", v.list)
+	}
+}
+
+func TestContestRaisable_one_world(t *testing.T) {
+	// E4: a C planted item with a decision in only one world must fail.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "C",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				if e.Type == "contest" {
+					return true
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	cat := contestEntry(t, p).Category
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropAgentDeclaresFor("w2", cat))
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "contest-raisable") {
+		t.Fatalf("contest item declared in exactly one world was accepted; got: %v", v.list)
+	}
+}
+
+func TestContestRaisable_no_detection(t *testing.T) {
+	// G.1: two declarations alone never contest — at least one world must
+	// also produce a detected decision for the item. Neutralise both
+	// worlds' contested-path edits (write the baseline content back) so
+	// the declarations remain but no detector fires.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "C",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				if e.Type == "contest" {
+					return true
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	e := contestEntry(t, p)
+	evPath := ""
+	for _, ev := range e.Evidence {
+		if ev.Path != "" {
+			evPath = ev.Path
+			break
+		}
+	}
+	if evPath == "" {
+		t.Fatalf("%s contest entry has no evidence path", p.ID)
+	}
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), func(raw string) string {
+		var keep []string
+		for _, l := range strings.Split(raw, "\n") {
+			if strings.Contains(l, "- edit:") && strings.Contains(l, "path: "+evPath) {
+				continue
+			}
+			keep = append(keep, l)
+		}
+		raw = strings.Join(keep, "\n")
+		return raw
+	})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "contest-raisable") {
+		t.Fatalf("contest item with declarations but no detected decision was accepted; got: %v", v.list)
 	}
 }
 
@@ -1041,5 +1272,80 @@ func TestVectors_count_boundary(t *testing.T) {
 		if !hasDetail(v2, "vectors-count", d) {
 			t.Fatalf("expected vectors-count %q; got: %v", d, v2.list)
 		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// F1 duplicate case detection: two vectors that differ only in renamed
+// identifiers or digits are the same situation and must be rejected.
+// ---------------------------------------------------------------------------
+
+func TestVectors_duplicate_normalized(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/detect")
+	// boundary: the real corpus has no normalized duplicates.
+	v := &violations{}
+	validateVectors(src, v)
+	if hasCode(v, "vectors-duplicate") {
+		t.Fatalf("real vector corpus contains normalized duplicates: %v", v.list)
+	}
+	// violating fixture: copy one vector under a new name, renaming an
+	// identifier and a digit inside the content — the signature must
+	// still collide.
+	root := t.TempDir()
+	copyDir(t, src, filepath.Join(root, "detect"))
+	var posPath, posDir string
+	err := filepath.Walk(filepath.Join(root, "detect"), func(path string, fi os.FileInfo, err error) error {
+		if err != nil || fi.IsDir() || posPath != "" {
+			return err
+		}
+		if strings.HasPrefix(fi.Name(), "pos-") {
+			posPath, posDir = path, filepath.Dir(path)
+		}
+		return nil
+	})
+	if err != nil || posPath == "" {
+		t.Fatalf("could not locate a positive vector to duplicate")
+	}
+	raw, err := os.ReadFile(posPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var vec map[string]any
+	if err := json.Unmarshal(raw, &vec); err != nil {
+		t.Fatal(err)
+	}
+	vec["id"] = fmt.Sprint(vec["id"]) + "-dup"
+	// rename every non-keyword identifier to a run of z's and every digit
+	// run to a repeat of its first digit, inside the file contents — the
+	// normalizer must collapse these back to the same signature (keywords
+	// and digit-change direction are preserved).
+	rename := func(s string) string {
+		s = normIdent.ReplaceAllStringFunc(s, func(w string) string {
+			if normKeywords[strings.ToLower(w)] {
+				return w
+			}
+			return strings.Repeat("z", len(w))
+		})
+		return normDigits.ReplaceAllStringFunc(s, func(d string) string {
+			return "0" + d
+		})
+	}
+	for _, fv := range vec["files"].(map[string]any) {
+		fm := fv.(map[string]any)
+		for _, side := range []string{"before", "after"} {
+			if txt, ok := fm[side].(string); ok {
+				fm[side] = rename(txt)
+			}
+		}
+	}
+	buf, _ := json.Marshal(vec)
+	if err := os.WriteFile(filepath.Join(posDir, "pos-98.json"), buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	v2 := &violations{}
+	validateVectors(filepath.Join(root, "detect"), v2)
+	if !hasCode(v2, "vectors-duplicate") {
+		t.Fatalf("identifier/digit-renamed duplicate was accepted; got: %v", v2.list)
 	}
 }

@@ -4,10 +4,10 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "requests==2.31.0  # core\n",
-      "after": "# core\nrequests==2.31.0\n"
+      "before": "--no-binary :all:\nrequests==2.31.0\n",
+      "after": "--no-binary :all:\n--prefer-binary\nrequests==2.31.0\n"
     }
   },
   "expect": [],
-  "note": "block-move"
+  "note": "option-line"
 }

@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "go.mod": {
-      "before": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.3\n",
-      "after": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.4\n"
+      "before": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v2.0.0\n",
+      "after": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v1.4.2\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         5
       ],
       "side": "after",
-      "evidence": "github.com/sirupsen/logrus v1.9.4",
+      "evidence": "github.com/a/b v1.4.2",
       "rule": "dt1-go-manifest-version"
     }
   ]

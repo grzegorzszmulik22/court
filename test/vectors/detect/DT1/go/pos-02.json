@@ -4,23 +4,23 @@
   "language": "go",
   "files": {
     "go.mod": {
-      "before": "module shop\n\ngo 1.22\n",
-      "after": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.3\n"
+      "before": "module shop\n\ngo 1.22\n\nrequire github.com/sirupsen/logrus v1.9.3\n",
+      "after": "module shop\n\ngo 1.22\n"
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "added",
+      "subkind": "removed",
       "path": "go.mod",
       "lines": [
         5,
         5
       ],
-      "side": "after",
+      "side": "before",
       "evidence": "github.com/sirupsen/logrus v1.9.3",
-      "rule": "dt1-go-manifest-added"
+      "rule": "dt1-go-manifest-removed"
     }
   ]
 }

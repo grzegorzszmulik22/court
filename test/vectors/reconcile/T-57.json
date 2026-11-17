@@ -1,9 +1,20 @@
 {
   "id": "T-57",
-  "comment": "The agent stated no_decisions at commit 1, then a detector hit arrives at commit 2. A no_decisions gate record is not a decision and cannot match the hit \u2014 the hit is undeclared. The tag is truthful: inputs.no_decisions is non-empty.",
+  "comment": "The agent stated no_decisions at commit 1, then at commit 2 a detector hit arrives (undeclared: a no_decisions gate record is not a decision and cannot match it) AND the agent separately declares a guarantee-category decision on a different path. The declared guarantee decision is outside every writ (01 \u00a79) and queued \u2014 the tag is truthful: a declared decision in a guarantee category flagged outside-writ exists.",
   "inputs": {
     "expected": [],
     "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "test-strength",
+        "paths": [
+          "t/y_test.go"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      },
       {
         "id": "h1",
         "source": "detected",
@@ -13,7 +24,10 @@
         ],
         "world": "w1",
         "commit": 2,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:68e0d53c5fa9028ac1257fdc8def63e7e46a36ce754adf0854d4d2649dab71eb"
+        ]
       }
     ],
     "no_decisions": [
@@ -47,11 +61,31 @@
     {
       "seq": 1,
       "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
         "h1"
       ]
     }
   ],
   "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true
+    },
     {
       "ids": [
         "h1"
@@ -69,6 +103,7 @@
   ],
   "tags": [
     "no-decisions",
-    "outside-writ-guarantee"
+    "outside-writ-guarantee",
+    "disjoint-paths"
   ]
 }

@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0009_add_index.py": {
-      "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    "alembic/versions/0001_init.py": {
+      "before": "-- step 1\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0009_add_index.py",
+      "path": "alembic/versions/0001_init.py",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-python-new-migration"
+      "side": "before",
+      "evidence": "-- step 1",
+      "rule": "dt2-python-changed-migration"
     }
-  ]
+  ],
+  "note": "a file deleted under a migration directory is a changed migration"
 }

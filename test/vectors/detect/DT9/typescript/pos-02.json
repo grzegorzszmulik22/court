@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/login/handler.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+      "before": "export function handle(r) {}\n",
+      "after": "export function handle(r) { audit(r); }\n"
     }
   },
   "expect": [
@@ -19,9 +19,9 @@
         1
       ],
       "side": "after",
-      "evidence": "return false;",
+      "evidence": "audit(r);",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "login path edited"
 }

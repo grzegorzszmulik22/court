@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc10.go": {
-      "before": "package calc\n\nfunc s(x interface{}) {}\n",
-      "after": "package calc\n\nfunc s(x interface{}) { _ = x }\n"
+    "pkg/types.go": {
+      "before": "package calc\n\ntype C struct{ N int }\n",
+      "after": "package calc\n\ntype C struct{ N int64 }\n"
     }
   },
   "expect": [],
-  "near_miss": "interface-already-b",
-  "note": "interface-already-b"
+  "near_miss": "field-concrete",
+  "note": "field-concrete"
 }

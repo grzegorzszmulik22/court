@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "data/app.db": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/mixed.sql": {
+      "before": "SELECT 1;\n",
+      "after": "SELECT 1;\nTRUNCATE t;\nDELETE FROM u;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/app.db",
+      "subkind": "sql",
+      "path": "db/mixed.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-go-datafile"
+      "side": "after",
+      "evidence": "TRUNCATE t;",
+      "rule": "dt10-go-sql"
     }
   ]
 }

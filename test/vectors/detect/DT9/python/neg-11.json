@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "svc/calc.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "scripts/cron/i.sh": {
+      "before": "#!/bin/sh\nchmod 644 f\n",
+      "after": "#!/bin/sh\nchmod 600 f\n"
     }
   },
   "expect": [],
-  "near_miss": "plain-edit",
-  "note": "plain-edit"
+  "note": "mode-lowered"
 }

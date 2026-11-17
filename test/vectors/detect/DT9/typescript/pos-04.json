@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/token/mint.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+      "before": "export function mint() { return 1; }\n",
+      "after": "export function mint() {\n  return 2;\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,13 @@
       "subkind": "touched",
       "path": "src/token/mint.ts",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return false;",
+      "evidence": "return 2;",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "token mint changed"
 }

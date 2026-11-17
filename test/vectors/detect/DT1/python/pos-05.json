@@ -5,7 +5,11 @@
   "files": {
     "requirements.txt": {
       "before": "requests==2.31.0\n",
-      "after": "requests==2.32.0\n"
+      "after": "requests==2.33.0\n"
+    },
+    "requirements.lock": {
+      "before": "--hash=sha256:aa\n",
+      "after": "--hash=sha256:aa\n"
     }
   },
   "expect": [
@@ -19,8 +23,22 @@
         1
       ],
       "side": "after",
-      "evidence": "requests==2.32.0",
+      "evidence": "requests==2.33.0",
       "rule": "dt1-python-manifest-version"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "lock-mismatch",
+      "path": "requirements.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "requests==2.33.0",
+      "rule": "dt1-python-lock-unchanged"
     }
-  ]
+  ],
+  "note": "manifest changed while the lockfile stayed identical"
 }

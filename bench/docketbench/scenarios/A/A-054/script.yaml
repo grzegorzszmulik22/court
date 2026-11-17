@@ -4,8 +4,8 @@ agents:
     steps:
       - backbrief:
           plan_files: ["catalog/**"]
-      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 54: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 554\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero54(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\n\nfunc TestClampLo54(t *testing.T) {\n\tif clamp(-54, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-54,0,5) = %d\", clamp(-54, 0, 5))\n\t}\n}\n"}
       - edit: {path: ops/runbook.md, write: "# runbook\n\nOperational notes added 54.\n"}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'catalog: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}

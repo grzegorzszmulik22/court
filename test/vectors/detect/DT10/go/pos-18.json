@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "db/cleanup2.sql": {
-      "before": "",
-      "after": "DELETE FROM logs;\n"
+    "warehouse/fact.csv": {
+      "before": "k,v\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/cleanup2.sql",
+      "subkind": "file",
+      "path": "warehouse/fact.csv",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "DELETE FROM logs;",
-      "rule": "dt10-go-sql"
+      "side": "before",
+      "evidence": "k,v",
+      "rule": "dt10-go-datafile"
     }
   ]
 }

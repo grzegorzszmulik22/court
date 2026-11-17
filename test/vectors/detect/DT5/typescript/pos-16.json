@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export const y = compute();\n",
-      "after": "// @ts-expect-error upstream type is wrong\nexport const y = compute();\n"
+      "before": "export const o = { x: 1 };\n",
+      "after": "// @ts-ignore\nexport const o = { x: 1 };\n"
     }
   },
   "expect": [
@@ -19,8 +19,21 @@
         1
       ],
       "side": "after",
-      "evidence": "@ts-expect-error",
+      "evidence": "@ts-ignore",
       "rule": "dt5-typescript-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "@ts-ignore",
+      "rule": "dt6-typescript-suppressed"
     }
   ]
 }

@@ -5,7 +5,7 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "RT = \"wss://rt.stream.example/ws\"\n\ndef c():\n    pass\n"
+      "after": "def c():\n    return requests.get(\"https://tri.example\", timeout=3)\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "code",
       "path": "svc/client.py",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "rt.stream.example",
+      "evidence": "tri.example",
       "rule": "dt8-python-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

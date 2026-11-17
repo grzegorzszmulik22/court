@@ -4,11 +4,10 @@
   "language": "typescript",
   "files": {
     ".gitlab-ci.yml": {
-      "before": "test:\n  script: go test ./...\n",
-      "after": "test:\n  script: go test ./...\n  stage: test\n"
+      "before": "stages:\n  - test\n\ntest:\n  script: pytest\n",
+      "after": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n"
     }
   },
   "expect": [],
-  "near_miss": "pad",
-  "note": "pad"
+  "note": "gitlab-stage-added"
 }

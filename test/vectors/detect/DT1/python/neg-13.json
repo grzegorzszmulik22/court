@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "app/version.py": {
-      "before": "VERSION = \"1.2.3\"\n",
-      "after": "VERSION = \"1.2.4\"\n"
+    "pyproject.toml": {
+      "before": "[project]\nname = \"app\"\nversion = \"1.0.0\"\n",
+      "after": "[project]\nname = \"app\"\nversion = \"1.0.1\"\n"
     }
   },
   "expect": [],
-  "note": "non-manifest-version"
+  "note": "own-version"
 }

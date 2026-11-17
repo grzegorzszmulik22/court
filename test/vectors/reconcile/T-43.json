@@ -13,7 +13,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
       },
       {
         "id": "d1",
@@ -60,13 +63,7 @@
           "**"
         ]
       }
-    },
-    "contested": [
-      [
-        "h1",
-        "d1"
-      ]
-    ]
+    }
   },
   "events": [
     {

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "app.py": {
-      "before": "def total():\n    return 1\n",
-      "after": "def total():\n    return 2\n"
+    "docs/deps.md": {
+      "before": "# deps\n",
+      "after": "# deps\n\n- requests==2.31.0\n"
     }
   },
   "expect": [],
-  "note": "unrelated-file"
+  "note": "dep-in-docstring"
 }

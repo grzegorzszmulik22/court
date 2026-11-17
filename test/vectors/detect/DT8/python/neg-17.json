@@ -4,11 +4,30 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c16():\n    pass\n"
+      "before": "x = 1\n\ndef c():\n    pass\n",
+      "after": "x = 1\n\ndef c():\n    pass\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl https://api.internal.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl https://api.internal.example/x"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example",
+      "b.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "unrelated-16",
-  "note": "unrelated-16"
+  "near_miss": "event-allowed",
+  "note": "event-allowed"
 }

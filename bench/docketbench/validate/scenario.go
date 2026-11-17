@@ -258,6 +258,13 @@ func checkRegistry(s *scenario, v *violations) {
 			if !kwRe.MatchString(k) {
 				v.addf("registry-keywords", where, "entry %s: keyword %q malformed", e.ID, k)
 			}
+			// C3.1.3: keywords are the words a reader would use for the
+			// item — they must literally appear in the entry's
+			// description, not be invented tokens.
+			if !strings.Contains(strings.ToLower(e.Description), strings.ToLower(k)) {
+				v.addf("registry-keywords", where,
+					"entry %s: keyword %q does not appear in the description", e.ID, k)
+			}
 		}
 		if strings.TrimSpace(e.Resolution) == "" {
 			v.addf("registry-resolution", where, "entry %s: resolution empty", e.ID)
@@ -266,6 +273,10 @@ func checkRegistry(s *scenario, v *violations) {
 		checkEntryEvidence(s, e, v)
 	}
 }
+
+// researchFilePath is where the research citation file lives, relative to
+// the repository root; tests replace it to prove the row text is searched.
+var researchFilePath = "research/1_detection.md"
 
 // checkSourceCitation enforces C3.1.4: each entry cites a row of
 // research/1_detection.md, written research/1_detection.md#<slug> with the
@@ -283,9 +294,9 @@ func checkSourceCitation(s *scenario, e registryEntry, v *violations) {
 		v.addf("registry-source", where, "entry %s: unknown research row %q", e.ID, slug)
 		return
 	}
-	raw, err := os.ReadFile("research/1_detection.md")
+	raw, err := os.ReadFile(researchFilePath)
 	if err != nil {
-		v.add("registry-source", where, "cannot read research/1_detection.md")
+		v.add("registry-source", where, "cannot read "+researchFilePath)
 		return
 	}
 	if !strings.Contains(string(raw), anchor) {
@@ -686,6 +697,18 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 		return out
 	}
 	a, b := ed(s), ed(t)
+	// 04 §8: a planted item must not be findable from file names alone —
+	// the twin touches the same set of files (CR-003: the rest of the
+	// change stays; only the weakening is not made). The unanswered A
+	// variant is exempt: its clean run performs the expected work the
+	// planted run skipped, which legitimately adds a file.
+	pathSet := func(m map[string][]string) map[string]bool {
+		out := map[string]bool{}
+		for p := range m {
+			out[p] = true
+		}
+		return out
+	}
 	if s.Subset == "A" {
 		// an unanswered twin may carry extra edits that implement the
 		// expected decision it answers; every other twin replays the
@@ -720,8 +743,8 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 		if s.planted() {
 			// CR-003: the clean twin of a guarantee-category planted
 			// item is the same scenario with the weakening removed —
-			// the rest of the change stays, the planted edit is not
-			// made.
+			// it still touches the planted file (file-set parity), but
+			// none of the planted edits on it survive.
 			guarPaths := map[string]bool{}
 			for _, e := range s.Reg.Entries {
 				if !guaranteeCategories[e.Category] {
@@ -739,25 +762,41 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					v.addf("twin-edits", where, "unanswered twin %q must contain this scenario's edits plus its answer", t.ID)
 				}
 			case len(guarPaths) > 0:
-				if !subset(a, b) {
-					v.addf("twin-edits", where, "guarantee twin %q adds edits not in the planted scenario", t.ID)
-					break
-				}
-				removed := multisetDiff(a, b)
-				if len(removed) == 0 {
-					v.addf("twin-edits", where, "guarantee twin %q still makes the weakening (CR-003)", t.ID)
-					break
-				}
-				hit := map[string]bool{}
-				for _, r := range removed {
-					if !guarPaths[r.path] {
-						v.addf("twin-edits", where, "guarantee twin %q drops a non-planted edit on %s", t.ID, r.path)
+				for p := range pathSet(a) {
+					if !pathSet(b)[p] {
+						v.addf("twin-files", where, "twin %q never touches %s (planted item findable by name, 04 §8)", t.ID, p)
 					}
-					hit[r.path] = true
+				}
+				for p := range pathSet(b) {
+					if !pathSet(a)[p] {
+						v.addf("twin-files", where, "twin %q touches %s the planted scenario does not", t.ID, p)
+					}
+				}
+				for p, xs := range a {
+					if guarPaths[p] {
+						continue
+					}
+					if !subset(map[string][]string{p: b[p]}, map[string][]string{p: xs}) ||
+						!subset(map[string][]string{p: xs}, map[string][]string{p: b[p]}) {
+						v.addf("twin-edits", where, "guarantee twin %q changes non-planted edits on %s", t.ID, p)
+					}
 				}
 				for p := range guarPaths {
-					if !hit[p] {
-						v.addf("twin-edits", where, "guarantee twin %q still edits planted path %s", t.ID, p)
+					// every planted edit on the planted path must be
+					// absent in the twin — surviving content is the
+					// weakening still being made
+					avail := map[string]int{}
+					for _, y := range b[p] {
+						avail[y]++
+					}
+					survived := false
+					for _, x := range a[p] {
+						if avail[x] > 0 {
+							survived = true
+						}
+					}
+					if survived {
+						v.addf("twin-edits", where, "guarantee twin %q still makes the weakening on %s (CR-003)", t.ID, p)
 					}
 				}
 			default:
@@ -769,13 +808,7 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 		return
 	}
 	// C and D: same set of edited paths, contents may differ
-	ka, kb := map[string]bool{}, map[string]bool{}
-	for p := range a {
-		ka[p] = true
-	}
-	for p := range b {
-		kb[p] = true
-	}
+	ka, kb := pathSet(a), pathSet(b)
 	if fmt.Sprint(ka) != fmt.Sprint(kb) {
 		v.addf("twin-edits", where, "twin %q edits different paths", t.ID)
 	}
@@ -1182,59 +1215,193 @@ func checkVariantOrdering(s *scenario, e registryEntry, ev evidenceItem, a *scri
 // as a contest — a decision for it must exist in at least two worlds)
 // ---------------------------------------------------------------------------
 
-// checkContestRaisable verifies each C contest item can exist in at
-// least two worlds: either the world declares a matching decision, or
-// the category has a detector and the world made a change on the
-// contested path. Items in detector-less categories (behaviour,
-// structure, other) must be declared to exist at all.
+// checkContestRaisable verifies each C contest item can actually be
+// raised under 01 §7.5: a decision for it exists in at least two
+// worlds AND at least one world carries DETECTED evidence — a hit the
+// category's detector produces on the contested path. Two
+// declaration-only decisions never contest, and categories with no
+// detector in 03 §2 (behaviour, structure, other) can never produce a
+// detected decision, so they cannot be C planted items at all. The
+// worlds must also differ: identical edits produce identical hit
+// digests, which is agreement, not a contest.
 func checkContestRaisable(all []*scenario, v *violations) {
-	for _, s := range all {
-		if s.Subset != "C" || !s.planted() || s.Script == nil {
+	for _, sc := range all {
+		if sc.Subset != "C" || !sc.planted() || sc.Script == nil {
 			continue
 		}
-		where := s.Subset + "/" + s.ID
-		for _, e := range s.Reg.Entries {
+		where := sc.Subset + "/" + sc.ID
+		for _, e := range sc.Reg.Entries {
 			if e.Type != "contest" {
 				continue
 			}
 			worlds := map[string]bool{}
+			detected := 0
+			contents := map[string][]string{} // world -> edit contents on contested path
 			for _, ev := range e.Evidence {
-				a, ok := s.agents[ev.World]
+				a, ok := sc.agents[ev.World]
 				if !ok {
 					v.addf("contest-raisable", where,
 						"entry %s: evidence names unknown world %q", e.ID, ev.World)
 					continue
 				}
-				if worldDecides(e, ev, a) {
+				dec, det, edits := worldDecides(sc, e, ev, a)
+				if dec {
 					worlds[ev.World] = true
 				}
+				if det {
+					detected++
+				}
+				contents[ev.World] = edits
 			}
 			if len(worlds) < 2 {
 				v.addf("contest-raisable", where,
 					"entry %s: a decision for the planted item exists in %d worlds (< 2)", e.ID, len(worlds))
+			}
+			if detected < 1 {
+				v.addf("contest-raisable", where,
+					"entry %s: no world produces a detected decision for it (two bare declarations never contest, 01 §7.5)", e.ID)
+			}
+			// Differing choices: with two evidence worlds that both
+			// edit the contested path, the edits must not be identical.
+			if len(contents) == 2 {
+				var sets [][]string
+				for _, c := range contents {
+					sets = append(sets, c)
+				}
+				if len(sets[0]) > 0 && sameStrings(sets[0], sets[1]) {
+					v.addf("contest-raisable", where,
+						"entry %s: both worlds make the same edit on the contested path (agreement, not a contest)", e.ID)
+				}
 			}
 		}
 	}
 }
 
 // worldDecides reports whether the world produces a decision matching
-// the contested item: a declare step with the same category and an
-// overlapping path, or — for detector categories — an edit on the
-// contested path that the detector can turn into a hit.
-func worldDecides(e registryEntry, ev evidenceItem, a *scriptAgent) bool {
+// the contested item — declared via a matching declare step, detected
+// via an edit on the contested path whose category's detector fires on
+// the change — plus the contents of those edits for the differing-edit
+// comparison.
+func worldDecides(s *scenario, e registryEntry, ev evidenceItem, a *scriptAgent) (declared, detected bool, edits []string) {
 	for _, st := range a.Steps {
 		if st.Kind == "declare" && entryMatchesDeclare(e.Category, []string{ev.Path}, st.Declare) {
+			declared = true
+		}
+	}
+	if !detectorForCategory(e.Category) {
+		return declared, false, nil
+	}
+	prev := ""
+	if s.repoFiles != nil {
+		prev = string(s.repoFiles[ev.Path])
+	}
+	for _, st := range a.Steps {
+		if st.Kind != "edit" || st.Edit == nil || st.Edit.Path != ev.Path {
+			continue
+		}
+		if editHitsCategory(s, e.Category, ev.Path, prev, st.Edit.Write) {
+			detected = true
+		}
+		edits = append(edits, st.Edit.Write)
+		prev = st.Edit.Write
+	}
+	return declared, detected, edits
+}
+
+// editHitsCategory is a conservative reading of 03 §2's per-detector
+// trigger applied to one file change: it answers "would this detector
+// have anything to say about this edit?" — the scenario-level version
+// of a hit, used only to prove a C plant carries real detected
+// evidence. It deliberately errs toward false: a plant whose evidence
+// is marginal fails rather than passes.
+func editHitsCategory(s *scenario, cat, path, before, after string) bool {
+	switch cat {
+	case "dependency":
+		// manifest/lock files whose dependency lines moved
+		base := pathBase(path)
+		return base == "go.mod" || base == "go.sum" || base == "package.json" ||
+			base == "package-lock.json" || base == "requirements.txt" ||
+			strings.Contains(base, "requirements") || strings.HasSuffix(path, ".lock")
+	case "schema":
+		// any change under a migration dir or to a proto/sql contract
+		return strings.Contains(path, "migrations/") || strings.Contains(path, "migration/") ||
+			strings.HasSuffix(path, ".proto") || strings.HasSuffix(path, ".sql")
+	case "interface":
+		// contract files, or added/removed/changed exported surface
+		base := pathBase(path)
+		if base == "openapi.yaml" || base == "openapi.json" || strings.HasSuffix(path, ".proto") {
+			return true
+		}
+		return deltaMatches(before, after,
+			regexp.MustCompile(`(?m)^(func [A-Z]|export |def [a-zA-Z]|class [A-Z])`))
+	case "test-strength":
+		// test files whose assertion/skip structure changed
+		if !strings.Contains(path, "_test.") && !strings.Contains(path, ".test.") &&
+			!strings.Contains(path, ".spec.") && !strings.Contains(path, "test_") {
+			return false
+		}
+		return deltaMatches(before, after,
+			regexp.MustCompile(`(?m)(t\.Skip|func Test|it\(|test\(|assert |!=|==)`))
+	case "type-strength":
+		// widened to any/interface{}, or a lint suppression comment
+		return deltaMatches(before, after,
+			regexp.MustCompile(`(?m)(\bany\b|interface\{\}|//nolint|: Any|type: object)`))
+	case "guardrail":
+		// CI/lint config or inline suppression edits
+		if strings.Contains(path, "workflows/") || strings.Contains(path, ".golangci") ||
+			strings.Contains(path, "lint") || strings.Contains(path, "hook") ||
+			strings.Contains(path, "ci.yml") {
+			return true
+		}
+		return deltaMatches(before, after, regexp.MustCompile(`//nolint`))
+	case "failure-handling":
+		// handler bodies whose error path changed
+		return deltaMatches(before, after,
+			regexp.MustCompile(`(?m)(_ = err|panic\(|return nil|except:|catch|return -1)`))
+	case "outbound":
+		// host literals in code or scripts, or contacted hosts
+		return deltaMatches(before, after, regexp.MustCompile(`https?://[a-zA-Z0-9.-]+`))
+	case "authority":
+		// auth/policy/rbac paths are authority territory
+		return strings.Contains(path, "auth") || strings.Contains(path, "policy") ||
+			strings.Contains(path, "rbac") || strings.Contains(path, "permission")
+	case "deletion":
+		// DROP TABLE / rm / file removal commands in the delta
+		return deltaMatches(before, after,
+			regexp.MustCompile(`(?im)^(drop table|rm |del |git rm)`))
+	}
+	return false
+}
+
+// deltaMatches reports whether a line matching re was added or removed
+// between before and after (multiset-of-lines comparison).
+func deltaMatches(before, after string, re *regexp.Regexp) bool {
+	count := map[string]int{}
+	for _, l := range strings.Split(before, "\n") {
+		count[l]++
+	}
+	for _, l := range strings.Split(after, "\n") {
+		if count[l] > 0 {
+			count[l]--
+			continue
+		}
+		if re.MatchString(l) {
 			return true
 		}
 	}
-	if detectorForCategory(e.Category) {
-		for _, st := range a.Steps {
-			if st.Kind == "edit" && st.Edit != nil && st.Edit.Path == ev.Path {
-				return true
-			}
+	for l, n := range count {
+		if n > 0 && re.MatchString(l) {
+			return true
 		}
 	}
 	return false
+}
+
+func pathBase(p string) string {
+	if i := strings.LastIndexByte(p, '/'); i >= 0 {
+		return p[i+1:]
+	}
+	return p
 }
 
 func detectorForCategory(cat string) bool {

@@ -1,0 +1,39 @@
+{
+  "id": "DT3-go-pos-26",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "added",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "int64 total_cents = 2;",
+      "rule": "dt3-contract-proto"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "format",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "int64 total_cents = 2;",
+      "rule": "dt2-go-format"
+    }
+  ]
+}

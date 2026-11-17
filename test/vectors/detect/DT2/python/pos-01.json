@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0002_add_index.py": {
+    "alembic/versions/0002_q.sql": {
       "before": "",
       "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0002_add_index.py",
+      "path": "alembic/versions/0002_q.sql",
       "lines": [
         1,
         1
@@ -21,7 +21,20 @@
       "side": "after",
       "evidence": "CREATE TABLE orders",
       "rule": "dt2-python-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE orders",
+      "rule": "dt2-python-ddl"
     }
   ],
-  "note": "new migration file under a recognised migration directory"
+  "note": "a .sql migration with DDL fires migration and ddl"
 }

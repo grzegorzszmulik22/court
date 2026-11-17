@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc13.ts": {
-      "before": "// @ts-ignore\nexport const x = 1;\n",
-      "after": "export const x = 1;\n"
+    "src/calc.ts": {
+      "before": "export function s(x: readonly number[]) { return 0; }\n",
+      "after": "export function s(x: readonly string[]) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "tsignore-removed-b",
-  "note": "tsignore-removed-b"
+  "near_miss": "readonly-type",
+  "note": "readonly-type"
 }

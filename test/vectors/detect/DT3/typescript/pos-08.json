@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
+    "src/consts.ts": {
+      "before": "export const RATE = 10;\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "path": "src/consts.ts",
       "lines": [
-        3,
-        3
+        1,
+        1
       ],
       "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "evidence": "export const RATE = 10",
+      "rule": "dt3-ts-export-removed"
     }
   ]
 }

@@ -3,19 +3,20 @@ package main
 // Reconciliation-trace validation (M3.1 build item 2, check C3.1.5).
 //
 // Per CR-003 (spec/CHANGE_REQUESTS/003) this validator contains NO
-// reconciliation oracle: the expected results in
-// test/vectors/reconcile/ were written by reasoning from spec/01 §7 and
-// are reviewed independently, then checked again by the independent
-// M3.5 implementation. What this file enforces is trace shape:
+// reconciliation oracle and computes NO expected result: verdicts,
+// flags and queued status in test/vectors/reconcile/ were written by
+// reasoning from spec/01 §7, are reviewed independently, and are
+// checked again by the independent M3.5 implementation. What this file
+// enforces is trace SHAPE:
 //   - file and id naming, vocabulary of categories/verdicts/flags/tags;
+//   - entry kinds: a detected entry carries real paths and hit text
+//     digests (03 §1.5); declared/expected entries carry neither;
 //   - every input entry appears in exactly one merged expectation and
 //     the expectation's sources equal the union of its members';
-//   - per-row internal consistency derivable from §7.2/§7.3 without
-//     re-running matching: verdict vs member sources, flags vs inputs,
-//     queued vs verdict+flags+petition;
 //   - decision.reconciled events: strictly increasing seqs, one event
 //     per expectation listing exactly its member ids;
-//   - every tag is a known name that is true of its trace;
+//   - every tag is a known name whose truth can be read from the
+//     trace's own inputs and expectation rows;
 //   - corpus coverage: >= 60 traces, every verdict and every required
 //     case exercised.
 
@@ -40,7 +41,6 @@ type rtrace struct {
 		Decisions   []rDecision      `json:"decisions"`
 		Writs       map[string]rWrit `json:"writs"`
 		Bypassed    []rBypass        `json:"bypassed"`
-		Contested   [][]string       `json:"contested"`
 		NoDecisions []rBypass        `json:"no_decisions"`
 	} `json:"inputs"`
 	Events []rEvent  `json:"events"`
@@ -57,7 +57,9 @@ type rExpected struct {
 	Ruled    bool     `json:"ruled"` // settled in the upfront hearing (01 §6)
 }
 
-// rDecision is a declared or detected entry.
+// rDecision is a declared or detected entry. Detected entries carry
+// `digests` — the sha256 text digests of the hits they stand for —
+// which are the evidence 01 §7.5 compares to derive contests.
 type rDecision struct {
 	ID       string   `json:"id"`
 	Source   string   `json:"source"` // declared | detected
@@ -66,6 +68,7 @@ type rDecision struct {
 	World    string   `json:"world"`
 	Commit   int      `json:"commit"`   // 1-based commit index in its world
 	Petition bool     `json:"petition"` // declared with petition: true
+	Digests  []string `json:"digests"`  // hit text digests (detected only)
 }
 
 type rWrit struct {
@@ -215,6 +218,8 @@ func loadTrace(path string, v *violations) *rtrace {
 // per-trace checks
 // ---------------------------------------------------------------------------
 
+var digestRe = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
+
 // traceMember is one input entry resolved for checking an expectation.
 type traceMember struct {
 	id       string
@@ -225,6 +230,7 @@ type traceMember struct {
 	commit   int
 	petition bool
 	ruled    bool
+	digests  []string
 }
 
 func checkTrace(tr *rtrace, fname string, v *violations) {
@@ -249,10 +255,31 @@ func checkTrace(tr *rtrace, fname string, v *violations) {
 		if d.Commit < 1 {
 			v.addf("reconcile-commit", where, "decision %s: commit must be ≥ 1", d.ID)
 		}
+		// 03 §1.5: a hit carries file, line range and the matched text
+		// digest — a detected entry therefore names real paths and at
+		// least one sha256 digest; a declaration has no hit and may not
+		// carry digests.
+		if d.Source == "detected" {
+			if len(d.Paths) == 0 {
+				v.addf("reconcile-detected-paths", where,
+					"detected entry %s has empty paths (a hit always has a span)", d.ID)
+			}
+			if len(d.Digests) == 0 {
+				v.addf("reconcile-digest", where,
+					"detected entry %s carries no hit text digest", d.ID)
+			}
+		} else if len(d.Digests) != 0 {
+			v.addf("reconcile-digest", where, "entry %s is not detected but carries digests", d.ID)
+		}
+		for _, dg := range d.Digests {
+			if !digestRe.MatchString(dg) {
+				v.addf("reconcile-digest", where, "entry %s: digest %q is not sha256:<64-hex>", d.ID, dg)
+			}
+		}
 		if _, dup := members[d.ID]; dup {
 			v.addf("reconcile-input-id", where, "input id %q used twice", d.ID)
 		}
-		members[d.ID] = traceMember{d.ID, d.Source, d.Category, d.Paths, w, d.Commit, d.Petition, false}
+		members[d.ID] = traceMember{d.ID, d.Source, d.Category, d.Paths, w, d.Commit, d.Petition, false, d.Digests}
 	}
 	for _, e := range tr.Inputs.Expected {
 		w := e.World
@@ -265,25 +292,7 @@ func checkTrace(tr *rtrace, fname string, v *violations) {
 		if _, dup := members[e.ID]; dup {
 			v.addf("reconcile-input-id", where, "input id %q used twice", e.ID)
 		}
-		members[e.ID] = traceMember{e.ID, "expected", e.Category, e.Paths, w, 0, false, e.Ruled}
-	}
-	for _, pair := range tr.Inputs.Contested {
-		if len(pair) != 2 {
-			v.addf("reconcile-contested", where, "contested pair %v must name exactly two ids", pair)
-			continue
-		}
-		a, aok := members[pair[0]]
-		b, bok := members[pair[1]]
-		if !aok || !bok {
-			v.addf("reconcile-contested", where, "contested pair %v names a non-input id", pair)
-			continue
-		}
-		if a.world == b.world {
-			v.addf("reconcile-contested", where, "contested pair %v is in one world (%s)", pair, a.world)
-		}
-		if a.category != b.category {
-			v.addf("reconcile-contested", where, "contested pair %v crosses categories", pair)
-		}
+		members[e.ID] = traceMember{e.ID, "expected", e.Category, e.Paths, w, 0, false, e.Ruled, nil}
 	}
 	for _, g := range tr.Inputs.Bypassed {
 		for _, c := range g.Commits {
@@ -371,9 +380,14 @@ func checkTrace(tr *rtrace, fname string, v *violations) {
 	checkTraceTags(tr, members, where, v)
 }
 
-// checkExpectRow enforces everything §7.2/§7.3 fixes about one merged
-// decision WITHOUT re-running the matcher's grouping: verdict vs member
-// sources, flags vs inputs, queued vs the §7.3 clause list.
+// checkExpectRow validates one merged decision's SHAPE only — member
+// ids resolve, members share one category and one world (a merged
+// decision is a single-category, single-world object by construction),
+// the row's denormalised sources field equals the member union, and
+// verdict/flag words come from the §7 vocabulary. It computes NO
+// expected result: whether the verdict, flags or queued status are
+// right is ground truth written by reasoning from §7 and checked by
+// the independent M3.5 implementation (CR-003).
 func checkExpectRow(tr *rtrace, e rExpect, members map[string]traceMember, where string, v *violations) {
 	var ms []traceMember
 	srcSet := map[string]bool{}
@@ -397,7 +411,8 @@ func checkExpectRow(tr *rtrace, e rExpect, members map[string]traceMember, where
 			v.addf("reconcile-merge", where, "%v merges worlds %q and %q", e.IDs, ms[0].world, m.world)
 		}
 	}
-	// sources must equal the union of member sources, sorted
+	// sources must equal the union of member sources, sorted — a
+	// denormalised field of the merged row, not a derived result.
 	var wantSrc []string
 	for _, s := range []string{"declared", "detected", "expected"} {
 		if srcSet[s] {
@@ -410,100 +425,10 @@ func checkExpectRow(tr *rtrace, e rExpect, members map[string]traceMember, where
 	if !reconVerdicts[e.Verdict] {
 		v.addf("reconcile-verdict", where, "verdict %q unknown", e.Verdict)
 	}
-	// verdict vs member sources (§7.2 table)
-	hasDecl, hasDet, hasExp := srcSet["declared"], srcSet["detected"], srcSet["expected"]
-	switch {
-	case !hasDet && !hasDecl:
-		if e.Verdict != "unanswered" {
-			v.addf("reconcile-verdict", where, "%v: expected-only members must be unanswered, not %q", e.IDs, e.Verdict)
-		}
-	case hasDet && !hasDecl:
-		if e.Verdict != "undeclared" {
-			v.addf("reconcile-verdict", where, "%v: detected without declaration must be undeclared, not %q", e.IDs, e.Verdict)
-		}
-	case !hasDet && hasDecl:
-		if e.Verdict != "declared-only" {
-			v.addf("reconcile-verdict", where, "%v: declared without detection must be declared-only, not %q", e.IDs, e.Verdict)
-		}
-	default: // declared + detected present
-		if e.Verdict != "confirmed" && e.Verdict != "undeclared" && e.Verdict != "late" {
-			v.addf("reconcile-verdict", where, "%v: declared+detected must be confirmed/undeclared/late, not %q", e.IDs, e.Verdict)
-		}
-	}
-	flag := map[string]bool{}
 	for _, f := range e.Flags {
 		if !reconFlags[f] {
 			v.addf("reconcile-flag", where, "flag %q unknown", f)
 		}
-		flag[f] = true
-	}
-	// late flag iff late verdict
-	if flag["late"] != (e.Verdict == "late") {
-		v.addf("reconcile-flag", where, "%v: late flag %v disagrees with verdict %q", e.IDs, flag["late"], e.Verdict)
-	}
-	// unforeseen flag iff no expected member
-	if flag["unforeseen"] == hasExp {
-		v.addf("reconcile-flag", where, "%v: unforeseen %v disagrees with expected membership", e.IDs, flag["unforeseen"])
-	}
-	// contested flag iff a member is named in an inputs.contested pair
-	inContest := map[string]bool{}
-	for _, pair := range tr.Inputs.Contested {
-		for _, id := range pair {
-			inContest[id] = true
-		}
-	}
-	memberContested := false
-	for _, m := range ms {
-		if inContest[m.id] {
-			memberContested = true
-		}
-	}
-	if flag["contested"] != memberContested {
-		v.addf("reconcile-flag", where, "%v: contested %v disagrees with inputs.contested", e.IDs, flag["contested"])
-	}
-	// outside-writ flag iff the merged decision is outside its writ:
-	// guarantee categories always, else the member world's writ must
-	// list the category and cover every member path
-	outside := guaranteeCategories[cat]
-	if !outside {
-		if wr, ok := tr.Inputs.Writs[ms[0].world]; ok {
-			if !contains(wr.Categories, cat) {
-				outside = true
-			} else {
-				for _, m := range ms {
-					for _, p := range m.paths {
-						if !writTerritoryCovers(wr.Territory, p) {
-							outside = true
-						}
-					}
-				}
-			}
-		}
-	}
-	if flag["outside-writ"] != outside {
-		v.addf("reconcile-flag", where, "%v: outside-writ %v disagrees with category/writ inputs", e.IDs, flag["outside-writ"])
-	}
-	// ruled flag iff a ruled expected member merged and the category is
-	// not a guarantee category (guarantees always get their own ruling)
-	ruled := false
-	for _, m := range ms {
-		if m.ruled {
-			ruled = true
-		}
-	}
-	if flag["ruled"] != (ruled && !guaranteeCategories[cat]) {
-		v.addf("reconcile-flag", where, "%v: ruled %v disagrees with expected member rulings", e.IDs, flag["ruled"])
-	}
-	// queued iff any §7.3 clause holds
-	queued := e.Verdict == "undeclared" || e.Verdict == "late" || e.Verdict == "unanswered" ||
-		flag["outside-writ"] || flag["contested"]
-	for _, m := range ms {
-		if m.petition {
-			queued = true
-		}
-	}
-	if e.Queued != queued {
-		v.addf("reconcile-queued", where, "%v: queued %v, §7.3 requires %v", e.IDs, e.Queued, queued)
 	}
 }
 
@@ -621,7 +546,18 @@ func checkTraceTags(tr *rtrace, members map[string]traceMember, where string, v 
 		},
 		"outside-writ": func() bool { return hasExp(expFlag("outside-writ")) },
 		"outside-writ-guarantee": func() bool {
-			return hasExp(func(e rExpect) bool {
+			// The tag is about §6/§7.4 guarantees being ruled in their
+			// own hearing: a guarantee-category row lands outside the
+			// writ AND a declared decision exists somewhere in the
+			// trace — a detected-only trace exercises the outside-writ
+			// path but not the guarantee declaration.
+			declared := false
+			for _, m := range ins {
+				if m.source == "declared" {
+					declared = true
+				}
+			}
+			return declared && hasExp(func(e rExpect) bool {
 				if !expFlag("outside-writ")(e) {
 					return false
 				}
@@ -676,9 +612,34 @@ func checkTraceTags(tr *rtrace, members map[string]traceMember, where string, v 
 		},
 		"gate-bypassed": func() bool { return len(tr.Inputs.Bypassed) > 0 },
 		"no-decisions":  func() bool { return len(tr.Inputs.NoDecisions) > 0 },
-		"contested":     func() bool { return hasExp(expFlag("contested")) },
+		"contested": func() bool {
+			// The tag claims the trace exercises a contest: a flag row
+			// exists AND the inputs contain a contest-capable pair —
+			// two same-category decisions in different worlds whose
+			// evidence differs through hits (different digest sets, or
+			// a hit against a bare declaration). Two declaration-only
+			// decisions can never contest (01 §7.5).
+			if !hasExp(expFlag("contested")) {
+				return false
+			}
+			return hasPair(ins, func(a, b traceMember) bool {
+				return a.world != b.world && a.category == b.category && contestingEvidence(a, b)
+			})
+		},
 		"no-contest": func() bool {
-			return len(tr.Inputs.Contested) == 0 && !hasExp(expFlag("contested"))
+			// True when the trace has a cross-world same-category pair
+			// that CANNOT contest — both declared, or detected with
+			// identical hit digests — and no row carries the flag.
+			if hasExp(expFlag("contested")) {
+				return false
+			}
+			return hasPair(ins, func(a, b traceMember) bool {
+				if a.world == b.world || a.category != b.category ||
+					a.source == "expected" || b.source == "expected" {
+					return false
+				}
+				return !contestingEvidence(a, b)
+			})
 		},
 		"petition": func() bool {
 			for _, m := range ins {
@@ -789,9 +750,11 @@ func checkTraceTags(tr *rtrace, members map[string]traceMember, where string, v 
 			return len(c) >= 2
 		},
 		"no-detector-category": func() bool {
+			// Categories with no detector in 03 §2: a decision in one
+			// can only ever be declared or expected.
 			return hasExp(func(e rExpect) bool {
 				c := memberCat(e)
-				return c == "behaviour" || c == "structure"
+				return c == "behaviour" || c == "structure" || c == "other"
 			})
 		},
 		"multi-commit": func() bool {
@@ -834,6 +797,33 @@ func checkTraceTags(tr *rtrace, members map[string]traceMember, where string, v 
 			v.addf("reconcile-tag", where, "tag %q is not true of this trace", tag)
 		}
 	}
+}
+
+// hasPair reports whether any two members satisfy pred (order-free).
+func hasPair(ins []traceMember, pred func(a, b traceMember) bool) bool {
+	for i := range ins {
+		for j := i + 1; j < len(ins); j++ {
+			if pred(ins[i], ins[j]) || pred(ins[j], ins[i]) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// contestingEvidence: 01 §7.5 — two decisions contest only when their
+// evidence differs through hits: detected-vs-detected with different
+// digest sets, or a detected hit on one side against a bare
+// declaration on the other. Declaration-vs-declaration never contests.
+func contestingEvidence(a, b traceMember) bool {
+	da, db := a.source == "detected", b.source == "detected"
+	if da != db {
+		return true
+	}
+	if !da {
+		return false
+	}
+	return !sameStrings(a.digests, b.digests)
 }
 
 func idSetKey(ids []string) string {

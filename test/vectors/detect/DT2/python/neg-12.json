@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "app/model.py": {
-      "before": "# TODO: ALTER TABLE t\n",
-      "after": "# TODO: ALTER TABLE t ADD COLUMN c\n"
+    "db/views.sql": {
+      "before": "CREATE VIEW v1 AS SELECT 1;\n",
+      "after": "CREATE VIEW v2 AS SELECT 2;\n"
     }
   },
   "expect": [],
-  "note": "ddl-in-source-comment"
+  "note": "create-view"
 }

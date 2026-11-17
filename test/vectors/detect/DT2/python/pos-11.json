@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0004_add_index.py": {
-      "before": "",
-      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    "alembic/versions/0001_init.py": {
+      "before": "-- step 1\n",
+      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n"
     }
   },
   "expect": [
@@ -13,14 +13,27 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0004_add_index.py",
+      "path": "alembic/versions/0001_init.py",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
-      "rule": "dt2-python-new-migration"
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "rule": "dt2-python-changed-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "alembic/versions/0001_init.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "rule": "dt2-python-ddl"
     }
   ]
 }

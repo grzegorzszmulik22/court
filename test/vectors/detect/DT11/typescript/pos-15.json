@@ -3,15 +3,14 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "deploy/helm/chart.yaml": {
+    "ops/nightly/cron.yaml": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "schedule: nightly\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "ops/jobs/**"
     ]
   },
   "expect": [
@@ -19,13 +18,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "deploy/helm/chart.yaml",
+      "path": "ops/nightly/cron.yaml",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "schedule: nightly",
       "rule": "dt11-typescript-outside"
     }
   ]

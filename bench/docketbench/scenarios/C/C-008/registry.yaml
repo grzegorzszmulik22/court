@@ -3,8 +3,8 @@
   variant: differing-choice
   category: authority
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on internal/auth/session.go (7200 vs 1800)."
-  keywords: ["contest-8", "sibling-drift", "world-split"]
+  description: "Two sibling worlds chose differently on internal/auth/session.go: a authority decision (7200 vs 1800)."
+  keywords: ["worlds", "differently", "authority"]
   evidence:
     - {world: "w1", path: "internal/auth/session.go", lines: [3, 3]}
     - {world: "w2", path: "internal/auth/session.go", lines: [3, 3]}

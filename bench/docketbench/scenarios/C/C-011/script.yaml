@@ -10,10 +10,13 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["shop/**", "config/**", "api/**"]
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n# revision note 11\n"}
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\n## Rollback\nSteps for rollback.\n"}
-      - declare: {category: behaviour, paths: ["docs/guide.md"], question: "take the w1 option?", chosen: "yes"}
+          plan_files: ["shop/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2011\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n15,delta11\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc must(err error) {\n\t_ = err\n}\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: failure-handling, paths: ["shop/util.go"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -21,10 +24,13 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["shop/**", "config/**", "api/**"]
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n# revision note 11\n"}
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\n## Rollback\nSteps for rollback.\n\n## FAQ\nCommon questions.\n"}
-      - declare: {category: behaviour, paths: ["docs/guide.md"], question: "take the w2 option?", chosen: "yes"}
+          plan_files: ["shop/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2011\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n15,delta11\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc must(err error) {\n\tif err != nil {\n\t\tpanic(err)\n\t}\n}\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: failure-handling, paths: ["shop/util.go"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

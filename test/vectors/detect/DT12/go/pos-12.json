@@ -3,31 +3,30 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "newpkg/mod.go": {
+    "shop/cart.go": {
       "before": "",
-      "after": "package shop\n"
+      "after": "item0\nitem1\nitem2\nitem3\nitem4\nitem5\nitem6\nitem7\nitem8\nitem9\nitem10\nitem11\nitem12\nitem13\nitem14\nitem15\nitem16\nitem17\nitem18\nitem19\nitem20\nitem21\nitem22\nitem23\nitem24\nitem25\nitem26\nitem27\nitem28\nitem29\ntail\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go",
-      "newpkg/mod.go"
+      "shop/cart.go"
     ],
-    "plan_lines": 20
+    "plan_lines": 10
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "newpkg/mod.go",
+      "subkind": "oversize",
+      "path": "shop/cart.go",
       "lines": [
-        1,
-        1
+        31,
+        31
       ],
       "side": "after",
-      "evidence": "package shop",
-      "rule": "dt12-go-new-top-level"
+      "evidence": "tail",
+      "rule": "dt12-go-oversize"
     }
   ]
 }

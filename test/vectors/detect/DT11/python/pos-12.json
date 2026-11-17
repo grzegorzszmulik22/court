@@ -3,15 +3,15 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "docs/guide.md": {
+    "lib/core.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "def core():\n    return 0\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "src/**",
+      "test/**"
     ]
   },
   "expect": [
@@ -19,13 +19,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "docs/guide.md",
+      "path": "lib/core.py",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "return 0",
       "rule": "dt11-python-outside"
     }
   ]

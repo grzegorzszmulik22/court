@@ -3,13 +3,9 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "src/extra.ts": {
+    "rootfile.ts": {
       "before": "",
       "after": "export const x = 1;\n"
-    },
-    "src/cart.ts": {
-      "before": "export const x = 1;\n",
-      "after": "export const x = 1;\ny\n"
     }
   },
   "commission": {
@@ -22,8 +18,21 @@
     {
       "detector": "DT12",
       "category": "scope",
+      "subkind": "new-top-level",
+      "path": "rootfile.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export const x = 1;",
+      "rule": "dt12-typescript-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
       "subkind": "unplanned-file",
-      "path": "src/extra.ts",
+      "path": "rootfile.ts",
       "lines": [
         1,
         1
@@ -32,5 +41,6 @@
       "evidence": "export const x = 1;",
       "rule": "dt12-typescript-unplanned-file"
     }
-  ]
+  ],
+  "note": "a new file at the root is new-top-level and unplanned"
 }

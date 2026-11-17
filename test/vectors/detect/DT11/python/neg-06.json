@@ -5,7 +5,7 @@
   "files": {
     "vendor/x/y.go": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "def f():\n    pass\n"
     }
   },
   "commission": {
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-vendor",
+  "note": "exempt-vendor"
 }

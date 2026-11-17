@@ -3,33 +3,25 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "svc/q.go": {
+      "before": "",
+      "after": "package svc\n\nconst wipe = \"DELETE FROM audit\"\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git clean -fdx"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
+      "subkind": "sql",
+      "path": "svc/q.go",
       "lines": [
-        0,
-        0
+        3,
+        3
       ],
-      "side": "events",
-      "evidence": "git clean -fdx",
-      "rule": "dt10-go-destructive-cmd"
+      "side": "after",
+      "evidence": "DELETE FROM audit",
+      "rule": "dt10-go-sql"
     }
-  ]
+  ],
+  "note": "destructive SQL inside a code string literal"
 }

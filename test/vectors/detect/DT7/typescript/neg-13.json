@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export function f() {\n  return get();\n}\n",
-      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    throw new FetchFailed(e);\n  }\n}\n"
+    "src/f.ts": {
+      "before": "export function f(x: number) { return x; }\n",
+      "after": "export function f(x: number) {\n  switch (x) {\n    case 1: return 1;\n    default: return x;\n  }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "rethrow-b",
-  "note": "rethrow-b"
+  "note": "switch-case"
 }

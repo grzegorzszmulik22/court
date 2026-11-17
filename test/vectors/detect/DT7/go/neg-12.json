@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/discount.go": {
-      "before": "package svc\n\nfunc Disc(x int) int { return x }\n",
-      "after": "package svc\n\nfunc Disc(x int) int {\n\tif x > 99 {\n\t\treturn 99\n\t}\n\treturn x\n}\n"
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\treturn nil\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "literal-new-b",
-  "note": "literal-new-b"
+  "note": "panic-added"
 }

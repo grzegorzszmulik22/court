@@ -3,12 +3,11 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "src/old.ts": {
-      "before": "x\n",
-      "after": ""
+    "data/seed.csv": {
+      "before": "a,1\n",
+      "after": "a,2\n"
     }
   },
   "expect": [],
-  "near_miss": "source-removed",
-  "note": "source-removed"
+  "note": "data-modified"
 }

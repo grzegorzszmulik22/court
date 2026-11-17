@@ -4,7 +4,7 @@
   category: territory
   mast: FM-9.1
   description: "The expected territory decision was never answered."
-  keywords: ["out-of-bounds-35", "territory-cross", "script-touch"]
+  keywords: ["expected", "decision", "answered"]
   evidence:
     - {world: "w1", expected_index: 0, paths: ["scripts/deploy.sh"]}
   source: "research/1_detection.md#specguard"

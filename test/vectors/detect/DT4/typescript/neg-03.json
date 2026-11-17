@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('n', () => {\n  expect(n()).toBeLessThanOrEqual(50);\n});\n",
-      "after": "test('n', () => {\n  expect(n()).toBeLessThanOrEqual(10);\n});\n"
+      "before": "test('n', () => {\n  const v = n();\n  expect(v).toBeLessThanOrEqual(50);\n});\n",
+      "after": "test('n', () => {\n  const v = n();\n  expect(v).toBeLessThanOrEqual(10);\n});\n"
     }
   },
   "expect": [],

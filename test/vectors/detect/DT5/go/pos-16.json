@@ -4,23 +4,23 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nvar x = 1\n",
-      "after": "package calc\n\n//nolint:unused\nvar x = 1\n"
+      "before": "package calc\n\nvar n int = 3\n",
+      "after": "package calc\n\nvar n any = 3\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "suppressed",
+      "subkind": "widened",
       "path": "pkg/calc.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "//nolint:unused",
-      "rule": "dt5-go-suppressed"
+      "evidence": "var n any",
+      "rule": "dt5-go-widened"
     }
   ]
 }

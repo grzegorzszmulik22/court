@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/calc_test.go": {
-      "before": "package calc\n\nfunc helper(x int) int { return x }\n",
-      "after": "package calc\n\nfunc helper(x interface{}) interface{} { return x.(int) }\n"
+      "before": "package calc\n\nfunc helper(x int) int {\n\ty := x\n\treturn y\n}\n",
+      "after": "package calc\n\nfunc helper(x interface{}) interface{} {\n\ty := x\n\treturn y.(int)\n}\n"
     }
   },
   "expect": [

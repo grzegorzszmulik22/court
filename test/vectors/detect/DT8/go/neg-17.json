@@ -4,11 +4,30 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c16() {}\n"
+      "before": "package svc\n\nvar x = 1\n\nfunc c() {}\n",
+      "after": "package svc\n\nvar x = 1\n\nfunc c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"curl https://api.internal.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl https://api.internal.example/x"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example",
+      "b.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "unrelated-16",
-  "note": "unrelated-16"
+  "near_miss": "event-allowed",
+  "note": "event-allowed"
 }

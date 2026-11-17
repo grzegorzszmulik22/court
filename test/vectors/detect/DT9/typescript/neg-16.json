@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: \"*\"\n",
-      "after": "cors:\n  origin: https://app.example\n"
+    "docs/tokens.md": {
+      "before": "# t\n",
+      "after": "# t\nrotate monthly\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-origin",
-  "note": "narrowed-origin"
+  "note": "token-in-doc"
 }

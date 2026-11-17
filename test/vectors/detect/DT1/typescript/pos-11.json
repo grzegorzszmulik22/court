@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^19.0.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"lodash\": \"^4.17.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"~18.2.0\",\n    \"lodash\": \"^4.17.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
+      "evidence": "\"react\": \"~18.2.0\"",
       "rule": "dt1-typescript-manifest-version"
     }
   ]

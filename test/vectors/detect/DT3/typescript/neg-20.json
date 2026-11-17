@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "src/api.ts": {
+      "before": "export abstract class A {\n}\n",
+      "after": "export abstract class A {\n  abstract m(): void;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "note": "abstract-method"
 }

@@ -3,13 +3,13 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "src/extra.ts": {
-      "before": "",
-      "after": "export const x = 1;\n"
-    },
     "src/cart.ts": {
       "before": "export const x = 1;\n",
-      "after": "export const x = 1;\ny\n"
+      "after": "export const x = 1;\nz\n"
+    },
+    "tools/note.txt": {
+      "before": "",
+      "after": "note\nmore\n"
     }
   },
   "commission": {
@@ -23,13 +23,13 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "src/extra.ts",
+      "path": "tools/note.txt",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "more",
       "rule": "dt12-typescript-unplanned-file"
     }
   ]

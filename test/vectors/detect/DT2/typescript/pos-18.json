@@ -3,24 +3,38 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0011_add_index/migration.sql": {
-      "before": "",
-      "after": "DROP TABLE legacy_orders;\n"
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n",
+      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "prisma/migrations/0011_add_index/migration.sql",
+      "subkind": "format",
+      "path": "api/order.proto",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders",
-      "rule": "dt2-typescript-new-migration"
+      "evidence": "int64 id = 1;",
+      "rule": "dt2-typescript-format"
+    },
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "before",
+      "evidence": "int64 total_cents = 2;",
+      "rule": "dt3-contract-proto"
     }
-  ]
+  ],
+  "note": "removed proto field fires DT2 format and DT3 contract removed"
 }

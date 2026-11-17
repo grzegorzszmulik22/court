@@ -5,7 +5,7 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst hook = \"https://hooks.svc-vendor.example/h\"\n\nfunc c() {}\n"
+      "after": "package svc\n\nfunc c() {\n\t_ = dial(\"tcp\", \"hooks.svc-vendor.example:443\")\n}\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "code",
       "path": "svc/client.go",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
       "side": "after",
       "evidence": "hooks.svc-vendor.example",
       "rule": "dt8-go-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

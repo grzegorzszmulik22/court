@@ -4,10 +4,10 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"name\": \"app\"\n}\n",
-      "after": "{\n    \"name\": \"app\"\n}\n"
+      "before": "{\n  \"keywords\": [\"a\"]\n}\n",
+      "after": "{\n  \"keywords\": [\"a\", \"b\"]\n}\n"
     }
   },
   "expect": [],
-  "note": "manifest-reformat"
+  "note": "keywords-field"
 }

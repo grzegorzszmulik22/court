@@ -4,11 +4,10 @@
   "language": "typescript",
   "files": {
     "src/f.ts": {
-      "before": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) s += x;\n  return s;\n}\n",
-      "after": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) {\n    if (x < 0) continue;\n    s += x;\n  }\n  return s;\n}\n"
+      "before": "export function f(xs: number[]) { return xs[0]; }\n",
+      "after": "export function f(xs: number[]) {\n  for (const x of xs) {\n    if (x > 0) return x;\n  }\n  return 0;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "loop-continue-b",
-  "note": "loop-continue-b"
+  "note": "for-of"
 }

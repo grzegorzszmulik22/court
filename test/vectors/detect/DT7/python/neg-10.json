@@ -5,10 +5,10 @@
   "files": {
     "svc/fetch.py": {
       "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError as e:\n        log(e)\n        raise\n"
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError as e:\n        raise\n"
     }
   },
   "expect": [],
-  "near_miss": "logged-error-b",
-  "note": "logged-error-b"
+  "near_miss": "reraise",
+  "note": "reraise"
 }

@@ -3,25 +3,25 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n"
+    "setup.cfg": {
+      "before": "[flake8]\nselect = E,W,F\n",
+      "after": "[flake8]\nselect = E\n"
     }
   },
   "expect": [
     {
       "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "subkind": "lint",
+      "path": "setup.cfg",
       "lines": [
-        7,
-        7
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "- run: go vet ./...",
-      "rule": "dt6-typescript-ci"
+      "side": "after",
+      "evidence": "select = E",
+      "rule": "dt6-typescript-lint"
     }
   ],
-  "note": "a CI step was removed"
+  "note": "flake8 rules were disabled"
 }

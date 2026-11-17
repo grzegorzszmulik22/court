@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except:\n        raise\n"
+    "svc/guard.py": {
+      "before": "def guard():\n    try:\n        return vault()\n    except KeyError:\n        raise\n",
+      "after": "def guard():\n    try:\n        return vault()\n    except BaseException:\n        raise\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "broadened",
-      "path": "svc/fetch.py",
+      "path": "svc/guard.py",
       "lines": [
         4,
         4
       ],
       "side": "after",
-      "evidence": "except:",
+      "evidence": "except BaseException:",
       "rule": "dt7-python-broadened"
     }
   ]

@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export function fetch_() {\n  return get();\n}\n",
-      "after": "export function fetch_() {\n  try {\n    return get();\n  } catch (e) {\n    return -1;\n  }\n}\n"
+    "src/parse.ts": {
+      "before": "export function parse() {\n  return conv();\n}\n",
+      "after": "export function parse() {\n  try {\n    return conv();\n  } catch (e) {\n    return {};\n  }\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "src/fetch.ts",
+      "path": "src/parse.ts",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "return -1;",
+      "evidence": "return {};",
       "rule": "dt7-typescript-swallowed"
     }
   ]

@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc Order(xs []int) {}\n",
+      "after": "package api\n\nfunc Order(ys []int, rev bool) {}\n"
     }
   },
   "expect": [
@@ -13,15 +13,14 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/order.proto",
+      "path": "api/service.go",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "// order record",
-      "rule": "dt3-contract-proto"
+      "evidence": "func Order(ys []int, rev bool)",
+      "rule": "dt3-go-exported-changed"
     }
-  ],
-  "note": "comment change on a contract file"
+  ]
 }

@@ -3,12 +3,11 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "db/seed.sql": {
-      "before": "",
-      "after": "INSERT INTO t VALUES (1);\n"
+    "data/seed.csv": {
+      "before": "a\n",
+      "after": "a\nb\n"
     }
   },
   "expect": [],
-  "near_miss": "insert-only",
-  "note": "insert-only"
+  "note": "data-appended"
 }

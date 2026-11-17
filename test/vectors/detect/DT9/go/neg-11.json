@@ -3,12 +3,11 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "svc/calc.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    "scripts/cron/i.sh": {
+      "before": "#!/bin/sh\nchmod 644 f\n",
+      "after": "#!/bin/sh\nchmod 600 f\n"
     }
   },
   "expect": [],
-  "near_miss": "plain-edit",
-  "note": "plain-edit"
+  "note": "mode-lowered"
 }

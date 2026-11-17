@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "app/calc.py": {
-      "before": "def pick(v: int) -> int:\n    return v\n",
-      "after": "def pick(v: int | None) -> int | None:\n    return v\n"
+      "before": "def t(xs: list[int], ys: list[int]) -> int:\n    return 0\n",
+      "after": "def t(xs: list[Any], ys: list[int]) -> int:\n    return 0\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "v: int | None",
+      "evidence": "xs: list[Any]",
       "rule": "dt5-python-widened"
     }
   ]

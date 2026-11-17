@@ -3,21 +3,31 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "x.txt": {
+    "ops/log3.txt": {
       "before": "a\n",
-      "after": "b\n"
+      "after": "a\nb\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"rm out.log\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"ls\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "rm x.tmp"
+        "command": "rm out.log"
+      },
+      "outcome": "ok"
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls"
       },
       "outcome": "ok"
     }
   ],
   "expect": [],
-  "near_miss": "rm-file",
-  "note": "rm-file"
+  "note": "rm-single"
 }

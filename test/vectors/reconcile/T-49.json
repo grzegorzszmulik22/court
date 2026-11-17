@@ -13,7 +13,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:2e9c41ddf5e7359f5e67d5a8eb4c39de4ffc6b3424a5d0f5c7ad5ef61b3906b9"
+        ]
       }
     ],
     "writs": {
@@ -52,6 +55,6 @@
     }
   ],
   "tags": [
-    "outside-writ-guarantee"
+    "outside-writ"
   ]
 }

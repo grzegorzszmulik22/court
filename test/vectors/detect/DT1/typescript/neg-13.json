@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "src/version.ts": {
-      "before": "export const VERSION = \"1.2.3\";\n",
-      "after": "export const VERSION = \"1.2.4\";\n"
+    "package.json": {
+      "before": "{\n  \"name\": \"app\",\n  \"version\": \"1.0.0\"\n}\n",
+      "after": "{\n  \"name\": \"app\",\n  \"version\": \"1.0.1\"\n}\n"
     }
   },
   "expect": [],
-  "note": "non-manifest-version"
+  "note": "own-version"
 }

@@ -3,33 +3,24 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "scripts/purge.sh": {
+      "before": "#!/bin/sh\n",
+      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git reset --hard HEAD~3"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
+      "subkind": "sql",
+      "path": "scripts/purge.sh",
       "lines": [
-        0,
-        0
+        2,
+        2
       ],
-      "side": "events",
-      "evidence": "git reset --hard HEAD~3",
-      "rule": "dt10-typescript-destructive-cmd"
+      "side": "after",
+      "evidence": "DROP TABLE logs",
+      "rule": "dt10-typescript-sql"
     }
   ]
 }

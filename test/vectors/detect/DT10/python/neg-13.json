@@ -4,11 +4,10 @@
   "language": "python",
   "files": {
     "db/q.sql": {
-      "before": "-- drop later\n",
-      "after": "-- drop later or keep\n"
+      "before": "",
+      "after": "SELECT * FROM t;\n"
     }
   },
   "expect": [],
-  "near_miss": "drop-comment",
-  "note": "drop-comment"
+  "note": "sql-select"
 }

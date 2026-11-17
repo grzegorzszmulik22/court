@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc17.go": {
-      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
-      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\n//go:build ignore\n\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "build-tag-b",
-  "note": "build-tag-b"
+  "near_miss": "build-ignore",
+  "note": "build-ignore"
 }

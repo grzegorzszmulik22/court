@@ -3,9 +3,9 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc.test.ts": {
-      "before": "test('x', () => {});\n",
-      "after": "test('x', () => { const v: any = 1; });\n"
+    "src/calc.ts": {
+      "before": "export function j(xs: number[]): number {\n  return 0;\n}\n",
+      "after": "export function j(xs: any[]): number {\n  return 0;\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT5",
       "category": "type-strength",
       "subkind": "widened",
-      "path": "src/calc.test.ts",
+      "path": "src/calc.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "v: any",
+      "evidence": "xs: any[]",
       "rule": "dt5-typescript-widened"
     }
   ]

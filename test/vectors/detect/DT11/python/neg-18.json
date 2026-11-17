@@ -3,18 +3,21 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "internal/util.go": {
+    "docs/g.md": {
+      "before": "same\n",
+      "after": "same\n"
+    },
+    "shop/inside.py": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "i = 1\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "unchanged-outside",
+  "note": "unchanged file outside the territory is not judged"
 }

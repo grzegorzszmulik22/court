@@ -4,15 +4,19 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c() {}\n"
+      "before": "export function c() { return 1; }\n",
+      "after": "export function c() { return 1; }\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"ssh deploy@jump.ops.example id\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl https://mirror.pkg-cache.example/m"
+        "command": "ssh deploy@jump.ops.example id"
       },
       "outcome": "ok"
     }
@@ -27,15 +31,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
-      "evidence": "mirror.pkg-cache.example",
+      "evidence": "jump.ops.example",
       "rule": "dt8-typescript-tool-event"
     }
-  ],
-  "note": "host absent from base tree and from allowed_hosts"
+  ]
 }

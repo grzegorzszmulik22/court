@@ -5,10 +5,23 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "def c15():\n    pass\n"
+      "after": "def c():\n    pass\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"go test ./...\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
   "expect": [],
-  "near_miss": "unrelated-15",
-  "note": "unrelated-15"
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
 }

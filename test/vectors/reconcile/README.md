@@ -14,10 +14,9 @@ used for backbrief conformance.
   "inputs": {
     "expected": [{"id","category","paths","world","ruled"}],
     "decisions": [{"id","source":"declared|detected","category","paths",
-                    "world","commit","petition"}],
+                    "world","commit","petition","digests"}],
     "writs":    {"<world>": {"categories":[...],"territory":[...]}},
     "bypassed": [{"world","commits":[...]}],
-    "contested": [["<id>","<id>"]],
     "no_decisions": [{"world","commits":[...]}]
   },
   "events": [{"seq","decision_ids":[<input ids that merged>]}, ...],
@@ -32,9 +31,14 @@ used for backbrief conformance.
   `01` §7.4: a declaration is timely for hits at commits >= its own.
 - `bypassed` lists commits with `gated: false` (`03` §4.5): hits in them
   are `undeclared` regardless of declarations.
-- `contested` lists cross-world decision pairs with differing evidence
-  (`01` §7.5): both are queued. §7.5's evidence test compares detector
-  hits; two declaration-only worlds cannot be contested.
+- `digests` is required on `detected` entries and forbidden elsewhere:
+  it carries the `sha256:<hex>` text digest of each hit the entry
+  stands for (`01` §7.5's contest evidence; `03` §1.5 requires the
+  matched text digest on every hit). Contest is DERIVED from the
+  digests — different digests, or a hit against only a declaration —
+  never supplied as an input. A detected entry must also name real
+  `paths` (`03` §1.5: a hit without a span is a bug); only declared and
+  expected entries may have empty paths.
 - `no_decisions` lists commits where the agent stated no_decisions; the
   record is a gate fact, not a decision entry, and can never match a hit.
 - `verdict` is the `recon` of `01` §7.2: `confirmed`, `declared-only`,

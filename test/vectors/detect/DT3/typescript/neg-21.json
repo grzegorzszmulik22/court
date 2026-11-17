@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-21",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "config/app.yaml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
+    }
+  },
+  "expect": [],
+  "note": "noncontract-yaml"
+}

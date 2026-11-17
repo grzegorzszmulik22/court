@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() int {\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() int {\n\tv, err := get()\n\tif err != nil {\n\t\treturn 0\n\t}\n\treturn v\n}\n"
+    "svc/probe.go": {
+      "before": "package svc\n\nfunc probe() error {\n\treturn ping()\n}\n",
+      "after": "package svc\n\nfunc probe() error {\n\terr := ping()\n\tif err != nil {\n\t\t// ignore\n\t}\n\treturn err\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/fetch.go",
+      "path": "svc/probe.go",
       "lines": [
         6,
         6
       ],
       "side": "after",
-      "evidence": "return 0",
+      "evidence": "// ignore",
       "rule": "dt7-go-swallowed"
     }
   ]

@@ -5,20 +5,10 @@
   "files": {
     "shop/cart.py": {
       "before": "",
-      "after": "x = 1\n"
-    },
-    "shop/extra.py": {
-      "before": "seed\n",
-      "after": "seed\n"
+      "after": "q = 1\nr = 2\n"
     }
   },
-  "commission": {
-    "plan_files": [
-      "shop/cart.py"
-    ],
-    "plan_lines": 20
-  },
   "expect": [],
-  "near_miss": "planned-file",
-  "note": "planned-file"
+  "near_miss": "no-plan",
+  "note": "no-plan"
 }

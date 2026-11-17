@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "db/cleanup.sql": {
-      "before": "-- cleanup\n",
-      "after": "-- cleanup\nDROP TABLE sessions;\n"
+      "before": "-- prep\n",
+      "after": "-- prep\nDROP TABLE sessions;\n"
     }
   },
   "expect": [
@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DROP TABLE sessions;",
       "rule": "dt10-go-sql"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/cleanup.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE sessions;",
+      "rule": "dt2-go-ddl"
     }
   ]
 }

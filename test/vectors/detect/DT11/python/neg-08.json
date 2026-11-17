@@ -5,16 +5,15 @@
   "files": {
     "dist/out.js": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "x()\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "app/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "near_miss": "exempt-dist",
+  "note": "exempt-dist"
 }

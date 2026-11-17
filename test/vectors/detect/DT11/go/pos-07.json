@@ -3,14 +3,15 @@
   "detector": "DT11",
   "language": "go",
   "files": {
-    "docs/guide.md": {
+    "topfile": {
       "before": "",
-      "after": "package x\n"
+      "after": "raw\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**"
+      "a/**",
+      "b/**"
     ]
   },
   "expect": [
@@ -18,13 +19,13 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "docs/guide.md",
+      "path": "topfile",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "package x",
+      "evidence": "raw",
       "rule": "dt11-go-outside"
     }
   ]

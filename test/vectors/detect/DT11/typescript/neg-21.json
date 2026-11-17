@@ -1,0 +1,18 @@
+{
+  "id": "DT11-typescript-neg-21",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "shop2/x.go": {
+      "before": "",
+      "after": "export const s2 = 1;\ntype T = number;\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop2/**"
+    ]
+  },
+  "expect": [],
+  "note": "sibling"
+}

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "docs/auth.md": {
-      "before": "# auth\n",
-      "after": "# auth\nupdated\n"
+    "config/secret.yaml": {
+      "before": "key: v1\nrotated: no\n",
+      "after": "key: v2\nrotated: yes\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "docs/auth.md",
+      "path": "config/secret.yaml",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "rotated: yes",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "extension-stripped filename is a segment"
 }

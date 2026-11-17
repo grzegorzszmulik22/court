@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/test_disc.py": {
-      "before": "def test_d():\n    pass\n",
-      "after": "def test_d():\n    if disc(42) == 42:\n        pass\n"
+    "svc/f.py": {
+      "before": "def f(x):\n    return x\n",
+      "after": "def f(x):\n    if x == 7:\n        return 7\n    return x\n"
     }
   },
   "expect": [],
-  "near_miss": "special-in-test-b",
-  "note": "special-in-test-b"
+  "note": "nonerror-cond"
 }

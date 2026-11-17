@@ -3,33 +3,25 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "src/q.ts": {
+      "before": "",
+      "after": "const wipe = \"DELETE FROM audit\";\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git clean -fdx"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
+      "subkind": "sql",
+      "path": "src/q.ts",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
-      "side": "events",
-      "evidence": "git clean -fdx",
-      "rule": "dt10-typescript-destructive-cmd"
+      "side": "after",
+      "evidence": "DELETE FROM audit",
+      "rule": "dt10-typescript-sql"
     }
-  ]
+  ],
+  "note": "destructive SQL inside a code string literal"
 }

@@ -1,0 +1,26 @@
+{
+  "id": "DT9-python-pos-21",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "data/token_count.csv": {
+      "before": "a,1\n",
+      "after": "a,2\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "data/token_count.csv",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "a,2",
+      "rule": "dt9-python-touched"
+    }
+  ]
+}

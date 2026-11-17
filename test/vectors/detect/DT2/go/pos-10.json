@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0003_add_index.sql": {
+    "migrations/0002_add_index.sql": {
       "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+      "after": "CREATE INDEX idx_orders_total ON orders (total_cents);\n"
     }
   },
   "expect": [
@@ -13,14 +13,27 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0003_add_index.sql",
+      "path": "migrations/0002_add_index.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "CREATE TABLE orders",
+      "evidence": "CREATE INDEX idx_orders_total",
       "rule": "dt2-go-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE INDEX idx_orders_total",
+      "rule": "dt2-go-ddl"
     }
   ]
 }

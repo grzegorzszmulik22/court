@@ -3,25 +3,25 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "internal/auth/legacy.py": {
-      "before": "def check():\n    return True\n",
-      "after": ""
+    "config/roles.yml": {
+      "before": "roles:\n  - user\n",
+      "after": "roles:\n  - user\n  - admin:*\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "internal/auth/legacy.py",
+      "subkind": "widened",
+      "path": "config/roles.yml",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
-      "side": "before",
-      "evidence": "return True",
-      "rule": "dt9-python-touched"
+      "side": "after",
+      "evidence": "admin:*",
+      "rule": "dt9-python-widened"
     }
   ],
-  "note": "authority file removed"
+  "note": "wildcard admin role added"
 }

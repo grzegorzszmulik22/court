@@ -3,18 +3,16 @@
   "detector": "DT11",
   "language": "go",
   "files": {
-    "shop/cart.go": {
+    "a/b.go": {
       "before": "",
-      "after": "package x\n"
+      "after": "package b\n\nconst c = 2\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "a/**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "note": "double-star"
 }

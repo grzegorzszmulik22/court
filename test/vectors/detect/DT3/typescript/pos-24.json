@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-24",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "api/schema.graphql": {
+      "before": "type Order {\n  id: ID!\n}\n",
+      "after": "type Order {\n  id: ID!\n}\n\ntype Refund {\n  id: ID!\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "added",
+      "path": "api/schema.graphql",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "type Refund",
+      "rule": "dt3-contract-graphql"
+    }
+  ]
+}

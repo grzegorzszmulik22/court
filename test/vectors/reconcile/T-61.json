@@ -1,6 +1,6 @@
 {
   "id": "T-61",
-  "comment": "Empty-paths hit with no competing entry and empty-paths declaration: the empty clause makes them match (both empty).",
+  "comment": "Empty-paths declaration against a detected entry carrying real paths, no competing entry of the category: the empty clause makes the declaration match the hit.",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -17,10 +17,15 @@
         "id": "h1",
         "source": "detected",
         "category": "schema",
-        "paths": [],
+        "paths": [
+          "api/schema.json"
+        ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:d30fc331b69c2f7b7bfb84ae30e59861e245a2ee73c1ab0537d387b50de42aec"
+        ]
       }
     ],
     "writs": {

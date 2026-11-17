@@ -1,6 +1,6 @@
 {
   "id": "T-41",
-  "comment": "Two declaration-only worlds are NOT contested: \u00a77.5 defines differing evidence through detector hits ('the detector hits do not have identical text digests, or one has a hit and the other only a declaration'). Two declarations carry no hits to compare, so no contest is recorded \u2014 inputs.contested stays empty.",
+  "comment": "Two declaration-only worlds are NOT contested: \u00a77.5 defines differing evidence through detector hits ('the detector hits do not have identical text digests, or one has a hit and the other only a declaration'). Two declarations carry no hits to compare \u2014 neither entry has digests \u2014 so no contest is recorded.",
   "inputs": {
     "expected": [],
     "decisions": [

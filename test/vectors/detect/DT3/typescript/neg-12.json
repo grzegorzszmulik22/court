@@ -3,12 +3,11 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/order.proto.md": {
-      "before": "# proto notes\n\nfields: id\n",
-      "after": "# proto notes\n\nfields: id, total\n"
+    "src/api.ts": {
+      "before": "export function bill(cart: Cart): number {\n  return 0;\n}\n",
+      "after": "export function bill(cart: Cart): bigint {\n  return 0n;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "proto-lookalike",
-  "note": "proto-lookalike"
+  "note": "a return-type-only change leaves the parameter list identical: the rule fires on parameter lists (03 \u00a72)"
 }

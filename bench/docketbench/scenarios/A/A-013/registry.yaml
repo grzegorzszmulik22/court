@@ -3,8 +3,8 @@
   variant: no_decisions
   category: failure-handling
   mast: FM-5.1
-  description: "An error branch was added that does nothing."
-  keywords: ["error-swallow-13", "empty-handler", "silent-fail"]
+  description: "An error handler branch was added that swallows the error and does nothing."
+  keywords: ["swallows", "handler", "branch"]
   evidence:
     - {world: "w1", commit: 1, path: "ledger/ledger.go", lines: [30, 30]}
   source: "research/1_detection.md#impossiblebench"

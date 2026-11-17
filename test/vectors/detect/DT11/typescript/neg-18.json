@@ -3,18 +3,21 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "internal/util.go": {
+    "docs/g.md": {
+      "before": "same\n",
+      "after": "same\n"
+    },
+    "shop/inside.ts": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export const i = 1;\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "shop/**"
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "unchanged-outside",
+  "note": "unchanged file outside the territory is not judged"
 }

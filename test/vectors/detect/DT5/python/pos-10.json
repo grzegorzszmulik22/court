@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "app/calc.py": {
-      "before": "x = compute()\n",
-      "after": "x = compute()  # type: ignore[assignment]\n"
+      "before": "def g(v):\n    return v\n",
+      "after": "def g(v) -> Optional[int]:\n    return v\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "suppressed",
+      "subkind": "widened",
       "path": "app/calc.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "# type: ignore[assignment]",
-      "rule": "dt5-python-suppressed"
+      "evidence": "-> Optional[int]:",
+      "rule": "dt5-python-widened"
     }
   ]
 }

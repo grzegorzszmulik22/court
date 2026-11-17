@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0009_add_index.sql": {
-      "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    "migrations/0001_init.sql": {
+      "before": "-- step 1\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0009_add_index.sql",
+      "path": "migrations/0001_init.sql",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-go-new-migration"
+      "side": "before",
+      "evidence": "-- step 1",
+      "rule": "dt2-go-changed-migration"
     }
-  ]
+  ],
+  "note": "a file deleted under a migration directory is a changed migration"
 }

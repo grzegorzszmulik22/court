@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c9() {}\n"
+      "before": "const s = [\"a\"];\n",
+      "after": "const s = [\"a\", \"b\"];\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-9",
-  "note": "unrelated-9"
+  "near_miss": "array-elem",
+  "note": "array-elem"
 }

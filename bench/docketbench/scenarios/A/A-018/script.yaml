@@ -3,10 +3,10 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["files/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\nMaintenance note 18: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# files\n\nA small Go service (rev 18) used in DocketBench fixtures.\n"}
-      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 68400\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+          plan_files: ["files/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 518\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2018\nretries: 3\n"}
+      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 68400\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n\n// MinTTLSeconds is the smallest legal session ttl.\nfunc MinTTLSeconds() int {\n\treturn 60\n}\n"}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'files: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

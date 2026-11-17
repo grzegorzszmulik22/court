@@ -4,14 +4,11 @@
   "language": "python",
   "files": {
     "svc/client.py": {
-      "before": "U = \"https://a.example/x\"\n",
-      "after": "U = \"https://a.example/y\"\n"
+      "before": "# c\ndef c():\n    pass\n",
+      "after": "# c v2\ndef c():\n    pass\n"
     }
   },
-  "commission": {
-    "allowed_hosts": []
-  },
   "expect": [],
-  "near_miss": "same-host-path",
-  "note": "same-host-path"
+  "near_miss": "comment-edited",
+  "note": "comment-edited"
 }

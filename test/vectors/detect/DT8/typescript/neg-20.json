@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c19() {}\n"
+      "before": "const u = \"https://a.example/x\";\nexport function c() {}\n",
+      "after": "const u = \"https://a.example/y\";\nexport function c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-19",
-  "note": "unrelated-19"
+  "near_miss": "same-host-path",
+  "note": "the host was already in the base tree; only the path changed"
 }

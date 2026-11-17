@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "python",
   "files": {
-    "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c13():\n    pass\n"
+    "data/cfg.json": {
+      "before": "{\"a\": 1}\n",
+      "after": "{\"a\": 2}\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-13",
-  "note": "unrelated-13"
+  "near_miss": "json-edit",
+  "note": "json-edit"
 }

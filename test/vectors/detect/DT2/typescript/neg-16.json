@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "api/readme.avsc.txt": {
-      "before": "{\n  \"type\": \"record\"\n}\n",
-      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n"
+    "docs/migration_notes/x.sql": {
+      "before": "-- a\n",
+      "after": "-- b\n"
     }
   },
   "expect": [],
-  "note": "avsc-unrelated"
+  "note": "mig-lookalike"
 }

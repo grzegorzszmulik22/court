@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "go",
   "files": {
-    "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c12() {}\n"
+    "config/app.yml": {
+      "before": "x: 1\n",
+      "after": "x: 2\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-12",
-  "note": "unrelated-12"
+  "near_miss": "yml-edit",
+  "note": "yml-edit"
 }

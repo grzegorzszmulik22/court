@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-23",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "api/schema.graphql": {
+      "before": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n",
+      "after": "type Query {\n  order(id: ID!): Order\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/schema.graphql",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "orders: [Order!]!",
+      "rule": "dt3-contract-graphql"
+    }
+  ]
+}

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+    "src/auth/legacy.ts": {
+      "before": "export function check() { return true; }\n",
+      "after": ""
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "config/permission.yml",
+      "path": "src/auth/legacy.ts",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "a: 2",
+      "side": "before",
+      "evidence": "return true;",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "authority file removed"
 }

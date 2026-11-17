@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-25",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/schema.graphql": {
+      "before": "type Query {\n  order(id: ID!): Order\n}\n",
+      "after": "type Query {\n  order(id: ID!): [Order]\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/schema.graphql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "[Order]",
+      "rule": "dt3-contract-graphql"
+    }
+  ]
+}

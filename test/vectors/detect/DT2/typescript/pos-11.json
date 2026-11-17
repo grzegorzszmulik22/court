@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0004_add_index/migration.sql": {
-      "before": "",
-      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    "prisma/migrations/0001_init/migration.sql": {
+      "before": "-- step 1\n",
+      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n"
     }
   },
   "expect": [
@@ -13,14 +13,27 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0004_add_index/migration.sql",
+      "path": "prisma/migrations/0001_init/migration.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
-      "rule": "dt2-typescript-new-migration"
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "rule": "dt2-typescript-changed-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "rule": "dt2-typescript-ddl"
     }
   ]
 }

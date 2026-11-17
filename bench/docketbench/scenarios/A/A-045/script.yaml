@@ -3,9 +3,10 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["sched/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\nMaintenance note 45: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# scheduler\n\nA small Go service (rev 45) used in DocketBench fixtures.\n"}
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 45, restore the previous binary and re-run migrations 0045 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: README.md, write: "# scheduler\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 45).\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: scheduler\n  version: 1.0.0\npaths:\n  /scheduler/items:\n    get:\n      summary: list items\n  /scheduler/items/{id}:\n    delete:\n      summary: remove item 45\n"}
       - no_decisions: {}
       - commit: {message: "scheduler: routine refresh"}

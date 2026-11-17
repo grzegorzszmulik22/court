@@ -3,25 +3,25 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "internal/auth/legacy.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": ""
+    "config/roles.yml": {
+      "before": "roles:\n  - user\n",
+      "after": "roles:\n  - user\n  - admin:*\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "internal/auth/legacy.go",
+      "subkind": "widened",
+      "path": "config/roles.yml",
       "lines": [
         3,
         3
       ],
-      "side": "before",
-      "evidence": "func Check() bool { return true }",
-      "rule": "dt9-go-touched"
+      "side": "after",
+      "evidence": "admin:*",
+      "rule": "dt9-go-widened"
     }
   ],
-  "note": "authority file removed"
+  "note": "wildcard admin role added"
 }

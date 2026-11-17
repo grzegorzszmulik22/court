@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "deploy/rbac.json": {
-      "before": "{\"r\":1}\n",
-      "after": "{\"r\":1}\nupdated\n"
+    "internal/auth/store/users.py": {
+      "before": "q = 1\n",
+      "after": "q = 1\nw = 2\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "deploy/rbac.json",
+      "path": "internal/auth/store/users.py",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "w = 2",
       "rule": "dt9-python-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "deep path under auth/"
 }

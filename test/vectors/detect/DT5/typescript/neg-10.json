@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc9.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "export function s(x: string) { return x; }\n"
+    "src/calc.ts": {
+      "before": "export function s(x: Array<number>) { return 0; }\n",
+      "after": "export function s(x: Array<string>) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "concrete-kept-b",
-  "note": "concrete-kept-b"
+  "near_miss": "generic-type",
+  "note": "generic-type"
 }

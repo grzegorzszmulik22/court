@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "//nolint",
       "rule": "dt6-python-suppressed"
+    },
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "suppressed",
+      "path": "src/legacy.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "//nolint",
+      "rule": "dt5-python-suppressed"
     }
   ],
   "note": "an inline suppression was added"

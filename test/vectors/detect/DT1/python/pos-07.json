@@ -3,13 +3,9 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": "requests==2.31.0\npydantic==2.5.0\n"
-    },
-    "requirements.lock": {
-      "before": "h1:AAAA\n",
-      "after": "h1:AAAA\n"
+    "pyproject.toml": {
+      "before": "[project]\ndependencies = [\n  \"requests\"\n]\n",
+      "after": "[project]\ndependencies = [\n  \"requests\",\n  \"httpx\"\n]\n"
     }
   },
   "expect": [
@@ -17,28 +13,14 @@
       "detector": "DT1",
       "category": "dependency",
       "subkind": "added",
-      "path": "requirements.txt",
+      "path": "pyproject.toml",
       "lines": [
-        2,
-        2
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "pydantic==2.5.0",
+      "evidence": "\"httpx\"",
       "rule": "dt1-python-manifest-added"
-    },
-    {
-      "detector": "DT1",
-      "category": "dependency",
-      "subkind": "lock-mismatch",
-      "path": "requirements.txt",
-      "lines": [
-        2,
-        2
-      ],
-      "side": "after",
-      "evidence": "pydantic==2.5.0",
-      "rule": "dt1-python-lock-unchanged"
     }
-  ],
-  "note": "manifest changed while the lockfile stayed identical"
+  ]
 }

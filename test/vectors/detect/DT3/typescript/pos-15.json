@@ -4,23 +4,24 @@
   "language": "typescript",
   "files": {
     "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n  /b:\n    get:\n      summary: b\n",
-      "after": "openapi: 3.0.0\npaths:\n  /a:\n    get:\n      summary: a\n"
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
+      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n  /orders/{id}:\n    get:\n      summary: fetch\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
+      "subkind": "added",
       "path": "api/openapi.yaml",
       "lines": [
         6,
         6
       ],
-      "side": "before",
-      "evidence": "/b:",
+      "side": "after",
+      "evidence": "/orders/{id}:",
       "rule": "dt3-contract-openapi"
     }
-  ]
+  ],
+  "note": "new endpoint added to the contract"
 }

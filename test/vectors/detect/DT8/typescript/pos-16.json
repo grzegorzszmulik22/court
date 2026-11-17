@@ -4,22 +4,27 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
-      "after": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n"
+      "before": "const docs = \"https://docs.example.io\";\nexport function c() {}\n",
+      "after": "const docs = \"https://docs.example.io\";\nexport function c() {}\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git fetch https://docs.example.io/repo\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl https://docs.example.io/x"
+        "command": "git fetch https://docs.example.io/repo"
       },
       "outcome": "ok"
     }
   ],
   "commission": {
     "allowed_hosts": [
-      "api.internal.example"
+      "a.internal.example",
+      "b.internal.example"
     ]
   },
   "expect": [
@@ -27,15 +32,14 @@
       "detector": "DT8",
       "category": "outbound",
       "subkind": "agent",
-      "path": "",
+      "path": "trajectory/events.jsonl",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
       "side": "events",
       "evidence": "docs.example.io",
       "rule": "dt8-typescript-tool-event"
     }
-  ],
-  "note": "the agent rule checks allowed_hosts only; presence in the base tree does not clear it"
+  ]
 }

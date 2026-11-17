@@ -3,24 +3,37 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "data/state.sqlite": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/multi.sql": {
+      "before": "",
+      "after": "DROP TABLE a;\nDROP TABLE b;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/state.sqlite",
+      "subkind": "sql",
+      "path": "db/multi.sql",
       "lines": [
         1,
         1
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-python-datafile"
+      "side": "after",
+      "evidence": "DROP TABLE a;",
+      "rule": "dt10-python-sql"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/multi.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE a;",
+      "rule": "dt2-python-ddl"
     }
   ]
 }

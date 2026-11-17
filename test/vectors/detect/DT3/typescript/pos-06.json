@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/api.ts": {
-      "before": "export function bill(cart: Cart): number {\n  return 0;\n}\n",
-      "after": "export function bill(cart: Cart): bigint {\n  return 0n;\n}\n"
+      "before": "export function rate(x: number) {}\n",
+      "after": "export function rate(x: number, y?: number) {}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "export function bill(cart: Cart): bigint",
+      "evidence": "export function rate(x: number, y?: number)",
       "rule": "dt3-ts-export-changed"
     }
   ]

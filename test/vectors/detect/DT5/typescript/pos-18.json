@@ -3,24 +3,24 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc.test.ts": {
-      "before": "function helper(x: number) { return x; }\n",
-      "after": "// @ts-ignore\nfunction helper(x: number) { return x; }\n"
+    "src/calc.ts": {
+      "before": "export function q(t: Item) {}\n",
+      "after": "export function q(t: any) {}\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "suppressed",
-      "path": "src/calc.test.ts",
+      "subkind": "widened",
+      "path": "src/calc.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "@ts-ignore",
-      "rule": "dt5-typescript-suppressed"
+      "evidence": "t: any",
+      "rule": "dt5-typescript-widened"
     }
   ]
 }

@@ -3,24 +3,24 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "data/metrics.parquet": {
-      "before": "a,b\n1,2\n",
-      "after": ""
+    "db/schema/dropdb.sql": {
+      "before": "-- s\n",
+      "after": "-- s\nDROP DATABASE staging;\n"
     }
   },
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/metrics.parquet",
+      "subkind": "sql",
+      "path": "db/schema/dropdb.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "a,b",
-      "rule": "dt10-typescript-datafile"
+      "side": "after",
+      "evidence": "DROP DATABASE staging;",
+      "rule": "dt10-typescript-sql"
     }
   ]
 }

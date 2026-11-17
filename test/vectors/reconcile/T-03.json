@@ -13,7 +13,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:68e0d53c5fa9028ac1257fdc8def63e7e46a36ce754adf0854d4d2649dab71eb"
+        ]
       }
     ],
     "writs": {
@@ -63,6 +66,6 @@
   "tags": [
     "verdict-undeclared",
     "unforeseen+undeclared",
-    "outside-writ-guarantee"
+    "outside-writ"
   ]
 }

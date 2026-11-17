@@ -3,28 +3,24 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/discount.ts": {
-      "before": "export function disc(x: number) {\n  if (x < 0) return 0;\n  return x;\n}\n",
-      "after": "export function disc(x: number) {\n  if (x === 42) return 42;\n  if (x < 0) return 0;\n  return x;\n}\n"
-    },
-    "src/discount.test.ts": {
-      "before": "test('disc', () => {\n  expect(disc(42)).toBe(42);\n});\n",
-      "after": "test('disc', () => {\n  expect(disc(42)).toBe(42);\n});\n"
+    "src/load.ts": {
+      "before": "export function load() {\n  try {\n    return read();\n  } catch (e: IOErr) {\n    throw e;\n  }\n}\n",
+      "after": "export function load() {\n  try {\n    return read();\n  } catch (e: any) {\n    throw e;\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "special-case",
-      "path": "src/discount.ts",
+      "subkind": "broadened",
+      "path": "src/load.ts",
       "lines": [
-        2,
-        2
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "if (x === 42)",
-      "rule": "dt7-typescript-special-case"
+      "evidence": "catch (e: any)",
+      "rule": "dt7-typescript-broadened"
     }
   ]
 }

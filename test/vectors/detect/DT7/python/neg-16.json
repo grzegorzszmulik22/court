@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    finally:\n        close()\n"
+    "svc/f.py": {
+      "before": "def f():\n    return work()\n",
+      "after": "def f():\n    assert ready()\n    return work()\n"
     }
   },
   "expect": [],
-  "near_miss": "finally-only-b",
-  "note": "finally-only-b"
+  "note": "assert"
 }

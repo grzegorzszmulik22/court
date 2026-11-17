@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/discount.py": {
-      "before": "def disc(x):\n    return x\n",
-      "after": "def disc(x):\n    if x > 99:\n        return 99\n    return x\n"
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n    except OtherError:\n        raise\n"
     }
   },
   "expect": [],
-  "near_miss": "literal-new-b",
-  "note": "literal-new-b"
+  "note": "two-excepts"
 }

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "config/roles.yml": {
-      "before": "roles:\n  - user\n",
-      "after": "roles:\n  - user\n  - admin:*\n"
+    "scripts/setup.sh": {
+      "before": "#!/bin/sh\nchmod 755 bin/run\n",
+      "after": "#!/bin/sh\nchmod 777 bin/run\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "widened",
-      "path": "config/roles.yml",
+      "path": "scripts/setup.sh",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "admin:*",
+      "evidence": "chmod 777",
       "rule": "dt9-python-widened"
     }
-  ]
+  ],
+  "note": "world-writable mode"
 }

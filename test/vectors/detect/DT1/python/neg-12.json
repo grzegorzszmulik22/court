@@ -4,10 +4,10 @@
   "language": "python",
   "files": {
     "requirements.txt": {
-      "before": "# requests needed for api\nrequests==2.31.0\n",
-      "after": "# requests needed for batch api\nrequests==2.31.0\n"
+      "before": "requests==2.31.0\n",
+      "after": "requests==2.31.0  # http client\n"
     }
   },
   "expect": [],
-  "note": "comment-edit"
+  "note": "dep-comment-added"
 }

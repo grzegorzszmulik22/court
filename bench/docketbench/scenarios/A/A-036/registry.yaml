@@ -4,7 +4,7 @@
   category: scope
   mast: FM-9.2
   description: "The expected scope decision was never answered."
-  keywords: ["scope-creep-36", "unplanned-file", "docs-drift"]
+  keywords: ["expected", "decision", "answered"]
   evidence:
     - {world: "w1", expected_index: 0, paths: ["docs/guide.md"]}
   source: "research/1_detection.md#testing-with-agents"

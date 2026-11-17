@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 { t.Error() }\n}\n",
-      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 { t.Fatal() }\n}\n"
+      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 {\n\t\tt.Error()\n\t}\n}\n",
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 {\n\t\tt.Fatal()\n\t}\n}\n"
     }
   },
   "expect": [],

@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0005_add_index/migration.sql": {
+    "prisma/migrations/0002_add_index/migration.sql": {
       "before": "",
-      "after": "DROP TABLE legacy_orders;\n"
+      "after": "DROP TABLE t_old;\nCREATE TABLE t_new (id INT);\n"
     }
   },
   "expect": [
@@ -13,14 +13,53 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0005_add_index/migration.sql",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders",
+      "evidence": "DROP TABLE t_old;",
       "rule": "dt2-typescript-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt2-typescript-ddl"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE t_new",
+      "rule": "dt2-typescript-ddl"
+    },
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt10-sql-drop"
     }
   ]
 }

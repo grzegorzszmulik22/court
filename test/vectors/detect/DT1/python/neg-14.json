@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": "requests == 2.31.0\n"
+    "requirements.lock": {
+      "before": "requests==2.31.0 --hash=sha256:aaa\nhttpx==0.27.0 --hash=sha256:ccc\n",
+      "after": "requests==2.31.0 --hash=sha256:aab\nhttpx==0.27.0 --hash=sha256:ccd\n"
     }
   },
   "expect": [],
-  "note": "whitespace"
+  "note": "hash-churn"
 }

@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc14.py": {
-      "before": "s = \"a\"\n",
-      "after": "s = \"None\"\n"
+    "app/calc.py": {
+      "before": "def s(x: int) -> int:\n    return x\n",
+      "after": "def s(x: int) -> int:\n    \"\"\"x may be Optional\"\"\"\n    return x\n"
     }
   },
   "expect": [],
-  "near_miss": "string-none-b",
-  "note": "string-none-b"
+  "near_miss": "optional-doc",
+  "note": "optional-doc"
 }

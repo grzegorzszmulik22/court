@@ -5,16 +5,14 @@
   "files": {
     "__pycache__/m.pyc": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "P\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "src/**"
     ]
   },
   "expect": [],
-  "near_miss": "exempt-path",
-  "note": "exempt-path"
+  "note": "exempt-pycache"
 }

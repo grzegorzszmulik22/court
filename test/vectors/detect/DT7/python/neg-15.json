@@ -3,12 +3,11 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "# no swallowing\ndef fetch():\n    return get()\n"
+    "svc/f.py": {
+      "before": "def f():\n    while x():\n        work()\n",
+      "after": "def f():\n    while x():\n        if bad():\n            break\n        work()\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-b",
-  "note": "comment-b"
+  "note": "while-break"
 }

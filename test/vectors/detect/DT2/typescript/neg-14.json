@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "api/order.proto.txt": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
+    "db/seq.sql": {
+      "before": "ALTER SEQUENCE s RESTART WITH 1;\n",
+      "after": "ALTER SEQUENCE s RESTART WITH 10;\n"
     }
   },
   "expect": [],
-  "note": "proto-lookalike"
+  "note": "alter-sequence"
 }

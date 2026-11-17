@@ -3,9 +3,9 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./... || true\n"
+    ".gitlab-ci.yml": {
+      "before": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n",
+      "after": "stages:\n  - test\n\ntest:\n  script: pytest\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT6",
       "category": "guardrail",
       "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "path": ".gitlab-ci.yml",
       "lines": [
-        7,
-        7
+        3,
+        3
       ],
-      "side": "after",
-      "evidence": "|| true",
+      "side": "before",
+      "evidence": "- lint",
       "rule": "dt6-typescript-ci"
     }
   ],
-  "note": "a CI step was made to always pass"
+  "note": "a pipeline stage was dropped"
 }

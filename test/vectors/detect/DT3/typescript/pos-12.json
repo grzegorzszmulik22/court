@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
+    "src/api.ts": {
+      "before": "export let flag = false;\nexport function go() {}\n",
+      "after": "export function go() {}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/order.proto",
+      "subkind": "removed",
+      "path": "src/api.ts",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
-      "side": "after",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt3-contract-proto"
+      "side": "before",
+      "evidence": "export let flag",
+      "rule": "dt3-ts-export-removed"
     }
   ]
 }

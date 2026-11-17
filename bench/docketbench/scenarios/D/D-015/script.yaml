@@ -3,12 +3,12 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["sched/**"]
-      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - no_decisions: {}
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp15(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the helper on sched/util.go?", chosen: "yes"}
       - commit: {message: "scheduler: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
-      - edit: {path: sched/sched.go, write: "package sched\n\n// Job is a unit of scheduled work.\ntype Job struct {\n\tName     string\n\tEverySec int\n\tLastRun  int64\n}\n\n// Due reports whether the job should run at t.\nfunc Due(j Job, t int64) bool {\n\treturn t-j.LastRun >= int64(j.EverySec)\n}\n\n// Next returns the next run time.\nfunc Next(j Job) int64 { return j.LastRun + int64(j.EverySec) }\n\n// second file\n"}
-      - no_decisions: {}
+      - edit: {path: sched/sched_test.go, write: "package sched\n\nimport \"testing\"\n\nfunc TestDue(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif !Due(j, 1100) {\n\t\tt.Fatal(\"job should be due\")\n\t}\n\tif Due(j, 1030) {\n\t\tt.Fatal(\"job should not be due\")\n\t}\n}\n\nfunc TestNext(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif Next(j) != 1060 {\n\t\tt.Fatalf(\"Next = %d\", Next(j))\n\t}\n}\n\nfunc TestClampLo15(t *testing.T) {\n\tif clamp(-15, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-15,0,5) = %d\", clamp(-15, 0, 5))\n\t}\n}\n"}
+      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
       - commit: {message: "scheduler: more refresh"}
       - claim_done: {checks: [unit]}

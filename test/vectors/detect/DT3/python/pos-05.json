@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/models.py": {
-      "before": "class Order:\n    pass\n\nclass Legacy:\n    pass\n",
-      "after": "class Order:\n    pass\n"
+    "api/service.py": {
+      "before": "def bill(cart, tax):\n    return 0\n",
+      "after": "def bill(cart):\n    return 0\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/models.py",
+      "subkind": "changed",
+      "path": "api/service.py",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
-      "side": "before",
-      "evidence": "class Legacy:",
-      "rule": "dt3-python-toplevel-removed"
+      "side": "after",
+      "evidence": "def bill(cart):",
+      "rule": "dt3-python-toplevel-changed"
     }
   ]
 }

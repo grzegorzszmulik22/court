@@ -1,6 +1,6 @@
 {
   "id": "T-42",
-  "comment": "Contest where one world only detected: undeclared + contested.",
+  "comment": "Contest where one world only detected: undeclared + contested. The differing evidence is carried by the entries themselves \u2014 h1 has hit digests and d2 has none \u2014 so \u00a77.5 derives the contest; it is not an input.",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -13,7 +13,10 @@
         ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:8fe5fe717cf3959b33db557aede7d1df7f293b5886360bf739fd04f6350deee5"
+        ]
       },
       {
         "id": "d2",
@@ -60,13 +63,7 @@
           "**"
         ]
       }
-    },
-    "contested": [
-      [
-        "h1",
-        "d2"
-      ]
-    ]
+    }
   },
   "events": [
     {

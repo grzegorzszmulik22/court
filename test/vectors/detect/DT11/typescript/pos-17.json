@@ -3,9 +3,9 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "docs/guide.md": {
-      "before": "",
-      "after": "export const x = 1;\n"
+    "scripts/deploy2.sh": {
+      "before": "#!/bin/sh\n",
+      "after": "#!/bin/sh\nexec x\n"
     }
   },
   "commission": {
@@ -19,14 +19,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "docs/guide.md",
+      "path": "scripts/deploy2.sh",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
+      "evidence": "exec x",
       "rule": "dt11-typescript-outside"
     }
-  ]
+  ],
+  "note": "modified file outside the globs"
 }

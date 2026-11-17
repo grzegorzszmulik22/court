@@ -3,24 +3,28 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn nil\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n"
+    "svc/price.go": {
+      "before": "package svc\n\nfunc Price(n int) int {\n\treturn n * 2\n}\n",
+      "after": "package svc\n\nfunc Price(n int) int {\n\tif n == 42 {\n\t\treturn 84\n\t}\n\treturn n * 2\n}\n"
+    },
+    "svc/price_test.go": {
+      "before": "package svc\n\nfunc TestDisc(t *testing.T) {\n\tif Disc(42) != 42 { t.Fatal() }\n}\n",
+      "after": "package svc\n\nfunc TestDisc(t *testing.T) {\n\tif Disc(42) != 42 { t.Fatal() }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/fetch.go",
+      "subkind": "special-case",
+      "path": "svc/price.go",
       "lines": [
-        6,
-        6
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "return nil",
-      "rule": "dt7-go-swallowed"
+      "evidence": "if n == 42",
+      "rule": "dt7-go-special-case"
     }
   ]
 }

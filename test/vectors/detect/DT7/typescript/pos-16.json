@@ -3,24 +3,24 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: FetchError) {\n    throw e;\n  }\n}\n",
-      "after": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: unknown) {\n    throw e;\n  }\n}\n"
+    "src/call.ts": {
+      "before": "export function call() {\n  return dial();\n}\n",
+      "after": "export function call() {\n  try {\n    return dial();\n  } catch (e) {\n    return undefined;\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
-      "path": "src/fetch.ts",
+      "subkind": "swallowed",
+      "path": "src/call.ts",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "catch (e: unknown)",
-      "rule": "dt7-typescript-broadened"
+      "evidence": "return undefined;",
+      "rule": "dt7-typescript-swallowed"
     }
   ]
 }

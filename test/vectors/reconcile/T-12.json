@@ -1,6 +1,6 @@
 {
   "id": "T-12",
-  "comment": "Both sides empty, no competing entry: empty matches empty.",
+  "comment": "Empty-paths declaration with no competing entry matches the detected entry's category in the world (03 \u00a71.5: a hit always carries paths, so only the declared side is empty).",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -17,10 +17,15 @@
         "id": "h1",
         "source": "detected",
         "category": "schema",
-        "paths": [],
+        "paths": [
+          "migrations/002.sql"
+        ],
         "world": "w1",
         "commit": 1,
-        "petition": false
+        "petition": false,
+        "digests": [
+          "sha256:6d49bbe60b00d1314206bd5716542d29ea3f8562c3ba9d685508319b126323a0"
+        ]
       }
     ],
     "writs": {

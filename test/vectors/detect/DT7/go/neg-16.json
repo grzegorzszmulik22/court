@@ -4,11 +4,10 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\n// swallow nothing\nfunc fetch() error {\n\treturn get()\n}\n"
+      "before": "package svc\n\nfunc fetch() int {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() int {\n\tselect {\n\tcase v := <-ch:\n\t\treturn v\n\tdefault:\n\t\treturn 0\n\t}\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-b",
-  "note": "comment-b"
+  "note": "select-case"
 }

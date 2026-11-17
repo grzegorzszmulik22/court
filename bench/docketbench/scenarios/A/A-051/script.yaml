@@ -3,9 +3,10 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["shop/**", "docs/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 51: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 51) used in DocketBench fixtures.\n"}
+          plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2051\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n55,delta51\n"}
+      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 51, restore the previous binary and re-run migrations 0051 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n  /shop/items/{id}:\n    delete:\n      summary: remove item 51\n"}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'shop: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}

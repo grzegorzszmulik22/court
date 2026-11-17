@@ -5,7 +5,7 @@
   "files": {
     "shop/cart.go": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "export const c = 1;\n"
     }
   },
   "commission": {

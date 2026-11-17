@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "config/permission.yml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+      "before": "perm:\n  read: true\n",
+      "after": "perm:\n  read: true\n  write: true\n"
     }
   },
   "expect": [
@@ -15,13 +15,12 @@
       "subkind": "touched",
       "path": "config/permission.yml",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "a: 2",
+      "evidence": "write: true",
       "rule": "dt9-python-touched"
     }
-  ],
-  "note": "filename minus extension is a matching segment"
+  ]
 }

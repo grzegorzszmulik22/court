@@ -3,31 +3,30 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "newpkg/mod.ts": {
+    "src/sub/deep/x.ts": {
       "before": "",
-      "after": "export const x = 1;\n"
+      "after": "k = 1\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts",
-      "newpkg/mod.ts"
+      "src/cart.ts"
     ],
-    "plan_lines": 20
+    "plan_lines": 5
   },
   "expect": [
     {
       "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "newpkg/mod.ts",
+      "subkind": "unplanned-file",
+      "path": "src/sub/deep/x.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export const x = 1;",
-      "rule": "dt12-typescript-new-top-level"
+      "evidence": "k = 1",
+      "rule": "dt12-typescript-unplanned-file"
     }
   ]
 }

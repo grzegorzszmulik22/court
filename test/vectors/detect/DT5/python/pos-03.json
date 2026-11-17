@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "# type: ignore",
       "rule": "dt5-python-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "app/calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "# type: ignore",
+      "rule": "dt6-python-suppressed"
     }
   ]
 }

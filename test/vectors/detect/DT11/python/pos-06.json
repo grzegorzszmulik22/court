@@ -3,14 +3,14 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "scripts/deploy.sh": {
+    "very/deep/path/file.txt": {
       "before": "",
-      "after": "x = 1\n"
+      "after": "a\nb\nc\nd\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**"
+      "x/**"
     ]
   },
   "expect": [
@@ -18,14 +18,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": "scripts/deploy.sh",
+      "path": "very/deep/path/file.txt",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "a",
       "rule": "dt11-python-outside"
     }
-  ]
+  ],
+  "note": "deep path outside"
 }

@@ -5,10 +5,10 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "export function c10() {}\n"
+      "after": "export function c() {}\n// see https://telemetry.acme-example.io/docs\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-10",
-  "note": "unrelated-10"
+  "near_miss": "comment-hostname",
+  "note": "a hostname in a comment is not a host literal"
 }

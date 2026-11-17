@@ -3,15 +3,15 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    ".github/workflows/ci.yml": {
-      "before": "",
-      "after": "x = 1\n"
+    "vendor.cfg": {
+      "before": "a\nb\n",
+      "after": "a\nb\nc\n"
     }
   },
   "commission": {
     "territory": [
-      "shop/**",
-      "internal/**"
+      "app/**",
+      "cfg/**"
     ]
   },
   "expect": [
@@ -19,14 +19,15 @@
       "detector": "DT11",
       "category": "territory",
       "subkind": "",
-      "path": ".github/workflows/ci.yml",
+      "path": "vendor.cfg",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "c",
       "rule": "dt11-python-outside"
     }
-  ]
+  ],
+  "note": "modified root file outside"
 }

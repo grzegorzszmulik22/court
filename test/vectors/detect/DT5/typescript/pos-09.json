@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export const x: number = compute();\n",
-      "after": "// @ts-ignore\nexport const x: number = compute();\n"
+      "before": "export const h = (x: number): number => x;\n",
+      "after": "export const h = (x: any): any => x;\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "suppressed",
+      "subkind": "widened",
       "path": "src/calc.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "@ts-ignore",
-      "rule": "dt5-typescript-suppressed"
+      "evidence": "(x: any): any",
+      "rule": "dt5-typescript-widened"
     }
   ]
 }

@@ -5,10 +5,10 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst e = \"API_HOST\"\n\nfunc c() {}\n"
+      "after": "package svc\n\nimport \"fmt\"\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "env-var-name",
-  "note": "env-var-name"
+  "near_miss": "import-added",
+  "note": "import-added"
 }

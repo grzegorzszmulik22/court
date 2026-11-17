@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "typescript",
   "files": {
-    "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c11() {}\n"
+    "docs/links.md": {
+      "before": "# links\n",
+      "after": "# links\n\nsee https://docs.vendor-docs.example\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-11",
-  "note": "unrelated-11"
+  "near_miss": "docs-url",
+  "note": "a URL in a doc file is prose, not a literal"
 }

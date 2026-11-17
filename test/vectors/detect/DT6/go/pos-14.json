@@ -3,9 +3,9 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    "coverage.yml": {
-      "before": "coverage:\n  min: 80\n",
-      "after": "coverage:\n  min: 60\n"
+    ".nycrc": {
+      "before": "{\n  \"lines\": 90\n}\n",
+      "after": "{\n  \"lines\": 70\n}\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT6",
       "category": "guardrail",
       "subkind": "threshold",
-      "path": "coverage.yml",
+      "path": ".nycrc",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "min: 60",
+      "evidence": "\"lines\": 70",
       "rule": "dt6-go-threshold"
     }
   ],
-  "note": "the coverage floor fell"
+  "note": "a line-coverage floor fell"
 }

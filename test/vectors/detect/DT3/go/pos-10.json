@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.1\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc (c Cart) Apply(d int) int { return d }\n",
+      "after": "package api\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "subkind": "removed",
+      "path": "api/service.go",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
-      "side": "after",
-      "evidence": "openapi: 3.0.1",
-      "rule": "dt3-contract-openapi"
+      "side": "before",
+      "evidence": "func (c Cart) Apply(d int) int",
+      "rule": "dt3-go-exported-removed"
     }
   ]
 }

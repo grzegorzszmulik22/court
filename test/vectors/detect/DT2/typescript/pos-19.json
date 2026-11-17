@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0012_add_index/migration.sql": {
+    "prisma/migrations/0002_add_index/migration.sql": {
       "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+      "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n"
     }
   },
   "expect": [
@@ -13,14 +13,40 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0012_add_index/migration.sql",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "CREATE TABLE orders",
+      "evidence": "ALTER TABLE users ADD COLUMN tag",
       "rule": "dt2-typescript-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE users ADD COLUMN tag",
+      "rule": "dt2-typescript-ddl"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "CREATE INDEX idx_tag",
+      "rule": "dt2-typescript-ddl"
     }
   ]
 }

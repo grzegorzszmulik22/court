@@ -5,10 +5,10 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "V = \"1.2.3\"\n\ndef c():\n    pass\n"
+      "after": "def c():\n    pass\ndef d():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "version-string",
-  "note": "version-string"
+  "near_miss": "func-added",
+  "note": "func-added"
 }

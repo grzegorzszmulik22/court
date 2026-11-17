@@ -3,14 +3,16 @@ agents:
     parent: human
     steps:
       - backbrief:
-          plan_files: ["files/**", "docs/**"]
-      - declare: {category: outbound, paths: ["files/util.go"], question: "allow the outbound change?", chosen: "yes"}
-      - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\nMaintenance note 58: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# files\n\nA small Go service (rev 58) used in DocketBench fixtures.\n"}
+          plan_files: ["files/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2058\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n62,delta58\n"}
       - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nconst metricsHost58 = \"https://telemetry.files58.example.net/v1\"\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: outbound, paths: ["files/util.go"], question: "allow the outbound change?", chosen: "yes"}
       - commit: {message: "files: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - no_decisions: {}
-      - commit: {message: "files: follow-up docs"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "files: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

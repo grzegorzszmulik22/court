@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "@ts-ignore",
       "rule": "dt5-typescript-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "@ts-ignore",
+      "rule": "dt6-typescript-suppressed"
     }
   ]
 }

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "typescript",
   "files": {
-    "tsconfig.json": {
-      "before": "{\n  \"target\": \"es2020\"\n}\n",
-      "after": "{\n  \"target\": \"es2022\"\n}\n"
+    "package.json": {
+      "before": "{\n  \"name\": \"app\",\n  \"types\": \"index.d.ts\"\n}\n",
+      "after": "{\n  \"name\": \"app\",\n  \"types\": \"dist/index.d.ts\"\n}\n"
     }
   },
   "expect": [],
-  "note": "toolchain-line"
+  "note": "types-field"
 }

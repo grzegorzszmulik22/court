@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc11.go": {
-      "before": "package calc\n\n// s returns\nfunc s(x int) int { return x }\n",
-      "after": "package calc\n\n// s accepts any int\nfunc s(x int) int { return x }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s() (r int) { return 0 }\n",
+      "after": "package calc\n\nfunc s() (r int64) { return 0 }\n"
     }
   },
   "expect": [],
-  "near_miss": "any-in-doc-b",
-  "note": "any-in-doc-b"
+  "near_miss": "named-result",
+  "note": "named-result"
 }

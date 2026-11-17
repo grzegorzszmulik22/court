@@ -5,10 +5,9 @@
   "files": {
     "svc/fetch.go": {
       "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\tlog(err)\n\t\treturn err\n\t}\n\treturn nil\n}\n"
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\treturn fmt.Errorf(\"wrap: %w\", err)\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "logged-error-b",
-  "note": "logged-error-b"
+  "note": "err-wrapped"
 }

@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "go",
   "files": {
-    "internal/version.go": {
-      "before": "package internal\n\nconst Version = \"1.2.3\"\n",
-      "after": "package internal\n\nconst Version = \"1.2.4\"\n"
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\ntoolchain go1.22.1\n",
+      "after": "module shop2\n\ngo 1.22\n\ntoolchain go1.22.1\n"
     }
   },
   "expect": [],
-  "note": "non-manifest-version"
+  "note": "own-version"
 }

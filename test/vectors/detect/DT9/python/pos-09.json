@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "scripts/token.sh": {
-      "before": "#!/bin/sh\nexit 0\n",
-      "after": "#!/bin/sh\nexit 0\nupdated\n"
+    "docs/auth/notes.md": {
+      "before": "# a\n",
+      "after": "# a\nmore\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "scripts/token.sh",
+      "path": "docs/auth/notes.md",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "updated",
+      "evidence": "more",
       "rule": "dt9-python-touched"
     }
   ],
-  "note": "filename minus extension is a matching segment"
+  "note": "doc under an auth dir is still an authority path"
 }

@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_x():\n    assert x() == 7\n",
-      "after": "def test_x():\n    assert x() == 8\n"
+      "before": "def test_x():\n    assert x() == 7\n    assert x() != 0\n",
+      "after": "def test_x():\n    assert x() == 8\n    assert x() != 0\n"
     }
   },
   "expect": [

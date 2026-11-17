@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/cart_test.go": {
-      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 1 { t.Fatal() }\n\tif X() > 9 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 1 { t.Fatal() }\n}\n"
+    "shop/wide/w_test.go": {
+      "before": "package wide\n\nfunc TestWide(t *testing.T) {\n\tlo, hi := 0, 10\n\tif x < lo || x > hi { t.Fatal() }\n}\n",
+      "after": "package wide\n\nfunc TestWide(t *testing.T) {\n\tlo, hi := 0, 100\n\tif x < lo || x > hi { t.Fatal() }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "fewer_assertions",
-      "path": "shop/cart_test.go",
+      "subkind": "loosened_threshold",
+      "path": "shop/wide/w_test.go",
       "lines": [
-        5,
-        5
+        4,
+        4
       ],
-      "side": "before",
-      "evidence": "if X() > 9 { t.Fatal() }",
-      "rule": "dt4-go-fewer_assertions"
+      "side": "after",
+      "evidence": "hi := 0, 100",
+      "rule": "dt4-go-loosened_threshold"
     }
   ]
 }

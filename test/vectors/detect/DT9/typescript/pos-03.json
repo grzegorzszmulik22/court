@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/acl/acl.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "src/acl/rules.ts": {
+      "before": "export const allow = ['a'];\n",
+      "after": "export const allow = ['a', 'b'];\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "src/acl/acl.ts",
+      "path": "src/acl/rules.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "return false;",
+      "evidence": "'b'];",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "acl rule list extended"
 }

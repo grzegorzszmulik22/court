@@ -3,8 +3,8 @@
   variant: differing-choice
   category: schema
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on migrations/003_cols.sql (updated_at vs touched_by)."
-  keywords: ["contest-18", "sibling-drift", "world-split"]
+  description: "Two sibling worlds chose differently on migrations/003_cols.sql: a schema decision (updated_at vs touched_by)."
+  keywords: ["worlds", "differently", "schema"]
   evidence:
     - {world: "w1", path: "migrations/003_cols.sql", lines: [1, 1]}
     - {world: "w2", path: "migrations/003_cols.sql", lines: [2, 2]}

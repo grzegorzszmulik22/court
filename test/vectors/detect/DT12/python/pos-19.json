@@ -3,13 +3,13 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/extra.py": {
-      "before": "",
-      "after": "x = 1\n"
-    },
     "shop/cart.py": {
       "before": "x = 1\n",
-      "after": "x = 1\ny\n"
+      "after": "x = 1\nz\n"
+    },
+    "tools/note.txt": {
+      "before": "",
+      "after": "note\nmore\n"
     }
   },
   "commission": {
@@ -23,13 +23,13 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.py",
+      "path": "tools/note.txt",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "x = 1",
+      "evidence": "more",
       "rule": "dt12-python-unplanned-file"
     }
   ]

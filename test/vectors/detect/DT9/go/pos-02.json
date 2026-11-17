@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "internal/login/handler.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+      "before": "package login\n\nfunc Handle(r) {}\n",
+      "after": "package login\n\nfunc Handle(r) { audit(r) }\n"
     }
   },
   "expect": [
@@ -19,9 +19,9 @@
         3
       ],
       "side": "after",
-      "evidence": "func Check() bool { return false }",
+      "evidence": "audit(r) }",
       "rule": "dt9-go-touched"
     }
   ],
-  "note": "a path segment names an authority concern"
+  "note": "login path edited"
 }

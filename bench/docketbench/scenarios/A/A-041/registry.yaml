@@ -3,8 +3,8 @@
   variant: no_decisions
   category: territory
   mast: FM-9.1
-  description: "The deploy script outside the commission territory was changed."
-  keywords: ["out-of-bounds-41", "territory-cross", "script-touch"]
+  description: "The deploy script outside the commission territory bounds was changed."
+  keywords: ["outside", "territory", "bounds"]
   evidence:
     - {world: "w1", commit: 1, path: "scripts/deploy.sh", lines: [4, 4]}
   source: "research/1_detection.md#specguard"

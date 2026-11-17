@@ -10,11 +10,13 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["tasks/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 12: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 12) used in DocketBench fixtures.\n"}
-      - edit: {path: go.mod, write: "module tasks\n\ngo 1.22\n"}
-      - declare: {category: dependency, paths: ["go.mod"], question: "take the w1 option?", chosen: "yes"}
+          plan_files: ["tasks/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n16,delta12\n"}
+      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 12, restore the previous binary and re-run migrations 0012 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"eslint\": \"^9.1.0\"\n  }\n}\n"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -22,11 +24,13 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["tasks/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 12: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 12) used in DocketBench fixtures.\n"}
-      - edit: {path: go.mod, write: "module tasks\n\ngo 1.22\n"}
-      - declare: {category: dependency, paths: ["go.mod"], question: "take the w2 option?", chosen: "yes"}
+          plan_files: ["tasks/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n16,delta12\n"}
+      - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 12, restore the previous binary and re-run migrations 0012 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"eslint\": \"^9.1.0\"\n  }\n}\n"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

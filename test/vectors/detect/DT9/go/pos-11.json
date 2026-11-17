@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "deploy/policy.json": {
-      "before": "{\n  \"allow\": [\"read\"]\n}\n",
-      "after": "{\n  \"allow\": [\"*\"]\n}\n"
+    "config/cors.yml": {
+      "before": "cors:\n  origin: https://app.example\n  home: https://app.example\n",
+      "after": "cors:\n  origin: \"*\"\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "widened",
-      "path": "deploy/policy.json",
+      "path": "config/cors.yml",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "\"allow\": [\"*\"]",
+      "evidence": "origin: \"*\"",
       "rule": "dt9-go-widened"
     }
-  ]
+  ],
+  "note": "origin broadened to wildcard"
 }

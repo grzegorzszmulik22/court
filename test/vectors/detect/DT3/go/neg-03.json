@@ -5,7 +5,7 @@
   "files": {
     "internal/impl.go": {
       "before": "package internal\n\nfunc Helper(c int) int { return c }\n",
-      "after": "package internal\n\nfunc Helper(c int, d int) int { return c + d }\n"
+      "after": "package internal\n\nfunc Helper(c, d, e int) int { return c }\n"
     }
   },
   "expect": [],

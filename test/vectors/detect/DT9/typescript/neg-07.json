@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/msg.ts": {
-      "before": "",
-      "after": "export function check() { return true; }\n"
+    "src/calc.ts": {
+      "before": "export function add() { return 1; }\n",
+      "after": "export function add() { return 1; }\nconst doc = \"auth flow\";\n"
     }
   },
   "expect": [],

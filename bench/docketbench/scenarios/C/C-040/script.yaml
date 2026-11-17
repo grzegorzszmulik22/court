@@ -10,10 +10,12 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 20: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 520\n  write_ms: 2000\nretries: 3\n"}
+          plan_files: ["vault/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n24,delta20\n"}
+      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 20, restore the previous binary and re-run migrations 0020 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
@@ -22,10 +24,12 @@ agents:
     parent: lead
     steps:
       - backbrief:
-          plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 20: clamp bounds are inclusive.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 520\n  write_ms: 2000\nretries: 3\n"}
+          plan_files: ["vault/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n24,delta20\n"}
+      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 20, restore the previous binary and re-run migrations 0020 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}

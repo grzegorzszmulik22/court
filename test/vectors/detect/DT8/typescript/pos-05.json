@@ -5,7 +5,7 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const ip = \"https://127.0.0.1:9000/h\";\n\nexport function c() {}\n"
+      "after": "const m = { h: \"https://localhost:8080\" };\nexport function c() {}\n"
     }
   },
   "expect": [
@@ -19,9 +19,8 @@
         1
       ],
       "side": "after",
-      "evidence": "127.0.0.1",
+      "evidence": "localhost",
       "rule": "dt8-typescript-host-literal"
     }
-  ],
-  "note": "added line carries a host the base tree never names"
+  ]
 }

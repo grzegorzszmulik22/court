@@ -3,12 +3,12 @@
   "detector": "DT8",
   "language": "python",
   "files": {
-    "svc/client.py": {
-      "before": "def c():\n    pass\n",
-      "after": "def c12():\n    pass\n"
+    "config/app.yml": {
+      "before": "x: 1\n",
+      "after": "x: 2\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated-12",
-  "note": "unrelated-12"
+  "near_miss": "yml-edit",
+  "note": "yml-edit"
 }

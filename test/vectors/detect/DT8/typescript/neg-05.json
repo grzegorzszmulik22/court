@@ -5,10 +5,10 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const e = \"API_HOST\";\n\nexport function c() {}\n"
+      "after": "import { x } from './x';\nexport function c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "env-var-name",
-  "note": "env-var-name"
+  "near_miss": "import-added",
+  "note": "import-added"
 }

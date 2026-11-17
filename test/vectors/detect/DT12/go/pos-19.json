@@ -3,13 +3,13 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/extra.go": {
-      "before": "",
-      "after": "package shop\n"
-    },
     "shop/cart.go": {
       "before": "package shop\n",
-      "after": "package shop\ny\n"
+      "after": "package shop\nz\n"
+    },
+    "tools/note.txt": {
+      "before": "",
+      "after": "note\nmore\n"
     }
   },
   "commission": {
@@ -23,13 +23,13 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "shop/extra.go",
+      "path": "tools/note.txt",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "package shop",
+      "evidence": "more",
       "rule": "dt12-go-unplanned-file"
     }
   ]

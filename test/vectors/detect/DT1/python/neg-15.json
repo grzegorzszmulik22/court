@@ -3,11 +3,11 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "requirements.lock": {
-      "before": "requests==2.31.0 --hash=sha256:aaa\n",
-      "after": "requests==2.31.0 --hash=sha256:bbb\n"
+    "requirements.txt": {
+      "before": "pydantic[email]==2.5.0\n",
+      "after": "pydantic[email]==2.5.0  # validated\n"
     }
   },
   "expect": [],
-  "note": "lockfile-only"
+  "note": "extras-kept"
 }

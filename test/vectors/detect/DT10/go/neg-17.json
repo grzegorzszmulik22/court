@@ -3,21 +3,24 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "ops/log2.txt": {
+      "before": "a\nb\n",
+      "after": "a\nb\nc\n"
+    },
+    "trajectory/events.jsonl": {
+      "before": "",
+      "after": "{\"input\": {\"command\": \"git commit -m x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "git checkout main"
+        "command": "git commit -m x"
       },
       "outcome": "ok"
     }
   ],
   "expect": [],
-  "near_miss": "git-checkout",
-  "note": "git-checkout"
+  "note": "git-commit"
 }

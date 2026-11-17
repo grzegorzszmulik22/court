@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "package.json": {
-      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"react\": \"^19.0.0\"\n  }\n}\n"
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT1",
       "category": "dependency",
-      "subkind": "version",
+      "subkind": "removed",
       "path": "package.json",
       "lines": [
         3,
         3
       ],
-      "side": "after",
-      "evidence": "\"react\": \"^19.0.0\"",
-      "rule": "dt1-typescript-manifest-version"
+      "side": "before",
+      "evidence": "\"react\": \"^18.2.0\"",
+      "rule": "dt1-typescript-manifest-removed"
     }
   ]
 }

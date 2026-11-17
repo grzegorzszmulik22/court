@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc sum(x int) int { return x }\n",
-      "after": "package calc\n\nfunc sum(x interface{}) interface{} { return x.(int) }\n"
+      "before": "package calc\n\nfunc k(a int, b string) {}\n",
+      "after": "package calc\n\nfunc k(a any, b string) {}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "func sum(x interface{}) interface{}",
+      "evidence": "func k(a any, b string)",
       "rule": "dt5-go-widened"
     }
   ]

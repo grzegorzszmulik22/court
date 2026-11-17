@@ -21,7 +21,20 @@
       "side": "after",
       "evidence": "CREATE TABLE orders",
       "rule": "dt2-go-new-migration"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE orders",
+      "rule": "dt2-go-ddl"
     }
   ],
-  "note": "new migration file under a recognised migration directory"
+  "note": "a .sql migration with DDL fires migration and ddl"
 }

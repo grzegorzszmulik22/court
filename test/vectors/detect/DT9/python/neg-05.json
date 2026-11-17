@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: x\n# note\n",
-      "after": "cors:\n  origin: x\n# keep x\n"
+    "config/proxy.yml": {
+      "before": "proxy:\n  a: 1\n# note\n",
+      "after": "proxy:\n  a: 1\n# keep\n"
     }
   },
   "expect": [],

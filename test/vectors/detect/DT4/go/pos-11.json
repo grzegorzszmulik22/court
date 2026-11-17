@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestTotals(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n"
+      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n\tif Total() > 9 { t.Error() }\n}\n",
+      "after": "package shop\n\nfunc TestTotals(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n\tif Total() > 9 { t.Error() }\n}\n"
     }
   },
   "expect": [
@@ -16,10 +16,10 @@
       "path": "shop/shop_test.go",
       "lines": [
         3,
-        5
+        6
       ],
       "side": "before",
-      "evidence": "func TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}",
+      "evidence": "func TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n\tif Total() > 9 { t.Error() }\n}",
       "rule": "dt4-go-deleted_test"
     }
   ],

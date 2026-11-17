@@ -4,23 +4,23 @@
   "language": "go",
   "files": {
     "api/service.go": {
-      "before": "package api\n\nfunc (c Cart) Sub() int {\n\treturn c.sum\n}\n",
-      "after": "package api\n\nfunc (c Cart) Sub(d int) int {\n\treturn c.sum + d\n}\n"
+      "before": "package api\n\nfunc A() {}\nfunc Export(c int) int { return c }\nfunc B() {}\n",
+      "after": "package api\n\nfunc A() {}\nfunc B() {}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
+      "subkind": "removed",
       "path": "api/service.go",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
-      "side": "after",
-      "evidence": "func (c Cart) Sub(d int) int",
-      "rule": "dt3-go-exported-changed"
+      "side": "before",
+      "evidence": "func Export(c int) int",
+      "rule": "dt3-go-exported-removed"
     }
   ]
 }
