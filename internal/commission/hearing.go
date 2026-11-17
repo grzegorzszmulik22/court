@@ -27,7 +27,15 @@ import (
 // be a real terminal (C2.5.3 — piped input skips the hearing).
 func terminalIn(r io.Reader) bool {
 	f, ok := r.(*os.File)
-	return ok && isatty.IsTerminal(f.Fd())
+	return ok && isTerminalFd(f.Fd())
+}
+
+// isTerminalFd: a console, or on Windows a Cygwin/MSYS pty such as Git
+// Bash's mintty, which is a named pipe that isatty.IsTerminal rejects.
+// Without the second test the hearing would be skipped for everyone who
+// runs court from Git Bash.
+var isTerminalFd = func(fd uintptr) bool {
+	return isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd)
 }
 
 // HearingCap is the at-most-seven bound of spec/milestones M2.5.
