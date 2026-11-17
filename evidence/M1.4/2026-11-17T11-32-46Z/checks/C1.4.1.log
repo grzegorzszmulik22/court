@@ -1,0 +1,9 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (40.89s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (1.51s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:515: posix dir permission semantics
+--- SKIP: TestC1_4_1_DiscardReportsError (0.00s)
+PASS
+ok  	court/internal/world	42.779s

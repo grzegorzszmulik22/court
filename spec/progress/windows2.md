@@ -1,0 +1,17 @@
+# Progress: lane `windows2`
+
+Windows 11 host (Git Bash), pinned tools from `make tools`. Rows use the
+format of `spec/05-agent-loop.md` §13. Evidence folders are committed
+(`git add -f`); the sabotage folder of the same run is named in the note.
+CR-002 applies to the M2 checks as it does to the M1 checks: the check
+scripts pick the Windows executable name through `test/checks/court-bin.sh`,
+which changes no check logic, threshold or vector.
+
+| chunk | status | attempts | last evidence folder | note |
+|---|---|---|---|---|
+| M1.4 | DONE | 1 | evidence/M1.4/2026-11-17T11-32-46Z | All 8 checks PASS on Windows, including C1.4.7 (200-char world root, >260-char path, `core.longpaths` proof) and C1.4.8 (`GOOS=windows` vet + test compile); 6/6 required sabotages caught (0 uncaught) in evidence/M1.4/2026-11-17T11-46-47Z-sabotage. MM1.3: 100% of 200 randomised sessions restored the digest; the per-session time is recorded as unstable when the host is loaded, the threshold is a share of sessions. |
+| M2.1 | DONE | 1 | evidence/M2.1/2026-11-17T11-18-14Z | C2.1.1–C2.1.5 PASS plus extra C2.1.6 (daemon lifecycle) PASS; 4/4 sabotages caught (0 uncaught) in evidence/M2.1/2026-11-17T11-18-59Z-sabotage, including the two added here. MM2.3 median 0.912 s over 5 runs, CV 0.057 (target ≤ 3 s); MM2.4 0 keystrokes (target ≤ 1). Daemon leak fix (supervisor note): every fixture shuts its daemon down and waits for the process to exit before the test ends, the package TestMain fails when a run-scoped pid registry still has a live daemon, and the product exits within 5 s (polled every 250 ms) after `daemon.json` disappears — TestDaemonExitsWhenDataDirRemoved deletes it under a running daemon and asserts exit. |
+| M2.2 | DONE | 1 | evidence/M2.2/2026-11-17T11-26-37Z | All 5 checks PASS; 3/3 sabotages caught (0 uncaught) in evidence/M2.2/2026-11-17T11-35-07Z-sabotage. MM2.2: 500 scripted commissions, every pre-backbrief write denied with the fixed reason, no tool event ahead of the stored expected decisions. |
+| M2.3 | DONE | 1 | evidence/M2.3/2026-11-17T11-26-57Z | All 6 checks PASS (C2.3.1–C2.3.5 plus the body/schema guard C2.3.6); 2/2 required sabotages caught (0 uncaught) in evidence/M2.3/2026-11-17T11-37-12Z-sabotage. The recorded clerk request is asserted to carry the commission only; 41 frozen comparison vectors agree with the §7.1 matcher. Clerk fixture paths are shell-quoted so a Windows path survives `sh` (CR-002 form). |
+| M2.4 | DONE | 1 | evidence/M2.4/2026-11-17T11-27-20Z | All 6 checks PASS; 4/4 sabotages caught (0 uncaught) in evidence/M2.4/2026-11-17T11-38-40Z-sabotage. MM2.1: 5,000 generated writs, every attenuation violation refused (0 accepted); 33 frozen glob vectors agree. |
+| M2.5 | DONE | 1 | evidence/M2.5/2026-11-17T11-28-21Z | All 6 checks PASS; 3/3 sabotages caught (0 uncaught) in evidence/M2.5/2026-11-17T11-44-13Z-sabotage. The terminal cases run on a real ConPTY on Windows (Linux uses `script`); the normalized comparison drops only conhost's terminal-control traffic. MM2.4 is one Enter or none: the non-terminal path rules nothing and says so. |
