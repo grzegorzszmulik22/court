@@ -46,7 +46,10 @@ func startProc(cmd *exec.Cmd) (*procTree, error) {
 		windows.PROCESS_SET_QUOTA|windows.PROCESS_TERMINATE|windows.PROCESS_SUSPEND_RESUME,
 		false, uint32(cmd.Process.Pid))
 	if err != nil {
-		return pt, nil // run anyway; kill falls back to taskkill
+		// The child is suspended; without a process handle it cannot be
+		// resumed, so fail the run instead of hanging it.
+		_ = cmd.Process.Kill()
+		return nil, fmt.Errorf("OpenProcess: %w", err)
 	}
 	defer windows.CloseHandle(h)
 	if job, err := windows.CreateJobObject(nil, nil); err == nil {
