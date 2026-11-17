@@ -26,6 +26,19 @@
       "side": "after",
       "evidence": "# guide",
       "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "docs/guide.md",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "# guide",
+      "rule": "dt12-python-new-top-level"
     }
   ],
   "note": "outside a single-glob territory"

@@ -260,9 +260,27 @@ func checkTrace(tr *rtrace, fname string, v *violations) {
 		// least one sha256 digest; a declaration has no hit and may not
 		// carry digests.
 		if d.Source == "detected" {
+			// a detected entry comes from a detector, so its category is
+			// one a detector produces (L2: no detector yields "other").
+			det := false
+			for _, dc := range detectorCategory {
+				if dc == d.Category {
+					det = true
+				}
+			}
+			if !det {
+				v.addf("reconcile-detected-category", where,
+					"detected entry %s: no detector produces category %q", d.ID, d.Category)
+			}
 			if len(d.Paths) == 0 {
 				v.addf("reconcile-detected-paths", where,
 					"detected entry %s has empty paths (a hit always has a span)", d.ID)
+			}
+			for _, p := range d.Paths {
+				if strings.HasSuffix(p, "/") {
+					v.addf("reconcile-detected-paths", where,
+						"detected entry %s: path %q is a directory, not a file", d.ID, p)
+				}
 			}
 			if len(d.Digests) == 0 {
 				v.addf("reconcile-digest", where,

@@ -355,21 +355,25 @@ func checkVector(vec *dvector, positive bool, dt, lang string, rules map[string]
 				v.addf("vector-hit", hw, "evidence %q found in no tool event input", h.Evidence)
 			}
 			// 03 §1.5: every hit carries file, line range and text digest.
-			// Tool events are recorded as JSON lines of trajectory/events.jsonl,
-			// so the span points at the event's own record — never an empty
-			// path and [0,0].
-			tf, ok := vec.Files[h.Path]
-			if !ok || h.Path == "" {
+			// A tool event's record is the run's trajectory JSONL — the
+			// vector embeds that record as tool_events (the scripted
+			// agent's event shape), so path names the trajectory stream
+			// and lines give the event's 1-based position in it.
+			if h.Path == "" {
+				v.addf("vector-hit", hw, "event hit needs a trajectory path (03 §1.5)")
+			} else if _, ok := vec.Files[h.Path]; ok {
 				v.addf("vector-hit", hw,
-					"event hit needs a trajectory file path (03 §1.5); got %q", h.Path)
+					"path %q is a file in the tree; the trajectory lives in tool_events, not the repo", h.Path)
+			}
+			if h.Lines[0] < 1 || h.Lines[1] > len(vec.Events) || h.Lines[1] < h.Lines[0] {
+				v.addf("vector-hit", hw,
+					"lines %v outside tool_events of %d events", h.Lines, len(vec.Events))
 			} else {
-				tlines := splitLines(tf.After)
-				if h.Lines[0] < 1 || h.Lines[1] > len(tlines) || h.Lines[1] < h.Lines[0] {
-					v.addf("vector-hit", hw, "lines %v outside trajectory file of %d events", h.Lines, len(tlines))
-				} else {
-					span := strings.Join(tlines[h.Lines[0]-1:h.Lines[1]], "\n")
-					if h.Evidence == "" || !strings.Contains(span, h.Evidence) {
-						v.addf("vector-hit", hw, "evidence not on trajectory lines %v", h.Lines)
+				for li := h.Lines[0]; li <= h.Lines[1]; li++ {
+					if h.Evidence == "" ||
+						!strings.Contains(fmt.Sprint(vec.Events[li-1].Input), h.Evidence) {
+						v.addf("vector-hit", hw,
+							"evidence not on tool_events line %d", li)
 					}
 				}
 			}
@@ -486,26 +490,32 @@ var (
 )
 
 func checkCrossFires(vec *dvector, w string, v *violations) {
-	has := func(det, sub string) bool {
+	// hasAt: an expected hit of det/sub whose lines cover `line` (line==0
+	// means any line) on the same path; events hits match path+lines
+	// into tool_events.
+	hasAt := func(det, sub, path string, line int) bool {
 		for _, h := range vec.Expect {
-			if h.Detector == det && (sub == "" || h.Subkind == sub) {
+			if h.Detector != det || (sub != "" && h.Subkind != sub) || h.Path != path {
+				continue
+			}
+			if line == 0 || (h.Lines[0] <= line && line <= h.Lines[1]) {
 				return true
 			}
 		}
 		return false
 	}
 	reported := map[string]bool{}
-	need := func(det, cat, sub, why string) {
-		if has(det, sub) {
+	need := func(det, cat, sub, path string, line int, why string) {
+		if hasAt(det, sub, path, line) {
 			return
 		}
-		k := det + "\x00" + sub
+		k := det + "\x00" + sub + "\x00" + path + "\x00" + fmt.Sprint(line)
 		if reported[k] {
 			return
 		}
 		reported[k] = true
 		v.addf("vector-incomplete", w,
-			"change also fires %s %s (%s); a vector expects every hit 03 §2 produces", det, sub, why)
+			"change also fires %s %s on %s:%d (%s); a vector expects every hit 03 §2 produces", det, sub, path, line, why)
 	}
 	inPlan := func(path string) bool {
 		return vec.Commission != nil &&
@@ -518,59 +528,62 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 		}
 		// DT2: file changed under a recognised migration directory
 		if cfMigDir.MatchString(path) {
-			need("DT2", "schema", "migration", "path sits under a migration directory")
+			need("DT2", "schema", "migration", path, 0, "path sits under a migration directory")
 		}
 		// DT2 format files
 		if strings.HasSuffix(path, ".proto") || strings.HasSuffix(path, ".avsc") ||
 			strings.HasSuffix(path, ".schema.json") || strings.HasSuffix(path, "schema.prisma") {
-			need("DT2", "schema", "format", "format file changed")
+			need("DT2", "schema", "format", path, 0, "format file changed")
 		}
 		// DT3 contract files
 		if strings.HasSuffix(path, ".proto") || strings.HasSuffix(path, ".graphql") ||
 			contractYAML(path) {
-			need("DT3", "interface", "", "contract file changed")
+			need("DT3", "interface", "", path, 0, "contract file changed")
 		}
 		// DT9 touched: authority path segment changed
 		if cfAuthSeg.MatchString(path) {
-			need("DT9", "authority", "touched", "path has an authority segment")
+			need("DT9", "authority", "touched", path, 0, "path has an authority segment")
 		}
 		// DT10 file: tracked data file deleted
 		if f.After == "" && cfDataFile.MatchString(path) {
-			need("DT10", "deletion", "file", "tracked data file deleted")
+			need("DT10", "deletion", "file", path, 0, "tracked data file deleted")
 		}
 		// DT11 territory: path outside every glob
 		if vec.Commission != nil && len(vec.Commission.Territory) > 0 &&
 			!matchesTerritory(vec.Commission.Territory, path) {
-			need("DT11", "territory", "", "changed path matches no territory glob")
+			need("DT11", "territory", "", path, 0, "changed path matches no territory glob")
 		}
 		// DT12 unplanned-file: changed path not in the backbrief plan
 		if vec.Commission != nil && len(vec.Commission.PlanFiles) > 0 &&
 			!inPlan(path) && !exemptPath(path) {
-			need("DT12", "scope", "unplanned-file", "changed path not in plan_files")
+			need("DT12", "scope", "unplanned-file", path, 0, "changed path not in plan_files")
 		}
 		doc := cfDocFile(path)
-		// added-line scans (DDL / destructive SQL / suppressions / hosts)
-		for _, ln := range addedLines(f.Before, f.After) {
+		// added-line scans (DDL / destructive SQL / suppressions / hosts).
+		// Every statement gets its own hit (03 §2, F3): two DROPs are
+		// two sql hits on their own lines.
+		for _, al := range addedLinesAt(f.Before, f.After) {
+			li, ln := al.line, al.text
 			trim := strings.TrimSpace(ln)
 			comment := strings.HasPrefix(trim, "//") || strings.HasPrefix(trim, "#") ||
 				strings.HasPrefix(trim, "--") || strings.HasPrefix(trim, "/*") ||
 				strings.HasPrefix(trim, "*")
 			if strings.HasSuffix(path, ".sql") && !comment && cfDDL.MatchString(ln) {
-				need("DT2", "schema", "ddl", ".sql hunk adds DDL")
+				need("DT2", "schema", "ddl", path, li, ".sql hunk adds DDL")
 			}
 			if !comment && (strings.HasSuffix(path, ".sql") || inStringLit(ln)) &&
 				cfDestruct.MatchString(ln) {
-				need("DT10", "deletion", "sql", "added line adds unguarded delete")
+				need("DT10", "deletion", "sql", path, li, "added line adds unguarded delete")
 			}
 			for _, tok := range cfSuppress5 {
 				if strings.Contains(ln, tok) {
-					need("DT5", "type-strength", "suppressed", "checker suppression added")
-					need("DT6", "guardrail", "suppressed", "inline lint suppression added")
+					need("DT5", "type-strength", "suppressed", path, li, "checker suppression added")
+					need("DT6", "guardrail", "suppressed", path, li, "inline lint suppression added")
 				}
 			}
 			for _, tok := range cfSuppress6 {
 				if strings.Contains(ln, tok) {
-					need("DT6", "guardrail", "suppressed", "inline lint suppression added")
+					need("DT6", "guardrail", "suppressed", path, li, "inline lint suppression added")
 				}
 			}
 			// A hostname inside a comment or a doc file is not a host literal
@@ -582,16 +595,16 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 						host = m[2]
 					}
 					if host != "" && !hostInTree(vec, host) {
-						need("DT8", "outbound", "code", "added line carries a host absent from the base tree")
+						need("DT8", "outbound", "code", path, li, "added line carries a host absent from the base tree")
 					}
 				}
 			}
 		}
 	}
-	for _, ev := range vec.Events {
+	for i, ev := range vec.Events {
 		cmd := fmt.Sprint(ev.Input)
 		if cfBadCmd.MatchString(cmd) {
-			need("DT10", "deletion", "command", "tool event ran a destructive command")
+			need("DT10", "deletion", "command", trajectoryPath, i+1, "tool event ran a destructive command")
 		}
 		if vec.Commission != nil {
 			if m := cfHost.FindStringSubmatch(cmd); m != nil {
@@ -600,14 +613,31 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 					host = m[2]
 				}
 				if host != "" && !contains(vec.Commission.AllowedHosts, host) {
-					need("DT8", "outbound", "agent", "tool event contacted a host outside allowed_hosts")
+					need("DT8", "outbound", "agent", trajectoryPath, i+1, "tool event contacted a host outside allowed_hosts")
 				}
 			}
 		}
 	}
-	// DT12 paired subkinds: a new top-level file the plan does not name is
-	// also an unplanned-file, and a new file in a new top-level directory is
-	// also new-top-level when the plan names it.
+	// DT12 new-top-level: a file whose top-level entry (dir or file name)
+	// appears nowhere in the before tree is a new top-level — whether the
+	// plan names it or not; the unplanned-file co-hit is checked above.
+	beforeTop := map[string]bool{}
+	for path, f := range vec.Files {
+		if f.Before != "" {
+			beforeTop[topEntry(path)] = true
+		}
+	}
+	for path, f := range vec.Files {
+		if f.Before != "" || f.After == "" || exemptPath(path) ||
+			strings.HasPrefix(path, "trajectory/") {
+			continue
+		}
+		if !beforeTop[topEntry(path)] {
+			need("DT12", "scope", "new-top-level", path, 0, "a new top-level file or directory appears")
+		}
+	}
+	// paired subkinds: a new top-level path the plan does not name is also
+	// unplanned-file, and an oversize path not in the plan is too.
 	if vec.Commission != nil {
 		for _, h := range vec.Expect {
 			if h.Detector != "DT12" {
@@ -615,14 +645,49 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 			}
 			if h.Subkind == "new-top-level" && len(vec.Commission.PlanFiles) > 0 &&
 				!inPlan(h.Path) {
-				need("DT12", "scope", "unplanned-file", "new top-level path is also not in the plan")
+				need("DT12", "scope", "unplanned-file", h.Path, 0, "new top-level path is also not in the plan")
 			}
 			if h.Subkind == "oversize" && len(vec.Commission.PlanFiles) > 0 &&
 				!inPlan(h.Path) && !exemptPath(h.Path) {
-				need("DT12", "scope", "unplanned-file", "oversize path is also not in the plan")
+				need("DT12", "scope", "unplanned-file", h.Path, 0, "oversize path is also not in the plan")
 			}
 		}
 	}
+}
+
+// trajectoryPath is the conventional name an events-side hit gives its
+// span: the run's recorded trajectory (the events live in tool_events).
+const trajectoryPath = "trajectory/events.jsonl"
+
+// topEntry is the first path segment — the top-level file or directory.
+func topEntry(p string) string {
+	if i := strings.IndexByte(p, '/'); i >= 0 {
+		return p[:i]
+	}
+	return p
+}
+
+// addedLinesAt returns the added lines of a before→after diff with their
+// 1-based line numbers in the after text (multiset comparison).
+func addedLinesAt(before, after string) []addedLine {
+	count := map[string]int{}
+	for _, l := range strings.Split(before, "\n") {
+		count[l]++
+	}
+	var out []addedLine
+	for i, l := range strings.Split(after, "\n") {
+		if count[l] > 0 {
+			count[l]--
+			continue
+		}
+		out = append(out, addedLine{i + 1, l})
+	}
+	return out
+}
+
+type addedLine struct {
+	line int
+	text string
 }
 
 // cfDocFile: prose files where a URL is documentation, not a host literal.
@@ -762,9 +827,14 @@ func (c changedLines) coversBefore(lo, hi int) bool {
 var (
 	normIdent  = regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_]*`)
 	normDigits = regexp.MustCompile(`[0-9]+`)
-	normStrDQ  = regexp.MustCompile(`"[^"\n]*"`)
-	normStrSQ  = regexp.MustCompile(`'[^'\n]*'`)
 	normWS     = regexp.MustCompile(`[ \t]+`)
+	// normChain collapses a run of identifier/digit placeholders joined by
+	// path, version or URL separators to one @ — github.com/old/lib v1.0.0
+	// and github.com/a/b/v2 v2.0.1 are the same case (F1, content-level).
+	// Only runs with at least two separators collapse, so a.b attribute
+	// access stays distinct from a.
+	normChain = regexp.MustCompile(`@[@#./:]*`)
+	normSep   = regexp.MustCompile(`[./:]`)
 )
 
 // normKeywords are language/config keywords kept literal so that different
@@ -790,18 +860,35 @@ func init() {
 	}
 }
 
+// normIdentTok maps one identifier piece: keywords stay literal, anything
+// else becomes @. Underscores split identifier parts so that leading-_
+// (private) and _test markers survive normalisation.
+func normIdentTok(tok string) string {
+	parts := strings.Split(tok, "_")
+	for i, p := range parts {
+		if p == "" {
+			continue
+		}
+		if k := strings.ToLower(p); normKeywords[k] {
+			parts[i] = k
+		} else {
+			parts[i] = "@"
+		}
+	}
+	return strings.Join(parts, "_")
+}
+
 func normText(s string) string {
 	var out []string
 	for _, ln := range strings.Split(s, "\n") {
-		ln = normStrDQ.ReplaceAllString(ln, `""`)
-		ln = normStrSQ.ReplaceAllString(ln, `''`)
-		ln = normIdent.ReplaceAllStringFunc(ln, func(tok string) string {
-			if k := strings.ToLower(tok); normKeywords[k] {
-				return k
-			}
-			return "@"
-		})
+		ln = normIdent.ReplaceAllStringFunc(ln, normIdentTok)
 		ln = normDigits.ReplaceAllString(ln, "#")
+		ln = normChain.ReplaceAllStringFunc(ln, func(m string) string {
+			if len(normSep.FindAllString(m, -1)) >= 2 {
+				return "@"
+			}
+			return m
+		})
 		ln = normWS.ReplaceAllString(ln, " ")
 		out = append(out, strings.TrimSpace(ln))
 	}
@@ -819,12 +906,7 @@ func normPath(p string) string {
 			ext = s[j:]
 			s = s[:j]
 		}
-		s = normIdent.ReplaceAllStringFunc(s, func(tok string) string {
-			if k := strings.ToLower(tok); normKeywords[k] {
-				return k
-			}
-			return "@"
-		})
+		s = normIdent.ReplaceAllStringFunc(s, normIdentTok)
 		segs[i] = normDigits.ReplaceAllString(s, "#") + ext
 	}
 	return strings.Join(segs, "/")

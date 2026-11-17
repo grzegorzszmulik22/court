@@ -6,6 +6,10 @@
     "src/cart.ts": {
       "before": "",
       "after": "a = 1\nb = 2\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

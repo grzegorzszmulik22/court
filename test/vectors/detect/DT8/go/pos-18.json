@@ -6,10 +6,6 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() { println(1) }\n",
       "after": "package svc\n\nfunc c() { println(1) }\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"ssh deploy@jump.ops.example id\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

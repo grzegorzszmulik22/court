@@ -10,6 +10,10 @@
     "src/extra.ts": {
       "before": "",
       "after": "e = 1\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

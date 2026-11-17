@@ -6,10 +6,6 @@
     "docs/n.md": {
       "before": "# n\n",
       "after": "# n2\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"git push --force origin main\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

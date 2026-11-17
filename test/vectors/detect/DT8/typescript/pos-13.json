@@ -6,10 +6,6 @@
     "src/client.ts": {
       "before": "export function c() {}\n",
       "after": "export function c() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"curl http://localhost:9090/debug\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

@@ -6,6 +6,10 @@
     "db/u.sql": {
       "before": "",
       "after": "UPDATE t SET v = 1 WHERE k = 2;\n"
+    },
+    "db/baseline.sql": {
+      "before": "-- baseline\n",
+      "after": "-- baseline\n"
     }
   },
   "expect": [],

@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "CREATE INDEX idx_orders_total",
       "rule": "dt2-typescript-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE INDEX idx_orders_total ON orders (total_cents);",
+      "rule": "dt12-typescript-new-top-level"
     }
   ]
 }

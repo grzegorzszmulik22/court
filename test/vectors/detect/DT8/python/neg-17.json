@@ -6,10 +6,6 @@
     "svc/client.py": {
       "before": "x = 1\n\ndef c():\n    pass\n",
       "after": "x = 1\n\ndef c():\n    pass\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"curl https://api.internal.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

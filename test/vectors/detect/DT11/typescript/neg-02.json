@@ -6,6 +6,10 @@
     "internal/util.ts": {
       "before": "",
       "after": "export function f() {}\n"
+    },
+    "internal/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

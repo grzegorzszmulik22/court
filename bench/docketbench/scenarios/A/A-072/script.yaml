@@ -9,7 +9,7 @@ agents:
       - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./...\n      - run: go build ./...\n"}
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
-      - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "the guardrail work on .github/workflows/ci.yml?", chosen: "yes"}
+      - declare: {category: other, paths: [".github/workflows/ci.yml"], question: "the other work on .github/workflows/ci.yml?", chosen: "yes"}
       - commit: {message: "tasks: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

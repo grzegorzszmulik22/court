@@ -8,7 +8,7 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 549\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2049\nretries: 3\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.49\"\n  }\n}\n"}
-      - declare: {category: test-strength, paths: ["poll/poll_test.go"], question: "the test-strength work on poll/poll_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["poll/poll_test.go"], question: "the other work on poll/poll_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}

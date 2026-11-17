@@ -8,7 +8,7 @@ agents:
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo6(t *testing.T) {\n\tif clamp(-6, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-6,0,5) = %d\", clamp(-6, 0, 5))\n\t}\n}\n"}
       - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc absval6(x int) int {\n\tif x < 0 {\n\t\treturn -x\n\t}\n\treturn x\n}\n"}
       - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["blog/blog_test.go"], question: "the test-strength work on blog/blog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["blog/blog_test.go"], question: "the other work on blog/blog_test.go?", chosen: "yes"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
       - commit: {message: "blog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

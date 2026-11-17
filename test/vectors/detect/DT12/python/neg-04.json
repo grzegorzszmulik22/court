@@ -6,6 +6,10 @@
     "shop/cart.py": {
       "before": "",
       "after": "a = 1\nb = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

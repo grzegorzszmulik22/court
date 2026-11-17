@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "CREATE TABLE IF NOT EXISTS kv",
       "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

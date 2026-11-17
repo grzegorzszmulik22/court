@@ -1,13 +1,13 @@
 {
   "id": "T-14",
-  "comment": "other + other with overlapping paths DO merge -> confirmed.",
+  "comment": "interface + interface with overlapping paths DO merge -> confirmed. (Taught as \"other\" before L2: no detector produces \"other\".)",
   "inputs": {
     "expected": [],
     "decisions": [
       {
         "id": "d1",
         "source": "declared",
-        "category": "other",
+        "category": "interface",
         "paths": [
           "x/a.go"
         ],
@@ -18,7 +18,7 @@
       {
         "id": "h1",
         "source": "detected",
-        "category": "other",
+        "category": "interface",
         "paths": [
           "x/a.go"
         ],
@@ -76,6 +76,6 @@
     }
   ],
   "tags": [
-    "other-overlap"
+    "merge"
   ]
 }

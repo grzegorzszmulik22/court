@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "ALTER TABLE orders ADD COLUMN",
       "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

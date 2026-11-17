@@ -6,10 +6,6 @@
     "ops/log.txt": {
       "before": "a\n",
       "after": "b\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"rm x.tmp\", \"cwd\": \"/repo\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

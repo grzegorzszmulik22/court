@@ -6,10 +6,6 @@
     "ops/log2.txt": {
       "before": "a\nb\n",
       "after": "a\nb\nc\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"git commit -m x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

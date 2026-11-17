@@ -10,7 +10,7 @@ agents:
       - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc absval5(x int) int {\n\tif x < 0 {\n\t\treturn -x\n\t}\n\treturn x\n}\n"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["sched/sched_test.go"], question: "the other work on sched/sched_test.go?", chosen: "yes"}
       - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
       - commit: {message: "scheduler: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

@@ -11,7 +11,7 @@ agents:
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "the test-strength work on ledger/ledger_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["ledger/ledger_test.go"], question: "the other work on ledger/ledger_test.go?", chosen: "yes"}
       - commit: {message: "ledger: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}

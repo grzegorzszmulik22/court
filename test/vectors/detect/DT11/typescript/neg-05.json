@@ -6,6 +6,10 @@
     "scripts/deploy.sh": {
       "before": "",
       "after": "#!/bin/sh\nrun\n"
+    },
+    "scripts/baseline.sh": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

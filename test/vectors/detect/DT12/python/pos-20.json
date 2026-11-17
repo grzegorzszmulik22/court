@@ -28,6 +28,19 @@
       "side": "after",
       "evidence": "entry34",
       "rule": "dt12-python-oversize"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "shop/cart.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "entry0",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

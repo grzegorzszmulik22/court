@@ -6,10 +6,6 @@
     "ops/log.txt": {
       "before": "a\n",
       "after": "a\nb\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"git reset --hard HEAD~3\", \"timeout\": 10}, \"name\": \"exec\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

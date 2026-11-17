@@ -6,10 +6,6 @@
     "tools/x.txt": {
       "before": "a\n",
       "after": "a\nb\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"rm -rf build/\"}, \"name\": \"shell\", \"outcome\": \"fail\"}\n"
     }
   },
   "tool_events": [

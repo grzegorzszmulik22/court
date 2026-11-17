@@ -6,6 +6,10 @@
     "scripts/x.sh": {
       "before": "",
       "after": "#!/bin/sh\nx\n"
+    },
+    "scripts/baseline.sh": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "expect": [],

@@ -6,6 +6,10 @@
     "app/x.go": {
       "before": "",
       "after": "export const a = 1;\nconsole.log(a);\n"
+    },
+    "app/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
     }
   },
   "commission": {

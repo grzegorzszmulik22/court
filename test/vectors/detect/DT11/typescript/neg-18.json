@@ -10,6 +10,10 @@
     "shop/inside.ts": {
       "before": "",
       "after": "export const i = 1;\n"
+    },
+    "shop/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

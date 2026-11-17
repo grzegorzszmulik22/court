@@ -6,6 +6,10 @@
     "db/q.sql": {
       "before": "",
       "after": "DELETE FROM users WHERE id = 7;\n"
+    },
+    "db/baseline.sql": {
+      "before": "-- baseline\n",
+      "after": "-- baseline\n"
     }
   },
   "expect": [],

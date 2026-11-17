@@ -6,6 +6,10 @@
     "src/cart.ts": {
       "before": "",
       "after": "export const x = 1;\nn = 3\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

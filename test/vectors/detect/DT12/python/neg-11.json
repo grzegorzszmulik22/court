@@ -10,6 +10,10 @@
     "shop/extra.py": {
       "before": "",
       "after": "e = 1\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

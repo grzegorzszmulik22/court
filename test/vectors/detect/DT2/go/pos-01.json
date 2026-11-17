@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "CREATE TABLE orders",
       "rule": "dt2-go-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE orders (",
+      "rule": "dt12-go-new-top-level"
     }
   ],
   "note": "a .sql migration with DDL fires migration and ddl"

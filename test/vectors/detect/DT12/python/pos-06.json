@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "# n",
       "rule": "dt12-python-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "docs/new.md",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "# n",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DELETE FROM audit",
       "rule": "dt10-python-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "svc/q.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "WIPE = \"DELETE FROM audit\"",
+      "rule": "dt12-python-new-top-level"
     }
   ],
   "note": "destructive SQL inside a code string literal"

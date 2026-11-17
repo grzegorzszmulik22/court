@@ -3,7 +3,7 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "data/token_count.csv": {
+    "data/token/count.csv": {
       "before": "a,1\n",
       "after": "a,2\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "data/token_count.csv",
+      "path": "data/token/count.csv",
       "lines": [
         1,
         1

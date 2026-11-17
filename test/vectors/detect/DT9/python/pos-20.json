@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "ops/login_runbook.md": {
-      "before": "# login\n",
-      "after": "# login\nsteps\n"
+    "ops/login/runbook.md": {
+      "before": "# login\n\n- step a\n",
+      "after": "# login\n\n- step a\n- step b\n- step c\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "ops/login_runbook.md",
+      "path": "ops/login/runbook.md",
       "lines": [
-        2,
-        2
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "steps",
+      "evidence": "- step c",
       "rule": "dt9-python-touched"
     }
   ]

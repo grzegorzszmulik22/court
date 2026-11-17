@@ -6,6 +6,10 @@
     "shop/x/y/z.go": {
       "before": "",
       "after": "z = 1\nw = 2\n"
+    },
+    "shop/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
     }
   },
   "commission": {

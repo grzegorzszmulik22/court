@@ -10,7 +10,7 @@ agents:
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo36(t *testing.T) {\n\tif clamp(-36, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-36,0,5) = %d\", clamp(-36, 0, 5))\n\t}\n}\n"}
       - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\n# answered: update the guide?\n"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["blog/blog_test.go"], question: "the test-strength work on blog/blog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["blog/blog_test.go"], question: "the other work on blog/blog_test.go?", chosen: "yes"}
       - declare: {category: scope, paths: ["docs/guide.md"], question: "update the guide?", chosen: "yes, done as asked"}
       - commit: {message: "blog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DELETE FROM users;",
       "rule": "dt10-go-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "ops/purge.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DELETE FROM users;",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

@@ -6,10 +6,6 @@
     "src/client.ts": {
       "before": "export function c() { return 1; }\n",
       "after": "export function c() { return 1; }\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"ssh deploy@jump.ops.example id\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

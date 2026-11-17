@@ -21,19 +21,7 @@
       "side": "after",
       "evidence": "ALTER TABLE users ADD COLUMN active",
       "rule": "dt2-python-changed-migration"
-    },
-    {
-      "detector": "DT2",
-      "category": "schema",
-      "subkind": "ddl",
-      "path": "alembic/versions/0001_init.py",
-      "lines": [
-        2,
-        2
-      ],
-      "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN active",
-      "rule": "dt2-python-ddl"
     }
-  ]
+  ],
+  "note": "alembic migration adding DDL: migration hit only; ddl subkind is .sql hunks only"
 }

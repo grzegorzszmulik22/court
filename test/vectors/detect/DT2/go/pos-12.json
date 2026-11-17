@@ -60,6 +60,19 @@
       "side": "after",
       "evidence": "DROP TABLE t_old;",
       "rule": "dt10-sql-drop"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

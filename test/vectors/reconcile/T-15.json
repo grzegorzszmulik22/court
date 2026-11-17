@@ -1,13 +1,13 @@
 {
   "id": "T-15",
-  "comment": "other + other with empty/non-overlapping paths never merge: declared-only beside undeclared.",
+  "comment": "dependency + dependency with empty/non-overlapping paths never merge: declared-only beside undeclared. (Re-categorised under L2.)",
   "inputs": {
     "expected": [],
     "decisions": [
       {
         "id": "d1",
         "source": "declared",
-        "category": "other",
+        "category": "dependency",
         "paths": [],
         "world": "w1",
         "commit": 1,
@@ -16,7 +16,7 @@
       {
         "id": "h1",
         "source": "detected",
-        "category": "other",
+        "category": "dependency",
         "paths": [
           "y/b.go"
         ],
@@ -90,6 +90,6 @@
     }
   ],
   "tags": [
-    "other-no-overlap"
+    "empty-paths"
   ]
 }

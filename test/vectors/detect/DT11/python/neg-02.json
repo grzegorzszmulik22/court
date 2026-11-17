@@ -6,6 +6,10 @@
     "internal/util.py": {
       "before": "",
       "after": "def f():\n    pass\n"
+    },
+    "internal/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "set -e",
       "rule": "dt11-go-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "scripts/deploy.sh",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "#!/bin/sh",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

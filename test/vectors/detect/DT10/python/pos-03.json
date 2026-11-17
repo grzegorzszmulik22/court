@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DELETE FROM users;",
       "rule": "dt10-python-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "ops/purge.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DELETE FROM users;",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

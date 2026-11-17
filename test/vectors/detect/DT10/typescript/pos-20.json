@@ -6,10 +6,6 @@
     "ops/run/x.log": {
       "before": "a\n",
       "after": "b\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"git clean -fdx\", \"user\": \"ci\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

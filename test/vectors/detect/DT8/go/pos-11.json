@@ -6,10 +6,6 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
       "after": "package svc\n\nfunc c() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"curl -s https://api0.vendor.example/ping\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

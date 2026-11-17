@@ -9,7 +9,7 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 511\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./... || true\n      - run: go build ./...\n"}
       - declare: {category: structure, paths: ["shop/util.go"], question: "the structure work on shop/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["shop/shop_test.go"], question: "the test-strength work on shop/shop_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "allow the guardrail change?", chosen: "yes"}

@@ -34,6 +34,45 @@
       "side": "after",
       "evidence": "DROP TABLE a;",
       "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/multi.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE b;",
+      "rule": "dt2-python-ddl"
+    },
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "db/multi.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE b;",
+      "rule": "dt10-python-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "db/multi.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE a;",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

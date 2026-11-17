@@ -6,6 +6,10 @@
     "internal/a/b/c.go": {
       "before": "",
       "after": "export const c = 1;\nexport const d = 2;\n"
+    },
+    "internal/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
     }
   },
   "commission": {

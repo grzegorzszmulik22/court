@@ -6,6 +6,10 @@
     "src/shop.test.ts": {
       "before": "",
       "after": "test('new', () => {});\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "expect": [],

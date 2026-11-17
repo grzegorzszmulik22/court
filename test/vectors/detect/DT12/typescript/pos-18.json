@@ -61,6 +61,45 @@
       "side": "after",
       "evidence": "c",
       "rule": "dt12-typescript-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "docs/a.md",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "a",
+      "rule": "dt12-typescript-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "config/b.yaml",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "b: 1",
+      "rule": "dt12-typescript-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/c.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "c",
+      "rule": "dt12-typescript-new-top-level"
     }
   ],
   "note": "each unplanned file gets its own hit"

@@ -50,9 +50,13 @@ used for backbrief conformance.
   merged decision, member input ids listed, seq increasing.
 
 The validator `bench/docketbench/validate` checks each trace's shape:
-id vocabulary, per-row internal consistency (verdict/flag/queued
-relations from `01` §7.2 and §7.3, event coverage), tag truthfulness,
-and corpus coverage. Per CR-003 it does NOT replay the traces through a
-second implementation of §7; the expected results were written by
-reasoning from `01` §7 and are reviewed independently, then checked
-again by the independent M3.5 implementation.
+id vocabulary and naming, required fields per source (detected entries
+always carry real file paths and hit digests — `03` §1.5), merge-shape
+consistency (a merged row's members share world and category), event
+coverage, tag truthfulness where a tag's truth is readable from the
+trace's shape, and corpus coverage. Per CR-003 it does NOT replay the
+traces through a second implementation of §7 and does NOT check that
+verdicts, flags or queue states follow from the inputs; the expected
+results were written by reasoning from `01` §7 and are reviewed
+independently, then checked again by the independent M3.5
+implementation.

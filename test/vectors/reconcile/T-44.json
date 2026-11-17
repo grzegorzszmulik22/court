@@ -1,6 +1,6 @@
 {
   "id": "T-44",
-  "comment": "Same world, same category, paths nested the other direction: hit path contains the declared path.",
+  "comment": "Same world, same category, nested paths: the declared dir path db/ contains the hit path db/migrations/2.sql (detected paths are files, never directories).",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -9,7 +9,7 @@
         "source": "declared",
         "category": "schema",
         "paths": [
-          "db/migrations/2.sql"
+          "db/"
         ],
         "world": "w1",
         "commit": 1,
@@ -20,7 +20,7 @@
         "source": "detected",
         "category": "schema",
         "paths": [
-          "db/"
+          "db/migrations/2.sql"
         ],
         "world": "w1",
         "commit": 1,

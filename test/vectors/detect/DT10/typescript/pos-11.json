@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DELETE FROM audit",
       "rule": "dt10-typescript-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "src/q.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "const wipe = \"DELETE FROM audit\";",
+      "rule": "dt12-typescript-new-top-level"
     }
   ],
   "note": "destructive SQL inside a code string literal"

@@ -1,11 +1,11 @@
 {
   "id": "T-16",
-  "comment": "other vs expected: expected 'other' with paths only matches on overlap; disjoint -> unanswered expected + undeclared hit.",
+  "comment": "schema vs expected: expected 'schema' with paths only matches on overlap; disjoint -> unanswered expected + undeclared hit.",
   "inputs": {
     "expected": [
       {
         "id": "e1",
-        "category": "other",
+        "category": "schema",
         "paths": [
           "x/"
         ],
@@ -17,7 +17,7 @@
       {
         "id": "h1",
         "source": "detected",
-        "category": "other",
+        "category": "schema",
         "paths": [
           "y/b.go"
         ],
@@ -89,6 +89,6 @@
     }
   ],
   "tags": [
-    "other-no-overlap"
+    "disjoint-paths"
   ]
 }

@@ -6,6 +6,10 @@
     "shop/cart.go": {
       "before": "",
       "after": "package shop\nn = 3\n"
+    },
+    "shop/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
     }
   },
   "commission": {

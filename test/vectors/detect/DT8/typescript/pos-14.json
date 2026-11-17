@@ -6,10 +6,6 @@
     "src/client.ts": {
       "before": "const x = 1;\n\nexport function c() {}\n",
       "after": "const x = 1;\n\nexport function c() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"ping -c1 stats.collector.example\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

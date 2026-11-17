@@ -9,7 +9,7 @@ agents:
       - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 29, restore the previous binary and re-run migrations 0029 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 29 runs extra sync'\n"}
-      - declare: {category: test-strength, paths: ["poll/poll_test.go"], question: "the test-strength work on poll/poll_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["poll/poll_test.go"], question: "the other work on poll/poll_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["poll/util.go"], question: "the behaviour work on poll/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}

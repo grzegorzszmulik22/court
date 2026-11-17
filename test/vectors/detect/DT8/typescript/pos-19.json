@@ -6,10 +6,6 @@
     "src/client.ts": {
       "before": "export function c() {}\n",
       "after": "export function c() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"curl https://m1.cache.example/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"telnet relay.ops.example 23\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

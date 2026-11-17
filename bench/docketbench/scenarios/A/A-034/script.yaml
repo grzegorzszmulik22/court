@@ -8,7 +8,7 @@ agents:
             - {question: "route metrics through the proxy?", category: outbound, paths: ["config/proxy.yml"]}
       - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\n\nfunc TestClampLo34(t *testing.T) {\n\tif clamp(-34, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-34,0,5) = %d\", clamp(-34, 0, 5))\n\t}\n}\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 534\n  write_ms: 2000\nretries: 3\n"}
-      - declare: {category: test-strength, paths: ["catalog/catalog_test.go"], question: "the test-strength work on catalog/catalog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["catalog/catalog_test.go"], question: "the other work on catalog/catalog_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "catalog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

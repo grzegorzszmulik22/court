@@ -60,6 +60,19 @@
       "side": "after",
       "evidence": "DROP TABLE t_old;",
       "rule": "dt10-sql-drop"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE t_old;",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

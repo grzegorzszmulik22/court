@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "tail",
       "rule": "dt12-go-oversize"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "shop/cart.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "item0",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

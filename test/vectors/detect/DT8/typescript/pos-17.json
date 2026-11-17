@@ -6,10 +6,6 @@
     "src/client.ts": {
       "before": "export function c() {}\nexport function d() {}\n",
       "after": "export function c() {}\nexport function d() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"nc -z backup.archive.example 443\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

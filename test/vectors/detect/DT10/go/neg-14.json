@@ -6,6 +6,10 @@
     "db/q.sql": {
       "before": "",
       "after": "INSERT INTO t VALUES (7, 'a');\n"
+    },
+    "db/baseline.sql": {
+      "before": "-- baseline\n",
+      "after": "-- baseline\n"
     }
   },
   "expect": [],

@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "k = 1",
       "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "shop/sub/deep/x.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k = 1",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

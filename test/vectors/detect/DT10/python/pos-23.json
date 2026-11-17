@@ -6,10 +6,6 @@
     "ops/run/log.txt": {
       "before": "x\n",
       "after": "y\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"rm -r data/\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"ls\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

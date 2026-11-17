@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "raw",
       "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "topfile",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "raw",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

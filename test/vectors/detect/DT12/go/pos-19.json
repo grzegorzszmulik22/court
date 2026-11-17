@@ -31,6 +31,19 @@
       "side": "after",
       "evidence": "more",
       "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/note.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "note",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

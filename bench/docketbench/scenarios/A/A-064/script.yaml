@@ -9,7 +9,7 @@ agents:
       - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\nfunc TestClampBounds4(t *testing.T) {\n\tif clamp(9, 0, 5) != 5 {\n\t\tt.Fatalf(\"clamp(9,0,5) = %d\", clamp(9, 0, 5))\n\t}\n}\n"}
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["catalog/catalog_test.go"], question: "the test-strength work on catalog/catalog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["catalog/catalog_test.go"], question: "the other work on catalog/catalog_test.go?", chosen: "yes"}
       - commit: {message: "catalog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

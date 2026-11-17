@@ -1,11 +1,11 @@
 {
   "id": "T-17",
-  "comment": "other + other with overlapping paths: expected and detected merge -> hit is undeclared but foreseen (no unforeseen flag).",
+  "comment": "interface + interface with overlapping paths: expected and detected merge -> hit is undeclared but foreseen (no unforeseen flag).",
   "inputs": {
     "expected": [
       {
         "id": "e1",
-        "category": "other",
+        "category": "interface",
         "paths": [
           "x/"
         ],
@@ -17,7 +17,7 @@
       {
         "id": "h1",
         "source": "detected",
-        "category": "other",
+        "category": "interface",
         "paths": [
           "x/b.go"
         ],
@@ -73,6 +73,6 @@
     }
   ],
   "tags": [
-    "other-overlap"
+    "expected-detected"
   ]
 }

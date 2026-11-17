@@ -6,6 +6,10 @@
     "shop/x/y/z.py": {
       "before": "",
       "after": "z = 1\nw = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

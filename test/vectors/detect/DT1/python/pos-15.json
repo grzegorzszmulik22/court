@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "requests==2.31.0",
       "rule": "dt1-python-manifest-added"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "requirements.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "requests==2.31.0",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

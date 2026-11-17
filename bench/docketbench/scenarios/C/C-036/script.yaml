@@ -15,7 +15,7 @@ agents:
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo16(t *testing.T) {\n\tif clamp(-16, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-16,0,5) = %d\", clamp(-16, 0, 5))\n\t}\n}\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: blog\n  version: 1.0.0\npaths:\n  /blog/items:\n    get:\n      summary: fetch items\n"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["blog/blog_test.go"], question: "the test-strength work on blog/blog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["blog/blog_test.go"], question: "the other work on blog/blog_test.go?", chosen: "yes"}
       - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
@@ -29,7 +29,7 @@ agents:
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo16(t *testing.T) {\n\tif clamp(-16, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-16,0,5) = %d\", clamp(-16, 0, 5))\n\t}\n}\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: blog\n  version: 1.0.0\npaths:\n  /blog/items:\n    get:\n      summary: fetch items\n"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["blog/blog_test.go"], question: "the test-strength work on blog/blog_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["blog/blog_test.go"], question: "the other work on blog/blog_test.go?", chosen: "yes"}
       - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}

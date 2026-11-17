@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "return 0 }",
       "rule": "dt11-go-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "lib/core.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package lib",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

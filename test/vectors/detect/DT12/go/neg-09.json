@@ -6,6 +6,10 @@
     "shop/cart.go": {
       "before": "",
       "after": "q = 1\nr = 2\n"
+    },
+    "shop/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
     }
   },
   "expect": [],

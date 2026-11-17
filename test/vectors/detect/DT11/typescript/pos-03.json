@@ -28,6 +28,19 @@
       "side": "after",
       "evidence": "export function f() {}",
       "rule": "dt11-typescript-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/gen.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function f() {}",
+      "rule": "dt12-typescript-new-top-level"
     }
   ],
   "note": "outside a three-glob territory"

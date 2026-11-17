@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nconst v = \"1.2.3\"\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst v = \"1.2.4\"\n\nfunc c() {}\n"
+      "before": "package svc\n\nconst endpoint = \"https://api.acme-example.io/v1\"\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst endpoint = \"https://api.acme-example.io/v1\"\nconst mirror = \"https://api.acme-example.io/v2\"\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "const-value",
-  "note": "const-value"
+  "near_miss": "host-in-base",
+  "note": "near miss: the only added host literal names a host already in the base tree"
 }

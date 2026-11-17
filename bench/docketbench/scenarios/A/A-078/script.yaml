@@ -6,10 +6,8 @@ agents:
           plan_files: ["files/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 518\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2018\nretries: 3\n"}
-      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 3600\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n\n// MinTTLSeconds is the smallest legal session ttl.\nfunc MinTTLSeconds() int {\n\treturn 60\n}\n"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "the authority work on internal/auth/session.go?", chosen: "yes"}
       - commit: {message: "files: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

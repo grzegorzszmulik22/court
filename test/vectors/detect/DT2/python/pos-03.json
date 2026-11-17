@@ -47,6 +47,19 @@
       "side": "after",
       "evidence": "DROP TABLE legacy_orders;",
       "rule": "dt10-sql-drop"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "alembic/versions/0002_q.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE legacy_orders;",
+      "rule": "dt12-python-new-top-level"
     }
   ],
   "note": "DROP in a migration is schema DDL and an unguarded delete"

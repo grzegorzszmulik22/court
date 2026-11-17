@@ -11,7 +11,7 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 533\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n\n# answered: version the public contract?\n"}
       - declare: {category: structure, paths: ["ledger/util.go"], question: "the structure work on ledger/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "the test-strength work on ledger/ledger_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["ledger/ledger_test.go"], question: "the other work on ledger/ledger_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: interface, paths: ["api/openapi.yaml"], question: "version the public contract?", chosen: "yes, done as asked"}
       - commit: {message: "ledger: routine refresh"}

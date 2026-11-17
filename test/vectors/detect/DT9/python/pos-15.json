@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "config/scopes.yaml": {
-      "before": "scopes: [read]\n",
-      "after": "scopes: [read, admin]\n"
+    "config/cors.yaml": {
+      "before": "allow_origins: [https://app.example.com]\n",
+      "after": "allow_origins: [\"*\"]\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "widened",
-      "path": "config/scopes.yaml",
+      "path": "config/cors.yaml",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "admin]",
+      "evidence": "\"*\"",
       "rule": "dt9-python-widened"
     }
   ],
-  "note": "scope list gains admin"
+  "note": "added line widens access: '*' origin"
 }

@@ -1349,3 +1349,240 @@ func TestVectors_duplicate_normalized(t *testing.T) {
 		t.Fatalf("identifier/digit-renamed duplicate was accepted; got: %v", v2.list)
 	}
 }
+
+// ---------------------------------------------------------------------------
+// I. sabotage-proofing: five rules that could be switched off with every
+// check green. Each violating fixture must be reported; each boundary
+// fixture must pass.
+// ---------------------------------------------------------------------------
+
+// I1: necessity regardless of letter case on the KEYWORD side too. A
+// mixed-case keyword is found in lowercase text only when the keyword
+// itself is lower-cased before matching — removing that ToLower is the
+// sabotage. (The malformed-case keyword also trips registry-keywords;
+// the assertion here is on necessity.)
+func TestC3_1_3_keyword_case(t *testing.T) {
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	kw := keywordOf(t, p)
+	mixed := strings.ToUpper(kw[:1]) + kw[1:]
+	reg := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(reg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := strings.Replace(string(raw), `"`+kw+`"`, `"`+mixed+`"`, 1)
+	if s == string(raw) {
+		t.Fatalf("registry does not contain keyword %q to recase", kw)
+	}
+	if err := os.WriteFile(reg, []byte(s), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, p.Subset, p.ID, "final.txt"),
+		[]byte("Done — "+kw+" happened as planned."), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "necessity")
+
+	// boundary: same keyword all-lowercase in a final.txt without it.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "necessity") {
+		t.Fatalf("clean pair tripped necessity; got: %v", v.list)
+	}
+}
+
+// I2: twin file parity — a twin that never touches a file its planted
+// scenario touches must fail (H1, 04 §8).
+func TestTwinEdits_missing_file(t *testing.T) {
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+
+	// violating fixture: drop every edit step on one file from the twin
+	// only, so it never touches that file at all.
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	raw, err := os.ReadFile(sp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out []string
+	removed := false
+	for _, ln := range strings.Split(string(raw), "\n") {
+		if strings.Contains(ln, "- edit:") && strings.Contains(ln, "config/limits.yml") {
+			removed = true
+			continue
+		}
+		out = append(out, ln)
+	}
+	if !removed {
+		t.Fatalf("twin %s has no edit on config/limits.yml to remove", tw.ID)
+	}
+	if err := os.WriteFile(sp, []byte(strings.Join(out, "\n")), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "twin-files")
+
+	// boundary: the untouched pair passes twin-files.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-files") {
+		t.Fatalf("clean pair tripped twin-files; got: %v", v.list)
+	}
+}
+
+// I3: a detected trace entry with empty paths must fail (03 §1.5, G5).
+func TestReconcile_detected_paths(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/reconcile")
+
+	// boundary: the real corpus is clean.
+	v := &violations{}
+	validateReconcile(src, v)
+	if hasCode(v, "reconcile-detected-paths") {
+		t.Fatalf("real corpus trips reconcile-detected-paths: %v", v.list)
+	}
+
+	// violating fixture: empty the paths of a detected entry.
+	root := t.TempDir()
+	dst := filepath.Join(root, "reconcile")
+	copyDir(t, src, dst)
+	files, _ := os.ReadDir(dst)
+	fixed := false
+	for _, f := range files {
+		fp := filepath.Join(dst, f.Name())
+		raw, err := os.ReadFile(fp)
+		if err != nil || !strings.HasSuffix(f.Name(), ".json") {
+			continue
+		}
+		var tr map[string]any
+		if json.Unmarshal(raw, &tr) != nil {
+			continue
+		}
+		inputs, _ := tr["inputs"].(map[string]any)
+		for _, d := range inputs["decisions"].([]any) {
+			dm := d.(map[string]any)
+			if dm["source"] == "detected" && !fixed {
+				dm["paths"] = []any{}
+				fixed = true
+			}
+		}
+		if fixed {
+			buf, _ := json.Marshal(tr)
+			os.WriteFile(fp, buf, 0o644)
+			break
+		}
+	}
+	if !fixed {
+		t.Fatal("no detected entry found to strip paths from")
+	}
+	v2 := &violations{}
+	validateReconcile(dst, v2)
+	if !hasCode(v2, "reconcile-detected-paths") {
+		t.Fatalf("detected entry with empty paths was accepted; got: %v", v2.list)
+	}
+}
+
+// I4: coverage-tag truth — every tag whose truth the validator checks
+// must fail on a trace it is not true of.
+func TestReconcile_tag_truth(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/reconcile")
+	dir, _ := os.ReadDir(src)
+
+	// Order traces deterministically; for each tag find one trace where
+	// the tag is not carried, add it, and require reconcile-tag.
+	var names []string
+	for _, f := range dir {
+		if strings.HasSuffix(f.Name(), ".json") {
+			names = append(names, f.Name())
+		}
+	}
+	skipped := []string{}
+	for tag := range knownTags {
+		found := false
+		for _, name := range names {
+			raw, err := os.ReadFile(filepath.Join(src, name))
+			if err != nil {
+				continue
+			}
+			var tr map[string]any
+			if json.Unmarshal(raw, &tr) != nil {
+				continue
+			}
+			cur, _ := tr["tags"].([]any)
+			has := false
+			for _, x := range cur {
+				if x == tag {
+					has = true
+				}
+			}
+			if has {
+				continue
+			}
+			root := t.TempDir()
+			dst := filepath.Join(root, "reconcile")
+			os.MkdirAll(dst, 0o755)
+			tr["tags"] = append(cur, tag)
+			buf, _ := json.Marshal(tr)
+			os.WriteFile(filepath.Join(dst, name), buf, 0o644)
+			v := &violations{}
+			validateReconcile(dst, v)
+			if hasDetail(v, "reconcile-tag", "not true") {
+				found = true
+				break
+			}
+		}
+		if !found {
+			skipped = append(skipped, tag)
+		}
+	}
+	if len(skipped) > 0 {
+		t.Logf("tags true on every real trace (no falsifying fixture): %v", skipped)
+	}
+}
+
+// I5: a keyword that does not occur in the item's description must fail
+// (H3, C3.1.3 registry-keywords).
+func TestC3_1_3_registry_keyword(t *testing.T) {
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+
+	// violating fixture: a token no description text contains.
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	reg := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(reg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	kw := keywordOf(t, p)
+	s := strings.Replace(string(raw), `"`+kw+`"`, `"zebra-token"`, 1)
+	if s == string(raw) {
+		t.Fatalf("registry does not contain keyword %q to corrupt", kw)
+	}
+	if err := os.WriteFile(reg, []byte(s), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "registry-keywords")
+
+	// boundary: the real registry passes the keyword check.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "registry-keywords") {
+		t.Fatalf("clean pair tripped registry-keywords; got: %v", v.list)
+	}
+}

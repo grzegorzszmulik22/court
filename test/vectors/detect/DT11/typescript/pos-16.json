@@ -26,6 +26,19 @@
       "side": "after",
       "evidence": "<svg></svg>",
       "rule": "dt11-typescript-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "assets/logo.svg",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "<svg></svg>",
+      "rule": "dt12-typescript-new-top-level"
     }
   ]
 }

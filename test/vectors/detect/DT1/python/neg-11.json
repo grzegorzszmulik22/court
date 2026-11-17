@@ -3,11 +3,15 @@
   "detector": "DT1",
   "language": "python",
   "files": {
-    "requirements.txt": {
+    "pkg/requirements.txt": {
       "before": "",
       "after": "# nothing yet\n"
+    },
+    "pkg/app.py": {
+      "before": "def a():\n    return 1\n",
+      "after": "def a():\n    return 1\n"
     }
   },
   "expect": [],
-  "note": "empty-file"
+  "note": "near miss: a stub requirements.txt inside an existing package dir, comment-only"
 }

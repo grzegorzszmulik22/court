@@ -9,7 +9,7 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 555\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.55\"\n  }\n}\n"}
       - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["sched/sched_test.go"], question: "the other work on sched/sched_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}
       - commit: {message: "scheduler: routine refresh"}

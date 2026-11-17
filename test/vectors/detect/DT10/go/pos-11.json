@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "DELETE FROM audit",
       "rule": "dt10-go-sql"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "svc/q.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package svc",
+      "rule": "dt12-go-new-top-level"
     }
   ],
   "note": "destructive SQL inside a code string literal"

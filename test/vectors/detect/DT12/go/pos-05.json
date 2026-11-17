@@ -40,6 +40,19 @@
       "side": "after",
       "evidence": "row49",
       "rule": "dt12-go-oversize"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/bigdata.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "row0",
+      "rule": "dt12-go-new-top-level"
     }
   ],
   "note": "big unplanned file is both unplanned and oversize"

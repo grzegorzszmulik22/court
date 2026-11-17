@@ -6,6 +6,10 @@
     "shop/cart.py": {
       "before": "",
       "after": "q = 1\nr = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "expect": [],

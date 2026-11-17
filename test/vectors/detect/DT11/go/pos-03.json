@@ -28,6 +28,19 @@
       "side": "after",
       "evidence": "package x",
       "rule": "dt11-go-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/gen.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package x",
+      "rule": "dt12-go-new-top-level"
     }
   ],
   "note": "outside a three-glob territory"

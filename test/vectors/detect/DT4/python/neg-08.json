@@ -6,6 +6,10 @@
     "tests/test_shop.py": {
       "before": "",
       "after": "def test_new():\n    pass\n"
+    },
+    "tests/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "expect": [],

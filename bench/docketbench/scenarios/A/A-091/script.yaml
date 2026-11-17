@@ -11,7 +11,7 @@ agents:
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.31\"\n  }\n}\n"}
       - declare: {category: behaviour, paths: ["shop/util.go"], question: "the behaviour work on shop/util.go?", chosen: "yes"}
       - declare: {category: structure, paths: ["shop/util.go"], question: "the structure work on shop/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["shop/shop_test.go"], question: "the test-strength work on shop/shop_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

@@ -6,6 +6,10 @@
     "src/sub/x.ts": {
       "before": "",
       "after": "export const x = 1;\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "commission": {

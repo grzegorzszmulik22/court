@@ -6,10 +6,6 @@
     "ops/run.txt": {
       "before": "a\n",
       "after": "a\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"git status\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n{\"input\": {\"command\": \"ls -la\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

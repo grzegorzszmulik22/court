@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nvar mirror = \"https://cdn-mirror.example.net/x\"\n\nfunc c() {}\n"
+      "before": "package svc\n\nfunc c() { ping() }\n",
+      "after": "package svc\n\nfunc c() { ping(\"https://cdn-mirror.example.net/x\") }\n"
     }
   },
   "expect": [

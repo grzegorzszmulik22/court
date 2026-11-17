@@ -1,0 +1,27 @@
+{
+  "id": "DT3-python-pos-31",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def f(x=1):\n    return x\n",
+      "after": "def f(x='a'):\n    return x\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def f(x='a'):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ],
+  "note": "parameter list changed (default value): hit"
+}

@@ -6,10 +6,6 @@
     "tools/refresh.sh": {
       "before": "#!/bin/sh\nexit 0\n",
       "after": "#!/bin/sh\nexit 0\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"sh tools/refresh.sh\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

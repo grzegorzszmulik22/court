@@ -52,6 +52,19 @@
       "side": "after",
       "evidence": "syntax",
       "rule": "dt3-contract-proto"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "proto/svc.proto",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "syntax = \"proto3\";",
+      "rule": "dt12-typescript-new-top-level"
     }
   ],
   "note": ".proto outside territory also fires format and contract"

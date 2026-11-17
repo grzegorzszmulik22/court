@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "github.com/a/b v1.0.0",
       "rule": "dt1-go-manifest-added"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "go.mod",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "module shop",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

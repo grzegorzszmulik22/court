@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "return 0",
       "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "lib/core.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def core():",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

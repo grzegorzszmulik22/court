@@ -6,10 +6,6 @@
     "x/y/z.txt": {
       "before": "1\n",
       "after": "2\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"rm -rf /tmp/stage\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

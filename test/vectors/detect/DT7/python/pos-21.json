@@ -1,0 +1,27 @@
+{
+  "id": "DT7-python-pos-21",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/final.py": {
+      "before": "def fin(n):\n    return tail(n)\n",
+      "after": "def fin(n):\n    try:\n        return tail(n)\n    except (FinalError, TailError):\n        return None\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/final.py",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return None",
+      "rule": "dt7-python-swallowed"
+    }
+  ],
+  "note": "handler returns a constant (None): swallowed"
+}

@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "CREATE TABLE IF NOT EXISTS kv",
       "rule": "dt2-typescript-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);",
+      "rule": "dt12-typescript-new-top-level"
     }
   ]
 }

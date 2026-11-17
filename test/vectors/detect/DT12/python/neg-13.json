@@ -6,6 +6,10 @@
     "shop/any/f.py": {
       "before": "",
       "after": "f = 1\ng = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {

@@ -27,6 +27,19 @@
       "side": "after",
       "evidence": "c: 3",
       "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "config/new.yaml",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "a: 1",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

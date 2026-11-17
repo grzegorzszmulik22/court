@@ -11,7 +11,7 @@ agents:
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["shop/shop_test.go"], question: "the test-strength work on shop/shop_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

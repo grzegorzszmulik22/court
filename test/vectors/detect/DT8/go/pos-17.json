@@ -6,10 +6,6 @@
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\nfunc d() {}\n",
       "after": "package svc\n\nfunc c() {}\nfunc d() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"nc -z backup.archive.example 443\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

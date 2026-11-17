@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() int { return 1 }\n",
-      "after": "package svc\n\nfunc c() int { return 2 }\n"
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\n// endpoint: https://api.acme-example.io/v1\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "body-digit-up",
-  "note": "body-digit-up"
+  "near_miss": "comment-hostname",
+  "note": "near miss: hostname inside a comment is documentation, not a literal"
 }

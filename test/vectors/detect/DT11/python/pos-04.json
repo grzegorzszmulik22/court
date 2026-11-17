@@ -26,6 +26,19 @@
       "side": "after",
       "evidence": "on: push",
       "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": ".github/workflows/ci.yml",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "on: push",
+      "rule": "dt12-python-new-top-level"
     }
   ]
 }

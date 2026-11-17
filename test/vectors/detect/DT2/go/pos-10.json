@@ -34,6 +34,19 @@
       "side": "after",
       "evidence": "CREATE INDEX idx_orders_total",
       "rule": "dt2-go-ddl"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "migrations/0002_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE INDEX idx_orders_total ON orders (total_cents);",
+      "rule": "dt12-go-new-top-level"
     }
   ]
 }

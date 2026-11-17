@@ -11,7 +11,7 @@ agents:
       - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\n\necho 'deploy completes'\n"}
       - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
-      - declare: {category: test-strength, paths: ["sched/sched_test.go"], question: "the test-strength work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["sched/sched_test.go"], question: "the other work on sched/sched_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["sched/util.go"], question: "the behaviour work on sched/util.go?", chosen: "yes"}
       - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "extend the deploy script?", chosen: "yes, done as asked"}
       - commit: {message: "scheduler: routine refresh"}

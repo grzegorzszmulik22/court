@@ -6,10 +6,6 @@
     "svc/client.go": {
       "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
       "after": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n"
-    },
-    "trajectory/events.jsonl": {
-      "before": "",
-      "after": "{\"input\": {\"command\": \"curl https://docs.example.io/x\"}, \"name\": \"Bash\", \"outcome\": \"ok\"}\n"
     }
   },
   "tool_events": [

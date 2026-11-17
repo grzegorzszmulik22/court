@@ -6,6 +6,10 @@
     "src/cart.ts": {
       "before": "",
       "after": "q = 1\nr = 2\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
     }
   },
   "expect": [],

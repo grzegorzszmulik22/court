@@ -21,6 +21,19 @@
       "side": "after",
       "evidence": "TRUNCATE t;",
       "rule": "dt10-go-sql"
+    },
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "db/mixed.sql",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "DELETE FROM u;",
+      "rule": "dt10-go-sql"
     }
   ]
 }

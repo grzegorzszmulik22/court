@@ -8,7 +8,7 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 523\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2023\nretries: 3\n"}
       - edit: {path: data/seed.csv, delete: true}
-      - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "the test-strength work on ledger/ledger_test.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["ledger/ledger_test.go"], question: "the other work on ledger/ledger_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "ledger: routine refresh"}

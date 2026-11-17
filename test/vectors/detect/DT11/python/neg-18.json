@@ -10,6 +10,10 @@
     "shop/inside.py": {
       "before": "",
       "after": "i = 1\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
     }
   },
   "commission": {
