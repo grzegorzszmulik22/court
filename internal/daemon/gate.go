@@ -54,24 +54,31 @@ func (d *Daemon) handleGatePre(w http.ResponseWriter, r *http.Request) {
 	}
 	d.mu.Lock()
 	sess, ok := d.byTree[normPath(gp.WorldPath)]
-	if ok {
-		key := gate.WorldKey(sess.Commission, sess.World)
-		if !d.gateState.Open(key) {
-			d.mu.Unlock()
-			writeJSON(w, http.StatusForbidden, map[string]any{"error": gate.Message})
-			return
-		}
-		d.gatePasses[key] = gate.Pass{Parent: gp.Head, Tree: gp.Tree}
-		err := d.saveGatePassesLocked()
-		d.mu.Unlock()
-		if err != nil {
-			d.refuse(w, r, "gate", err.Error(), http.StatusInternalServerError)
-			return
-		}
+	d.mu.Unlock()
+	if !ok {
 		writeJSON(w, 200, map[string]any{})
 		return
 	}
+	// A gate pass belongs to the world it names only when it describes
+	// that worktree's current HEAD and index tree (M3.2 attribution rule).
+	if err := verifyGatePre(sess, gp.Head, gp.Tree); err != nil {
+		d.refuse(w, r, "gate", err.Error(), http.StatusForbidden)
+		return
+	}
+	key := gate.WorldKey(sess.Commission, sess.World)
+	d.mu.Lock()
+	if !d.gateState.Open(key) {
+		d.mu.Unlock()
+		writeJSON(w, http.StatusForbidden, map[string]any{"error": gate.Message})
+		return
+	}
+	d.gatePasses[key] = gate.Pass{Parent: gp.Head, Tree: gp.Tree}
+	err := d.saveGatePassesLocked()
 	d.mu.Unlock()
+	if err != nil {
+		d.refuse(w, r, "gate", err.Error(), http.StatusInternalServerError)
+		return
+	}
 	writeJSON(w, 200, map[string]any{})
 }
 
@@ -102,6 +109,16 @@ func (d *Daemon) handleGate(w http.ResponseWriter, r *http.Request) {
 	}
 	// Serialize per world so two near-simultaneous posts record in order.
 	wl.Lock()
+	// Attribution rule (M3.2, red-team B3-10): the posted commit must be
+	// on this world's own branch, in this worktree's first-parent history
+	// after the fork point. A dangling object created in a sibling world,
+	// or a commit merged in from another world's branch, is not this
+	// world's commit and is refused rather than recorded under its path.
+	if err := verifyWorldCommit(sess, gp.Commit); err != nil {
+		wl.Unlock()
+		d.refuse(w, r, "gate", err.Error(), http.StatusForbidden)
+		return
+	}
 	err := d.recordCommits(sess, gp.Commit, clientKey(r, "gate"))
 	wl.Unlock()
 	if err != nil {
@@ -109,6 +126,61 @@ func (d *Daemon) handleGate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, 200, map[string]any{})
+}
+
+// verifyWorldCommit checks that commit belongs to the world's own history:
+// it is the world's tip or on its first-parent chain after the fork point.
+// First-parent excludes dangling objects (the B3-10 attack) and commits a
+// merge brought in from another world's branch; those were made elsewhere
+// and must be recorded under the world that made them.
+func verifyWorldCommit(sess *Session, commit string) error {
+	if commit == "" {
+		return fmt.Errorf("gate: empty commit")
+	}
+	if sess.Base == "" {
+		return fmt.Errorf("gate: world %s has no base commit", sess.World)
+	}
+	headOut, err := gitOut(sess.Worktree, "rev-parse", "--verify", "HEAD")
+	if err != nil {
+		return fmt.Errorf("gate: world %s has no HEAD: %v", sess.World, err)
+	}
+	head := strings.TrimSpace(headOut)
+	out, err := gitOut(sess.Worktree, "rev-list", "--first-parent", "--reverse",
+		sess.Base+".."+head)
+	if err != nil {
+		return fmt.Errorf("gate: world %s history: %v", sess.World, err)
+	}
+	for _, l := range strings.Split(strings.TrimSpace(out), "\n") {
+		if l == commit {
+			return nil
+		}
+	}
+	return fmt.Errorf("gate: commit %s is not on world %s's branch", commit, sess.World)
+}
+
+// verifyGatePre checks that a pre-commit post describes this worktree's
+// current state: its HEAD must be the worktree's HEAD and its tree the
+// index tree the commit would record. A pass for another world's state
+// cannot be created under this world's path.
+func verifyGatePre(sess *Session, head, tree string) error {
+	cur := ""
+	if out, err := gitOut(sess.Worktree, "rev-parse", "--verify", "HEAD"); err == nil {
+		cur = strings.TrimSpace(out)
+	}
+	if head != cur {
+		return fmt.Errorf("gate: pre-commit head %q is not world %s's HEAD %q",
+			head, sess.World, cur)
+	}
+	idxOut, err := gitOut(sess.Worktree, "write-tree")
+	if err != nil {
+		return fmt.Errorf("gate: world %s index: %v", sess.World, err)
+	}
+	idx := strings.TrimSpace(idxOut)
+	if tree == "" || tree != idx {
+		return fmt.Errorf("gate: pre-commit tree %q is not world %s's index tree %q",
+			tree, sess.World, idx)
+	}
+	return nil
 }
 
 func (d *Daemon) worldMuFor(world string) *sync.Mutex {
@@ -139,7 +211,10 @@ func (d *Daemon) recordCommits(sess *Session, head, key string) error {
 	if bound != "" {
 		revRange = bound + ".." + head
 	}
-	out, err := gitOut(sess.Worktree, "rev-list", "--reverse", revRange)
+	// First-parent only: a merge can bring another world's commits into
+	// this branch's object graph, but they were made in that other world
+	// and must not be recorded here (M3.2 attribution rule, B3-10).
+	out, err := gitOut(sess.Worktree, "rev-list", "--first-parent", "--reverse", revRange)
 	if err != nil {
 		return fmt.Errorf("gate: rev-list: %w", err)
 	}

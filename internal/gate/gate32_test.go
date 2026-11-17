@@ -5,7 +5,10 @@ package gate_test
 // nothing is mocked and no model is called.
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -192,6 +195,35 @@ func exactLine(out, want string) bool {
 		}
 	}
 	return false
+}
+
+// postGate posts a commit to /gate exactly as an agent with shell access
+// could, and returns the response (body already drained and closed).
+func postGate(t *testing.T, h *scripted.Harness, world, commit string) int {
+	t.Helper()
+	raw, err := json.Marshal(map[string]any{
+		"world_path": world, "commit": commit, "parents": []string{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp, err := http.Post(h.Daemon.URL()+"/gate", "application/json",
+		bytes.NewReader(raw))
+	if err != nil {
+		t.Fatalf("gate post: %v", err)
+	}
+	defer resp.Body.Close()
+	var body map[string]any
+	_ = json.NewDecoder(resp.Body).Decode(&body)
+	return resp.StatusCode
+}
+
+func gitTree(t *testing.T, c *scripted.Client, rev string) string {
+	t.Helper()
+	out, err := gitRun(c, "rev-parse", rev)
+	if err != nil {
+		t.Fatalf("rev-parse %s: %v: %s", rev, err, out)
+	}
+	return strings.TrimSpace(out)
 }
 
 func declareStep(question, category, path string) *scripted.Step {
@@ -485,10 +517,21 @@ func TestC3_2_4(t *testing.T) {
 		t.Fatalf("world b second refusal does not carry exactly %q:\n%s", gate.Message, out)
 	}
 
-	// B declares and commits on its own declaration.
+	// B declares, and while B's window is open A still needs a declaration
+	// of its own: the second direction of per-world isolation.
 	if err := b.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
 		t.Fatal(err)
 	}
+	writeFile(t, a, "app.txt", "one\nworld a again\nthree\n")
+	out, err = commitRaw(t, a, "a without a declaration")
+	if err == nil {
+		t.Fatalf("world a's commit was opened by world b's declaration:\n%s", out)
+	}
+	if !exactLine(out, gate.Message) {
+		t.Fatalf("world a refusal does not carry exactly %q:\n%s", gate.Message, out)
+	}
+
+	// B commits on its own declaration.
 	if out, err := commitRaw(t, b, "b declared"); err != nil {
 		t.Fatalf("world b's declared commit failed: %v\n%s", err, out)
 	}
@@ -497,6 +540,133 @@ func TestC3_2_4(t *testing.T) {
 		func(e []*ledger.Event) bool { return commitFor(e, headB) != nil })
 	if wc := commitFor(e, headB); !bodyBool(wc, "gated") {
 		t.Fatalf("world b's declared commit recorded gated:false")
+	}
+	headA = revParse(t, a)
+
+	// Direction 2, gate records: neither world's real commit may be
+	// recorded under the other world's path.
+	if code := postGate(t, h, a.Worktree, headB); code != http.StatusForbidden {
+		t.Fatalf("posting world b's commit under world a answered %d, want 403", code)
+	}
+	if code := postGate(t, h, b.Worktree, headA); code != http.StatusForbidden {
+		t.Fatalf("posting world a's commit under world b answered %d, want 403", code)
+	}
+	// A dangling commit object made in b's worktree (git commit-tree: no
+	// branch, no hook) is not on either world's branch and must be refused
+	// under both paths, the B3-10 attack.
+	treeB := gitTree(t, b, "HEAD^{tree}")
+	out, err = gitRun(b, "-c", "user.email=a@court.local", "-c", "user.name=b",
+		"commit-tree", treeB, "-p", headB, "-m", "fabricated")
+	if err != nil {
+		t.Fatalf("commit-tree: %v: %s", err, out)
+	}
+	foreign := strings.TrimSpace(out)
+	for _, world := range []string{a.Worktree, b.Worktree} {
+		if code := postGate(t, h, world, foreign); code != http.StatusForbidden {
+			t.Fatalf("posting a dangling commit under %s answered %d, want 403", world, code)
+		}
+	}
+	e = evs(t, h)
+	if wc := commitFor(e, foreign); wc != nil {
+		t.Fatalf("dangling commit recorded as world.commit of %q", bodyStr(wc, "world"))
+	}
+	// Everything recorded for each world is that world's own history.
+	for _, wc := range ofType(e, "world.commit") {
+		switch bodyStr(wc, "world") {
+		case "a":
+			if bodyStr(wc, "commit") != headA {
+				t.Fatalf("world a recorded a foreign commit %s", bodyStr(wc, "commit"))
+			}
+		case "b":
+			if bodyStr(wc, "commit") != headB {
+				t.Fatalf("world b recorded a foreign commit %s", bodyStr(wc, "commit"))
+			}
+		}
+	}
+	// The refusals are recorded, with a reason naming the attribution.
+	refs, err := h.Refusals()
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := 0
+	for _, line := range refs {
+		if strings.Contains(line, `"endpoint":"gate"`) &&
+			strings.Contains(line, "not on world") {
+			n++
+		}
+	}
+	if n < 4 {
+		t.Fatalf("gate refusals recorded = %d, want >= 4 (%v)", n, refs)
+	}
+}
+
+// C3.2.4 (attribution, merges): a commit merged in from another branch is
+// not this world's commit and must not be recorded under it, even though it
+// is reachable from the branch. Only the first-parent chain is the world's
+// own history.
+func TestC3_2_4MergeAttribution(t *testing.T) {
+	h := newGateHarness(t)
+	a := addAgent(t, h, "a")
+	b := addAgent(t, h, "b")
+
+	writeFile(t, a, "a.txt", "a from A\n")
+	if err := a.RunStep(declareStep("Which a default?", "behaviour", "a.txt")); err != nil {
+		t.Fatal(err)
+	}
+	if out, err := commitRaw(t, a, "a commit"); err != nil {
+		t.Fatalf("a commit: %v\n%s", err, out)
+	}
+	headA := revParse(t, a)
+	writeFile(t, b, "b.txt", "b from B\n")
+	if err := b.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+		t.Fatal(err)
+	}
+	if out, err := commitRaw(t, b, "b commit"); err != nil {
+		t.Fatalf("b commit: %v\n%s", err, out)
+	}
+	headB := revParse(t, b)
+	waitFor(t, h, "both world commits", 5*time.Second, func(e []*ledger.Event) bool {
+		return commitFor(e, headA) != nil && commitFor(e, headB) != nil
+	})
+
+	// A commit object in the shared store, on top of B's tip, reachable
+	// only through a scratch ref: no Court world made it through a hook.
+	treeB := gitTree(t, b, "HEAD^{tree}")
+	out, err := gitRun(b, "-c", "user.email=a@court.local", "-c", "user.name=b",
+		"commit-tree", treeB, "-p", headB, "-m", "foreign history")
+	if err != nil {
+		t.Fatalf("commit-tree: %v: %s", err, out)
+	}
+	foreign := strings.TrimSpace(out)
+	if out, err := gitRun(a, "branch", "scratch-foreign", foreign); err != nil {
+		t.Fatalf("git branch: %v: %s", err, out)
+	}
+
+	// A merges the scratch branch. The merge commit is A's own; the
+	// foreign commit is only a second parent.
+	if err := a.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+		t.Fatal(err)
+	}
+	out, err = gitRun(a, "-c", "user.email=a@court.local", "-c", "user.name=a",
+		"merge", "--no-ff", "-m", "merge scratch", "scratch-foreign")
+	if err != nil {
+		t.Fatalf("git merge: %v\n%s", err, out)
+	}
+	merge := revParse(t, a)
+
+	// Let the next ledger write observe the new head.
+	if err := b.RunStep(&scripted.Step{Tool: &scripted.ToolStep{
+		Name: "Read", Input: map[string]any{"file_path": "b.txt"}}}); err != nil {
+		t.Fatal(err)
+	}
+	e := waitFor(t, h, "merged commit under world a", 5*time.Second,
+		func(e []*ledger.Event) bool { return commitFor(e, merge) != nil })
+	if wc := commitFor(e, merge); bodyStr(wc, "world") != "a" {
+		t.Fatalf("merge commit recorded under world %q, want a", bodyStr(wc, "world"))
+	}
+	if wc := commitFor(e, foreign); wc != nil {
+		t.Fatalf("commit merged in from another branch recorded under world %q",
+			bodyStr(wc, "world"))
 	}
 }
 
