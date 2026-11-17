@@ -22,6 +22,12 @@ Every M1 check, its sabotages, `make lint` and `make regress` must pass on Windo
 - **Line endings and separators** are normalised where output is compared, never by weakening what is compared.
 - A check that cannot have a Windows meaning is listed in `tools/env-skips.txt` with its reason. None is expected.
 
+## As implemented (lane/windows, merged 2026-11-17)
+
+- **C1.1.1 on Windows is a weaker offline proof.** Windows has no unprivileged network namespace, so the inner run gets `GOPROXY=off` and every HTTP(S) proxy variable pointed at a closed loopback port, and the probe proves only that ordinary proxy-honouring tools cannot reach the network. A tool that dials directly would not be stopped. The Linux run (`unshare -Un`) stays the authoritative proof of C1.1.1; the Windows run proves the build needs no module download.
+- **C1.3.1 batches verifier calls** (Windows caps a command line at 32,767 characters). The supervisor added a completeness rule: every corpus file must have a result from both verifiers, so a crashed batch fails the check instead of shrinking the corpus.
+- **Open:** `TestC1_4_1_DiscardReportsError` (part of C1.4.1) skips on Windows, so a Discard that ignores a failed packed-refs removal is not caught there (supervisor sabotage `discard-ignores-packed-refs-removal-error`). It needs a Windows way to make that one removal fail. Until then C1.4.1's error-reporting half is proven on Linux only.
+
 ## Effect on properties and numbers
 
 None weakened. Checks gain a second platform, and that platform is the supervisor's PC, where Windows behaviour is already re-verified by hand.

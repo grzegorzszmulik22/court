@@ -1,0 +1,22 @@
+[
+  {
+    "command": "append 2000 tool.event rows via Store.Append",
+    "cv": 0.08123878008364606,
+    "machine": {
+      "go": "go1.27.4",
+      "uname": "MINGW64_NT-10.0-26200 3.6.9-b4195d69.x86_64 x86_64"
+    },
+    "measurement": "MM1.5 single-writer ledger append throughput",
+    "median": 24985.071419826654,
+    "runs": 5,
+    "samples": [
+      24985.071419826654,
+      20572.808712995946,
+      25293.435468225754,
+      22364.01004591331,
+      25376.55637592323
+    ],
+    "threshold": 2000,
+    "unit": "events/s"
+  }
+]

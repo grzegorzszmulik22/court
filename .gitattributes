@@ -1,0 +1,8 @@
+# One line-ending convention on every host (CR-002). The frozen-file manifest
+# hashes the LF form, gofmt requires LF, and checks compare text: Git's global
+# core.autocrlf=true on Windows must not rewrite the working tree to CRLF.
+* text=auto eol=lf
+
+# Recorded fixtures keep the exact bytes they were recorded with (some were
+# captured with CRLF); Git must never convert these on checkout.
+test/vectors/** -text

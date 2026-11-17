@@ -1,0 +1,17 @@
+# Progress: lane `windows`
+
+Windows 11 host (Git Bash), CR-002: every M1 check, its sabotage, `make lint`
+and `make regress` must pass here with the same meaning as on Linux, from the
+pinned tools of `make tools`. Rows use the format of `spec/05-agent-loop.md`
+§13; evidence folders are committed (CR-002 lane note).
+
+| chunk | status | attempts | last evidence folder | note |
+|---|---|---|---|---|
+| M1.1 | DONE | 1 | evidence/M1.1/2026-11-17T02-00-33Z | Windows 11 Git Bash, go1.27.4 windows/amd64, python 3.14.4: all 8 checks PASS; 6/6 sabotages caught (evidence/M1.1/2026-11-17T00-23-27Z-sabotage). C1.1.1 runs the fresh clone offline through a dead loopback proxy and GOPROXY=off (no unshare(CLONE_NEWNET) on Windows) and uses the real make; C1.1.4 states and checks the CR-002 Windows form (PE, CGO_ENABLED=0, only system DLL imports: kernel32.dll). C1.1.5/go fmt need LF, so .gitattributes pins the worktree to LF and keeps recorded vectors byte-exact (test/vectors/** -text). The per-check hang guard is 900 s on Windows only (Linux unchanged); a fresh clone suite takes about 8 min here because of scratch-tree I/O. |
+| M1.2 | DONE | 1 | evidence/M1.2/2026-11-17T02-08-34Z | All 6 checks PASS; 3/3 sabotages caught (evidence/M1.2/2026-11-17T00-20-50Z-sabotage). The listed seq-reuse patch was refreshed to the current appendOnce shape after the AppendIdem refactor: same defect (head read outside the transaction), caught by C1.2.3. MM1.5: median 24,985 events/s over 5 samples, CV 0.081, target 2,000 (measurements.json in the evidence folder). |
+| M1.3 | DONE | 1 | evidence/M1.3/2026-11-17T02-08-59Z | All 4 checks PASS; 6/6 sabotages caught (evidence/M1.3/2026-11-17T01-13-12Z-sabotage). C1.3.1 agrees on 200 generated ledgers and 4,805 mutants with 0 disagreements; the Windows command line caps at 32,767 characters, so each verifier gets the corpus in deterministic batches and its per-file output is appended (every file verified exactly once by each). C1.3.2 normalises path separators only (os.path.join '\' vs the verifier's '/') and line endings before comparing the recorded class; the class itself is not weakened. |
+| M1.4 | DONE | 1 | evidence/M1.4/2026-11-17T02-09-47Z | All 8 checks PASS on Windows, including C1.4.7 (200-char world root, >260-char file) and C1.4.8; 6/6 sabotages caught (evidence/M1.4/2026-11-17T01-22-54Z-sabotage). MM1.3: 200 of 200 randomised sessions restored the digest, 238 commits, 770 discards, median 1,364 ms, CV 0.304 recorded as unstable; the threshold is a share of sessions, and it is 100%. |
+| M1.5 | DONE | 1 | evidence/M1.5/2026-11-17T02-12-07Z | All 6 checks PASS; 5/5 sabotages caught (evidence/M1.5/2026-11-17T01-38-28Z-sabotage). Recorded hook fixtures are read byte-exact: test/vectors/** keeps its recorded bytes on Windows. |
+| M1.6 | DONE | 1 | evidence/M1.6/2026-11-17T02-13-43Z | All 5 checks PASS; 3/3 sabotages caught (evidence/M1.6/2026-11-17T01-48-21Z-sabotage). |
+| M1.7 | DONE | 1 | evidence/M1.7/2026-11-17T02-14-05Z | All 3 hermetic checks PASS; 5/5 sabotages caught (evidence/M1.7/2026-11-17T01-50-52Z-sabotage). The live check L1.7.1 remains out of scope for done. |
+| M1.8 | DONE | 1 | evidence/M1.8/2026-11-17T02-14-18Z | All 4 checks PASS; 4/4 sabotages caught (evidence/M1.8/2026-11-17T01-54-11Z-sabotage). MM1.1 completeness (C1.8.1) and restart (C1.8.3) pass; MM1.4 paired hook latency p99 = 535.2 µs, target 50 ms. |

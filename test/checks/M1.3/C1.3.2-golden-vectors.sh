@@ -43,12 +43,17 @@ python3 ref/python/refledger "$d"/rej/*.jsonl 2>/dev/null | awk '{print $2, $3}'
 python3 - "$d" <<'PYEOF' || { echo "rejecting vectors: disagreement" >&2; exit 1; }
 import json, os, sys
 d = sys.argv[1]
-want = json.load(open(os.path.join(d, 'rej-classes.json')))
+def norm(p):
+    # Windows: os.path.join writes '\' while the verifiers print the path they
+    # were given ('/'). Normalise separators only; the compared class is not
+    # changed.
+    return p.replace('\\', '/')
+want = {norm(p): c for p, c in json.load(open(os.path.join(d, 'rej-classes.json'))).items()}
 got = {}
 for which in ('go-rej.out', 'py-rej.out'):
     for line in open(os.path.join(d, which)):
-        path, cls = line.split()
-        got.setdefault(path, {})[which[:2]] = cls
+        path, cls = line.rstrip('\r\n').split()
+        got.setdefault(norm(path), {})[which[:2]] = cls
 bad = []
 for p, wantcls in want.items():
     g = got.get(p, {})

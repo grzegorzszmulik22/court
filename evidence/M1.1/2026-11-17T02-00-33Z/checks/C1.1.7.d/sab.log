@@ -1,0 +1,4 @@
+UNCAUGHT test/sabotage/D9.2/breaks-dummy-add.patch
+1 uncaught
+sabotage.sh: evidence: evidence/D9.2/2026-11-17T02-06-14Z-sabotage
+make[2]: *** [Makefile:36: sabotage-D9.2] Error 1

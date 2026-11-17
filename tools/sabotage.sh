@@ -45,6 +45,14 @@ orig=$PWD
 
 report() { echo "$*" | tee -a "$ev/output.log"; }
 
+# The inner suite runs under a hang guard; Windows needs longer because the
+# scratch copy and its checks are slowed by filesystem scanning. Linux keeps
+# its original 600 s.
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) default_timeout=1800 ;;
+    *) default_timeout=600 ;;
+esac
+
 start=$(date +%s%N)
 uncaught=0; errors=0
 for p in "$sabdir"/*.patch; do
@@ -80,7 +88,7 @@ for p in "$sabdir"/*.patch; do
         COURT_GIT_COMMIT="$commit" \
         COURT_TOOLS_DIR="$orig/.tools" \
         PATH="$orig/.tools/bin:$PATH" \
-        timeout "${COURT_SABOTAGE_TIMEOUT:-1800}" \
+        timeout "${COURT_SABOTAGE_TIMEOUT:-$default_timeout}" \
         make --no-print-directory "check-$chunk") >>"$plog" 2>&1
     rc=$?
     caught=$(grep -oE '^CHECK [^ ]+ +(FAIL|BLOCKED|SKIP)' "$plog" | awk '{print $2}' | sort -u | tr '\n' ',' | sed 's/,$//')

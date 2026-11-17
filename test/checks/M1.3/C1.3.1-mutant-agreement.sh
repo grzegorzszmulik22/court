@@ -51,23 +51,49 @@ head -c -1 "$d/gen/gen-00001.jsonl" > "$d/edge/no-newline.jsonl"
     > "$d/edge/first-moved-last.jsonl"
 
 # 4. Verify with both, in parallel (independent passes over the corpus).
-"$COURT" ledger verify "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/go.out" 2>"$d/go.err" &
+# Windows caps one command line at 32,767 characters and the corpus is over
+# 5,000 paths, so each verifier is invoked in deterministic batches and its
+# per-file lines are appended in corpus order. Every file is still verified
+# exactly once by each verifier; the agreement pass below sees the same output
+# it sees on Linux.
+files=("$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl)
+run_batched() { # <out> <err> <verifier command...>
+    local out=$1 err=$2
+    shift 2
+    local batch=() f
+    : >"$out"
+    : >"$err"
+    for f in "${files[@]}"; do
+        batch+=("$f")
+        if [ "${#batch[@]}" -ge 100 ]; then
+            "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
+            batch=()
+        fi
+    done
+    if [ "${#batch[@]}" -gt 0 ]; then
+        "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
+    fi
+}
+run_batched "$d/go.out" "$d/go.err" "$COURT" ledger verify &
 gopid=$!
-python3 "$REFLEDGER" "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/py.out" 2>"$d/py.err" &
+run_batched "$d/py.out" "$d/py.err" python3 "$REFLEDGER" &
 pypid=$!
 wait "$gopid" "$pypid" 2>/dev/null || true
 
 python3 - "$d" <<'PYEOF' || { echo "verifier agreement failed" >&2; exit 1; }
 import sys, os, re
 d = sys.argv[1]
+def norm(p):
+    # Windows: verifier output and Python path joins may use either separator.
+    # Normalise separators for the key; line endings for the read. The class
+    # compared is untouched.
+    return p.replace('\\', '/')
 def classes(path):
     out = {}
     for line in open(path):
-        m = re.match(r'^VERIFY (\S+) (\S+)', line)
+        m = re.match(r'^VERIFY (\S+) (\S+)', line.rstrip('\r\n'))
         if m:
-            out[m.group(1)] = m.group(2)
+            out[norm(m.group(1))] = m.group(2)
     return out
 go, py = classes(d + '/go.out'), classes(d + '/py.out')
 bad = []
@@ -92,6 +118,17 @@ for path, gcls in go.items():
 missing = set(py) - set(go)
 for path in missing:
     bad.append(f"{os.path.basename(path)}: go verifier did not report")
+# The verifiers run in batches, so a crashed batch would drop its files from
+# both outputs at once. Every corpus file must have a result from both.
+# Keyed by <subdir>/<name>: on Windows the two sides may spell the scratch
+# root differently (/tmp/... versus C:/...).
+def key(p):
+    return '/'.join(norm(p).split('/')[-2:])
+reported = {key(p) for p in go} & {key(p) for p in py}
+for sub in ('gen', 'mut', 'edge'):
+    for f in sorted(os.listdir(os.path.join(d, sub))):
+        if f.endswith('.jsonl') and f"{sub}/{f}" not in reported:
+            bad.append(f"{sub}/{f}: not reported by both verifiers")
 print(f"agreement: {n_gen} ledgers, {n_mut} mutants, {len(bad)} disagreements")
 if n_gen < 200 or n_mut < 1000:
     print(f"counts below spec: {n_gen} ledgers {n_mut} mutants"); sys.exit(1)

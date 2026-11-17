@@ -1,0 +1,7 @@
+CHECK C1.6.1 FAIL tool validation check failed; see go test output 
+CHECK C1.6.2 PASS
+CHECK C1.6.3 PASS
+CHECK C1.6.4 PASS
+CHECK C1.6.5 PASS
+check.sh: evidence: evidence/M1.6/2026-11-17T01-49-30Z
+make[1]: *** [Makefile:33: check-M1.6] Error 1
