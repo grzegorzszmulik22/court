@@ -10,11 +10,42 @@ package commission_test
 // that never exits fails the test instead of being papered over.
 
 import (
+	"errors"
+	"strconv"
 	"testing"
 	"time"
 
 	"golang.org/x/sys/windows"
 )
+
+// processIdentity returns the process object's creation time as a string,
+// or "" when the process is gone. A pid alone is not an identity: the host
+// is shared and Windows recycles pids, so a leaked-daemon report must not
+// count an unrelated process that inherited the pid.
+func processIdentity(pid int) string {
+	if pid <= 0 {
+		return ""
+	}
+	h, err := windows.OpenProcess(windows.PROCESS_QUERY_LIMITED_INFORMATION, false, uint32(pid))
+	if err != nil {
+		return ""
+	}
+	defer windows.CloseHandle(h)
+	var creation, exit, kernel, user windows.Filetime
+	if err := windows.GetProcessTimes(h, &creation, &exit, &kernel, &user); err != nil {
+		return ""
+	}
+	return strconv.FormatInt(creation.Nanoseconds(), 10)
+}
+
+// processMatches reports whether the live pid is still the process the
+// registry recorded. An empty identity falls back to the pid alone.
+func processMatches(pid int, ident string) bool {
+	if ident == "" {
+		return true
+	}
+	return processIdentity(pid) == ident
+}
 
 // processAlive reports whether pid is a live process. OpenProcess fails
 // for a pid whose process object is gone; an exited process that still
@@ -25,7 +56,11 @@ func processAlive(pid int) bool {
 	}
 	h, err := windows.OpenProcess(windows.SYNCHRONIZE, false, uint32(pid))
 	if err != nil {
-		return false
+		// A process object that is gone fails with an invalid parameter;
+		// any other failure (access denied under security software) does
+		// not prove the process is gone, so err on the side of alive.
+		return !errors.Is(err, windows.ERROR_INVALID_PARAMETER) &&
+			!errors.Is(err, windows.ERROR_NOT_FOUND)
 	}
 	defer windows.CloseHandle(h)
 	event, err := windows.WaitForSingleObject(h, 0)

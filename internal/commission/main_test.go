@@ -105,7 +105,12 @@ func recordDaemonPID(t *testing.T, pid int) {
 	if pid <= 0 {
 		t.Fatalf("cannot record daemon pid %d", pid)
 	}
-	if err := os.WriteFile(filepath.Join(dir, strconv.Itoa(pid)), nil, 0o644); err != nil {
+	// The identity pins the record to this process object: a pid reused
+	// by an unrelated process after the daemon exits must not read as a
+	// leaked daemon (the host is shared and pids recycle).
+	ident := processIdentity(pid)
+	if err := os.WriteFile(filepath.Join(dir, strconv.Itoa(pid)),
+		[]byte(ident), 0o644); err != nil {
 		t.Fatalf("record daemon pid %d: %v", pid, err)
 	}
 }
@@ -130,7 +135,8 @@ func reportLeakedDaemons(registry string, code int) int {
 			code = 1
 			continue
 		}
-		if processAlive(pid) {
+		ident, _ := os.ReadFile(filepath.Join(registry, e.Name()))
+		if processAlive(pid) && processMatches(pid, string(ident)) {
 			leaked = append(leaked, e.Name())
 		}
 	}
