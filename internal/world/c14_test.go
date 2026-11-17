@@ -50,6 +50,9 @@ type mm13Sample struct {
 // so a fresh repository per session would measure nothing extra. A session
 // that fails forces a fresh repository for the remaining sessions.
 func TestC1_4_1_MM13(t *testing.T) {
+	if testing.Short() {
+		t.Skip("MM1.3 world creation: a timed measurement; make check-M1.4 runs it in full, make regress runs go test -short")
+	}
 	const sessions = 200
 	const groupSize = 10
 	base := t.TempDir()
@@ -595,6 +598,9 @@ func TestC1_4_2_SameBranch(t *testing.T) {
 // concurrently for 60 seconds; no commit is lost and no ref-lock failure is
 // surfaced to an agent (internal retries are counted).
 func TestC1_4_3_ConcurrentCommits(t *testing.T) {
+	if testing.Short() {
+		t.Skip("C1.4.3 60-second concurrency run: a timed measurement; make check-M1.4 runs it in full, make regress runs go test -short")
+	}
 	repo := newRepo(t, 1)
 	root := open(t, repo)
 	const nWorlds = 8

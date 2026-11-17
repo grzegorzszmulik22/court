@@ -50,6 +50,9 @@ func runConcurrent(t *testing.T, h *scripted.Harness, sc *scripted.Script) {
 // commits, randomly interleaved; every scripted step has exactly one
 // ledger event, compared against the script.
 func TestC1_8_1(t *testing.T) {
+	if testing.Short() {
+		t.Skip("C1.8.1 load run: a timed measurement; make check-M1.8 runs it in full, make regress runs go test -short")
+	}
 	h := newHarness(t)
 	sc := &scripted.Script{}
 	for i := 0; i < 8; i++ {
@@ -113,6 +116,9 @@ func TestC1_8_1(t *testing.T) {
 // TestC1_8_2 (MM1.4): paired hook round trip against a no-op endpoint,
 // p99 ≤ 50 ms.
 func TestC1_8_2(t *testing.T) {
+	if testing.Short() {
+		t.Skip("C1.8.2 paired latency: a timed measurement; make check-M1.8 runs it in full, make regress runs go test -short")
+	}
 	h := newHarness(t)
 	c, err := h.AddAgent(&scripted.AgentSpec{ID: "lat", Parent: "human"})
 	if err != nil {

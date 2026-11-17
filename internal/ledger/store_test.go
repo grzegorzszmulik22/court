@@ -290,6 +290,9 @@ func TestCrashRecovery(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestAppendThroughput(t *testing.T) {
+	if testing.Short() {
+		t.Skip("MM1.5 throughput, C1.2.6: a timed measurement; make check-M1.2 runs it in full, make regress runs go test -short")
+	}
 	dir := checkDir(t)
 	db := filepath.Join(dir, "throughput.sqlite")
 	const runs, n = 5, 2000
