@@ -1,0 +1,26 @@
+=== RUN   TestC2_2_1
+--- PASS: TestC2_2_1 (4.15s)
+PASS
+ok  	court/internal/adapter/scripted	4.260s
+CHECK C2.2.1 PASS
+=== RUN   TestC2_2_2
+--- PASS: TestC2_2_2 (1.39s)
+PASS
+ok  	court/internal/adapter/scripted	1.559s
+CHECK C2.2.2 PASS
+=== RUN   TestC2_2_3
+--- PASS: TestC2_2_3 (1.34s)
+PASS
+ok  	court/internal/adapter/scripted	1.467s
+CHECK C2.2.3 PASS
+=== RUN   TestC2_2_4
+--- PASS: TestC2_2_4 (1.38s)
+PASS
+ok  	court/internal/adapter/scripted	1.495s
+CHECK C2.2.4 PASS
+=== RUN   TestC2_2_5
+--- PASS: TestC2_2_5 (1.44s)
+PASS
+ok  	court/internal/adapter/scripted	1.584s
+CHECK C2.2.5 PASS
+check.sh: evidence: evidence/M2.2/2026-11-17T22-08-32Z

@@ -1,0 +1,16 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 740b253..0538ed9 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -627,11 +627,6 @@ func (w *GitWorld) Digest() (string, error) {
+ 	// Paths are session-stable (same dataDir before and after), so the
+ 	// porcelain block can go in verbatim.
+ 	lines = append(lines, "W "+out)
+-	shared, err := w.stateLines(ctx, env)
+-	if err != nil {
+-		return "", fmt.Errorf("world: digest: shared state: %v", err)
+-	}
+-	lines = append(lines, shared...)
+ 	sort.Strings(lines)
+ 	h := sha256.Sum256([]byte(strings.Join(lines, "\n")))
+ 	return hex.EncodeToString(h[:]), nil

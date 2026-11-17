@@ -1,0 +1,4 @@
+=== RUN   TestC2_2_4
+--- PASS: TestC2_2_4 (1.38s)
+PASS
+ok  	court/internal/adapter/scripted	1.495s
