@@ -4,7 +4,8 @@
 set -uo pipefail
 d=${COURT_CHECK_DIR:?}
 case "$d" in /*) ;; *) d="$PWD/$d" ;; esac
-go build -o "$d/court" ./cmd/court || { echo "court build failed" >&2; exit 1; }
+bin=$(bash test/checks/court-bin.sh "$d") || exit 1
+go build -o "$bin" ./cmd/court || { echo "court build failed" >&2; exit 1; }
 # The check dir lives inside the checkout, so the not-a-repository
 # fixture must sit outside it entirely.
 norepo=$(mktemp -d "${TMPDIR:-/tmp}/court-norepo.XXXXXX")

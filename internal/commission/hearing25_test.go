@@ -6,30 +6,13 @@ package commission_test
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
 	"court/internal/ledger"
 )
-
-// commissionPTY runs `court commission` with stdin on a pty fed the
-// answer lines in answers.
-func (f *fixture) commissionPTY(answers string, args ...string) (string, error) {
-	f.t.Helper()
-	argv := append([]string{"commission"}, args...)
-	for i, a := range argv {
-		argv[i] = "'" + strings.ReplaceAll(a, "'", `'\''`) + "'"
-	}
-	line := fmt.Sprintf("cd %s && exec %s %s", f.repo, f.bin,
-		strings.Join(argv, " "))
-	cmd := exec.Command("script", "-qec", line, "-E", "never", os.DevNull)
-	cmd.Stdin = strings.NewReader(answers)
-	out, err := cmd.CombinedOutput()
-	return string(out), err
-}
 
 func ruledEvents(t *testing.T, f *fixture) []*ledger.Event {
 	t.Helper()
@@ -62,7 +45,16 @@ func TestC2_5_1(t *testing.T) {
 		"go.mod": "module x\n", "x.go": "package x\n",
 	})
 	script := f.writeScript(hearingScript)
-	out, err := f.commissionPTY("\n", "hearing-goal", "--data-dir", f.data,
+	// One empty Enter per question: on Linux the pty's EOF after the
+	// first line makes the remaining reads empty, but a Windows console
+	// has no EOF after a line, so the same "no answer given" path needs
+	// an empty line for each of the two expected decisions. Both forms
+	// read the same empty answers; Linux keeps the one-line form.
+	answers := "\n"
+	if runtime.GOOS == "windows" {
+		answers = "\n\n"
+	}
+	out, err := f.commissionPTY(answers, "hearing-goal", "--data-dir", f.data,
 		"--script", script)
 	if err != nil {
 		t.Fatalf("%v\n%s", err, out)
@@ -322,7 +314,7 @@ func TestC2_5_5(t *testing.T) {
 		if i < 0 {
 			t.Fatalf("no hearing section:\n%s", out)
 		}
-		return out[i:]
+		return normalizePTYOutput(out[i:])
 	}
 	a := hearing(filepath.Join(t.TempDir(), "d1"))
 	b := hearing(filepath.Join(t.TempDir(), "d2"))

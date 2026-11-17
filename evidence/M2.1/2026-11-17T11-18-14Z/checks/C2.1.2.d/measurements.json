@@ -1,0 +1,18 @@
+{
+  "command": "court commission \u003cgoal\u003e --data-dir D --script s.yaml",
+  "cv": 0.056632926139523275,
+  "keystrokes": 0,
+  "keystrokes_target": 1,
+  "machine": "uname: MINGW64_NT-10.0-26200 3.6.9-b4195d69.x86_64 x86_64 Msys\nos: \narch: x86_64\ncpus: 24\nmem: 64628 MiB\ngit: 2.55.0.windows.3\ngo: go1.27.4\npython3: 3.14.4\ncommit: 9b9a42c6fd55f21101428bbc68ce1db94e536b7b",
+  "measurement": "MM2.3 commission-to-first-agent-step / MM2.4 keystrokes",
+  "median_s": 0.9120386,
+  "runs": 5,
+  "samples_s": [
+    1.0338102,
+    0.9120386,
+    0.9360599,
+    0.8824487,
+    0.9043995
+  ],
+  "target_s": 3
+}
