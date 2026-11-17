@@ -12,7 +12,6 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -511,42 +510,16 @@ func TestC1_4_1_SiblingStagedBlob(t *testing.T) {
 // git shim locks .git read-only right after branch -D, so every earlier
 // step succeeds and only the packed-refs removal can fail.
 func TestC1_4_1_DiscardReportsError(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("posix dir permission semantics")
-	}
-	realGit, err := exec.LookPath("git")
-	if err != nil {
-		t.Skip("no git on PATH")
-	}
 	repo := newRepo(t, 1)
 	gitDir := filepath.Join(repo, ".git")
-
-	shimDir := t.TempDir()
-	shim := filepath.Join(shimDir, "git")
-	script := fmt.Sprintf(`#!/bin/sh
-%q "$@"
-rc=$?
-if [ "$1" = branch ] && [ "$2" = -D ] && [ $rc -eq 0 ] && [ -f %q/packed-refs ]; then
-	chmod 0555 %q
-fi
-exit $rc
-`, realGit, gitDir, gitDir)
-	if err := os.WriteFile(shim, []byte(script), 0755); err != nil {
-		t.Fatal(err)
-	}
-	t.Setenv("PATH", shimDir+":"+os.Getenv("PATH"))
-
-	root := open(t, repo)
-	w, err := root.Fork(head(t, repo), "x")
-	if err != nil {
-		t.Fatalf("fork: %v", err)
-	}
-	defer os.Chmod(gitDir, 0755) // let t.TempDir clean up
-	if err := w.Discard(); err == nil {
+	err := discardReportsPackedRefsError(t, repo, gitDir)
+	if err == nil {
 		t.Fatal("Discard returned nil although removing packed-refs failed")
-	} else {
-		t.Logf("Discard reported: %v", err)
 	}
+	if !strings.Contains(err.Error(), "packed-refs") {
+		t.Fatalf("Discard error does not name the cleanup step: %v", err)
+	}
+	t.Logf("Discard reported: %v", err)
 }
 
 // TestC1_4_2_SameBranch implements check C1.4.2: two worlds cannot hold the
