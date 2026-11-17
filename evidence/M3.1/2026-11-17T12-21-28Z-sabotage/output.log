@@ -1,0 +1,28 @@
+SABOTAGE validator-accepts-empty-registry-in-planted caught by C3.1.1
+CHECK C3.1.1 FAIL check failed; see go test output 
+CHECK C3.1.2 PASS
+CHECK C3.1.3 PASS
+CHECK C3.1.4 PASS
+CHECK C3.1.5 PASS
+CHECK C3.1.6 PASS
+check.sh: evidence: evidence/M3.1/2026-11-17T12-21-32Z
+make[1]: *** [Makefile:33: check-M3.1] Error 1
+SABOTAGE validator-ignores-missing-twin caught by C3.1.1
+CHECK C3.1.1 FAIL check failed; see go test output 
+CHECK C3.1.2 PASS
+CHECK C3.1.3 PASS
+CHECK C3.1.4 PASS
+CHECK C3.1.5 PASS
+CHECK C3.1.6 PASS
+check.sh: evidence: evidence/M3.1/2026-11-17T12-22-46Z
+make[1]: *** [Makefile:33: check-M3.1] Error 1
+SABOTAGE validator-skips-repo-tests caught by C3.1.2
+CHECK C3.1.1 PASS
+CHECK C3.1.2 FAIL check failed; see go test output 
+CHECK C3.1.3 PASS
+CHECK C3.1.4 PASS
+CHECK C3.1.5 PASS
+CHECK C3.1.6 PASS
+check.sh: evidence: evidence/M3.1/2026-11-17T12-24-00Z
+make[1]: *** [Makefile:33: check-M3.1] Error 1
+0 uncaught
