@@ -1,0 +1,19 @@
+SABOTAGE clerk-sees-orchestrator-list caught by C2.3.1
+CHECK C2.3.1 FAIL check failed; see go test output 
+CHECK C2.3.2 PASS
+CHECK C2.3.3 PASS
+CHECK C2.3.4 PASS
+CHECK C2.3.5 PASS
+CHECK C2.3.6 PASS
+check.sh: evidence: evidence/M2.3/2026-11-17T11-37-30Z
+make[1]: *** [Makefile:33: check-M2.3] Error 1
+SABOTAGE comparison-by-question-text caught by C2.3.2
+CHECK C2.3.1 PASS
+CHECK C2.3.2 FAIL check failed; see go test output 
+CHECK C2.3.3 PASS
+CHECK C2.3.4 PASS
+CHECK C2.3.5 PASS
+CHECK C2.3.6 PASS
+check.sh: evidence: evidence/M2.3/2026-11-17T11-38-13Z
+make[1]: *** [Makefile:33: check-M2.3] Error 1
+0 uncaught
