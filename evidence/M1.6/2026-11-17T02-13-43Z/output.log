@@ -1,0 +1,26 @@
+=== RUN   TestC1_6_1
+--- PASS: TestC1_6_1 (1.01s)
+PASS
+ok  	court/internal/adapter/scripted	1.115s
+CHECK C1.6.1 PASS
+=== RUN   TestC1_6_2
+--- PASS: TestC1_6_2 (2.56s)
+PASS
+ok  	court/internal/adapter/scripted	2.664s
+CHECK C1.6.2 PASS
+=== RUN   TestC1_6_3
+--- PASS: TestC1_6_3 (1.03s)
+PASS
+ok  	court/internal/adapter/scripted	1.137s
+CHECK C1.6.3 PASS
+=== RUN   TestC1_6_4
+--- PASS: TestC1_6_4 (1.01s)
+PASS
+ok  	court/internal/adapter/scripted	1.111s
+CHECK C1.6.4 PASS
+=== RUN   TestC1_6_5
+--- PASS: TestC1_6_5 (1.03s)
+PASS
+ok  	court/internal/adapter/scripted	1.135s
+CHECK C1.6.5 PASS
+check.sh: evidence: evidence/M1.6/2026-11-17T02-13-43Z

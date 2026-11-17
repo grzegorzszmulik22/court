@@ -1,0 +1,48 @@
+=== RUN   TestC1_4_1_MM13
+--- PASS: TestC1_4_1_MM13 (45.87s)
+=== RUN   TestC1_4_1_SiblingStagedBlob
+--- PASS: TestC1_4_1_SiblingStagedBlob (1.64s)
+=== RUN   TestC1_4_1_DiscardReportsError
+    c14_test.go:512: posix dir permission semantics
+--- SKIP: TestC1_4_1_DiscardReportsError (0.00s)
+PASS
+ok  	court/internal/world	47.910s
+CHECK C1.4.1 PASS
+=== RUN   TestC1_4_2_SameBranch
+--- PASS: TestC1_4_2_SameBranch (1.53s)
+PASS
+ok  	court/internal/world	1.923s
+CHECK C1.4.2 PASS
+=== RUN   TestC1_4_3_ConcurrentCommits
+    c14_test.go:664: C1.4.3: 3481 commits across 8 worlds in 1m0s, 0 internal lock retries
+    c14_test.go:696: C1.4.3: held-lock update succeeded after 1 counted retries
+--- PASS: TestC1_4_3_ConcurrentCommits (64.84s)
+PASS
+ok  	court/internal/world	65.237s
+CHECK C1.4.3 PASS
+=== RUN   TestC1_4_4_ConfigIdentical
+--- PASS: TestC1_4_4_ConfigIdentical (1.93s)
+PASS
+ok  	court/internal/world	2.335s
+CHECK C1.4.4 PASS
+=== RUN   TestC1_4_5_SubmoduleRefusal
+--- PASS: TestC1_4_5_SubmoduleRefusal (3.27s)
+PASS
+ok  	court/internal/world	3.670s
+CHECK C1.4.5 PASS
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (2.02s)
+PASS
+ok  	court/internal/world	2.414s
+CHECK C1.4.6 PASS
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (2.29s)
+=== RUN   TestC1_4_7_WindowsLongPaths
+--- PASS: TestC1_4_7_WindowsLongPaths (2.09s)
+PASS
+ok  	court/internal/world	4.802s
+CHECK C1.4.7 PASS
+frozen: spec/01-b.md: matches frozen pattern 'spec/0*.md' but is not listed
+frozen_verify separator test: ok
+CHECK C1.4.8 PASS
+check.sh: evidence: evidence/M1.4/2026-11-17T02-09-47Z

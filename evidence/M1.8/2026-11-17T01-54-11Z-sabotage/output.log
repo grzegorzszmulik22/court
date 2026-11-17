@@ -1,0 +1,29 @@
+SABOTAGE ack-before-durable-write caught by C1.8.1,C1.8.3
+CHECK C1.8.1 FAIL completeness check failed; see go test output 
+CHECK C1.8.2 PASS
+CHECK C1.8.3 FAIL restart check failed; see go test output 
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-17T01-54-32Z
+make[1]: *** [Makefile:33: check-M1.8] Error 1
+SABOTAGE hook-request-identity-not-per-session caught by C1.8.3
+CHECK C1.8.1 PASS
+CHECK C1.8.2 PASS
+CHECK C1.8.3 FAIL restart check failed; see go test output 
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-17T01-56-00Z
+make[1]: *** [Makefile:33: check-M1.8] Error 1
+SABOTAGE request-identity-not-per-session caught by C1.8.3
+CHECK C1.8.1 PASS
+CHECK C1.8.2 PASS
+CHECK C1.8.3 FAIL restart check failed; see go test output 
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-17T01-57-29Z
+make[1]: *** [Makefile:33: check-M1.8] Error 1
+SABOTAGE retry-creates-duplicate-event caught by C1.8.1,C1.8.3
+CHECK C1.8.1 FAIL completeness check failed; see go test output 
+CHECK C1.8.2 PASS
+CHECK C1.8.3 FAIL restart check failed; see go test output 
+CHECK C1.8.4 PASS
+check.sh: evidence: evidence/M1.8/2026-11-17T01-58-55Z
+make[1]: *** [Makefile:33: check-M1.8] Error 1
+0 uncaught

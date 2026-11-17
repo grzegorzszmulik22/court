@@ -1,0 +1,5 @@
+=== RUN   TestC1_7_3
+{"type":"system","subtype":"init"}
+--- PASS: TestC1_7_3 (0.64s)
+PASS
+ok  	court/internal/adapter/scripted	0.752s

@@ -1,0 +1,4 @@
+=== RUN   TestC1_8_1
+--- PASS: TestC1_8_1 (40.44s)
+PASS
+ok  	court/internal/adapter/scripted	40.578s

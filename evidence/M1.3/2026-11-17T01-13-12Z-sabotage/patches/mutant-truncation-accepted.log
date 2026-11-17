@@ -1,0 +1,6 @@
+CHECK C1.3.1 FAIL verifier agreement failed 
+CHECK C1.3.2 PASS
+CHECK C1.3.3 PASS
+CHECK C1.3.4 PASS
+check.sh: evidence: evidence/M1.3/2026-11-17T01-16-18Z
+make[1]: *** [Makefile:33: check-M1.3] Error 1
