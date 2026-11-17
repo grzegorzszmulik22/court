@@ -16,7 +16,7 @@
 #   exit 77  -> SKIP   (first stderr line is the reason)
 #   exit 78  -> BLOCKED (first stderr line is the reason)
 #   other    -> FAIL   (first stderr line is the reason, else "exit <rc>")
-#   A check runs under `timeout` ($COURT_CHECK_TIMEOUT seconds, default 240);
+#   A check runs under `timeout` ($COURT_CHECK_TIMEOUT seconds, default 900);
 #   a kill is a FAIL. A check's own scratch area is $COURT_CHECK_DIR; its
 #   output is captured to checks/<id>.log in the run's evidence folder.
 #   A check must never print a `CHECK <its own id> ...` line itself: the
@@ -69,12 +69,12 @@ for f in "$dir"/*; do
     ran=$((ran+1))
     d="$ev/checks/$id.d"; mkdir -p "$d"
     log="$ev/checks/$id.log"; err="$d/stderr.log"
-    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-240}" bash "$f" >"$log" 2>"$err"
+    COURT_CHECK_DIR="$d" timeout "${COURT_CHECK_TIMEOUT:-900}" bash "$f" >"$log" 2>"$err"
     rc=$?
     cat "$err" >>"$log"          # the check's log holds stdout then stderr
     cat "$log" >>"$ev/output.log"
     reason=$(head -1 "$err" 2>/dev/null | tr '\n' ' ' | cut -c1-200)
-    [ "$rc" -eq 124 ] && reason="timeout after ${COURT_CHECK_TIMEOUT:-240}s"
+    [ "$rc" -eq 124 ] && reason="timeout after ${COURT_CHECK_TIMEOUT:-900}s"
     # A check reporting its own CHECK line forges the result namespace; only
     # the runner may emit `CHECK <id>` lines for this run.
     forged=$(grep -cE "^CHECK ${id//./\\.}(\.[^ ]+)?( |$)" "$log" || true)

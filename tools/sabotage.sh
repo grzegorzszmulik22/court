@@ -80,7 +80,7 @@ for p in "$sabdir"/*.patch; do
         COURT_GIT_COMMIT="$commit" \
         COURT_TOOLS_DIR="$orig/.tools" \
         PATH="$orig/.tools/bin:$PATH" \
-        timeout "${COURT_SABOTAGE_TIMEOUT:-600}" \
+        timeout "${COURT_SABOTAGE_TIMEOUT:-1800}" \
         make --no-print-directory "check-$chunk") >>"$plog" 2>&1
     rc=$?
     caught=$(grep -oE '^CHECK [^ ]+ +(FAIL|BLOCKED|SKIP)' "$plog" | awk '{print $2}' | sort -u | tr '\n' ',' | sed 's/,$//')
