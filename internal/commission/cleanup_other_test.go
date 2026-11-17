@@ -9,6 +9,9 @@ package commission_test
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
+	"strconv"
 	"syscall"
 	"testing"
 	"time"
@@ -41,6 +44,7 @@ func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
 		}
 		time.Sleep(20 * time.Millisecond)
 	}
+	clearDaemonPID(pid)
 }
 
 // waitFileReleased is a no-op on Unix: an open file does not block its
@@ -49,3 +53,17 @@ func waitFileReleased(t *testing.T, path string) {}
 
 // normalizePTYOutput is a no-op where the pty is a real one.
 func normalizePTYOutput(s string) string { return s }
+
+// clearDaemonPID removes a pid the test proved dead. A recorded pid whose
+// process has exited can be reused by an unrelated process (a bash
+// worker, another test's helper); keeping it would report a false leak.
+func clearDaemonPID(pid int) {
+	if pid <= 0 {
+		return
+	}
+	dir := os.Getenv("COURT_TEST_DAEMON_REGISTRY")
+	if dir == "" {
+		return
+	}
+	_ = os.Remove(filepath.Join(dir, strconv.Itoa(pid)))
+}

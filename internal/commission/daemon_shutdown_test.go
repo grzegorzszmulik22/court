@@ -113,6 +113,7 @@ func (d *testDaemon) waitExit(t *testing.T, timeout time.Duration) error {
 	select {
 	case err := <-d.done:
 		d.exited = true
+		clearDaemonPID(d.pid)
 		return err
 	case <-time.After(timeout):
 		t.Fatalf("court daemon (pid %d) is still running %s after it should have exited",
