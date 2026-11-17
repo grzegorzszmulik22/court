@@ -18,11 +18,11 @@ M0 is human work and is tracked here only so the gate is visible.
 | M1.6 | Agent tools | DONE | 2 | evidence/M1.6/2026-11-16T19-01-37Z | Re-verified by supervisor: passed rounds 2 and 3. |
 | M1.7 | Claude Code adapter | DONE | 3 | evidence/M1.7/2026-11-16T20-34-51Z | Re-verified by supervisor: round 3 caught 3/5 unseen sabotages; the two Windows program-form gaps (curl.exe, backslash paths) and the bash-only C1.7.3 stand-in fixed by the supervisor (babb879). Residual of a shell-text deny list documented in docs/M1.7.md. Whole suite green on Windows 11. |
 | M1.8 | Completeness and overhead | DONE | 3 | evidence/M1.8/2026-11-16T20-35-08Z | Re-verified by supervisor: request-identity idempotency per session, 2/2 unseen sabotages caught (session dropped from MCP key; JSON-RPC id 5 vs "5"). |
-| M2.1 | The commission | TODO | 0 | | |
-| M2.2 | Backbrief and ordering | TODO | 0 | | |
-| M2.3 | The blind clerk | TODO | 0 | | |
-| M2.4 | Writs and spawn | TODO | 0 | | |
-| M2.5 | The upfront hearing | TODO | 0 | | |
+| M2.1 | The commission | DONE | 3 | evidence/M2.1/2026-11-16T22-34-48Z | Re-verified by supervisor: passed both reviews. |
+| M2.2 | Backbrief and ordering | DONE | 1 | evidence/M2.2/2026-11-16T22-42-03Z | Re-verified by supervisor: passed both reviews. |
+| M2.3 | The blind clerk | DONE | 3 | evidence/M2.3/2026-11-17T01-46-31Z | Re-verified by supervisor (2 reviews). Sent back once: schema drift (invalid field missing from backbrief.submitted schema, its guard test run by no check). Round 2: 3/3 unseen sabotages caught. |
+| M2.4 | Writs and spawn | DONE | 3 | evidence/M2.4/2026-11-17T01-46-54Z | Re-verified by supervisor (2 reviews). Sent back once: speculation budget never checked. Round 2: 5/5 unseen sabotages caught (every budget, boundary, class). |
+| M2.5 | The upfront hearing | DONE | 2 | evidence/M2.5/2026-11-17T01-48-20Z | Re-verified by supervisor (2 reviews). Sent back once: clerk-only guarantee decisions not ordered first. Round 2: 2/2 caught. Windows: hearing tests need Linux script(1) and leave daemon.log open (CR-002, windows lane); hearing skipped under mintty, fixed by supervisor. |
 | M3.1 | Vectors and scenarios first | TODO | 0 | | freeze commit recorded here |
 | M3.2 | The declaration gate | TODO | 0 | | |
 | M3.3 | Detectors DT1 to DT6 | TODO | 0 | | |
