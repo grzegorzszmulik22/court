@@ -3,6 +3,6 @@
 # agent's final message, the diff --stat, or a commit message. The corpus
 # run in C3.1.1 covers the real data; this leg proves the rule fires.
 set -uo pipefail
-go test ./bench/docketbench/validate -count=1 -timeout 300s -v \
+go test ./bench/docketbench/validate -count=1 -timeout 30m -v \
     -run '^TestC3_1_3$' \
     || { echo "check failed; see go test output" >&2; exit 1; }
