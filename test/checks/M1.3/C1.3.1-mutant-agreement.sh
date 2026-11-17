@@ -51,23 +51,49 @@ head -c -1 "$d/gen/gen-00001.jsonl" > "$d/edge/no-newline.jsonl"
     > "$d/edge/first-moved-last.jsonl"
 
 # 4. Verify with both, in parallel (independent passes over the corpus).
-"$COURT" ledger verify "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/go.out" 2>"$d/go.err" &
+# Windows caps one command line at 32,767 characters and the corpus is over
+# 5,000 paths, so each verifier is invoked in deterministic batches and its
+# per-file lines are appended in corpus order. Every file is still verified
+# exactly once by each verifier; the agreement pass below sees the same output
+# it sees on Linux.
+files=("$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl)
+run_batched() { # <out> <err> <verifier command...>
+    local out=$1 err=$2
+    shift 2
+    local batch=() f
+    : >"$out"
+    : >"$err"
+    for f in "${files[@]}"; do
+        batch+=("$f")
+        if [ "${#batch[@]}" -ge 100 ]; then
+            "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
+            batch=()
+        fi
+    done
+    if [ "${#batch[@]}" -gt 0 ]; then
+        "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
+    fi
+}
+run_batched "$d/go.out" "$d/go.err" "$COURT" ledger verify &
 gopid=$!
-python3 "$REFLEDGER" "$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl \
-    > "$d/py.out" 2>"$d/py.err" &
+run_batched "$d/py.out" "$d/py.err" python3 "$REFLEDGER" &
 pypid=$!
 wait "$gopid" "$pypid" 2>/dev/null || true
 
 python3 - "$d" <<'PYEOF' || { echo "verifier agreement failed" >&2; exit 1; }
 import sys, os, re
 d = sys.argv[1]
+def norm(p):
+    # Windows: verifier output and Python path joins may use either separator.
+    # Normalise separators for the key; line endings for the read. The class
+    # compared is untouched.
+    return p.replace('\\', '/')
 def classes(path):
     out = {}
     for line in open(path):
-        m = re.match(r'^VERIFY (\S+) (\S+)', line)
+        m = re.match(r'^VERIFY (\S+) (\S+)', line.rstrip('\r\n'))
         if m:
-            out[m.group(1)] = m.group(2)
+            out[norm(m.group(1))] = m.group(2)
     return out
 go, py = classes(d + '/go.out'), classes(d + '/py.out')
 bad = []
