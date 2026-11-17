@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # regress.sh — make regress.
 #   1. verify spec/FROZEN.sha256 (spec/05-agent-loop.md section 7)
-#   2. run `make check-<chunk>` for every chunk marked DONE in spec/PROGRESS.md
+#   2. run every Go test (go test ./...)
+#   3. run `make check-<chunk>` for every chunk marked DONE in spec/PROGRESS.md
 #      or spec/progress/*.md
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -30,6 +31,15 @@ for c in sorted(seen):
     print(c)
 PYEOF
 )
+
+# Every Go test, not only the ones a check script names: a test that no
+# check runs could otherwise fail unseen (found 2026-11-17, when
+# TestBodyFieldShapes failed on a lane branch while every check passed).
+echo "regress: go test ./..."
+if ! go test -count=1 ./...; then
+    echo "regress: go test ./... FAIL"
+    fail=1
+fi
 
 os=$(uname -s)
 for c in $chunks; do
