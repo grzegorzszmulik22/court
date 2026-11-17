@@ -50,6 +50,9 @@ type Options struct {
 	// writes daemon.json, sessions.json, refusals.log and hooks/post-commit
 	// into it.
 	DataDir string
+	// Repo is the repository under commission; the spawn tool forks worlds
+	// from it (M2.4). Empty disables spawn.
+	Repo string
 	// Policy is the PreToolUse deny evaluator (nil abstains from everything).
 	Policy DenyPolicy
 	// CourtBin is the court binary the generated git hook script execs.
@@ -82,6 +85,13 @@ type Session struct {
 	Branch     string `json:"branch"`
 	Worktree   string `json:"worktree"`
 	Writ       string `json:"writ"`
+	Task       string `json:"task,omitempty"`
+	// RequireBackbrief gates this agent's non-read-only tool calls on its
+	// backbrief.submitted being in the ledger (M2.2).
+	RequireBackbrief bool `json:"require_backbrief,omitempty"`
+	// AwaitClerk additionally gates them on the commission's clerk list
+	// being recorded (M2.3); only sessions the commissioner opens carry it.
+	AwaitClerk bool `json:"await_clerk,omitempty"`
 }
 
 // preEntry is one parked PreToolUse: a call the policy abstained from and
@@ -106,18 +116,26 @@ type Daemon struct {
 	mux   *http.ServeMux
 
 	mu         sync.Mutex
-	sessions   map[string]*Session      // token -> session
-	byAgent    map[string]*Session      // commission/agent -> session (children included)
-	byTree     map[string]*Session      // normalized worktree path -> session
-	started    map[string]bool          // commission/agent already has agent.started
-	stopped    map[string]bool          // commission/agent already has agent.stopped
-	recorded   map[string]bool          // recorded commit ids
-	lastCommit map[string]string        // world -> newest recorded commit
-	pending    map[string][]preEntry    // token -> parked PreToolUse entries
-	worldMu    map[string]*sync.Mutex   // serialize gate sync per world
-	mcpSrv     map[*Session]*mcp.Server // session -> its tools server
-	mcpHTTP    http.Handler
-	refusalMu  sync.Mutex
+	sessions   map[string]*Session // token -> session
+	byAgent    map[string]*Session // commission/agent -> session (children included)
+	byTree     map[string]*Session // normalized worktree path -> session
+	started    map[string]bool     // commission/agent already has agent.started
+	stopped    map[string]bool     // commission/agent already has agent.stopped
+	recorded   map[string]bool     // recorded commit ids
+	lastCommit map[string]string   // world -> newest recorded commit
+	// backbriefed marks commission/actor pairs whose backbrief.submitted is
+	// in the ledger (the M2.2 ordering gate's release).
+	backbriefed map[string]bool
+	// writs holds issued writs by id; spent accrues the budgets granted
+	// to a writ's children so attenuation is against what remains (§9).
+	writs       map[string]*ledger.WritIssued
+	writByAgent map[string]string // commission/agent -> its writ id
+	spent       map[string]ledger.Budgets
+	pending     map[string][]preEntry    // token -> parked PreToolUse entries
+	worldMu     map[string]*sync.Mutex   // serialize gate sync per world
+	mcpSrv      map[*Session]*mcp.Server // session -> its tools server
+	mcpHTTP     http.Handler
+	refusalMu   sync.Mutex
 
 	adminToken string
 	closed     chan struct{}
@@ -139,16 +157,15 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 		byTree: map[string]*Session{}, started: map[string]bool{},
 		stopped:  map[string]bool{},
 		recorded: map[string]bool{}, lastCommit: map[string]string{},
-		pending: map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
+		backbriefed: map[string]bool{},
+		writs:       map[string]*ledger.WritIssued{},
+		writByAgent: map[string]string{},
+		spent:       map[string]ledger.Budgets{},
+		pending:     map[string][]preEntry{}, worldMu: map[string]*sync.Mutex{},
 		mcpSrv: map[*Session]*mcp.Server{},
 		closed: make(chan struct{}),
 	}
 	d.mcpHTTP = d.newMCPHandler()
-	if opts.CourtBin == "" {
-		if exe, err := os.Executable(); err == nil {
-			opts.CourtBin = exe
-		}
-	}
 	if err := os.MkdirAll(opts.DataDir, 0o755); err != nil {
 		return nil, err
 	}
@@ -172,6 +189,10 @@ func New(store *ledger.Store, opts Options) (*Daemon, error) {
 	d.mux.HandleFunc("POST /admin/session", d.adminSession)
 	d.mux.HandleFunc("GET /admin/info", d.adminInfo)
 	d.mux.HandleFunc("POST /admin/shutdown", d.adminShutdown)
+	d.mux.HandleFunc("POST /admin/clerk", d.adminClerk)
+	d.mux.HandleFunc("POST /admin/rule", d.adminRule)
+	d.mux.HandleFunc("GET /admin/events", d.adminEvents)
+	d.mux.HandleFunc("POST /admin/writ", d.adminWrit)
 	return d, nil
 }
 
@@ -262,6 +283,21 @@ func (d *Daemon) rebuildFromLedger() error {
 			idemKeys = append(idemKeys, "agent.started|"+ev.Commission+"/"+agent)
 		case "agent.stopped":
 			d.stopped[ev.Commission+"/"+s(b["agent"])] = true
+		case "backbrief.submitted":
+			d.backbriefed[ev.Commission+"/"+ev.Actor] = true
+		case "writ.issued":
+			var w ledger.WritIssued
+			if remarshal(b, &w) == nil {
+				d.writs[w.ID] = &w
+				d.writByAgent[ev.Commission+"/"+w.Agent] = w.ID
+				if pw := d.writs[d.writByAgent[ev.Commission+"/"+w.Parent]]; pw != nil {
+					s := d.spent[pw.ID]
+					s.Tokens += w.Budgets.Tokens
+					s.Minutes += w.Budgets.Minutes
+					s.Speculation += w.Budgets.Speculation
+					d.spent[pw.ID] = s
+				}
+			}
 		case "commission.opened":
 			idemKeys = append(idemKeys, "commission.opened|"+ev.Commission)
 		case "world.created":
@@ -455,7 +491,19 @@ func (d *Daemon) emit(commission, actor, typ string, body any, idemKeys ...strin
 	// AppendIdem marshals canonically, validates, deduplicates on the
 	// request-identity keys and commits in one write transaction; the
 	// response goes out only after COMMIT.
-	return d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+	ev, appended, err := d.store.AppendIdem(commission, actor, typ, body, idemKeys)
+	if err == nil && typ == "backbrief.submitted" {
+		d.backbriefed[commission+"/"+actor] = true
+	}
+	return ev, appended, err
+}
+
+// hasBackbrief reports whether the actor's backbrief.submitted is in the
+// ledger (actor is the ledger actor: "agent:<name>" or "clerk").
+func (d *Daemon) hasBackbrief(commission, actor string) bool {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.backbriefed[commission+"/"+actor]
 }
 
 // --------------------------------------------------------------------------
@@ -483,6 +531,106 @@ func (d *Daemon) adminShutdown(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, 200, map[string]any{"ok": true})
 	go d.Close()
+}
+
+// ClerkResult is the /admin/clerk payload: the clerk's expected-decision
+// list, or the invalid-output marker when it failed schema validation.
+type ClerkResult struct {
+	Commission string            `json:"commission"`
+	Goal       string            `json:"goal"`
+	Expected   []ledger.Expected `json:"expected_decisions"`
+	Invalid    bool              `json:"invalid"`
+	Output     string            `json:"output"`
+}
+
+// RecordClerk stores the clerk's answer as backbrief.submitted under
+// actor clerk — before anything reads it (02 §7). It is idempotent per
+// commission: the clerk runs once.
+func (d *Daemon) RecordClerk(c ClerkResult) error {
+	if c.Commission == "" {
+		return fmt.Errorf("daemon: commission is required")
+	}
+	out := c.Output
+	if r := []rune(out); len(r) > 2000 {
+		out = string(r[:2000])
+	}
+	_, _, err := d.emit(c.Commission, "clerk", "backbrief.submitted",
+		&ledger.BackbriefSubmitted{
+			Goal: c.Goal, ExpectedDecisions: c.Expected,
+			WillNotTouch: []string{},
+			Invalid:      c.Invalid, Output: out},
+		"clerk|"+c.Commission)
+	return err
+}
+
+func (d *Daemon) adminClerk(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	var c ClerkResult
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&c); err != nil {
+		d.refuse(w, r, "admin", "bad clerk body", http.StatusBadRequest)
+		return
+	}
+	if err := d.RecordClerk(c); err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJSON(w, 200, map[string]any{"ok": true})
+}
+
+// adminRule records a human ruling from the upfront hearing. The body
+// is {commission, decision, option}; only an actual answer reaches
+// here — skipped questions never emit decision.ruled (C2.5.1).
+func (d *Daemon) adminRule(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	var req struct {
+		Commission string `json:"commission"`
+		Decision   string `json:"decision"`
+		Option     string `json:"option"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&req); err != nil {
+		d.refuse(w, r, "admin", "bad rule body", http.StatusBadRequest)
+		return
+	}
+	if req.Commission == "" || req.Decision == "" || req.Option == "" {
+		d.refuse(w, r, "admin", "rule needs commission, decision and option",
+			http.StatusBadRequest)
+		return
+	}
+	if _, _, err := d.emit(req.Commission, "human", "decision.ruled",
+		&ledger.DecisionRuled{Decision: req.Decision, Option: req.Option},
+		"rule|"+req.Commission+"/"+req.Decision+"/"+req.Option); err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJSON(w, 200, map[string]any{"ok": true})
+}
+
+// adminEvents returns the commission's events in ledger order (or all
+// events without the filter), for the commissioner and checks.
+func (d *Daemon) adminEvents(w http.ResponseWriter, r *http.Request) {
+	if !d.adminOK(w, r) {
+		return
+	}
+	comm := r.URL.Query().Get("commission")
+	evs, err := d.store.Events()
+	if err != nil {
+		d.refuse(w, r, "admin", err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var out []*ledger.Event
+	for _, e := range evs {
+		if comm == "" || e.Commission == comm {
+			out = append(out, e)
+		}
+	}
+	if out == nil {
+		out = []*ledger.Event{}
+	}
+	writeJSON(w, 200, map[string]any{"events": out})
 }
 
 // Commission is the registration payload of /admin/commission.

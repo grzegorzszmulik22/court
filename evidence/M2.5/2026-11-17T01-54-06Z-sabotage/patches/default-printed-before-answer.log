@@ -1,0 +1,8 @@
+CHECK C2.5.1 PASS
+CHECK C2.5.2 PASS
+CHECK C2.5.3 PASS
+CHECK C2.5.4 PASS
+CHECK C2.5.5 PASS
+CHECK C2.5.6 FAIL check failed; see go test output 
+check.sh: evidence: evidence/M2.5/2026-11-17T01-54-06Z
+make[1]: *** [Makefile:33: check-M2.5] Error 1

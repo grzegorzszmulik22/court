@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"court/internal/ledger"
 	"court/internal/tools"
 )
 
@@ -47,7 +49,41 @@ func (d *Daemon) mcpServer(sess *Session) *mcp.Server {
 	}
 	s := tools.New(tools.Deps{
 		Actor: func(tool string) string { return d.actorForMCP(sess, tool) },
+		Spawn: func(ctx context.Context, actor string, in tools.SpawnIn) (*tools.SpawnOutcome, error) {
+			res, err := d.Spawn(sess, SpawnRequest{
+				Agent: in.Agent, Task: in.Task, Categories: in.Categories,
+				Territory: in.Territory,
+				Budgets: ledger.Budgets{
+					Tokens: in.Budgets.Tokens, Minutes: in.Budgets.Minutes,
+					Speculation: in.Budgets.Speculation},
+			})
+			if err != nil {
+				return nil, err
+			}
+			return &tools.SpawnOutcome{
+				Token: res.Token, HookURL: res.HookURL, MCPURL: res.MCPURL,
+				World: res.World, Worktree: res.Worktree,
+				Writ: res.Writ, Agent: res.Agent}, nil
+		},
 		Emit: func(ctx context.Context, actor, typ string, body any) error {
+			// The ordering gate applies at this boundary too: an MCP call
+			// that bypassed its PreToolUse (or the hook layer) may not
+			// write ahead of the actor's backbrief (M2.2).
+			if sess.RequireBackbrief && typ != "backbrief.submitted" {
+				if !d.hasBackbrief(sess.Commission, "agent:"+actor) {
+					return fmt.Errorf("Submit your backbrief first")
+				}
+				if sess.AwaitClerk && !d.hasBackbrief(sess.Commission, "clerk") {
+					return fmt.Errorf("waiting for the clerk's list")
+				}
+			}
+			// outside-writ: a declared decision outside the session's
+			// writ is marked before it lands (M2.4, C2.4.5).
+			if dd, ok := body.(*ledger.DecisionDeclared); ok {
+				if !d.withinWrit(sess, dd) {
+					dd.OutsideWrit = true
+				}
+			}
 			var keys []string
 			if id := rpcIDFrom(ctx); id != "" {
 				// MCP retry identity: the session plus the JSON-RPC

@@ -1,0 +1,33 @@
+=== RUN   TestC2_4_1
+--- PASS: TestC2_4_1 (28.33s)
+=== RUN   TestWritVectors
+--- PASS: TestWritVectors (0.13s)
+PASS
+ok  	court/internal/writ	28.758s
+CHECK C2.4.1 PASS
+=== RUN   TestC2_4_2
+--- PASS: TestC2_4_2 (7.03s)
+PASS
+ok  	court/internal/adapter/scripted	7.067s
+CHECK C2.4.2 PASS
+=== RUN   TestC2_4_3
+--- PASS: TestC2_4_3 (0.27s)
+PASS
+ok  	court/internal/adapter/scripted	0.303s
+CHECK C2.4.3 PASS
+=== RUN   TestC2_4_4
+--- PASS: TestC2_4_4 (0.12s)
+PASS
+ok  	court/internal/adapter/scripted	0.144s
+CHECK C2.4.4 PASS
+=== RUN   TestC2_4_5
+--- PASS: TestC2_4_5 (0.17s)
+PASS
+ok  	court/internal/adapter/scripted	0.210s
+CHECK C2.4.5 PASS
+=== RUN   TestC2_4_6
+--- PASS: TestC2_4_6 (0.65s)
+PASS
+ok  	court/internal/adapter/scripted	0.682s
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-16T23-08-46Z

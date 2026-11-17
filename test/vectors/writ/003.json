@@ -1,0 +1,5 @@
+{
+ "parent": "**",
+ "child": "src/api/x.go",
+ "contains": true
+}

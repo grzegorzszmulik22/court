@@ -94,6 +94,10 @@
         },
         "petition": {
           "type": "boolean"
+        },
+        "outside_writ": {
+          "type": "boolean",
+          "description": "true when the declared decision's category or paths fall outside the declaring agent's writ (spec/01 section 9); every guarantee category is outside every writ"
         }
       }
     },

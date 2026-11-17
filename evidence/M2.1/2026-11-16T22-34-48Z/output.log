@@ -1,0 +1,22 @@
+=== RUN   TestC2_1_1
+--- PASS: TestC2_1_1 (0.29s)
+PASS
+ok  	court/internal/commission	0.325s
+CHECK C2.1.1 PASS
+=== RUN   TestC2_1_2
+--- PASS: TestC2_1_2 (1.57s)
+PASS
+ok  	court/internal/commission	1.591s
+CHECK C2.1.2 PASS
+=== RUN   TestC2_1_3
+--- PASS: TestC2_1_3 (0.27s)
+PASS
+ok  	court/internal/commission	0.291s
+CHECK C2.1.3 PASS
+CHECK C2.1.4 PASS
+=== RUN   TestC2_1_5
+--- PASS: TestC2_1_5 (0.42s)
+PASS
+ok  	court/internal/commission	0.452s
+CHECK C2.1.5 PASS
+check.sh: evidence: evidence/M2.1/2026-11-16T22-34-48Z

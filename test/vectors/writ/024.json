@@ -1,0 +1,5 @@
+{
+ "parent": "doc/*",
+ "child": "doc/*.md",
+ "contains": true
+}

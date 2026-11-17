@@ -366,7 +366,9 @@ func writeMeasurements(t *testing.T, rec map[string]any) {
 	rec["machine"] = machineDesc()
 	var all []any
 	if b, err := os.ReadFile(out); err == nil && len(b) > 0 {
-		_ = json.Unmarshal(b, &all)
+		if err := json.Unmarshal(b, &all); err != nil {
+			t.Fatalf("measurements file %s is not a JSON array: %v", out, err)
+		}
 	}
 	all = append(all, rec)
 	b, err := json.MarshalIndent(all, "", "  ")

@@ -90,6 +90,7 @@ func NewHarness(o Options) (*Harness, error) {
 		DataDir: o.DataDir,
 		Policy:  pol, CourtBin: bin,
 		AppendDelay: o.AppendDelay,
+		Repo:        o.Repo,
 	})
 	if err != nil {
 		store.Close()
@@ -159,7 +160,9 @@ func (h *Harness) AddAgent(spec *AgentSpec) (*Client, error) {
 		"commission": h.Commission, "agent": spec.ID, "parent": parent,
 		"tool": "scripted", "version": "2.1.325", "session_id": sid,
 		"world": spec.ID, "base": base, "branch": gw.Branch(),
-		"worktree": gw.Path(), "writ": "",
+		"worktree": gw.Path(), "writ": spec.Writ,
+		"require_backbrief": spec.RequireBackbrief,
+		"await_clerk":       spec.AwaitClerk,
 	}, &resp); err != nil {
 		return nil, err
 	}
@@ -260,6 +263,69 @@ func (h *Harness) postJSONInto(path string, v any, into any) error {
 
 // Events returns the whole ledger in order.
 func (h *Harness) Events() ([]*ledger.Event, error) { return h.Store.Events() }
+
+// IssueWrit posts a writ to /admin/writ and returns its id.
+func (h *Harness) IssueWrit(commission string, w *ledger.WritIssued) (string, error) {
+	var out struct {
+		Writ string `json:"writ"`
+	}
+	if err := h.postJSONInto("/admin/writ", map[string]any{
+		"commission": commission, "writ": w}, &out); err != nil {
+		return "", err
+	}
+	return out.Writ, nil
+}
+
+// OpenCommissionID opens another commission on the same daemon. Checks
+// that need hundreds of commissions share the harness.
+func (h *Harness) OpenCommissionID(id, goal string, doneChecks []string) error {
+	return h.postJSON("/admin/commission", map[string]any{
+		"commission": id, "goal": goal,
+		"done_checks": doneChecks, "territory": []string{},
+		"budgets":   map[string]any{"tokens": 0, "minutes": 0, "speculation": 0},
+		"attention": 0, "defaults": []string{}, "exemptions": []string{},
+	})
+}
+
+// AddSession registers a session without forking a world: the ordering
+// checks need hundreds of sessions and a real worktree per agent only
+// slows them down. The session's world id is the agent's plus a suffix
+// so the byAgent key stays unique inside its commission.
+func (h *Harness) AddSession(commission string, spec *AgentSpec) (*Client, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	parent := spec.Parent
+	if parent == "" {
+		parent = "human"
+	}
+	sid := newSessionID()
+	var resp struct {
+		Token   string `json:"token"`
+		HookURL string `json:"hook_url"`
+		MCPURL  string `json:"mcp_url"`
+	}
+	if err := h.postJSONInto("/admin/session", map[string]any{
+		"commission": commission, "agent": spec.ID, "parent": parent,
+		"tool": "scripted", "version": "2.1.325", "session_id": sid,
+		"world":             spec.ID + "-world",
+		"worktree":          filepath.Join(h.DataDir, "noworld", commission+"-"+spec.ID),
+		"require_backbrief": spec.RequireBackbrief,
+		"await_clerk":       spec.AwaitClerk,
+		"writ":              spec.Writ,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	c := &Client{
+		HookURL: resp.HookURL, MCPURL: resp.MCPURL,
+		Worktree:  filepath.Join(h.DataDir, "noworld", commission+"-"+spec.ID),
+		Agent:     spec.ID,
+		SessionID: sid,
+		PromptID:  fmt.Sprintf("prompt-%s-%s", spec.ID, sid),
+		Retries:   3,
+	}
+	h.sessions[commission+"/"+spec.ID] = c
+	return c, nil
+}
 
 // Refusals returns the raw refusals.log lines.
 func (h *Harness) Refusals() ([]string, error) {

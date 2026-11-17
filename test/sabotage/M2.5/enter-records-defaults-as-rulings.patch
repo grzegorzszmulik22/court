@@ -1,0 +1,14 @@
+diff --git a/internal/commission/hearing.go b/internal/commission/hearing.go
+index e8670a7..b905709 100644
+--- a/internal/commission/hearing.go
++++ b/internal/commission/hearing.go
+@@ -171,6 +171,9 @@ func Hearing(in io.Reader, out io.Writer, goal string,
+ 		default:
+ 			skipped++
+ 			fmt.Fprintln(out, "skipped — stays open")
++			if err := rule(c.ID, c.Exp.IntendedDefault); err != nil {
++				return err
++			}
+ 			continue
+ 		}
+ 		// Only now may the intended default appear (C2.5.6, sabotage

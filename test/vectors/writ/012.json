@@ -1,0 +1,5 @@
+{
+ "parent": "a/b/**",
+ "child": "a/b/c/d/e.go",
+ "contains": true
+}

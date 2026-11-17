@@ -1,0 +1,13 @@
+diff --git a/internal/recon/compare.go b/internal/recon/compare.go
+index fac0153..48070d3 100644
+--- a/internal/recon/compare.go
++++ b/internal/recon/compare.go
+@@ -29,7 +29,7 @@ func Compare(orch, clerk []ledger.Expected) Comparison {
+ 	// matches through paths, so this pass carries it entirely.
+ 	for i, o := range orch {
+ 		for j, k := range clerk {
+-			if usedC[j] || o.Category != k.Category {
++			if usedC[j] || o.Question != k.Question {
+ 				continue
+ 			}
+ 			if pathsOverlap(o.Paths, k.Paths) {

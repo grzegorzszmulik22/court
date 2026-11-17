@@ -1,0 +1,33 @@
+{
+ "name": "024",
+ "orchestrator": [
+  {
+   "question": "a?",
+   "category": "interface",
+   "paths": [
+    "m",
+    "n"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "clerk": [
+  {
+   "question": "b?",
+   "category": "interface",
+   "paths": [
+    "src"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "expect": {
+  "both": [],
+  "only_orch": [
+   0
+  ],
+  "only_clerk": [
+   0
+  ]
+ }
+}

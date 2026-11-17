@@ -1,0 +1,10 @@
+diff --git a/internal/ledger/bodies.go b/internal/ledger/bodies.go
+index ae3c018..308c60e 100644
+--- a/internal/ledger/bodies.go
++++ b/internal/ledger/bodies.go
+@@ -619,4 +619,4 @@ func Categories() []string { return append([]string(nil), categories...) }
+ 
+ // IsGuarantee reports whether c is a guarantee category: outside every
+ // writ in version 1.
+-func IsGuarantee(c string) bool { return guaranteeCategories[c] }
++func IsGuarantee(c string) bool { return false }

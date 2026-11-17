@@ -1,0 +1,5 @@
+{
+ "parent": "doc/*",
+ "child": "doc/api/x.md",
+ "contains": false
+}

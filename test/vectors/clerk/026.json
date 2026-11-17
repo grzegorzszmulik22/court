@@ -1,0 +1,41 @@
+{
+ "name": "026",
+ "orchestrator": [
+  {
+   "question": "a?",
+   "category": "dependency",
+   "paths": [],
+   "intended_default": "d"
+  }
+ ],
+ "clerk": [
+  {
+   "question": "b?",
+   "category": "dependency",
+   "paths": [
+    "go.mod"
+   ],
+   "intended_default": "d"
+  },
+  {
+   "question": "c?",
+   "category": "dependency",
+   "paths": [
+    "sum"
+   ],
+   "intended_default": "d"
+  }
+ ],
+ "expect": {
+  "both": [
+   [
+    0,
+    0
+   ]
+  ],
+  "only_orch": [],
+  "only_clerk": [
+   1
+  ]
+ }
+}

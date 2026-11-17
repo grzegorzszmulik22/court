@@ -1,0 +1,5 @@
+{
+ "parent": "*.go",
+ "child": "x.go",
+ "contains": true
+}
