@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-07",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/msg.ts": {
+      "before": "",
+      "after": "export function check() { return true; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "auth-in-string",
+  "note": "auth-in-string"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-02",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestPerf(t *testing.T) {\n\tif ms > 500 { t.Fatal(ms) }\n}\n",
+      "after": "package shop\n\nfunc TestPerf(t *testing.T) {\n\tif ms > 100 { t.Fatal(ms) }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened",
+  "fp_kind": "changed_expectation"
+}

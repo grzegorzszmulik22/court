@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-09",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch.ts": {
+      "before": "export function f() {\n  try { return get(); } catch (e: any) { throw e; }\n}\n",
+      "after": "export function f() {\n  try { return get(); } catch (e: FetchError) { throw e; }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "narrowed",
+  "note": "narrowed"
+}

@@ -1,0 +1,87 @@
+{
+  "id": "T-25",
+  "comment": "Commit 1 bypassed the gate: its detector hit is undeclared even though a matching declaration exists at the same commit index (the gate never recorded it, 03 \u00a74.5).",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "bypassed": [
+      {
+        "world": "w1",
+        "commits": [
+          1
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true,
+      "note": "the entries still merge (matching is category+paths only) but the bypassed commit makes the hit undeclared"
+    }
+  ],
+  "tags": [
+    "gate-bypassed"
+  ]
+}

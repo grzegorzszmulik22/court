@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-05",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n  expect(total()).toBeGreaterThan(0);\n});\n",
+      "after": "test('total', () => {\n  expect(total()).toBe(1);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "src/shop.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "test('total'",
+      "rule": "dt4-typescript-fewer_assertions"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT5-python-pos-06",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def pick(v: int) -> int:\n    return v\n",
+      "after": "def pick(v: int | None) -> int | None:\n    return v\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "app/calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "v: int | None",
+      "rule": "dt5-python-widened"
+    }
+  ]
+}

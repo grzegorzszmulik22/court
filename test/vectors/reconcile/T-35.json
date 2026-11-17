@@ -1,0 +1,78 @@
+{
+  "id": "T-35",
+  "comment": "Expected + detected merge (no declaration): undeclared but foreseen.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "deletion",
+        "paths": [
+          "data/x.csv"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "deletion",
+        "paths": [
+          "data/x.csv"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1",
+        "h1"
+      ],
+      "sources": [
+        "detected",
+        "expected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "outside-writ"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "expected-detected",
+    "outside-writ-guarantee"
+  ]
+}

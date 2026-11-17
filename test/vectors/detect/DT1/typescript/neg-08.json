@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-08",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "README.md": {
+      "before": "# app\n",
+      "after": "# app\n\nEvaluating zod.\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "docs-mention",
+  "note": "docs-mention"
+}

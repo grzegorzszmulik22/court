@@ -1,0 +1,31 @@
+{
+  "id": "DT8-typescript-pos-07",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "const endpoint = \"https://telemetry.host6.example.net/v1\";\n\nexport function c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "src/client.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "host6.example.net",
+      "rule": "dt8-typescript-host-literal"
+    }
+  ]
+}

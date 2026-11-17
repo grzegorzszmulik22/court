@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-12",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "internal/authority_notes.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "substring-not-segment",
+  "note": "substring-not-segment"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT7-go-neg-14",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\tif err := get(); err != nil {\n\t\treturn fmt.Errorf(\"fetch: %w\", err)\n\t}\n\treturn nil\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rethrow",
+  "note": "rethrow"
+}

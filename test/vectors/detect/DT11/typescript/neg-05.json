@@ -1,0 +1,19 @@
+{
+  "id": "DT11-typescript-neg-05",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "scripts/deploy.sh": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "scripts/deploy.sh"
+    ]
+  },
+  "expect": [],
+  "near_miss": "exact-file",
+  "note": "exact-file"
+}

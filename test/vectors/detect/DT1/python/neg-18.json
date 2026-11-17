@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-18",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "README.md": {
+      "before": "# app\n",
+      "after": "# app\n\nMay add pydantic later.\n"
+    }
+  },
+  "expect": [],
+  "note": "docs-mention"
+}

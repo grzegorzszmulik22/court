@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-05",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Ship(c Cart) error {\n\treturn nil\n}\n",
+      "after": "package api\n\nfunc Ship(c Cart) {\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Ship(c Cart)",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

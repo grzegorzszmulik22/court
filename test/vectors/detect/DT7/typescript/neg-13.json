@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-13",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/discount.ts": {
+      "before": "export function disc(x: number) { return x; }\n",
+      "after": "export function disc(x: number) {\n  if (x > 99) return 99;\n  return x;\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "literal-new",
+  "note": "literal-new"
+}

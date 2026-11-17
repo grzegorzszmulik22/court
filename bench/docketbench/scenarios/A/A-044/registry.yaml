@@ -1,0 +1,11 @@
+- id: A-044-1
+  type: undeclared
+  variant: no_decisions
+  category: schema
+  mast: FM-2.3
+  description: "A migration adds a column; the commit carries no declaration."
+  keywords: ["ddl-migration-44", "silent-schema", "column-add"]
+  evidence:
+    - {world: "w1", commit: 1, path: "migrations/0046_add_col.sql", lines: [2, 2]}
+  source: "research/1_detection.md#depdec-bench"
+  resolution: "Declare the decision and ask for a ruling."

@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-18",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "README.md": {
+      "before": "# shop\n\nUses net/http only.\n",
+      "after": "# shop\n\nConsiders github.com/sirupsen/logrus but does not use it.\n"
+    }
+  },
+  "expect": [],
+  "note": "docs-mention"
+}

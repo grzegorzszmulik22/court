@@ -1,0 +1,26 @@
+{
+  "id": "DT5-typescript-pos-02",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function pick(v: number): number {\n  return v;\n}\n",
+      "after": "export function pick(v: any): any {\n  return v;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "pick(v: any): any",
+      "rule": "dt5-typescript-widened"
+    }
+  ]
+}

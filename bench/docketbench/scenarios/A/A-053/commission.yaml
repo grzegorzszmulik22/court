@@ -1,0 +1,7 @@
+goal: "extend the ledger service per roadmap ledger-territory"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["ledger/**", "internal/**", "api/**", "docs/**", "config/**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "ledger-territory"
+allowed_hosts: ["api.internal.example"]

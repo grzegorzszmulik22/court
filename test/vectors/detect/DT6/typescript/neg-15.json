@@ -1,0 +1,14 @@
+{
+  "id": "DT6-typescript-neg-15",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    ".pre-commit-config.yaml.14": {
+      "before": "repos:\n  - repo: local\n    hooks:\n",
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "hook-added",
+  "note": "hook-added"
+}

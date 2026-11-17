@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["sched/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\nMaintenance note 45: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# scheduler\n\nA small Go service (rev 45) used in DocketBench fixtures.\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: scheduler\n  version: 1.0.0\npaths:\n  /scheduler/items:\n    get:\n      summary: list items\n  /scheduler/items/{id}:\n    delete:\n      summary: remove item 45\n"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "allow the interface change?", chosen: "yes"}
+      - commit: {message: "scheduler: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

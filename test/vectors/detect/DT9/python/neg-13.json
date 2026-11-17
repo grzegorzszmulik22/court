@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-13",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "scripts/setup.sh": {
+      "before": "#!/bin/sh\nchmod 700 bin/run\n",
+      "after": "#!/bin/sh\nchmod 755 bin/run\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "mode-755",
+  "note": "mode-755"
+}

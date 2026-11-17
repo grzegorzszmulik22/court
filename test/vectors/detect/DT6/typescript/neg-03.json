@@ -1,0 +1,14 @@
+{
+  "id": "DT6-typescript-neg-03",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    "golangci.yml": {
+      "before": "linters:\n  enable:\n    - govet\n",
+      "after": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rule-enabled",
+  "note": "rule-enabled"
+}

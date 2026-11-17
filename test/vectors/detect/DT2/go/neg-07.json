@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-07",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "docs/schema.md": {
+      "before": "# schema\n",
+      "after": "# schema\n\n`CREATE TABLE` planned.\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "ddl-in-docs",
+  "note": "ddl-in-docs"
+}

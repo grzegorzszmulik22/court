@@ -1,0 +1,40 @@
+{
+  "id": "DT8-typescript-pos-19",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl -s https://api8.vendor.example/ping"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "",
+      "lines": [
+        0,
+        0
+      ],
+      "side": "events",
+      "evidence": "api8.vendor.example",
+      "rule": "dt8-typescript-tool-event"
+    }
+  ]
+}

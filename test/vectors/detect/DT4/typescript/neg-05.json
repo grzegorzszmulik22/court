@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-05",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/helpers.ts": {
+      "before": "export const h = () => 1;\n",
+      "after": "export const h = () => 2;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "helper-edit",
+  "note": "helper-edit",
+  "fp_kind": "changed_expectation"
+}

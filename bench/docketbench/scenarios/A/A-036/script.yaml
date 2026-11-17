@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["blog/**"]
+          expected:
+            - {question: "update the guide?", category: scope, paths: ["docs/guide.md"]}
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 36: clamp bounds are inclusive.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 536\n  write_ms: 2000\nretries: 3\n"}
+      - commit: {message: "blog: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

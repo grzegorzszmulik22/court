@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-20",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/t7.test.ts": {
+      "before": "test('x', () => { expect(x()).toBe(1); });\n",
+      "after": "test('x', () => { expect(x()).toBe(2); });\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "expectation-stricter-fill",
+  "fp_kind": "changed_expectation",
+  "note": "expectation-stricter-fill"
+}

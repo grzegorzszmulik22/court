@@ -1,0 +1,26 @@
+{
+  "id": "DT5-typescript-pos-09",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function total(items: Item[]): number {\n  return items.length;\n}\n",
+      "after": "export function total(items: any[]): number {\n  return items.length;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "items: any[]",
+      "rule": "dt5-typescript-widened"
+    }
+  ]
+}

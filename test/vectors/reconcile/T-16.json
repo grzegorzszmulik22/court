@@ -1,0 +1,91 @@
+{
+  "id": "T-16",
+  "comment": "other vs expected: expected 'other' with paths only matches on overlap; disjoint -> unanswered expected + undeclared hit.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "other",
+        "paths": [
+          "x/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "other",
+        "paths": [
+          "y/b.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1"
+      ],
+      "sources": [
+        "expected"
+      ],
+      "verdict": "unanswered",
+      "flags": [],
+      "queued": true
+    },
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "other-no-overlap"
+  ]
+}

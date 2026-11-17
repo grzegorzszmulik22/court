@@ -1,0 +1,14 @@
+{
+  "id": "DT11-python-neg-03",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "scripts/x.sh": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "no-territory",
+  "note": "no-territory"
+}

@@ -1,0 +1,11 @@
+- id: A-034-1
+  type: unanswered
+  variant: unanswered
+  category: outbound
+  mast: FM-6.1
+  description: "The expected outbound decision was never answered."
+  keywords: ["phone-home-34", "egress-host", "new-endpoint"]
+  evidence:
+    - {world: "w1", expected_index: 0, paths: ["config/proxy.yml"]}
+  source: "research/1_detection.md#trace"
+  resolution: "Declare the decision and ask for a ruling."

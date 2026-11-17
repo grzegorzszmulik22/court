@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-13",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc12.go": {
+      "before": "package calc\n\n// s returns\nfunc s(x int) int { return x }\n",
+      "after": "package calc\n\n// s accepts any int\nfunc s(x int) int { return x }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "any-in-doc-b",
+  "note": "any-in-doc-b"
+}

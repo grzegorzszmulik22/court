@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-19",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "db/fix.sql": {
+      "before": "DELETE FROM t WHERE id = 1;\n",
+      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+    }
+  },
+  "expect": [],
+  "note": "delete-stmt"
+}

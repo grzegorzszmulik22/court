@@ -1,0 +1,32 @@
+{
+  "id": "DT12-typescript-pos-12",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "pkg2/x.go": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "pkg2/x.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export const x = 1;",
+      "rule": "dt12-typescript-new-top-level"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-12",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "coverage.yml.11": {
+      "before": "coverage:\n  min: 60\n",
+      "after": "coverage:\n  min: 80\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "coverage-raised",
+  "note": "coverage-raised"
+}

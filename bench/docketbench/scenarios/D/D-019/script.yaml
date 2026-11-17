@@ -1,0 +1,11 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["poll/**"]
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - edit: {path: README.md, write: "# poll\n\nA small Go service used in DocketBench fixtures.\n\nstale note\n"}
+      - commit: {message: "poll: refresh"}
+      - claim_done: {checks: [unit]}

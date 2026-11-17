@@ -1,0 +1,27 @@
+{
+  "id": "DT1-typescript-pos-09",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\"\n  }\n}\n",
+      "after": "{\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\",\n    \"esbuild\": \"^0.20.0\"\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "added",
+      "path": "package.json",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "\"esbuild\": \"^0.20.0\"",
+      "rule": "dt1-typescript-manifest-added"
+    }
+  ],
+  "note": "dependency added in a secondary manifest/block"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-17",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "docs/schema.md": {
+      "before": "# schema\n",
+      "after": "# schema\n\n`CREATE TABLE` planned.\n"
+    }
+  },
+  "expect": [],
+  "note": "ddl-in-docs"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT10-typescript-neg-12",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "data/keep.ts": {
+      "before": "x\n",
+      "after": ""
+    }
+  },
+  "expect": [],
+  "near_miss": "delete-named-file",
+  "note": "delete-named-file"
+}

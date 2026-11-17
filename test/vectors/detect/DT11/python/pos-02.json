@@ -1,0 +1,32 @@
+{
+  "id": "DT11-python-pos-02",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "docs/guide.md": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "docs/guide.md",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt11-python-outside"
+    }
+  ]
+}

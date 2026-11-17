@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-01",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function total(cart: Cart): number {\n  return cart.sum;\n}\n",
+      "after": "export function total(cart: Cart, tax: number): number {\n  return cart.sum + tax;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function total(cart: Cart, tax: number)",
+      "rule": "dt3-ts-export-changed"
+    }
+  ]
+}

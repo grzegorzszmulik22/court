@@ -1,0 +1,13 @@
+{
+  "id": "DT2-go-neg-13",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "db/report.sql": {
+      "before": "SELECT * FROM t;\n",
+      "after": "SELECT * FROM t WHERE id > 0;\n"
+    }
+  },
+  "expect": [],
+  "note": "select"
+}

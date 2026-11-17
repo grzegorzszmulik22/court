@@ -1,0 +1,26 @@
+{
+  "id": "DT2-python-pos-04",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "db/schema_python.sql": {
+      "before": "CREATE TABLE t (id INT);\n",
+      "after": "CREATE TABLE t (id INT);\nALTER TABLE t ADD COLUMN c2 INT;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "ddl",
+      "path": "db/schema_python.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE t ADD COLUMN c2",
+      "rule": "dt2-python-ddl"
+    }
+  ]
+}

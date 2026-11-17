@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-09",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "src/legacy.go": {
+      "before": "package src\n\n//nolint\nfunc f() {}\n",
+      "after": "package src\n\nfunc f() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "nolint-removed",
+  "note": "nolint-removed"
+}

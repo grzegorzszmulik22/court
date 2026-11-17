@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-06",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "migrations/0004_x.sql": {
+      "before": "",
+      "after": "-- placeholder\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "migration-empty",
+  "note": "migration-empty"
+}

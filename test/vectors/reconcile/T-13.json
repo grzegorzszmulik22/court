@@ -1,0 +1,106 @@
+{
+  "id": "T-13",
+  "comment": "Empty declaration vs hit, where a THIRD entry of the same category has overlapping paths elsewhere: blocked -> undeclared.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "d2",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "pkg/go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "pkg/go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d2",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "d2",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "empty-paths-competing"
+  ]
+}

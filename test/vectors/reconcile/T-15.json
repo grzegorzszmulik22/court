@@ -1,0 +1,92 @@
+{
+  "id": "T-15",
+  "comment": "other + other with empty/non-overlapping paths never merge: declared-only beside undeclared.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "other",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "other",
+        "paths": [
+          "y/b.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "other-no-overlap"
+  ]
+}

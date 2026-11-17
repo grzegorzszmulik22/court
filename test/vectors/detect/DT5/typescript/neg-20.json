@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-20",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc19.ts": {
+      "before": "export const c = { x: 1 };\n",
+      "after": "export const c = { x: 1 } satisfies Record<string, number>;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "satisfies-b",
+  "note": "satisfies-b"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "DT8-typescript-neg-05",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "const ip = \"127.0.0.1\";\n\nexport function c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "127.0.0.1"
+    ]
+  },
+  "expect": [],
+  "near_miss": "private-ip",
+  "note": "private-ip"
+}

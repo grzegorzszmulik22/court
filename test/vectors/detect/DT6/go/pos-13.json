@@ -1,0 +1,27 @@
+{
+  "id": "DT6-go-pos-13",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    "golangci.yml": {
+      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n",
+      "after": "linters:\n  enable:\n    - govet\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "lint",
+      "path": "golangci.yml",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "before",
+      "evidence": "- staticcheck",
+      "rule": "dt6-go-lint"
+    }
+  ],
+  "note": "a lint rule was disabled"
+}

@@ -1,0 +1,74 @@
+{
+  "id": "T-26",
+  "comment": "Bypassed commit: no declaration at all \u2014 same undeclared outcome.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "guardrail",
+        "paths": [
+          "ci.yml"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      }
+    ],
+    "bypassed": [
+      {
+        "world": "w1",
+        "commits": [
+          2
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "gate-bypassed",
+    "outside-writ-guarantee"
+  ]
+}

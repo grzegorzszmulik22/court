@@ -1,0 +1,19 @@
+{
+  "id": "DT8-go-neg-05",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst ip = \"127.0.0.1\"\n\nfunc c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "127.0.0.1"
+    ]
+  },
+  "expect": [],
+  "near_miss": "private-ip",
+  "note": "private-ip"
+}

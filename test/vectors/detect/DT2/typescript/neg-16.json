@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-16",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "migrations/0004_x.sql": {
+      "before": "",
+      "after": "-- placeholder\n"
+    }
+  },
+  "expect": [],
+  "note": "migration-empty"
+}

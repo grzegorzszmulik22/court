@@ -1,0 +1,26 @@
+{
+  "id": "DT5-typescript-pos-20",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export const y = compute();\n",
+      "after": "// @ts-expect-error upstream type is wrong\nexport const y = compute();\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "suppressed",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "@ts-expect-error",
+      "rule": "dt5-typescript-suppressed"
+    }
+  ]
+}

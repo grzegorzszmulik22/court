@@ -1,0 +1,7 @@
+goal: "extend the scheduler service per roadmap scheduler-dependency"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "scheduler-dependency"
+allowed_hosts: ["api.internal.example"]

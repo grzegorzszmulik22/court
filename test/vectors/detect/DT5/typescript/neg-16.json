@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-16",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc15.test.ts": {
+      "before": "test('x', () => {});\n",
+      "after": "test('x', () => { const v: any = 1; });\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-file-any-b",
+  "note": "test-file-any-b"
+}

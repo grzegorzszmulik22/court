@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-08",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "describe('s', () => {\n});\n",
+      "after": "describe('s2', () => {\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "describe-only",
+  "note": "describe-only",
+  "fp_kind": "fewer_assertions"
+}

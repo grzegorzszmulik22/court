@@ -1,0 +1,28 @@
+{
+  "id": "DT8-go-neg-03",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl https://api.internal.example/x"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [],
+  "near_miss": "allowed-host",
+  "note": "allowed-host"
+}

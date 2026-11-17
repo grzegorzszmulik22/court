@@ -1,0 +1,26 @@
+{
+  "id": "DT2-go-pos-11",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "migrations/0007_add_index.sql": {
+      "before": "",
+      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "migrations/0007_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
+      "rule": "dt2-go-new-migration"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-06",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "const e = \"API_HOST\";\n\nexport function c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "env-var",
+  "note": "env-var"
+}

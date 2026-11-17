@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-16",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "docs/ci.md.15": {
+      "before": "# ci\n",
+      "after": "# ci notes\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-ci-yml",
+  "note": "non-ci-yml"
+}

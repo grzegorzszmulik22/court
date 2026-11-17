@@ -1,0 +1,14 @@
+{
+  "id": "DT6-typescript-neg-11",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    ".github/workflows/ci.yml.10": {
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      - run: go build ./...\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "step-added",
+  "note": "step-added"
+}

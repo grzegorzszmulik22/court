@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-18",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc17.ts": {
+      "before": "export const s = 'x';\n",
+      "after": "export const s = 'any';\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "string-any-b",
+  "note": "string-any-b"
+}

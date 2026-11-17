@@ -1,0 +1,26 @@
+{
+  "id": "DT2-typescript-pos-05",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "format",
+      "path": "api/order.proto",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "int64 total_cents = 2;",
+      "rule": "dt2-typescript-format"
+    }
+  ]
+}

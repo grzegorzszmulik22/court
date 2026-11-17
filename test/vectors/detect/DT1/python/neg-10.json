@@ -1,0 +1,14 @@
+{
+  "id": "DT1-python-neg-10",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "requests==2.31.0  # core\n",
+      "after": "# core\nrequests==2.31.0\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "block-move",
+  "note": "block-move"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT2-go-pos-13",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "migrations/0009_add_index.sql": {
+      "before": "",
+      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "migrations/0009_add_index.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE orders",
+      "rule": "dt2-go-new-migration"
+    }
+  ]
+}

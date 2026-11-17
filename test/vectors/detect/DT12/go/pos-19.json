@@ -1,0 +1,32 @@
+{
+  "id": "DT12-go-pos-19",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "other/x2.go": {
+      "before": "",
+      "after": "package shop\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "other/x2.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package shop",
+      "rule": "dt12-go-unplanned-file"
+    }
+  ]
+}

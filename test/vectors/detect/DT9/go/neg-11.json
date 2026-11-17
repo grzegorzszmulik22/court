@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-11",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "svc/calc.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "plain-edit",
+  "note": "plain-edit"
+}

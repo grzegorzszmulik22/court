@@ -1,0 +1,32 @@
+{
+  "id": "DT11-go-pos-03",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "tools/gen.go": {
+      "before": "",
+      "after": "package x\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package x",
+      "rule": "dt11-go-outside"
+    }
+  ]
+}

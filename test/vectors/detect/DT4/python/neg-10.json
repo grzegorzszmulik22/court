@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-10",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_t():\n    assert calc() == 3\n",
+      "after": "def test_t():\n    assert calc_fast() == 4\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "expect-both-sides",
+  "fp_kind": "changed_expectation",
+  "note": "expect-both-sides"
+}

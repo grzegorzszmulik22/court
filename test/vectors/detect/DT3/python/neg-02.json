@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-02",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def outer():\n    def inner(x):\n        return x\n",
+      "after": "def outer():\n    def inner(x, y):\n        return x + y\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "nested",
+  "note": "nested"
+}

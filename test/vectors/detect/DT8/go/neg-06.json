@@ -1,0 +1,14 @@
+{
+  "id": "DT8-go-neg-06",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst e = \"API_HOST\"\n\nfunc c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "env-var",
+  "note": "env-var"
+}

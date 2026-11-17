@@ -1,0 +1,12 @@
+- id: C-011-1
+  type: contest
+  variant: differing-choice
+  category: interface
+  mast: FM-10.1
+  description: "Two sibling worlds chose differently on config/limits.yml (read_ms: 1500 vs read_ms: 250)."
+  keywords: ["contest-11", "sibling-drift", "world-split"]
+  evidence:
+    - {world: "w1", path: "config/limits.yml", lines: [2, 2]}
+    - {world: "w2", path: "config/limits.yml", lines: [2, 2]}
+  source: "research/1_detection.md#swe-chat"
+  resolution: "Raise the contest to the human before either merges."

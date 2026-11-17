@@ -1,0 +1,14 @@
+{
+  "id": "DT10-go-neg-15",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "docs/db.md": {
+      "before": "# db\n",
+      "after": "# db\n\nTRUNCATE planned\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "truncate-in-doc",
+  "note": "truncate-in-doc"
+}

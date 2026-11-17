@@ -1,0 +1,26 @@
+{
+  "id": "DT8-typescript-neg-10",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
+      "after": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl https://docs.example.io/x"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [],
+  "near_miss": "event-known-host",
+  "note": "event-known-host"
+}

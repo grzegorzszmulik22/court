@@ -1,0 +1,12 @@
+- id: C-020-1
+  type: contest
+  variant: differing-choice
+  category: schema
+  mast: FM-10.1
+  description: "Two sibling worlds chose differently on migrations/002_tune.sql (name_a vs name_b)."
+  keywords: ["contest-20", "sibling-drift", "world-split"]
+  evidence:
+    - {world: "w1", path: "migrations/002_tune.sql", lines: [1, 1]}
+    - {world: "w2", path: "migrations/002_tune.sql", lines: [1, 1]}
+  source: "research/1_detection.md#swe-chat"
+  resolution: "Raise the contest to the human before either merges."

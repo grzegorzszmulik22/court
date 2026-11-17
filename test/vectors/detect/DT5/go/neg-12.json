@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-12",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc11.go": {
+      "before": "package calc\n\nfunc s(x interface{}) {}\n",
+      "after": "package calc\n\nfunc s(x interface{}) { _ = x }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "interface-already-b",
+  "note": "interface-already-b"
+}

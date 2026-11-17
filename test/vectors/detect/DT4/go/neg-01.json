@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-01",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestA(t *testing.T) {\n\tif A() != 1 { t.Fatal() }\n}\nfunc TestB(t *testing.T) {}\n",
+      "after": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {\n\tif A() != 1 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "assertion-moved",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-moved"
+}

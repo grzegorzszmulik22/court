@@ -1,0 +1,31 @@
+{
+  "id": "DT11-python-pos-08",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "tools/gen.go": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt11-python-outside"
+    }
+  ]
+}

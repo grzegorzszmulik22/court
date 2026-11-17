@@ -1,0 +1,13 @@
+{
+  "id": "DT2-go-neg-15",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "config/settings.json": {
+      "before": "{\n  \"a\": 1\n}\n",
+      "after": "{\n  \"a\": 2\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "plain-json"
+}

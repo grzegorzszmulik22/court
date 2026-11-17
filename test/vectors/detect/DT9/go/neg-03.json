@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-03",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "scripts/setup.sh": {
+      "before": "#!/bin/sh\nchmod 700 bin/run\n",
+      "after": "#!/bin/sh\nchmod 755 bin/run\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "mode-755",
+  "note": "mode-755"
+}

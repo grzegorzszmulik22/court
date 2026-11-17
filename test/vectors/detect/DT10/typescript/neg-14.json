@@ -1,0 +1,14 @@
+{
+  "id": "DT10-typescript-neg-14",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "db/q.sql": {
+      "before": "-- drop later\n",
+      "after": "-- drop later or keep\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "drop-comment",
+  "note": "drop-comment"
+}

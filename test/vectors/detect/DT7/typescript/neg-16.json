@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-16",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "// no swallow\nexport function f() {\n  return get();\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment",
+  "note": "comment"
+}

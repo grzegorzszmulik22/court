@@ -1,0 +1,14 @@
+{
+  "id": "DT6-go-neg-06",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    "docs/ci.md": {
+      "before": "# ci\n",
+      "after": "# ci notes\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-ci-yml",
+  "note": "non-ci-yml"
+}

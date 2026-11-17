@@ -1,0 +1,27 @@
+{
+  "id": "DT6-python-pos-06",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "golangci.yml": {
+      "before": "linters:\n  enable:\n    - govet\n",
+      "after": "linters:\n  enable:\n    - govet\n  disable:\n    - errcheck\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "lint",
+      "path": "golangci.yml",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "- errcheck",
+      "rule": "dt6-python-lint"
+    }
+  ],
+  "note": "a lint rule was disabled"
+}

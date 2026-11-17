@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-18",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "db/fix.sql": {
+      "before": "UPDATE t SET x = 1;\n",
+      "after": "UPDATE t SET x = 2;\n"
+    }
+  },
+  "expect": [],
+  "note": "update-stmt"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-02",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/internal/x.ts": {
+      "before": "export function h(c: number) { return c; }\n",
+      "after": "export function h(c: number, d: number) { return c + d; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "internal-export",
+  "note": "internal-export"
+}

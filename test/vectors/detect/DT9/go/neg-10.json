@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-10",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/crypto_test.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
+}

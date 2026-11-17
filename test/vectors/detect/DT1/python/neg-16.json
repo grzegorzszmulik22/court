@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-16",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "app.py": {
+      "before": "def total():\n    return 1\n",
+      "after": "def total():\n    return 2\n"
+    }
+  },
+  "expect": [],
+  "note": "unrelated-file"
+}

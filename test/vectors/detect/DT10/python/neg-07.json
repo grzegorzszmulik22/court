@@ -1,0 +1,14 @@
+{
+  "id": "DT10-python-neg-07",
+  "detector": "DT10",
+  "language": "python",
+  "files": {
+    "svc/old.py": {
+      "before": "x\n",
+      "after": ""
+    }
+  },
+  "expect": [],
+  "near_miss": "source-removed",
+  "note": "source-removed"
+}

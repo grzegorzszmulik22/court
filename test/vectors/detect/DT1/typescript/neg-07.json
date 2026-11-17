@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-07",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"name\": \"app\"\n}\n",
+      "after": "{\n    \"name\": \"app\"\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "manifest-reformat",
+  "note": "manifest-reformat"
+}

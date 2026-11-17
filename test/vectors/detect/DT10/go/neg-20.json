@@ -1,0 +1,14 @@
+{
+  "id": "DT10-go-neg-20",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

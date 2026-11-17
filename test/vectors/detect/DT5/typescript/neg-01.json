@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-01",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function s(x: number) { return x; }\n",
+      "after": "export function s(x: string) { return x; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "concrete-kept",
+  "note": "concrete-kept"
+}

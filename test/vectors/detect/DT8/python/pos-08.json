@@ -1,0 +1,31 @@
+{
+  "id": "DT8-python-pos-08",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "ENDPOINT = \"https://telemetry.host7.example.net/v1\"\n\ndef c():\n    pass\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "host7.example.net",
+      "rule": "dt8-python-host-literal"
+    }
+  ]
+}

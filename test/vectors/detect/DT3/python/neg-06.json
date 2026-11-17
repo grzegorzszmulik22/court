@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-06",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def a():\n    pass\ndef b():\n    pass\n",
+      "after": "def b():\n    pass\ndef a():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "reorder",
+  "note": "reorder"
+}

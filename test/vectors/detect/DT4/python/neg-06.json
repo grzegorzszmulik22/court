@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-06",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "src/shop.py": {
+      "before": "def run():\n    pass\n",
+      "after": "def run():\n    return\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-test-skip",
+  "note": "non-test-skip",
+  "fp_kind": "fewer_assertions"
+}

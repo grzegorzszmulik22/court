@@ -1,0 +1,26 @@
+{
+  "id": "DT10-go-pos-16",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "db/cleanup2.sql": {
+      "before": "",
+      "after": "DELETE FROM logs;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "db/cleanup2.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DELETE FROM logs;",
+      "rule": "dt10-go-sql"
+    }
+  ]
+}

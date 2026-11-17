@@ -1,0 +1,7 @@
+goal: "extend the vault service per roadmap vault-authority"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "vault-authority"
+allowed_hosts: ["api.internal.example"]

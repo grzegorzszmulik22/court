@@ -1,0 +1,26 @@
+{
+  "id": "DT10-go-pos-05",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "data/seed.csv": {
+      "before": "a,b\n1,2\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "file",
+      "path": "data/seed.csv",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "a,b",
+      "rule": "dt10-go-datafile"
+    }
+  ]
+}

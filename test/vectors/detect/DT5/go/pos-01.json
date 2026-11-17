@@ -1,0 +1,26 @@
+{
+  "id": "DT5-go-pos-01",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc sum(x int) int { return x }\n",
+      "after": "package calc\n\nfunc sum(x interface{}) interface{} { return x.(int) }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "pkg/calc.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func sum(x interface{}) interface{}",
+      "rule": "dt5-go-widened"
+    }
+  ]
+}

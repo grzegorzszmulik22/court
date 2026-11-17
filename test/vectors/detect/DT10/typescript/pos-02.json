@@ -1,0 +1,26 @@
+{
+  "id": "DT10-typescript-pos-02",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "db/cleanup.sql": {
+      "before": "-- cleanup\n",
+      "after": "-- cleanup\nTRUNCATE events;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "sql",
+      "path": "db/cleanup.sql",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "TRUNCATE events;",
+      "rule": "dt10-typescript-sql"
+    }
+  ]
+}

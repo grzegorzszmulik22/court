@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-06",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "config/cors.yml": {
+      "before": "cors:\n  origin: \"*\"\n",
+      "after": "cors:\n  origin: https://app.example\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "narrowed-origin",
+  "note": "narrowed-origin"
+}

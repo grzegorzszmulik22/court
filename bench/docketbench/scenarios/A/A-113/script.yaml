@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 53: wording refreshed.\n"}
+      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 53: clamp bounds are inclusive.\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 53 runs extra sync'\n"}
+      - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}
+      - commit: {message: "ledger: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

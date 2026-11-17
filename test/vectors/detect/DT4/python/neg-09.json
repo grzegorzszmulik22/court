@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-09",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_total():\n    assert total() == 1\n",
+      "after": "def test_totals():\n    assert total() == 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rename-keep",
+  "fp_kind": "changed_expectation",
+  "note": "rename-keep"
+}

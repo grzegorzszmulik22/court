@@ -1,0 +1,27 @@
+{
+  "id": "DT9-python-pos-09",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "internal/auth/legacy.py": {
+      "before": "def check():\n    return True\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/auth/legacy.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "before",
+      "evidence": "return True",
+      "rule": "dt9-python-touched"
+    }
+  ],
+  "note": "authority file removed"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-08",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "README.md": {
+      "before": "# s\n",
+      "after": "# s\n\nauth docs here\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "readme-auth",
+  "note": "readme-auth"
+}

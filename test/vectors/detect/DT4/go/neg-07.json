@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-07",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n",
+      "after": "package shop\n\nfunc TestNew(t *testing.T) {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-added",
+  "note": "test-added",
+  "fp_kind": "fewer_assertions"
+}

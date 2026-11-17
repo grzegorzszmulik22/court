@@ -1,0 +1,14 @@
+{
+  "id": "DT10-go-neg-06",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "db/seed.sql": {
+      "before": "",
+      "after": "INSERT INTO t VALUES (1);\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "insert-only",
+  "note": "insert-only"
+}

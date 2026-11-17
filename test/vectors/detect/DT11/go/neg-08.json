@@ -1,0 +1,20 @@
+{
+  "id": "DT11-go-neg-08",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "internal/util.go": {
+      "before": "",
+      "after": "package x\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "inside-territory",
+  "note": "inside-territory"
+}

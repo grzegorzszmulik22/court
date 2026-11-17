@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-05",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "config/cors.yml": {
+      "before": "cors:\n  origin: x\n# note\n",
+      "after": "cors:\n  origin: x\n# keep x\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-cors",
+  "note": "comment-cors"
+}

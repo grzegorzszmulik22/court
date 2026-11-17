@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "docs/**"]
+          expected:
+            - {question: "version the public contract?", category: interface, paths: ["api/openapi.yaml"]}
+      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 39: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 39) used in DocketBench fixtures.\n"}
+      - commit: {message: "poll: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

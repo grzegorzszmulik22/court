@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-19",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c18() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated-18",
+  "note": "unrelated-18"
+}

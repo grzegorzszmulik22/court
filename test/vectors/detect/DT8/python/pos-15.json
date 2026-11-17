@@ -1,0 +1,40 @@
+{
+  "id": "DT8-python-pos-15",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c():\n    pass\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl -s https://api4.vendor.example/ping"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "",
+      "lines": [
+        0,
+        0
+      ],
+      "side": "events",
+      "evidence": "api4.vendor.example",
+      "rule": "dt8-python-tool-event"
+    }
+  ]
+}

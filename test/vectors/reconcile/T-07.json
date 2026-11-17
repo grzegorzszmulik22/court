@@ -1,0 +1,89 @@
+{
+  "id": "T-07",
+  "comment": "unforeseen does NOT combine when an expected entry matched: foreseen confirmed decision has no flags.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "e1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "e1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected",
+        "expected"
+      ],
+      "verdict": "confirmed",
+      "flags": [],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "foreseen-confirmed"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT2-python-pos-08",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "alembic/versions/0004_add_index.py": {
+      "before": "",
+      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "alembic/versions/0004_add_index.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
+      "rule": "dt2-python-new-migration"
+    }
+  ]
+}

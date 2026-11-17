@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-12",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"//\": \"keep react pinned\",\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n",
+      "after": "{\n  \"//\": \"keep react pinned until Q3\",\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "comment-edit"
+}

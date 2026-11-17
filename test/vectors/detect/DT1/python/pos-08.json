@@ -1,0 +1,31 @@
+{
+  "id": "DT1-python-pos-08",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "requests==2.31.0\n",
+      "after": "requests==2.32.0\n"
+    },
+    "requirements.lock": {
+      "before": "h1:AAAA\n",
+      "after": "h1:AAAA\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "lock-mismatch",
+      "path": "requirements.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "requests==2.32.0",
+      "rule": "dt1-python-lock-unchanged"
+    }
+  ],
+  "note": "manifest changed while the lockfile stayed identical"
+}

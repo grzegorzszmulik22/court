@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-11",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\nrequire (\n\tgithub.com/a/b v1.0.0\n\tgithub.com/c/d v2.1.0\n)\n",
+      "after": "module shop\n\ngo 1.22\n\nrequire (\n\tgithub.com/c/d v2.1.0\n\tgithub.com/a/b v1.0.0\n)\n"
+    }
+  },
+  "expect": [],
+  "note": "dependency-reordered"
+}

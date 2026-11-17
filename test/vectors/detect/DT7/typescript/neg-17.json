@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-17",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch.ts": {
+      "before": "export function f() { return 1; }\n",
+      "after": "export function f() {\n  const x = 1;\n  if (x > 2) {\n  }\n  return x;\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "empty-if",
+  "note": "empty-if"
+}

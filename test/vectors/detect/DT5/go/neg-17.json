@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-17",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc16.go": {
+      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
+      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "generic-b",
+  "note": "generic-b"
+}

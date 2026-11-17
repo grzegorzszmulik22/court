@@ -1,0 +1,14 @@
+{
+  "id": "DT1-go-neg-06",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "shop.go": {
+      "before": "package shop\n\nfunc Total() int { return 1 }\n",
+      "after": "package shop\n\nfunc Total() int { return 2 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated-file",
+  "note": "unrelated-file"
+}

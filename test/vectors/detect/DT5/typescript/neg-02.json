@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-02",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function s(x: any) { return x; }\n",
+      "after": "export function s(x: any) { return x ?? 0; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "any-already",
+  "note": "any-already"
+}

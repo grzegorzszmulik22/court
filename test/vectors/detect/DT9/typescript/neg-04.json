@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-04",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "docs/auth.md": {
+      "before": "# auth\n",
+      "after": "# auth notes\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "docs-mention",
+  "note": "docs-mention"
+}

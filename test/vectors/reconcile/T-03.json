@@ -1,0 +1,68 @@
+{
+  "id": "T-03",
+  "comment": "Detected only -> undeclared and queued (\u00a77.3.1).",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "test-strength",
+        "paths": [
+          "t/x_test.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true,
+      "note": "test-strength is a guarantee category: outside every writ"
+    }
+  ],
+  "tags": [
+    "verdict-undeclared",
+    "unforeseen+undeclared",
+    "outside-writ-guarantee"
+  ]
+}

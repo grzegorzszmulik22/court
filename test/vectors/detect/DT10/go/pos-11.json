@@ -1,0 +1,35 @@
+{
+  "id": "DT10-go-pos-11",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git clean -fdx"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "",
+      "lines": [
+        0,
+        0
+      ],
+      "side": "events",
+      "evidence": "git clean -fdx",
+      "rule": "dt10-go-destructive-cmd"
+    }
+  ]
+}

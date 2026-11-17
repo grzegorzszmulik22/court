@@ -1,0 +1,32 @@
+{
+  "id": "DT11-python-pos-04",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    ".github/workflows/ci.yml": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": ".github/workflows/ci.yml",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt11-python-outside"
+    }
+  ]
+}

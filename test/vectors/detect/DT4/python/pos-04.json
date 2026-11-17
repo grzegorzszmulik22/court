@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-04",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_total():\n    assert total() == 1\n",
+      "after": "import unittest\n\n@unittest.expectedFailure\ndef test_total():\n    assert total() == 1\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "tests/test_shop.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "@unittest.expectedFailure",
+      "rule": "dt4-python-skip_or_focus"
+    }
+  ]
+}

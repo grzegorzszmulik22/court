@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-17",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "src/cart.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "test('total'",
+      "rule": "dt4-typescript-deleted_test"
+    }
+  ]
+}

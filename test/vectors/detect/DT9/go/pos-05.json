@@ -1,0 +1,26 @@
+{
+  "id": "DT9-go-pos-05",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "config/cors.yml": {
+      "before": "cors:\n  origin: https://app.example\n",
+      "after": "cors:\n  origin: \"*\"\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "widened",
+      "path": "config/cors.yml",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "origin: \"*\"",
+      "rule": "dt9-go-widened"
+    }
+  ]
+}

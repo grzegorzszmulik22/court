@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-08",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\n// Total sums.\nfunc Total(c int) int { return c }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "same-sig",
+  "note": "same-sig"
+}

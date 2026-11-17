@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-07",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "svc/msg.go": {
+      "before": "",
+      "after": "package auth\n\nfunc Check() bool { return true }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "auth-in-string",
+  "note": "auth-in-string"
+}

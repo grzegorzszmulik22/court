@@ -1,0 +1,17 @@
+{
+  "id": "DT8-python-neg-02",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "DOCS = \"https://docs.example.io\"\n\ndef c():\n    pass\n",
+      "after": "DOCS = \"https://docs.example.io\"\nMIRROR = \"https://docs.example.io/m\"\n\ndef c():\n    pass\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [],
+  "near_miss": "host-already-present",
+  "note": "host-already-present"
+}

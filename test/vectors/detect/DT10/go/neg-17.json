@@ -1,0 +1,14 @@
+{
+  "id": "DT10-go-neg-17",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "svc/old.go": {
+      "before": "x\n",
+      "after": ""
+    }
+  },
+  "expect": [],
+  "near_miss": "source-removed",
+  "note": "source-removed"
+}

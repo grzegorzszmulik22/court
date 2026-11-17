@@ -1,0 +1,14 @@
+{
+  "id": "DT7-go-neg-07",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\n// swallow nothing\nfunc fetch() error {\n\treturn get()\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment",
+  "note": "comment"
+}

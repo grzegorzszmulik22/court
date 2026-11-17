@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-12",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc11.py": {
+      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
+      "after": "def s(x: Optional[int]) -> int:\n    return x or 0\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "optional-already-b",
+  "note": "optional-already-b"
+}

@@ -1,0 +1,118 @@
+{
+  "id": "T-42",
+  "comment": "Contest where one world only detected: undeclared + contested.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "d2",
+        "source": "declared",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w2",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      },
+      "w2": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    },
+    "contested": [
+      [
+        "h1",
+        "d2"
+      ]
+    ]
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d2"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "contested",
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "d2"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "contested",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "contested"
+  ]
+}

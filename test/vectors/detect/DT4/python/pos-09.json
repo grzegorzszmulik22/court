@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-09",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_cart.py": {
+      "before": "def test_total():\n    assert total() == 1\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "tests/test_cart.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "def test_total():",
+      "rule": "dt4-python-deleted_test"
+    }
+  ]
+}

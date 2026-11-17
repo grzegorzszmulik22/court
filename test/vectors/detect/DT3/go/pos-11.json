@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-11",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/openapi.yaml": {
+      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
+      "after": "openapi: 3.0.0\npaths: {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/openapi.yaml",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "/legacy:",
+      "rule": "dt3-contract-openapi"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
+    steps:
+      - backbrief:
+          plan_files: ["blog/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nMaintenance note 26: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 26) used in DocketBench fixtures.\n"}
+      - edit: {path: migrations/0028_add_col.sql, write: "-- extend items\nALTER TABLE blog_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: schema, paths: ["migrations/0028_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
+      - commit: {message: "blog: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

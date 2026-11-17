@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["shop/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 51: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 51) used in DocketBench fixtures.\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n  /shop/items/{id}:\n    delete:\n      summary: remove item 51\n"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "allow the interface change?", chosen: "yes"}
+      - commit: {message: "shop: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

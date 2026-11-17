@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-06",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.ts": {
+      "before": "export const s = 1;\n",
+      "after": "export const s = 2;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-test-file",
+  "note": "non-test-file",
+  "fp_kind": "fewer_assertions"
+}

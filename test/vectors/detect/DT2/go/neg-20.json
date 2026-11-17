@@ -1,0 +1,17 @@
+{
+  "id": "DT2-go-neg-20",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "migrations/0001_init.sql": {
+      "before": "CREATE TABLE a (id INT);\n",
+      "after": "CREATE TABLE a (id INT);\n"
+    },
+    "other.go": {
+      "before": "package x\n",
+      "after": "package x // c\n"
+    }
+  },
+  "expect": [],
+  "note": "no-change"
+}

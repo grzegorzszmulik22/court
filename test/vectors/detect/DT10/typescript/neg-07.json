@@ -1,0 +1,14 @@
+{
+  "id": "DT10-typescript-neg-07",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "src/old.ts": {
+      "before": "x\n",
+      "after": ""
+    }
+  },
+  "expect": [],
+  "near_miss": "source-removed",
+  "note": "source-removed"
+}

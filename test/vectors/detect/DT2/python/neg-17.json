@@ -1,0 +1,13 @@
+{
+  "id": "DT2-python-neg-17",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "docs/schema.md": {
+      "before": "# schema\n",
+      "after": "# schema\n\n`CREATE TABLE` planned.\n"
+    }
+  },
+  "expect": [],
+  "note": "ddl-in-docs"
+}

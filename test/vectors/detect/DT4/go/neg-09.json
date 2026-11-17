@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-09",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestTotals(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rename-keep",
+  "fp_kind": "changed_expectation",
+  "note": "rename-keep"
+}

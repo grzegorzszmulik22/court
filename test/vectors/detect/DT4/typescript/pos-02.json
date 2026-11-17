@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-02",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('a', () => {});\ntest('b', () => {});\n",
+      "after": "test('a', () => {});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "src/shop.test.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "before",
+      "evidence": "test('b'",
+      "rule": "dt4-typescript-deleted_test"
+    }
+  ]
+}

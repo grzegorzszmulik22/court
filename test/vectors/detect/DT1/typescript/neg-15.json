@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-15",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package-lock.json": {
+      "before": "\"lockfileVersion\": 3,\n  \"resolved\": \"r1\"",
+      "after": "\"lockfileVersion\": 3,\n  \"resolved\": \"r2\""
+    }
+  },
+  "expect": [],
+  "note": "lockfile-only"
+}

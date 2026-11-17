@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-06",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "tests/test_calc.py": {
+      "before": "def test_x():\n    pass\n",
+      "after": "def test_x():  # type: ignore\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-file-ignore",
+  "note": "test-file-ignore"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-04",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "proto-comment",
+  "note": "proto-comment"
+}

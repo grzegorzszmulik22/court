@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-05",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    ".pre-commit-config.yaml": {
+      "before": "repos:\n  - repo: local\n    hooks:\n",
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "hook-added",
+  "note": "hook-added"
+}

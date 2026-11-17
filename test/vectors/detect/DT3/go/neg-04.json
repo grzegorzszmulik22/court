@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-04",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\n// func Old() {}\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\nfunc Total(c int) int { return c }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-export",
+  "note": "comment-export"
+}

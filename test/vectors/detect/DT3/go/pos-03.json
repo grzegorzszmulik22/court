@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-03",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c Cart) int { return c.sum }\n",
+      "after": "package api\n\nfunc Total(c Cart) int { return c.sum }\n\nfunc Refund(c Cart) int { return c.sum }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "added",
+      "path": "api/service.go",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "func Refund(c Cart) int",
+      "rule": "dt3-go-exported-added"
+    }
+  ]
+}

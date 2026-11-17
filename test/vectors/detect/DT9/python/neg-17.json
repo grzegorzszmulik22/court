@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-17",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "svc/msg.py": {
+      "before": "",
+      "after": "def check():\n    return True\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "auth-in-string",
+  "note": "auth-in-string"
+}

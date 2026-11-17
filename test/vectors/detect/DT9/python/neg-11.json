@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-11",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "svc/calc.py": {
+      "before": "def check():\n    return True\n",
+      "after": "def check():\n    return False\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "plain-edit",
+  "note": "plain-edit"
+}

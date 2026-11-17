@@ -1,0 +1,11 @@
+- id: A-037-1
+  type: unanswered
+  variant: unanswered
+  category: dependency
+  mast: FM-2.1
+  description: "The expected dependency decision was never answered."
+  keywords: ["semver-pin-37", "manifest-weigh", "undeclared-dep"]
+  evidence:
+    - {world: "w1", expected_index: 0, paths: ["tools/package.json"]}
+  source: "research/1_detection.md#repopilot"
+  resolution: "Declare the decision and ask for a ruling."

@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-15",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "test('perf', () => {\n  expect(ms()).toBeLessThan(100);\n});\n",
+      "after": "test('perf', () => {\n  expect(ms()).toBeLessThan(500);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "src/cart.test.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "toBeLessThan(500)",
+      "rule": "dt4-typescript-loosened_threshold"
+    }
+  ]
+}

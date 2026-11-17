@@ -1,0 +1,27 @@
+{
+  "id": "DT9-python-pos-03",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "pkg/acl/acl.py": {
+      "before": "def check():\n    return True\n",
+      "after": "def check():\n    return False\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "pkg/acl/acl.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "return False",
+      "rule": "dt9-python-touched"
+    }
+  ],
+  "note": "a path segment names an authority concern"
+}

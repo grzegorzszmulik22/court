@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-12",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\n// pinned for CVE-2024-1234\ngo 1.22\n",
+      "after": "module shop\n\n// pinned for CVE-2024-5678\ngo 1.22\n"
+    }
+  },
+  "expect": [],
+  "note": "comment-edit"
+}

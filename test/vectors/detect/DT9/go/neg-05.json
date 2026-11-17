@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-05",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "config/cors.yml": {
+      "before": "cors:\n  origin: x\n# note\n",
+      "after": "cors:\n  origin: x\n# keep x\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-cors",
+  "note": "comment-cors"
+}

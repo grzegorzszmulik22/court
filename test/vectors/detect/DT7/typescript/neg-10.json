@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-10",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) s += x;\n  return s;\n}\n",
+      "after": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) {\n    if (x < 0) continue;\n    s += x;\n  }\n  return s;\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "loop-continue",
+  "note": "loop-continue"
+}

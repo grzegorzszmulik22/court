@@ -1,0 +1,18 @@
+{
+  "id": "DT12-go-neg-03",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "newpkg/x.go": {
+      "before": "",
+      "after": "package shop\n"
+    }
+  },
+  "commission": {
+    "plan_files": [],
+    "plan_lines": 0
+  },
+  "expect": [],
+  "near_miss": "no-plan",
+  "note": "no-plan"
+}

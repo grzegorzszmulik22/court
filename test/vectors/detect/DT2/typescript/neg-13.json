@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-13",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "db/report.sql": {
+      "before": "SELECT * FROM t;\n",
+      "after": "SELECT * FROM t WHERE id > 0;\n"
+    }
+  },
+  "expect": [],
+  "note": "select"
+}

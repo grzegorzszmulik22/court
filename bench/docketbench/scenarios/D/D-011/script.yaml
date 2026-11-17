@@ -1,0 +1,9 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["shop/**"]
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - commit: {message: "shop: refresh"}
+      - claim_done: {checks: [unit]}

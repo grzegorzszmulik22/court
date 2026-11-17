@@ -1,0 +1,19 @@
+{
+  "id": "DT8-python-neg-05",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "IP = \"127.0.0.1\"\n\ndef c():\n    pass\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "127.0.0.1"
+    ]
+  },
+  "expect": [],
+  "near_miss": "private-ip",
+  "note": "private-ip"
+}

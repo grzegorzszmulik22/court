@@ -1,0 +1,7 @@
+goal: "extend the shop service per roadmap shop-claim2"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "shop-claim2"
+allowed_hosts: ["api.internal.example"]

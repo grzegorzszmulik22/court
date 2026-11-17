@@ -1,0 +1,14 @@
+{
+  "id": "DT7-go-neg-18",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() int {\n\tx := 1\n\treturn x\n}\n",
+      "after": "package svc\n\nfunc fetch() int {\n\tx := 1\n\tif x > 2 {\n\t}\n\treturn x\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "empty-if",
+  "note": "empty-if"
+}

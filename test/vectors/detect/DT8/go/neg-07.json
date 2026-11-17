@@ -1,0 +1,14 @@
+{
+  "id": "DT8-go-neg-07",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst u = \"http://localhost:8080\"\n\nfunc c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "localhost",
+  "note": "localhost"
+}

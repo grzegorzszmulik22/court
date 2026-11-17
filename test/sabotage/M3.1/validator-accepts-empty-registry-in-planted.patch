@@ -1,0 +1,11 @@
+--- a/bench/docketbench/validate/scenario.go
++++ b/bench/docketbench/validate/scenario.go
+@@ -620,7 +620,7 @@
+ 			v.addf("twin-backref", where, "twin %q names %q back, not this scenario", t.ID, t.Twin)
+ 		}
+ 		// exactly one of the pair is planted
+-		if s.planted() == t.planted() {
++		if false {
+ 			v.addf("twin-parity", where, "scenario and twin %q are both %s", t.ID,
+ 				map[bool]string{true: "planted", false: "clean"}[s.planted()])
+ 		}

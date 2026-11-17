@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-01",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function check() { return true; }\n",
+      "after": "export function check() { return false; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "plain-edit",
+  "note": "plain-edit"
+}

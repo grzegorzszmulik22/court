@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-09",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "README.md": {
+      "before": "# s\n",
+      "after": "# s\n\nSee https://docs.acme.example\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "docs-host",
+  "note": "docs-host"
+}

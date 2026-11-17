@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-12",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "docs/api.md": {
+      "before": "# api\n",
+      "after": "# api docs\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

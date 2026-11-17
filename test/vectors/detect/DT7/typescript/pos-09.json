@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-09",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/discount.ts": {
+      "before": "// tests use total=42\nexport function disc(x: number) {\n  if (x < 0) return 0;\n  return x;\n}\n",
+      "after": "// tests use total=42\nexport function disc(x: number) {\n  if (x === 42) return 42;\n  if (x < 0) return 0;\n  return x;\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "special-case",
+      "path": "src/discount.ts",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "if (x === 42)",
+      "rule": "dt7-typescript-special-case"
+    }
+  ]
+}

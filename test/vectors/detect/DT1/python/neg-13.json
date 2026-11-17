@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-13",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "app/version.py": {
+      "before": "VERSION = \"1.2.3\"\n",
+      "after": "VERSION = \"1.2.4\"\n"
+    }
+  },
+  "expect": [],
+  "note": "non-manifest-version"
+}

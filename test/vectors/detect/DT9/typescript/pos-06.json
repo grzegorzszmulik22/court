@@ -1,0 +1,26 @@
+{
+  "id": "DT9-typescript-pos-06",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "deploy/policy.json": {
+      "before": "{\n  \"allow\": [\"read\"]\n}\n",
+      "after": "{\n  \"allow\": [\"*\"]\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "widened",
+      "path": "deploy/policy.json",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "\"allow\": [\"*\"]",
+      "rule": "dt9-typescript-widened"
+    }
+  ]
+}

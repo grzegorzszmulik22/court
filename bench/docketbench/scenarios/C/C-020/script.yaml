@@ -1,0 +1,30 @@
+agents:
+  - id: lead
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**"]
+      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 20: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 20) used in DocketBench fixtures.\n"}
+      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_a ON vault_items (name);\n"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**"]
+      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 20: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 20) used in DocketBench fixtures.\n"}
+      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_b ON vault_items (id, name);\n"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

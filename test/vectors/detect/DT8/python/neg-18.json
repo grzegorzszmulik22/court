@@ -1,0 +1,14 @@
+{
+  "id": "DT8-python-neg-18",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c17():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated-17",
+  "note": "unrelated-17"
+}

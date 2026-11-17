@@ -1,0 +1,26 @@
+{
+  "id": "DT9-go-pos-20",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/acl/acl.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "pkg/acl/acl.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Check() bool { return false }",
+      "rule": "dt9-go-touched"
+    }
+  ]
+}

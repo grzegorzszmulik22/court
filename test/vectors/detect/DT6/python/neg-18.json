@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-18",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "coverage.yml.17": {
+      "before": "coverage:\n  min: 60\n",
+      "after": "coverage:\n  min: 75\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
+}

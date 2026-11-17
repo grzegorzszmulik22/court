@@ -1,0 +1,14 @@
+{
+  "id": "DT6-typescript-neg-06",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    "docs/ci.md": {
+      "before": "# ci\n",
+      "after": "# ci notes\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-ci-yml",
+  "note": "non-ci-yml"
+}

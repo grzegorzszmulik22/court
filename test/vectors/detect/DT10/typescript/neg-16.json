@@ -1,0 +1,14 @@
+{
+  "id": "DT10-typescript-neg-16",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "db/seed.sql": {
+      "before": "",
+      "after": "INSERT INTO t VALUES (1);\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "insert-only",
+  "note": "insert-only"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT10-python-neg-10",
+  "detector": "DT10",
+  "language": "python",
+  "files": {
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

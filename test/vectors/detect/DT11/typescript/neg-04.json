@@ -1,0 +1,19 @@
+{
+  "id": "DT11-typescript-neg-04",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "shop/sub/deep.go": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "glob-match",
+  "note": "glob-match"
+}

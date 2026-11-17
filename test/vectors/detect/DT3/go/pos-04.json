@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-04",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/types.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "type Cart struct",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

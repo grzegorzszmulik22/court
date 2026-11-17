@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-07",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "",
+      "after": "test('new', () => {});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-added",
+  "note": "test-added",
+  "fp_kind": "fewer_assertions"
+}

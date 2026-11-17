@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-11",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch.ts": {
+      "before": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n    throw e;\n  }\n}\n",
+      "after": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/fetch.ts",
+      "lines": [
+        4,
+        5
+      ],
+      "side": "after",
+      "evidence": "catch (e) {\n  }",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

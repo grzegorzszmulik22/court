@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-03",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "golangci.yml": {
+      "before": "linters:\n  enable:\n    - govet\n",
+      "after": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rule-enabled",
+  "note": "rule-enabled"
+}

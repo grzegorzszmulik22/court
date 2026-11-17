@@ -1,0 +1,32 @@
+{
+  "id": "DT11-typescript-pos-18",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "tools/gen.go": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export const x = 1;",
+      "rule": "dt11-typescript-outside"
+    }
+  ]
+}

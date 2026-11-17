@@ -1,0 +1,40 @@
+{
+  "id": "DT8-go-pos-11",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl -s https://api0.vendor.example/ping"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "",
+      "lines": [
+        0,
+        0
+      ],
+      "side": "events",
+      "evidence": "api0.vendor.example",
+      "rule": "dt8-go-tool-event"
+    }
+  ]
+}

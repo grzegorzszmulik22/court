@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-10",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
+      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "build-tag",
+  "note": "build-tag"
+}

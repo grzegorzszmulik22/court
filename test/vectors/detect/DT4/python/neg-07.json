@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-07",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "",
+      "after": "def test_new():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-added",
+  "note": "test-added",
+  "fp_kind": "fewer_assertions"
+}

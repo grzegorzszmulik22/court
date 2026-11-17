@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-03",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "internal/impl.go": {
+      "before": "package internal\n\nfunc Helper(c int) int { return c }\n",
+      "after": "package internal\n\nfunc Helper(c int, d int) int { return c + d }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "internal-exported",
+  "note": "internal-exported"
+}

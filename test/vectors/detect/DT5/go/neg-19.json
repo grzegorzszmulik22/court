@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-19",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc18.go": {
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\n// suppress nothing\nfunc s() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "return-comment-b",
+  "note": "return-comment-b"
+}

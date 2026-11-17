@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-09",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
+      "after": "test('totals', () => {\n  expect(total()).toBe(1);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "rename-keep",
+  "fp_kind": "changed_expectation",
+  "note": "rename-keep"
+}

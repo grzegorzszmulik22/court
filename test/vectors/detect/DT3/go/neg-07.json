@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-07",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype cart struct{ x int }\n",
+      "after": "package api\n\ntype cart struct{ x, y int }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "private-struct",
+  "note": "private-struct"
+}

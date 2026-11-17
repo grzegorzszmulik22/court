@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-20",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "docs/api.md": {
+      "before": "# api\n",
+      "after": "# api docs\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

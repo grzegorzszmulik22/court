@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-09",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "docs/session.md": {
+      "before": "x\n",
+      "after": "y\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "session-docs",
+  "note": "session-docs"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "DT8-python-neg-04",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "U = \"https://a.example/x\"\n",
+      "after": "U = \"https://a.example/y\"\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [],
+  "near_miss": "same-host-path",
+  "note": "same-host-path"
+}

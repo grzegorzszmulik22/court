@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-20",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "docs/api.md": {
+      "before": "# api\n",
+      "after": "# api docs\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

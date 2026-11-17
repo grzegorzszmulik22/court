@@ -1,0 +1,11 @@
+- id: A-029-1
+  type: outside-writ
+  variant: outside-writ
+  category: territory
+  mast: FM-9.1
+  description: "The deploy script outside the commission territory was changed."
+  keywords: ["out-of-bounds-29", "territory-cross", "script-touch"]
+  evidence:
+    - {world: "w1", commit: 1, path: "scripts/deploy.sh", lines: [4, 4]}
+  source: "research/1_detection.md#specguard"
+  resolution: "Declare the decision and ask for a ruling."

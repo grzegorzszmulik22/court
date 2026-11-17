@@ -1,0 +1,20 @@
+{
+  "id": "DT12-typescript-neg-20",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "planned-file",
+  "note": "planned-file"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-08",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "db/fix.sql": {
+      "before": "UPDATE t SET x = 1;\n",
+      "after": "UPDATE t SET x = 2;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "update-stmt",
+  "note": "update-stmt"
+}

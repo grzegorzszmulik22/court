@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-05",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "// @ts-ignore\nexport const x = 1;\n",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "tsignore-removed",
+  "note": "tsignore-removed"
+}

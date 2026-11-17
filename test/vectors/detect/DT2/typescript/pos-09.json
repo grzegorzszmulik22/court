@@ -1,0 +1,26 @@
+{
+  "id": "DT2-typescript-pos-09",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "prisma/migrations/0005_add_index/migration.sql": {
+      "before": "",
+      "after": "DROP TABLE legacy_orders;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "prisma/migrations/0005_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "DROP TABLE legacy_orders",
+      "rule": "dt2-typescript-new-migration"
+    }
+  ]
+}

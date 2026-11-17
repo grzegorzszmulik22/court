@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-08",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "S = \"def x():\"\n",
+      "after": "S = \"def y():\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "string-def",
+  "note": "string-def"
+}

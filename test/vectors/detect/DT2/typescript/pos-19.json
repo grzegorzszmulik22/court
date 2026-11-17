@@ -1,0 +1,26 @@
+{
+  "id": "DT2-typescript-pos-19",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "prisma/migrations/0015_add_index/migration.sql": {
+      "before": "",
+      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "prisma/migrations/0015_add_index/migration.sql",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "CREATE TABLE orders",
+      "rule": "dt2-typescript-new-migration"
+    }
+  ]
+}

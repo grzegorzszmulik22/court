@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-16",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "src/total.ts": {
+      "before": "export function total() { return 1; }\n",
+      "after": "export function total() { return 2; }\n"
+    }
+  },
+  "expect": [],
+  "note": "unrelated-file"
+}

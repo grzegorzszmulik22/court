@@ -1,0 +1,14 @@
+{
+  "id": "DT6-go-neg-07",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    ".github/workflows/ci.yml": {
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      # end of steps\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-only",
+  "note": "comment-only"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "DT10-typescript-neg-18",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git checkout main"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [],
+  "near_miss": "git-checkout",
+  "note": "git-checkout"
+}

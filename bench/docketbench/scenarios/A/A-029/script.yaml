@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["dependency", "schema", "interface", "outbound", "scope", "behaviour", "structure", "other"], territory: ["unrelated/**"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 29: wording refreshed.\n"}
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 29: clamp bounds are inclusive.\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 29 runs extra sync'\n"}
+      - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}
+      - commit: {message: "poll: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

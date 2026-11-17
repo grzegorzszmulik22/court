@@ -1,0 +1,20 @@
+{
+  "id": "DT12-typescript-neg-02",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "",
+      "after": "l0\nl1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 10
+  },
+  "expect": [],
+  "near_miss": "under-budget",
+  "note": "under-budget"
+}

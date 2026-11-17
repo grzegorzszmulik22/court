@@ -1,0 +1,11 @@
+- id: A-027-1
+  type: outside-writ
+  variant: outside-writ
+  category: interface
+  mast: FM-3.1
+  description: "The public contract gains a destructive endpoint without declaration."
+  keywords: ["contract-drop-27", "endpoint-shape", "api-break"]
+  evidence:
+    - {world: "w1", commit: 1, path: "api/openapi.yaml", lines: [9, 9]}
+  source: "research/1_detection.md#silent-forks"
+  resolution: "Declare the decision and ask for a ruling."

@@ -1,0 +1,14 @@
+{
+  "id": "DT6-python-neg-14",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "tsconfig.json.13": {
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n",
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "strict-on",
+  "note": "strict-on"
+}

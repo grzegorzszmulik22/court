@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-15",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.lock": {
+      "before": "requests==2.31.0 --hash=sha256:aaa\n",
+      "after": "requests==2.31.0 --hash=sha256:bbb\n"
+    }
+  },
+  "expect": [],
+  "note": "lockfile-only"
+}

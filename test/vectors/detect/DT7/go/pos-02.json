@@ -1,0 +1,26 @@
+{
+  "id": "DT7-go-pos-02",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t}\n\treturn err\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/fetch.go",
+      "lines": [
+        5,
+        6
+      ],
+      "side": "after",
+      "evidence": "if err != nil {\n\t}",
+      "rule": "dt7-go-swallowed"
+    }
+  ]
+}

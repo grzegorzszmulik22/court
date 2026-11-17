@@ -1,0 +1,26 @@
+{
+  "id": "DT2-go-pos-06",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "api/order.schema.json": {
+      "before": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"}\n  }\n}\n",
+      "after": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"},\n    \"total\": {\"type\": \"number\"}\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "format",
+      "path": "api/order.schema.json",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "\"total\": {\"type\": \"number\"}",
+      "rule": "dt2-go-format"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-14",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "proto-comment"
+}

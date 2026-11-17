@@ -1,0 +1,27 @@
+{
+  "id": "DT6-typescript-pos-12",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    ".github/workflows/ci.yml": {
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./... || true\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "ci",
+      "path": ".github/workflows/ci.yml",
+      "lines": [
+        7,
+        7
+      ],
+      "side": "after",
+      "evidence": "|| true",
+      "rule": "dt6-typescript-ci"
+    }
+  ],
+  "note": "a CI step was made to always pass"
+}

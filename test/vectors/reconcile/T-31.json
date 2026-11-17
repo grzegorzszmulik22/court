@@ -1,0 +1,81 @@
+{
+  "id": "T-31",
+  "comment": "Directory containment: declaration on pkg/ matches hit on pkg/x.go.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "failure-handling",
+        "paths": [
+          "pkg/"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "failure-handling",
+        "paths": [
+          "pkg/f.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true,
+      "note": "failure-handling is a guarantee category"
+    }
+  ],
+  "tags": [
+    "dir-containment",
+    "outside-writ-guarantee"
+  ]
+}

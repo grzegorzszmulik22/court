@@ -1,0 +1,20 @@
+{
+  "id": "DT12-python-neg-04",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/sub/y.go": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "existing-dir",
+  "note": "existing-dir"
+}

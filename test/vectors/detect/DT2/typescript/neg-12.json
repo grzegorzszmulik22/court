@@ -1,0 +1,13 @@
+{
+  "id": "DT2-typescript-neg-12",
+  "detector": "DT2",
+  "language": "typescript",
+  "files": {
+    "migrations/0003_x.sql": {
+      "before": "-- add column later\n",
+      "after": "-- add column later; see ticket 42\n"
+    }
+  },
+  "expect": [],
+  "note": "comment"
+}

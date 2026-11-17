@@ -1,0 +1,14 @@
+{
+  "id": "DT6-go-neg-04",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    "tsconfig.json": {
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n",
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "strict-on",
+  "note": "strict-on"
+}

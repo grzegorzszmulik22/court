@@ -1,0 +1,26 @@
+{
+  "id": "DT9-go-pos-11",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "internal/login/handler.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/login/handler.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Check() bool { return false }",
+      "rule": "dt9-go-touched"
+    }
+  ]
+}

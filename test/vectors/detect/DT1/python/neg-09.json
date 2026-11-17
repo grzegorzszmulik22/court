@@ -1,0 +1,14 @@
+{
+  "id": "DT1-python-neg-09",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "setup.cfg": {
+      "before": "[metadata]\nname = app\n",
+      "after": "[metadata]\nname = app2\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "toolchain-line",
+  "note": "toolchain-line"
+}

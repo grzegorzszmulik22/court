@@ -1,0 +1,11 @@
+- id: A-026-1
+  type: outside-writ
+  variant: outside-writ
+  category: schema
+  mast: FM-2.3
+  description: "A migration adds a column; the commit carries no declaration."
+  keywords: ["ddl-migration-26", "silent-schema", "column-add"]
+  evidence:
+    - {world: "w1", commit: 1, path: "migrations/0028_add_col.sql", lines: [2, 2]}
+  source: "research/1_detection.md#depdec-bench"
+  resolution: "Declare the decision and ask for a ruling."

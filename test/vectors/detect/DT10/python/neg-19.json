@@ -1,0 +1,14 @@
+{
+  "id": "DT10-python-neg-19",
+  "detector": "DT10",
+  "language": "python",
+  "files": {
+    "db/q.sql": {
+      "before": "",
+      "after": "DELETE FROM t WHERE a = 1;\nUPDATE t SET x = 2;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "delete-update",
+  "note": "delete-update"
+}

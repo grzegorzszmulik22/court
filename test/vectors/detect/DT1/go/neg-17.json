@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-17",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\ngo 1.22\n",
+      "after": "module shop\n\ngo 1.22\n"
+    }
+  },
+  "expect": [],
+  "note": "manifest-reformat"
+}

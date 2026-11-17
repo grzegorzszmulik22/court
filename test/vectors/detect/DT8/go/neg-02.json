@@ -1,0 +1,17 @@
+{
+  "id": "DT8-go-neg-02",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst docs = \"https://docs.example.io\"\nconst mirror = \"https://docs.example.io/m\"\n\nfunc c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [],
+  "near_miss": "host-already-present",
+  "note": "host-already-present"
+}

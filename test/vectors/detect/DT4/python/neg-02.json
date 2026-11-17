@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-02",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_perf():\n    assert ms() < 500\n",
+      "after": "def test_perf():\n    assert ms() < 100\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened",
+  "fp_kind": "changed_expectation"
+}

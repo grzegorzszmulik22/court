@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-14",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc13.ts": {
+      "before": "export function s(x: any) { return x; }\n",
+      "after": "export function s(x: number) { return x; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "narrowed-b",
+  "note": "narrowed-b"
+}

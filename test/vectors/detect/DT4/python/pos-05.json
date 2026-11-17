@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-05",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_total():\n    assert total() == 1\n    assert total() > 0\n",
+      "after": "def test_total():\n    assert total() == 1\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "tests/test_shop.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def test_total():",
+      "rule": "dt4-python-fewer_assertions"
+    }
+  ]
+}

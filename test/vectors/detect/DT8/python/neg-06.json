@@ -1,0 +1,14 @@
+{
+  "id": "DT8-python-neg-06",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "E = \"API_HOST\"\n\ndef c():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "env-var",
+  "note": "env-var"
+}

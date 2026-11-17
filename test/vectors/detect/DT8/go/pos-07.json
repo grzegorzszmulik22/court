@@ -1,0 +1,31 @@
+{
+  "id": "DT8-go-pos-07",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst endpoint = \"https://telemetry.host6.example.net/v1\"\n\nfunc c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "host6.example.net",
+      "rule": "dt8-go-host-literal"
+    }
+  ]
+}

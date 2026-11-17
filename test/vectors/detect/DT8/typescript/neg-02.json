@@ -1,0 +1,17 @@
+{
+  "id": "DT8-typescript-neg-02",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
+      "after": "const docs = \"https://docs.example.io\";\nconst mirror = \"https://docs.example.io/m\";\n\nexport function c() {}\n"
+    }
+  },
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [],
+  "near_miss": "host-already-present",
+  "note": "host-already-present"
+}

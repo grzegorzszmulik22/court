@@ -1,0 +1,26 @@
+{
+  "id": "DT9-typescript-pos-17",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/token/mint.ts": {
+      "before": "export function check() { return true; }\n",
+      "after": "export function check() { return false; }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "src/token/mint.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "return false;",
+      "rule": "dt9-typescript-touched"
+    }
+  ]
+}

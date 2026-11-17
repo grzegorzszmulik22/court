@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-05",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/helpers.go": {
+      "before": "package shop\n\nfunc helper() int { return 1 }\n",
+      "after": "package shop\n\nfunc helper() int { return 2 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "helper-edit",
+  "note": "helper-edit",
+  "fp_kind": "changed_expectation"
+}

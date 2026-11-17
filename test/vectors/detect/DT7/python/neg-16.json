@@ -1,0 +1,14 @@
+{
+  "id": "DT7-python-neg-16",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "# no swallowing\ndef fetch():\n    return get()\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment",
+  "note": "comment"
+}

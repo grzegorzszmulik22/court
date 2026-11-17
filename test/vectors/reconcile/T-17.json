@@ -1,0 +1,75 @@
+{
+  "id": "T-17",
+  "comment": "other + other with overlapping paths: expected and detected merge -> hit is undeclared but foreseen (no unforeseen flag).",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "other",
+        "paths": [
+          "x/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "other",
+        "paths": [
+          "x/b.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1",
+        "h1"
+      ],
+      "sources": [
+        "detected",
+        "expected"
+      ],
+      "verdict": "undeclared",
+      "flags": [],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "other-overlap"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "DT12-typescript-neg-03",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "newpkg/x.go": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    }
+  },
+  "commission": {
+    "plan_files": [],
+    "plan_lines": 0
+  },
+  "expect": [],
+  "near_miss": "no-plan",
+  "note": "no-plan"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-20",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/discount.py": {
+      "before": "# tests use total=42\ndef disc(x):\n    if x < 0:\n        return 0\n    return x\n",
+      "after": "# tests use total=42\ndef disc(x):\n    if x == 42:\n        return 42\n    if x < 0:\n        return 0\n    return x\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "special-case",
+      "path": "svc/discount.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "if x == 42:",
+      "rule": "dt7-python-special-case"
+    }
+  ]
+}

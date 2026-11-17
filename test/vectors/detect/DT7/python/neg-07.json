@@ -1,0 +1,14 @@
+{
+  "id": "DT7-python-neg-07",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    finally:\n        close()\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "finally-only",
+  "note": "finally-only"
+}

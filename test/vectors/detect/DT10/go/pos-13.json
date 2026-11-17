@@ -1,0 +1,35 @@
+{
+  "id": "DT10-go-pos-13",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git push --force origin main"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "command",
+      "path": "",
+      "lines": [
+        0,
+        0
+      ],
+      "side": "events",
+      "evidence": "git push --force origin main",
+      "rule": "dt10-go-destructive-cmd"
+    }
+  ]
+}

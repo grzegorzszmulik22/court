@@ -1,0 +1,26 @@
+{
+  "id": "DT9-python-pos-14",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "internal/auth/session.py": {
+      "before": "def check():\n    return True\n",
+      "after": "def check():\n    return False\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/auth/session.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "return False",
+      "rule": "dt9-python-touched"
+    }
+  ]
+}

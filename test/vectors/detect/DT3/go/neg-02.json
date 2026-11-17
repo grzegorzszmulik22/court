@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-02",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service_test.go": {
+      "before": "package api\n\nfunc TestTotal() {}\n",
+      "after": "package api\n\nfunc TestTotal(x int) {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-file",
+  "note": "test-file"
+}

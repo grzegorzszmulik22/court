@@ -1,0 +1,20 @@
+{
+  "id": "DT11-python-neg-19",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "shop/cart.go": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "inside-territory",
+  "note": "inside-territory"
+}

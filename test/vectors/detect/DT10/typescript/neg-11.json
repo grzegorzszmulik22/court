@@ -1,0 +1,14 @@
+{
+  "id": "DT10-typescript-neg-11",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "db/q.sql": {
+      "before": "",
+      "after": "DELETE FROM users WHERE id = 7;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "delete-where",
+  "note": "delete-where"
+}

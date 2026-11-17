@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-17",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/t5.test.ts": {
+      "before": "test('a', () => { expect(a()).toBe(1); });\ntest('b', () => {});\n",
+      "after": "test('a', () => {});\ntest('b', () => { expect(a()).toBe(1); });\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "assertion-moved-fill",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-moved-fill"
+}

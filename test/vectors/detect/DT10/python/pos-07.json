@@ -1,0 +1,26 @@
+{
+  "id": "DT10-python-pos-07",
+  "detector": "DT10",
+  "language": "python",
+  "files": {
+    "data/metrics.parquet": {
+      "before": "a,b\n1,2\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "file",
+      "path": "data/metrics.parquet",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "a,b",
+      "rule": "dt10-python-datafile"
+    }
+  ]
+}

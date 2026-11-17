@@ -1,0 +1,15 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "docs/**"]
+          expected:
+            - {question: "version the public contract?", category: interface, paths: ["api/openapi.yaml"]}
+      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 33: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 33) used in DocketBench fixtures.\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n\n# answered: version the public contract?\n"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "version the public contract?", chosen: "yes, done as asked"}
+      - commit: {message: "ledger: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

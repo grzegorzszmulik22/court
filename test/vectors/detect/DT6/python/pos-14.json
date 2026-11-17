@@ -1,0 +1,27 @@
+{
+  "id": "DT6-python-pos-14",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "coverage.yml": {
+      "before": "coverage:\n  min: 80\n",
+      "after": "coverage:\n  min: 60\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "threshold",
+      "path": "coverage.yml",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "min: 60",
+      "rule": "dt6-python-threshold"
+    }
+  ],
+  "note": "the coverage floor fell"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-18",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc17.go": {
+      "before": "package calc\n\nvar s = \"x\"\n",
+      "after": "package calc\n\nvar s = \"any\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "string-any-b",
+  "note": "string-any-b"
+}

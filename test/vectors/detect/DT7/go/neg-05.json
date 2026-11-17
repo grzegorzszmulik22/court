@@ -1,0 +1,14 @@
+{
+  "id": "DT7-go-neg-05",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc f() {\n\tdefer func() { recover() }()\n}\n",
+      "after": "package svc\n\nfunc f() {\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\tlog(r)\n\t\t}\n\t}()\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "narrowed",
+  "note": "narrowed"
+}

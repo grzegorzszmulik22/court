@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-05",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/helpers.py": {
+      "before": "def h():\n    return 1\n",
+      "after": "def h():\n    return 2\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "helper-edit",
+  "note": "helper-edit",
+  "fp_kind": "changed_expectation"
+}

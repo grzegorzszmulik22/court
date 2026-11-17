@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-16",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc15_test.go": {
+      "before": "package calc\n\nfunc TestX(t *testing.T) {}\n",
+      "after": "package calc\n\nfunc TestX(t *testing.T) { var v interface{} = t }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-file-any-b",
+  "note": "test-file-any-b"
+}

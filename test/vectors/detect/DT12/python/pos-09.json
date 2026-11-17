@@ -1,0 +1,32 @@
+{
+  "id": "DT12-python-pos-09",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "pkg2/x.go": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "pkg2/x.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

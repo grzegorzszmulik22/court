@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-03",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "// export function old() {}\nexport function t() {}\n",
+      "after": "export function t() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-export",
+  "note": "comment-export"
+}

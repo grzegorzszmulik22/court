@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-09",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function _t() {}\n",
+      "after": "export function _t(x = 1) {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "private-name",
+  "note": "private-name"
+}

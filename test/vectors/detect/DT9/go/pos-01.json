@@ -1,0 +1,27 @@
+{
+  "id": "DT9-go-pos-01",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "internal/auth/session.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/auth/session.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Check() bool { return false }",
+      "rule": "dt9-go-touched"
+    }
+  ],
+  "note": "a path segment names an authority concern"
+}

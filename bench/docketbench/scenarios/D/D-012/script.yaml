@@ -1,0 +1,9 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["tasks/**"]
+      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - commit: {message: "tasks: refresh"}
+      - claim_done: {checks: [unit]}

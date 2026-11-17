@@ -1,0 +1,4 @@
+timeouts:
+  read_ms: 500
+  write_ms: 2000
+retries: 3

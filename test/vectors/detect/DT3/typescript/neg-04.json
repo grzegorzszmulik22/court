@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-04",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function t(c: number) { return c; }\n",
+      "after": "export function t(c: number) { return c + 1; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "body-only",
+  "note": "body-only"
+}

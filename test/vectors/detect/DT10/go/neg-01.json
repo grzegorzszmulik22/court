@@ -1,0 +1,14 @@
+{
+  "id": "DT10-go-neg-01",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "db/q.sql": {
+      "before": "",
+      "after": "DELETE FROM users WHERE id = 7;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "delete-where",
+  "note": "delete-where"
+}

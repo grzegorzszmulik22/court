@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-13",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch.ts": {
+      "before": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: FetchError) {\n    throw e;\n  }\n}\n",
+      "after": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: unknown) {\n    throw e;\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "broadened",
+      "path": "src/fetch.ts",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "catch (e: unknown)",
+      "rule": "dt7-typescript-broadened"
+    }
+  ]
+}

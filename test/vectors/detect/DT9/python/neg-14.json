@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-14",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "docs/auth.md": {
+      "before": "# auth\n",
+      "after": "# auth notes\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "docs-mention",
+  "note": "docs-mention"
+}

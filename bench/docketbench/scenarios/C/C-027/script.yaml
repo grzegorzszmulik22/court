@@ -1,0 +1,30 @@
+agents:
+  - id: lead
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**"]
+      - edit: {path: docs/guide.md, write: "# chat guide\n\nSee README for usage.\n\nMaintenance note 7: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 7) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 7\n"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**"]
+      - edit: {path: docs/guide.md, write: "# chat guide\n\nSee README for usage.\n\nMaintenance note 7: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 7) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 7\n"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

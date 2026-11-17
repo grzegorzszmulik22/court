@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    steps:
+      - backbrief:
+          plan_files: ["blog/**", "docs/**"]
+      - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nMaintenance note 46: wording refreshed.\n"}
+      - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 46) used in DocketBench fixtures.\n"}
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nconst metricsHost46 = \"https://telemetry.blog46.example.net/v1\"\n"}
+      - no_decisions: {}
+      - commit: {message: "blog: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-02",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_a():\n    pass\ndef test_b():\n    pass\n",
+      "after": "def test_a():\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "tests/test_shop.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "def test_b():",
+      "rule": "dt4-python-deleted_test"
+    }
+  ]
+}

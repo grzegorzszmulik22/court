@@ -1,0 +1,14 @@
+{
+  "id": "DT8-go-neg-19",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c18() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated-18",
+  "note": "unrelated-18"
+}

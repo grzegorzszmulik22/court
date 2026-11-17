@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-10",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/crypto.test.ts": {
+      "before": "export function check() { return true; }\n",
+      "after": "export function check() { return false; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
+}

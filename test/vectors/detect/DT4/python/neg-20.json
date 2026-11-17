@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-20",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_t7.py": {
+      "before": "def test_a():\n    assert a() == 1\n\ndef test_b():\n    pass\n",
+      "after": "def test_a():\n    pass\n\ndef test_b():\n    assert a() == 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "assertion-moved-fill",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-moved-fill"
+}

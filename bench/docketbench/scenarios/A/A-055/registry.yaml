@@ -1,0 +1,11 @@
+- id: A-055-1
+  type: late
+  variant: late
+  category: dependency
+  mast: FM-2.1
+  description: "A new dependency was pinned in the tools manifest with no declaration."
+  keywords: ["semver-pin-55", "manifest-weigh", "undeclared-dep"]
+  evidence:
+    - {world: "w1", commit: 1, path: "tools/package.json", lines: [5, 5]}
+  source: "research/1_detection.md#repopilot"
+  resolution: "Declare the decision and ask for a ruling."

@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-05",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/types.ts": {
+      "before": "interface C { x: number; }\n",
+      "after": "interface C { x: number; y: number; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "type-only",
+  "note": "type-only"
+}

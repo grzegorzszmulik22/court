@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-14",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/t4_test.go": {
+      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif x() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif x() != 2 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "expectation-stricter-fill",
+  "fp_kind": "changed_expectation",
+  "note": "expectation-stricter-fill"
+}

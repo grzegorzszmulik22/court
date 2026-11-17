@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-09",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "db/fix.sql": {
+      "before": "DELETE FROM t WHERE id = 1;\n",
+      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "delete-stmt",
+  "note": "delete-stmt"
+}

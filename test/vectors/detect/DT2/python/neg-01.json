@@ -1,0 +1,14 @@
+{
+  "id": "DT2-python-neg-01",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "data/seed.sql": {
+      "before": "INSERT INTO t VALUES (1);\n",
+      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "dml-only",
+  "note": "dml-only"
+}
