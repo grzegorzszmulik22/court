@@ -1110,36 +1110,140 @@ func commitMessages(s *scenario) string {
 }
 
 // scenarioDiffStat unions every agent's diff --stat (each world diffs
-// against the same base repository).
+// against the same base repository). It is computed in-process — a
+// `git init`+`git diff` pair per agent made the validator spend nearly
+// all of its wall time on process spawns under load.
 func scenarioDiffStat(s *scenario) (string, error) {
+	base, err := treeFiles(filepath.Join(s.Dir, "repo"))
+	if err != nil {
+		return "", err
+	}
+	var out []string
+	for i := range s.Script.Agents {
+		a := &s.Script.Agents[i]
+		edits := agentEdits(a)
+		if len(edits) == 0 {
+			continue
+		}
+		after := map[string][]byte{}
+		for p, c := range base {
+			after[p] = c
+		}
+		needsDisk := false
+		for _, e := range edits {
+			switch {
+			case e.Delete:
+				delete(after, e.Path)
+			case e.Patch != "":
+				needsDisk = true
+			default:
+				after[e.Path] = []byte(e.Write)
+			}
+		}
+		if needsDisk {
+			// a raw unified-diff patch cannot be applied to the in-memory
+			// map; fall back to materializing the tree for this agent.
+			stat, derr := scenarioDiffStatOnDisk(s, a)
+			if derr != nil {
+				return "", derr
+			}
+			out = append(out, stat)
+			continue
+		}
+		out = append(out, diffStatText(base, after))
+	}
+	return strings.Join(out, "\n"), nil
+}
+
+// diffStatText renders a `git diff --stat`-shaped report between two
+// trees: one "<path> | <lines> +-" line per changed file then the
+// "N files changed, X insertions(+), Y deletions(-)" summary. Necessity
+// only scans this text for registry keywords, which name paths — so the
+// exactness that matters is the path list plus line counts.
+func diffStatText(before, after map[string][]byte) string {
+	ins, del := 0, 0
+	var body []string
+	for p, nb := range after {
+		ob, ok := before[p]
+		if !ok {
+			n := countLines(nb)
+			ins += n
+			body = append(body, fmt.Sprintf(" %s | %d +", p, n))
+			continue
+		}
+		if bytes.Equal(ob, nb) {
+			continue
+		}
+		a, d := lineDelta(ob, nb)
+		ins += a
+		del += d
+		body = append(body, fmt.Sprintf(" %s | %d +-", p, a+d))
+	}
+	for p, ob := range before {
+		if _, ok := after[p]; !ok {
+			n := countLines(ob)
+			del += n
+			body = append(body, fmt.Sprintf(" %s | %d -", p, n))
+		}
+	}
+	summary := fmt.Sprintf(" %d file(s) changed, %d insertions(+), %d deletions(-)",
+		len(body), ins, del)
+	return strings.Join(append(body, summary), "\n")
+}
+
+func countLines(b []byte) int {
+	if len(b) == 0 {
+		return 0
+	}
+	n := bytes.Count(b, []byte("\n"))
+	if !bytes.HasSuffix(b, []byte("\n")) {
+		n++
+	}
+	return n
+}
+
+// lineDelta approximates added/removed counts with a multiset diff —
+// exact per-hunk counts do not matter to keyword scanning.
+func lineDelta(before, after []byte) (int, int) {
+	seen := map[string]int{}
+	for _, l := range strings.Split(string(before), "\n") {
+		seen[l]++
+	}
+	add := 0
+	for _, l := range strings.Split(string(after), "\n") {
+		if seen[l] > 0 {
+			seen[l]--
+		} else {
+			add++
+		}
+	}
+	rem := 0
+	for _, n := range seen {
+		rem += n
+	}
+	return add, rem
+}
+
+// scenarioDiffStatOnDisk is the fallback for an agent whose edits carry
+// a raw `patch:` step — the only shape the in-memory overlay cannot
+// apply.
+func scenarioDiffStatOnDisk(s *scenario, a *scriptAgent) (string, error) {
 	tmp, err := os.MkdirTemp("", "dbstat")
 	if err != nil {
 		return "", err
 	}
 	defer os.RemoveAll(tmp)
-	var out []string
-	for i := range s.Script.Agents {
-		a := &s.Script.Agents[i]
-		if len(agentEdits(a)) == 0 {
-			continue
-		}
-		dir := filepath.Join(tmp, a.ID)
-		if err := copyTree(filepath.Join(s.Dir, "repo"), dir); err != nil {
-			return "", err
-		}
-		if err := gitInitBase(dir); err != nil {
-			return "", err
-		}
-		if _, err := applyAgentEdits(dir, a); err != nil {
-			return "", fmt.Errorf("%s: %w", a.ID, err)
-		}
-		stat, err := gitDiffStat(dir)
-		if err != nil {
-			return "", err
-		}
-		out = append(out, stat)
+	dir := filepath.Join(tmp, a.ID)
+	if err := copyTree(filepath.Join(s.Dir, "repo"), dir); err != nil {
+		return "", err
 	}
-	return strings.Join(out, "\n"), nil
+	if err := gitInitBase(dir); err != nil {
+		return "", err
+	}
+	if _, err := applyAgentEdits(dir, a); err != nil {
+		return "", fmt.Errorf("%s: %w", a.ID, err)
+	}
+	return gitDiffStat(dir)
 }
 
 // ---------------------------------------------------------------------------
