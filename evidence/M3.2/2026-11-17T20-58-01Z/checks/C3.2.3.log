@@ -1,0 +1,8 @@
+=== RUN   TestC3_2_3
+=== RUN   TestC3_2_3/no-verify
+=== RUN   TestC3_2_3/all-hooks-bypassed
+--- PASS: TestC3_2_3 (5.79s)
+    --- PASS: TestC3_2_3/no-verify (3.23s)
+    --- PASS: TestC3_2_3/all-hooks-bypassed (2.56s)
+PASS
+ok  	court/internal/gate	5.961s

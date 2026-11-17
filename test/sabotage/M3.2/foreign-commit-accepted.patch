@@ -1,0 +1,16 @@
+diff --git a/internal/daemon/gate.go b/internal/daemon/gate.go
+index 976e9b4..a3449fe 100644
+--- a/internal/daemon/gate.go
++++ b/internal/daemon/gate.go
+@@ -114,11 +114,6 @@ func (d *Daemon) handleGate(w http.ResponseWriter, r *http.Request) {
+ 	// after the fork point. A dangling object created in a sibling world,
+ 	// or a commit merged in from another world's branch, is not this
+ 	// world's commit and is refused rather than recorded under its path.
+-	if err := verifyWorldCommit(sess, gp.Commit); err != nil {
+-		wl.Unlock()
+-		d.refuse(w, r, "gate", err.Error(), http.StatusForbidden)
+-		return
+-	}
+ 	err := d.recordCommits(sess, gp.Commit, clientKey(r, "gate"))
+ 	wl.Unlock()
+ 	if err != nil {
