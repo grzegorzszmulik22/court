@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "internal/auth/legacy.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": ""
+    "scripts/token.sh": {
+      "before": "#!/bin/sh\nexit 0\n",
+      "after": "#!/bin/sh\nexit 0\nupdated\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "internal/auth/legacy.go",
+      "path": "scripts/token.sh",
       "lines": [
         3,
         3
       ],
-      "side": "before",
-      "evidence": "func Check() bool { return true }",
+      "side": "after",
+      "evidence": "updated",
       "rule": "dt9-go-touched"
     }
   ],
-  "note": "authority file removed"
+  "note": "filename minus extension is a matching segment"
 }

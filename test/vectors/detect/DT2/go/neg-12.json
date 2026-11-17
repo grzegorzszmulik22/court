@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0003_x.sql": {
-      "before": "-- add column later\n",
-      "after": "-- add column later; see ticket 42\n"
+    "app/model.go": {
+      "before": "package app\n\n// TODO: ALTER TABLE t\n",
+      "after": "package app\n\n// TODO: ALTER TABLE t ADD COLUMN c\n"
     }
   },
   "expect": [],
-  "note": "comment"
+  "note": "ddl-in-source-comment"
 }

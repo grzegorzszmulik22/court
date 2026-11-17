@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/discount_test.go": {
-      "before": "package svc\n\nfunc TestDisc(t *testing.T) {}\n",
-      "after": "package svc\n\nfunc TestDisc(t *testing.T) {\n\tif Disc(42) != 42 { t.Fatal() }\n}\n"
+    "svc/discount.go": {
+      "before": "package svc\n\nfunc Disc(x int) int { return x }\n",
+      "after": "package svc\n\nfunc Disc(x int) int {\n\tif x > 99 {\n\t\treturn 99\n\t}\n\treturn x\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "test-input-in-test",
-  "note": "test-input-in-test"
+  "near_miss": "literal-new-b",
+  "note": "literal-new-b"
 }

@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": ""
+    "tests/test_shop.py": {
+      "before": "def test_perf():\n    assert ms() < 100\n",
+      "after": "def test_perf():\n    assert ms() < 500\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
-      "path": "tests/test_cart.py",
+      "subkind": "loosened_threshold",
+      "path": "tests/test_shop.py",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "def test_total():",
-      "rule": "dt4-python-deleted_test"
+      "side": "after",
+      "evidence": "ms() < 500",
+      "rule": "dt4-python-loosened_threshold"
     }
   ]
 }

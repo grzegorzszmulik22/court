@@ -3,7 +3,7 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "other/x.go": {
+    "shop/extra.py": {
       "before": "",
       "after": "x = 1\n"
     },
@@ -23,7 +23,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "other/x.go",
+      "path": "shop/extra.py",
       "lines": [
         1,
         1

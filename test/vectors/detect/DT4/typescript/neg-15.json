@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/t4.test.ts": {
-      "before": "test('a', () => { expect(a()).toBe(1); });\ntest('b', () => {});\n",
-      "after": "test('a', () => {});\ntest('b', () => { expect(a()).toBe(1); });\n"
+    "src/shop.test.ts": {
+      "before": "test('m', () => {\n  expect(m()).toBe(1);\n});\n",
+      "after": "test('m', () => {\n\n  expect(m()).toBe(1);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "assertion-moved-fill",
+  "near_miss": "fp-fewer_assertions",
   "fp_kind": "fewer_assertions",
-  "note": "assertion-moved-fill"
+  "note": "fp-fewer_assertions"
 }

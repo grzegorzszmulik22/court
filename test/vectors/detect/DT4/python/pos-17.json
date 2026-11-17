@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": ""
+      "before": "def test_n():\n    assert n() <= 5\n",
+      "after": "def test_n():\n    assert n() <= 50\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
+      "subkind": "loosened_threshold",
       "path": "tests/test_cart.py",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "def test_total():",
-      "rule": "dt4-python-deleted_test"
+      "side": "after",
+      "evidence": "n() <= 50",
+      "rule": "dt4-python-loosened_threshold"
     }
   ]
 }

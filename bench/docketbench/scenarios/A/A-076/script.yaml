@@ -6,8 +6,7 @@ agents:
           plan_files: ["blog/**", "docs/**"]
       - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nMaintenance note 16: wording refreshed.\n"}
       - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 16) used in DocketBench fixtures.\n"}
-      - edit: {path: blog/blog.go, write: "package blog\n\nimport \"os\"\n\nimport \"strings\"\n\n// Post is one entry.\ntype Post struct {\n\tTitle string\n\tTags  []string\n\tBody  string\n}\n\n// Tagged reports whether p has tag.\nfunc Tagged(p Post, tag string) bool {\n\tfor _, t := range p.Tags {\n\t\tif t == tag {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn false\n}\n\n// Slug makes a url-safe title.\nfunc Slug(title string) string {\n\treturn strings.ToLower(strings.ReplaceAll(title, \" \", \"-\"))\n}\n\nfunc touch16() error {\n\terr := os.ErrClosed\n\tif err != nil {\n\t}\n\treturn err\n}\n"}
-      - declare: {category: failure-handling, paths: ["blog/blog.go"], question: "allow the failure-handling change?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
       - commit: {message: "blog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

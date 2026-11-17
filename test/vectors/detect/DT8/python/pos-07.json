@@ -5,13 +5,8 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "ENDPOINT = \"https://telemetry.host6.example.net/v1\"\n\ndef c():\n    pass\n"
+      "after": "IP2 = \"https://10.4.5.6/feed\"\n\ndef c():\n    pass\n"
     }
-  },
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [
     {
@@ -24,8 +19,9 @@
         1
       ],
       "side": "after",
-      "evidence": "host6.example.net",
+      "evidence": "10.4.5.6",
       "rule": "dt8-python-host-literal"
     }
-  ]
+  ],
+  "note": "added line carries a host the base tree never names"
 }

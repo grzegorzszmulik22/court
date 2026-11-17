@@ -1,12 +1,12 @@
 - id: C-004-1
   type: contest
   variant: differing-choice
-  category: structure
+  category: interface
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on catalog/util.go (maxBatch4 = 200 vs maxBatch4 = 50)."
+  description: "Two sibling worlds chose differently on api/openapi.yaml (fetch items vs post:)."
   keywords: ["contest-4", "sibling-drift", "world-split"]
   evidence:
-    - {world: "w1", path: "catalog/util.go", lines: [13, 13]}
-    - {world: "w2", path: "catalog/util.go", lines: [13, 13]}
+    - {world: "w1", path: "api/openapi.yaml", lines: [8, 8]}
+    - {world: "w2", path: "api/openapi.yaml", lines: [7, 7]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

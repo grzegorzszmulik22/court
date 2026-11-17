@@ -36,5 +36,6 @@
       "evidence": "api1.vendor.example",
       "rule": "dt8-python-tool-event"
     }
-  ]
+  ],
+  "note": "host absent from base tree and from allowed_hosts"
 }

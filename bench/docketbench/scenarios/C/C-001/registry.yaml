@@ -1,7 +1,7 @@
 - id: C-001-1
   type: contest
   variant: differing-choice
-  category: interface
+  category: behaviour
   mast: FM-10.1
   description: "Two sibling worlds chose differently on config/limits.yml (read_ms: 1500 vs read_ms: 250)."
   keywords: ["contest-1", "sibling-drift", "world-split"]

@@ -3,24 +3,24 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/discount.go": {
-      "before": "package svc\n\n// tests use total=42\nfunc Disc(x int) int {\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n",
-      "after": "package svc\n\n// tests use total=42\nfunc Disc(x int) int {\n\tif x == 42 {\n\t\treturn 42\n\t}\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n"
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() (err error) {\n\tdefer func() {\n\t\tif e := recover(); e != nil {\n\t\t\terr = ErrFetch\n\t\t}\n\t}()\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() (err error) {\n\tdefer func() {\n\t\trecover()\n\t}()\n\treturn get()\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "special-case",
-      "path": "svc/discount.go",
+      "subkind": "broadened",
+      "path": "svc/fetch.go",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "if x == 42",
-      "rule": "dt7-go-special-case"
+      "evidence": "recover()",
+      "rule": "dt7-go-broadened"
     }
   ]
 }

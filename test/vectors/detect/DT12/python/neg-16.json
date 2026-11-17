@@ -6,6 +6,10 @@
     "shop/cart.py": {
       "before": "",
       "after": "x = 1\n"
+    },
+    "shop/extra.py": {
+      "before": "seed\n",
+      "after": "seed\n"
     }
   },
   "commission": {

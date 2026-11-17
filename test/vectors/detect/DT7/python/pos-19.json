@@ -5,22 +5,22 @@
   "files": {
     "svc/fetch.py": {
       "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except:\n        raise\n"
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        pass\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
+      "subkind": "swallowed",
       "path": "svc/fetch.py",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "except:",
-      "rule": "dt7-python-broadened"
+      "evidence": "pass",
+      "rule": "dt7-python-swallowed"
     }
   ]
 }

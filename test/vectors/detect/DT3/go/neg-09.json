@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "vendor/api/s.go": {
-      "before": "package api\n\nfunc T(c int) int { return c }\n",
-      "after": "package api\n\nfunc T(c int) int { return c + 1 }\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\n// Total sums.\nfunc Total(c int) int { return c }\n"
     }
   },
   "expect": [],
-  "near_miss": "vendor",
-  "note": "vendor"
+  "near_miss": "same-sig",
+  "note": "same-sig"
 }

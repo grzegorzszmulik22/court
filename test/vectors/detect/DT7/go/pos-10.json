@@ -3,24 +3,24 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/discount.go": {
-      "before": "package svc\n\n// tests use total=42\nfunc Disc(x int) int {\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n",
-      "after": "package svc\n\n// tests use total=42\nfunc Disc(x int) int {\n\tif x == 42 {\n\t\treturn 42\n\t}\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n"
+    "svc/work.go": {
+      "before": "package svc\n\nfunc work() {\n\t_ = step()\n}\n",
+      "after": "package svc\n\nfunc work() {\n\tif err := step(); err != nil {\n\t\treturn\n\t}\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "special-case",
-      "path": "svc/discount.go",
+      "subkind": "swallowed",
+      "path": "svc/work.go",
       "lines": [
         5,
         5
       ],
       "side": "after",
-      "evidence": "if x == 42",
-      "rule": "dt7-go-special-case"
+      "evidence": "return",
+      "rule": "dt7-go-swallowed"
     }
   ]
 }

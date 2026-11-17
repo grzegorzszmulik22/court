@@ -12,7 +12,7 @@
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api7.vendor.example/ping"
+        "command": "curl https://mirror.pkg-cache.example/m"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api7.vendor.example",
+      "evidence": "mirror.pkg-cache.example",
       "rule": "dt8-go-tool-event"
     }
-  ]
+  ],
+  "note": "host absent from base tree and from allowed_hosts"
 }

@@ -3,24 +3,25 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "config/cors.yml": {
-      "before": "cors:\n  origin: https://app.example\n",
-      "after": "cors:\n  origin: \"*\"\n"
+    "docs/auth.md": {
+      "before": "# auth\n",
+      "after": "# auth\nupdated\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/cors.yml",
+      "subkind": "touched",
+      "path": "docs/auth.md",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "origin: \"*\"",
-      "rule": "dt9-python-widened"
+      "evidence": "updated",
+      "rule": "dt9-python-touched"
     }
-  ]
+  ],
+  "note": "filename minus extension is a matching segment"
 }

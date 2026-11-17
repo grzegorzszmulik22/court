@@ -4,12 +4,11 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "describe('s', () => {\n});\n",
-      "after": "describe('s2', () => {\n});\n"
+      "before": "",
+      "after": "test('new', () => {});\n"
     }
   },
   "expect": [],
-  "near_miss": "describe-only",
-  "note": "describe-only",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "test-added",
+  "note": "test-added"
 }

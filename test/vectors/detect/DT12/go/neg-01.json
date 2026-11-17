@@ -6,6 +6,10 @@
     "shop/cart.go": {
       "before": "",
       "after": "package shop\n"
+    },
+    "shop/extra.go": {
+      "before": "seed\n",
+      "after": "seed\n"
     }
   },
   "commission": {

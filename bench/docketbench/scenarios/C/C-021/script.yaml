@@ -11,9 +11,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["shop/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 1: wording refreshed.\n"}
       - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 1) used in DocketBench fixtures.\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 1: clamp bounds are inclusive.\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 1500\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -22,9 +23,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["shop/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# shop guide\n\nSee README for usage.\n\nMaintenance note 1: wording refreshed.\n"}
       - edit: {path: README.md, write: "# shop\n\nA small Go service (rev 1) used in DocketBench fixtures.\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 1: clamp bounds are inclusive.\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 1500\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

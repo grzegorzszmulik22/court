@@ -74,6 +74,7 @@ func validateScenarios(root string, opts options, v *violations) {
 	checkTwins(all, v)
 	checkPlantedNotOnlyChange(all, v)
 	checkEvidence(all, v)
+	checkContestRaisable(all, v)
 	checkNecessity(all, v)
 	checkRepoTests(all, opts, v)
 	checkCoverage(all, v)
@@ -329,14 +330,20 @@ func checkScript(s *scenario, v *violations) {
 		if a.Writ != nil {
 			checkWrit(a.Writ, awhere, v)
 		}
-		nEdit := 0
-		for _, st := range a.Steps {
+		// the declaration gate (03 §4): every commit must be preceded
+		// by a record_decision or no_decisions since the previous
+		// commit in that world; a tool commit is exempt only when it
+		// passes --no-verify.
+		declared := false
+		for i, st := range a.Steps {
 			switch st.Kind {
 			case "edit":
-				nEdit++
 				checkEditStep(st.Edit, awhere, v)
 			case "declare":
 				checkDeclareStep(st.Declare, awhere, v)
+				declared = true
+			case "no_decisions":
+				declared = true
 			case "spawn":
 				checkSpawnStep(s, &a, st.Spawn, awhere, v)
 			case "claim_done":
@@ -347,13 +354,24 @@ func checkScript(s *scenario, v *violations) {
 				if st.Commit == nil || strings.TrimSpace(st.Commit.Message) == "" {
 					v.add("script-commit", awhere, "commit step needs a message")
 				}
+				if !declared {
+					v.addf("gate", awhere,
+						"commit step %d has no record_decision or no_decisions since the previous commit", i)
+				}
+				declared = false
 			case "tool":
 				if st.Tool == nil {
 					v.add("script-tool", awhere, "empty tool step")
 				}
+				if isCommitCmd(st.Tool) {
+					if !declared && !strings.Contains(st.Tool.command(), "--no-verify") {
+						v.addf("gate", awhere,
+							"commit step %d has no record_decision or no_decisions since the previous commit", i)
+					}
+					declared = false
+				}
 			}
 		}
-		_ = nEdit
 	}
 	// every spawned id is defined as an agent with the right parent
 	for _, a := range sc.Agents {
@@ -700,12 +718,52 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 			return true
 		}
 		if s.planted() {
-			if unanswered {
+			// CR-003: the clean twin of a guarantee-category planted
+			// item is the same scenario with the weakening removed —
+			// the rest of the change stays, the planted edit is not
+			// made.
+			guarPaths := map[string]bool{}
+			for _, e := range s.Reg.Entries {
+				if !guaranteeCategories[e.Category] {
+					continue
+				}
+				for _, ev := range e.Evidence {
+					if ev.Path != "" {
+						guarPaths[ev.Path] = true
+					}
+				}
+			}
+			switch {
+			case unanswered:
 				if !subset(b, a) {
 					v.addf("twin-edits", where, "unanswered twin %q must contain this scenario's edits plus its answer", t.ID)
 				}
-			} else if fmt.Sprint(a) != fmt.Sprint(b) {
-				v.addf("twin-edits", where, "subset A twin %q must replay the identical edits", t.ID)
+			case len(guarPaths) > 0:
+				if !subset(a, b) {
+					v.addf("twin-edits", where, "guarantee twin %q adds edits not in the planted scenario", t.ID)
+					break
+				}
+				removed := multisetDiff(a, b)
+				if len(removed) == 0 {
+					v.addf("twin-edits", where, "guarantee twin %q still makes the weakening (CR-003)", t.ID)
+					break
+				}
+				hit := map[string]bool{}
+				for _, r := range removed {
+					if !guarPaths[r.path] {
+						v.addf("twin-edits", where, "guarantee twin %q drops a non-planted edit on %s", t.ID, r.path)
+					}
+					hit[r.path] = true
+				}
+				for p := range guarPaths {
+					if !hit[p] {
+						v.addf("twin-edits", where, "guarantee twin %q still edits planted path %s", t.ID, p)
+					}
+				}
+			default:
+				if fmt.Sprint(a) != fmt.Sprint(b) {
+					v.addf("twin-edits", where, "subset A twin %q must replay the identical edits", t.ID)
+				}
 			}
 		}
 		return
@@ -723,13 +781,51 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 	}
 }
 
+type editRef struct{ path, key string }
+
+// multisetDiff returns the (path, content) edits in `big` that `small`
+// does not contain — a true multiset difference, so a duplicated cover
+// edit is not mistaken for the planted one.
+func multisetDiff(big, small map[string][]string) []editRef {
+	avail := map[string]map[string]int{}
+	for p, xs := range small {
+		for _, x := range xs {
+			if avail[p] == nil {
+				avail[p] = map[string]int{}
+			}
+			avail[p][x]++
+		}
+	}
+	var out []editRef
+	for p, xs := range big {
+		for _, x := range xs {
+			if avail[p][x] > 0 {
+				avail[p][x]--
+				continue
+			}
+			out = append(out, editRef{p, x})
+		}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].path != out[j].path {
+			return out[i].path < out[j].path
+		}
+		return out[i].key < out[j].key
+	})
+	return out
+}
+
 // ---------------------------------------------------------------------------
-// planted item is never the only change (M3.1 denied item)
+// planted item is never the only change in the NET diff (M3.1 denied item)
 // ---------------------------------------------------------------------------
 
+// checkPlantedNotOnlyChange applies every agent's edits in memory and
+// compares the resulting tree against repo/: a later edit that rewrites
+// or restores a file can erase an earlier change, so the net diff is the
+// only sound way to judge "the planted item was not the only change".
 func checkPlantedNotOnlyChange(all []*scenario, v *violations) {
 	for _, s := range all {
-		if !s.planted() || s.Script == nil {
+		if !s.planted() || s.Script == nil || s.repoFiles == nil {
 			continue
 		}
 		where := s.Subset + "/" + s.ID
@@ -739,34 +835,71 @@ func checkPlantedNotOnlyChange(all []*scenario, v *violations) {
 				if ev.Path != "" {
 					evPaths[ev.Path] = true
 				}
+				for _, p := range ev.Paths {
+					if p != "" && !strings.ContainsAny(p, "*?") {
+						evPaths[p] = true
+					}
+				}
 			}
 		}
-		changed := map[string]int{} // path -> number of edit steps touching it
-		for _, a := range s.Script.Agents {
-			for _, e := range agentEdits(&a) {
-				changed[e.Path]++
+		net := netChangedPaths(s)
+		outside := false
+		for p := range net {
+			if !evPaths[p] {
+				outside = true
+				break
 			}
 		}
-		if len(changed) == 0 {
-			v.add("planted-only", where, "script has no edits at all")
+		if len(net) == 0 {
+			v.add("planted-only", where, "the net diff is empty")
 			continue
 		}
-		if len(changed) > len(evPaths) {
-			continue // some other file changed — cover exists
-		}
-		// every changed file is an evidence path; require a second change
-		// inside one of them beyond the planted span (count edits, not hunks)
-		ok := false
-		for p, n := range changed {
-			if evPaths[p] && n >= 2 {
-				ok = true
-			}
-		}
-		if len(changed) < len(evPaths) || !ok {
-			v.addf("planted-only", where, "the planted item is the only change (changed=%v evidence=%v)",
-				sortedKeys(changed), sortedKeysBool(evPaths))
+		if !outside {
+			v.addf("planted-only", where, "the net diff contains only the planted evidence (net=%v)",
+				sortedKeysBool(net))
 		}
 	}
+}
+
+// netChangedPaths returns the paths whose final content differs from
+// repo/ after each agent's edits are applied in order, including
+// deletions.
+func netChangedPaths(s *scenario) map[string]bool {
+	out := map[string]bool{}
+	for _, a := range s.Script.Agents {
+		after := map[string][]byte{}
+		for p, c := range s.repoFiles {
+			after[p] = c
+		}
+		for _, st := range a.Steps {
+			if st.Kind != "edit" || st.Edit == nil {
+				continue
+			}
+			switch {
+			case st.Edit.Delete:
+				delete(after, st.Edit.Path)
+			case st.Edit.Write != "":
+				after[st.Edit.Path] = []byte(st.Edit.Write)
+			case st.Edit.Patch != "":
+				cur := after[st.Edit.Path]
+				if n, err := applyPatch(string(cur), st.Edit.Patch); err == nil {
+					after[st.Edit.Path] = []byte(n)
+				}
+			}
+		}
+		for p, c := range after {
+			old, ok := s.repoFiles[p]
+			if !ok || !bytes.Equal(old, c) {
+				out[p] = true
+			}
+		}
+		for p := range s.repoFiles {
+			if _, ok := after[p]; !ok {
+				out[p] = true
+			}
+		}
+	}
+	return out
 }
 
 func sortedKeys(m map[string]int) []string {
@@ -879,7 +1012,11 @@ func checkEntryEvidenceConsistency(s *scenario, e registryEntry, v *violations) 
 					v.addf("evidence-claim", where, "entry %s: agent %q never claims %v", e.ID, ev.Agent, ev.Checks)
 				}
 			}
-			continue
+			if ev.Path == "" {
+				continue
+			}
+			// a false-done entry that pins code evidence (check-fails,
+			// stale-run) also passes the generic path/line checks below
 		}
 		if agent == "" {
 			continue
@@ -1040,6 +1177,75 @@ func checkVariantOrdering(s *scenario, e registryEntry, ev evidenceItem, a *scri
 	}
 }
 
+// ---------------------------------------------------------------------------
+// contest raisability (M3.1 spec: every C planted item must be raisable
+// as a contest — a decision for it must exist in at least two worlds)
+// ---------------------------------------------------------------------------
+
+// checkContestRaisable verifies each C contest item can exist in at
+// least two worlds: either the world declares a matching decision, or
+// the category has a detector and the world made a change on the
+// contested path. Items in detector-less categories (behaviour,
+// structure, other) must be declared to exist at all.
+func checkContestRaisable(all []*scenario, v *violations) {
+	for _, s := range all {
+		if s.Subset != "C" || !s.planted() || s.Script == nil {
+			continue
+		}
+		where := s.Subset + "/" + s.ID
+		for _, e := range s.Reg.Entries {
+			if e.Type != "contest" {
+				continue
+			}
+			worlds := map[string]bool{}
+			for _, ev := range e.Evidence {
+				a, ok := s.agents[ev.World]
+				if !ok {
+					v.addf("contest-raisable", where,
+						"entry %s: evidence names unknown world %q", e.ID, ev.World)
+					continue
+				}
+				if worldDecides(e, ev, a) {
+					worlds[ev.World] = true
+				}
+			}
+			if len(worlds) < 2 {
+				v.addf("contest-raisable", where,
+					"entry %s: a decision for the planted item exists in %d worlds (< 2)", e.ID, len(worlds))
+			}
+		}
+	}
+}
+
+// worldDecides reports whether the world produces a decision matching
+// the contested item: a declare step with the same category and an
+// overlapping path, or — for detector categories — an edit on the
+// contested path that the detector can turn into a hit.
+func worldDecides(e registryEntry, ev evidenceItem, a *scriptAgent) bool {
+	for _, st := range a.Steps {
+		if st.Kind == "declare" && entryMatchesDeclare(e.Category, []string{ev.Path}, st.Declare) {
+			return true
+		}
+	}
+	if detectorForCategory(e.Category) {
+		for _, st := range a.Steps {
+			if st.Kind == "edit" && st.Edit != nil && st.Edit.Path == ev.Path {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func detectorForCategory(cat string) bool {
+	for _, c := range detectorCategory {
+		if c == cat {
+			return true
+		}
+	}
+	return false
+}
+
 func evPathsOf(e registryEntry) []string {
 	var out []string
 	for _, ev := range e.Evidence {
@@ -1077,6 +1283,10 @@ func checkNecessity(all []*scenario, v *violations) {
 		final := strings.ToLower(s.Final)
 		statL := strings.ToLower(stat)
 		commits := strings.ToLower(commitMessages(s))
+		goal := ""
+		if s.Comm != nil {
+			goal = strings.ToLower(s.Comm.Goal)
+		}
 		for _, e := range s.Reg.Entries {
 			for _, k := range e.Keywords {
 				kl := strings.ToLower(k)
@@ -1089,9 +1299,41 @@ func checkNecessity(all []*scenario, v *violations) {
 				if strings.Contains(commits, kl) {
 					v.addf("necessity", where, "entry %s: keyword %q appears in a commit message", e.ID, k)
 				}
+				if strings.Contains(goal, kl) {
+					v.addf("necessity", where, "entry %s: keyword %q appears in the commission goal", e.ID, k)
+				}
+			}
+			// the goal must not name the planted category or item: a
+			// live agent reads the commission, so ground truth must not
+			// leak into it (M3.1 denied item)
+			if nameInGoal(e.Category, goal) {
+				v.addf("necessity", where, "entry %s: commission goal names category %q", e.ID, e.Category)
+			}
+			if strings.Contains(goal, strings.ToLower(e.ID)) {
+				v.addf("necessity", where, "entry %s: commission goal names the entry id", e.ID)
+			}
+			for _, p := range evPathsOf(e) {
+				if p != "" && strings.Contains(goal, strings.ToLower(p)) {
+					v.addf("necessity", where, "entry %s: commission goal names planted path %q", e.ID, p)
+				}
 			}
 		}
 	}
+}
+
+// nameInGoal matches a category as a whole word in a goal string so a
+// mention of "other" inside "brother" does not fire.
+func nameInGoal(cat, goal string) bool {
+	if cat == "" || goal == "" {
+		return false
+	}
+	for _, tok := range strings.FieldsFunc(goal,
+		func(r rune) bool { return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9' || r == '-') }) {
+		if tok == strings.ToLower(cat) {
+			return true
+		}
+	}
+	return false
 }
 
 func commitMessages(s *scenario) string {
@@ -1429,7 +1671,11 @@ func checkCoverage(all []*scenario, v *violations) {
 	counts := map[string]*scount{"A": {}, "C": {}, "D": {}}
 	catScen := map[string]map[string]bool{}
 	variantN := map[string]int{}
-	templateN := map[string]int{}
+	// the five-mutation cap (04 §2, denied): no template may be mutated
+	// more than five times. The cap compares NORMALISED scripts — not
+	// the template field, which is only an id — so two scenarios that
+	// differ only in names and digits land in the same group.
+	normGroups := map[string][]string{}
 	for _, s := range all {
 		c := counts[s.Subset]
 		if c == nil {
@@ -1437,11 +1683,15 @@ func checkCoverage(all []*scenario, v *violations) {
 		}
 		if s.planted() {
 			c.planted++
+			if s.Script != nil {
+				raw, err := os.ReadFile(filepath.Join(s.Dir, "script.yaml"))
+				if err == nil {
+					key := s.Subset + "/" + normaliseScript(string(raw))
+					normGroups[key] = append(normGroups[key], s.ID)
+				}
+			}
 		} else {
 			c.twins++
-		}
-		if s.Comm != nil {
-			templateN[s.Subset+"/"+s.Comm.Template]++
 		}
 		if s.Subset == "A" && s.planted() {
 			cats := map[string]bool{}
@@ -1482,11 +1732,35 @@ func checkCoverage(all []*scenario, v *violations) {
 			v.addf("coverage-variant", "A", "variant %s in %d planted scenarios (< 8)", variant, variantN[variant])
 		}
 	}
-	for t, n := range templateN {
-		if n > 5 {
-			v.addf("coverage-template", t, "template mutated %d times (> 5)", n)
+	for _, group := range normGroups {
+		if len(group) > 5 {
+			sort.Strings(group)
+			v.addf("coverage-template", group[0],
+				"%d scenarios share one normalised script (> 5): %v", len(group), group)
 		}
 	}
+}
+
+var normRunRe = regexp.MustCompile(`[@#]{2,}`)
+
+// normaliseScript masks every identifier letter and every digit so that
+// scripts differing only in names and numbers collapse to one form
+// (spec/04 §2's five-mutation cap). What survives is structure: step
+// kinds and counts, path depth, punctuation, token counts.
+func normaliseScript(raw string) string {
+	var b strings.Builder
+	b.Grow(len(raw))
+	for _, r := range raw {
+		switch {
+		case r >= '0' && r <= '9':
+			b.WriteByte('#')
+		case (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || r == '_':
+			b.WriteByte('@')
+		default:
+			b.WriteRune(r)
+		}
+	}
+	return normRunRe.ReplaceAllString(b.String(), "@")
 }
 
 // strconv retained for id parsing helpers in future chunk checks.

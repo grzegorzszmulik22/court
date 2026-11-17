@@ -3,24 +3,24 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0003_add_index.py": {
-      "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
+    "api/order.schema.json": {
+      "before": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"}\n  }\n}\n",
+      "after": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"},\n    \"total\": {\"type\": \"number\"}\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "alembic/versions/0003_add_index.py",
+      "subkind": "format",
+      "path": "api/order.schema.json",
       "lines": [
-        1,
-        1
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-python-new-migration"
+      "evidence": "\"total\": {\"type\": \"number\"}",
+      "rule": "dt2-python-format"
     }
   ]
 }

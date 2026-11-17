@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/fetch.ts": {
-      "before": "export function f() {\n  return get();\n}\n",
-      "after": "// no swallow\nexport function f() {\n  return get();\n}\n"
+      "before": "export function f() { return 1; }\n",
+      "after": "export function f() {\n  const x = 1;\n  if (x > 2) {\n  }\n  return x;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "comment",
-  "note": "comment"
+  "near_miss": "empty-if-b",
+  "note": "empty-if-b"
 }

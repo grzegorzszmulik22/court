@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/service.go": {
-      "before": "package api\n\nfunc A() {}\nfunc B() {}\n",
-      "after": "package api\n\nfunc B() {}\nfunc A() {}\n"
+    "vendor/api/s.go": {
+      "before": "package api\n\nfunc T(c int) int { return c }\n",
+      "after": "package api\n\nfunc T(c int) int { return c + 1 }\n"
     }
   },
   "expect": [],
-  "near_miss": "reorder",
-  "note": "reorder"
+  "near_miss": "vendor",
+  "note": "vendor"
 }

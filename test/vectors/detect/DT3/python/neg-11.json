@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "api/service.py": {
+      "before": "def t():\n    \"\"\"d\"\"\"\n    pass\n",
+      "after": "def t():\n    \"\"\"longer doc\"\"\"\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "contract-comment",
-  "note": "contract-comment"
+  "near_miss": "indent-doc",
+  "note": "indent-doc"
 }

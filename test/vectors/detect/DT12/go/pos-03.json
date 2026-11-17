@@ -10,7 +10,8 @@
   },
   "commission": {
     "plan_files": [
-      "shop/cart.go"
+      "shop/cart.go",
+      "newpkg/mod.go"
     ],
     "plan_lines": 20
   },

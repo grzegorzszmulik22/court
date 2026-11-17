@@ -3,9 +3,9 @@
   "detector": "DT5",
   "language": "typescript",
   "files": {
-    "src/calc.ts": {
-      "before": "export const y = compute();\n",
-      "after": "// @ts-expect-error upstream type is wrong\nexport const y = compute();\n"
+    "src/calc.test.ts": {
+      "before": "function helper(x: number) { return x; }\n",
+      "after": "// @ts-ignore\nfunction helper(x: number) { return x; }\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT5",
       "category": "type-strength",
       "subkind": "suppressed",
-      "path": "src/calc.ts",
+      "path": "src/calc.test.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "@ts-expect-error",
+      "evidence": "@ts-ignore",
       "rule": "dt5-typescript-suppressed"
     }
   ]

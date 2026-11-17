@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/types.go": {
-      "before": "package api\n\ntype cart struct{ x int }\n",
-      "after": "package api\n\ntype cart struct{ x, y int }\n"
+    "api/service.go": {
+      "before": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 1 }\n",
+      "after": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 2 }\n"
     }
   },
   "expect": [],
-  "near_miss": "private-struct",
-  "note": "private-struct"
+  "near_miss": "method-body",
+  "note": "method-body"
 }

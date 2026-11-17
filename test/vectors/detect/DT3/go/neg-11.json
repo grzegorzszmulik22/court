@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc A() {}\nfunc B() {}\n",
+      "after": "package api\n\nfunc B() {}\nfunc A() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "contract-comment",
-  "note": "contract-comment"
+  "near_miss": "reorder",
+  "note": "reorder"
 }

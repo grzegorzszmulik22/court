@@ -12,7 +12,7 @@
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api2.vendor.example/ping"
+        "command": "wget -q https://dl.get-tool.example/pkg.tgz"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api2.vendor.example",
+      "evidence": "dl.get-tool.example",
       "rule": "dt8-go-tool-event"
     }
-  ]
+  ],
+  "note": "host absent from base tree and from allowed_hosts"
 }

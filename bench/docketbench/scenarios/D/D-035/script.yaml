@@ -5,7 +5,8 @@ agents:
       - backbrief:
           plan_files: ["sched/**"]
       - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: README.md, write: "# scheduler\n\nA small Go service used in DocketBench fixtures.\n\nstale note\n"}
+      - edit: {path: sched/sched.go, write: "package sched\n\n// Job is a unit of scheduled work.\ntype Job struct {\n\tName     string\n\tEverySec int\n\tLastRun  int64\n}\n\n// Due reports whether the job should run at t.\nfunc Due(j Job, t int64) bool {\n\treturn t-j.LastRun >= int64(j.EverySec)\n}\n\n// Next returns the next run time.\nfunc Next(j Job) int64 { return j.LastRun + int64(j.EverySec) }\n\n// second file\n"}
+      - no_decisions: {}
       - commit: {message: "scheduler: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

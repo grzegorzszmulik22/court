@@ -3,13 +3,12 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/bench_test.go": {
-      "before": "package shop\n\nfunc BenchmarkT(b *testing.B) {}\n",
-      "after": "package shop\n\nfunc BenchmarkT(b *testing.B) { b.Skip() }\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n",
+      "after": "package shop\n\nfunc TestNew(t *testing.T) {}\n"
     }
   },
   "expect": [],
-  "near_miss": "benchmark-only",
-  "note": "benchmark-only",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "test-added",
+  "note": "test-added"
 }

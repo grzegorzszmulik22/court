@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc13.py": {
-      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
-      "after": "def s(x: int) -> int:\n    return x\n"
+      "before": "x = 1  # type: ignore\n",
+      "after": "x = 1\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "near_miss": "ignore-removed-b",
+  "note": "ignore-removed-b"
 }

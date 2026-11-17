@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "pkg/crypto_test.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    "docs/authentication.md": {
+      "before": "x\n",
+      "after": "y\n"
     }
   },
   "expect": [],
-  "near_miss": "crypto-in-test",
-  "note": "crypto-in-test"
+  "near_miss": "authword-filename",
+  "note": "authword-filename"
 }

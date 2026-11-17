@@ -3,9 +3,13 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "other/x2.go": {
+    "shop/extra.go": {
       "before": "",
       "after": "package shop\n"
+    },
+    "shop/cart.go": {
+      "before": "package shop\n",
+      "after": "package shop\ny\n"
     }
   },
   "commission": {
@@ -19,7 +23,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "other/x2.go",
+      "path": "shop/extra.go",
       "lines": [
         1,
         1

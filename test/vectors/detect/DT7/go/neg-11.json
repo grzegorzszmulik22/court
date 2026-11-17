@@ -9,6 +9,6 @@
     }
   },
   "expect": [],
-  "near_miss": "logged-error",
-  "note": "logged-error"
+  "near_miss": "logged-error-b",
+  "note": "logged-error-b"
 }

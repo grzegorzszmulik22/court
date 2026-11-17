@@ -3,13 +3,12 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/shop.ts": {
-      "before": "export const s = 1;\n",
-      "after": "export const s = 2;\n"
+    "src/helpers.ts": {
+      "before": "export function helper() { return 1; }\n",
+      "after": "export function helper() { return 2; }\n"
     }
   },
   "expect": [],
-  "near_miss": "non-test-file",
-  "note": "non-test-file",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "helper-edit",
+  "note": "helper-edit"
 }

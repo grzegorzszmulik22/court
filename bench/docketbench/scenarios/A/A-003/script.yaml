@@ -7,9 +7,10 @@ agents:
       - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 3: wording refreshed.\n"}
       - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 3) used in DocketBench fixtures.\n"}
       - edit: {path: ledger/ledger_test.go, write: "package ledger\n\nimport \"testing\"\n\nfunc TestBalance(t *testing.T) {\n\tt.Skip(\"slow on ci 3\")\n\tvar b Book\n\tb.Post(Entry{\"cash\", 100})\n\tb.Post(Entry{\"cash\", -40})\n\tif got := b.Balance(\"cash\"); got != 60 {\n\t\tt.Fatalf(\"Balance = %d, want 60\", got)\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar b Book\n\tif got := b.Balance(\"none\"); got != 0 {\n\t\tt.Fatalf(\"Balance = %d, want 0\", got)\n\t}\n}\n"}
+      - no_decisions: {}
       - commit: {message: "ledger: routine refresh"}
       - declare: {category: test-strength, paths: ["ledger/ledger_test.go"], question: "allow the test-strength change?", chosen: "yes"}
-      - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
       - commit: {message: "ledger: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

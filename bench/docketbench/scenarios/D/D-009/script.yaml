@@ -5,5 +5,7 @@ agents:
       - backbrief:
           plan_files: ["poll/**"]
       - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - edit: {path: poll/poll.go, write: "package poll\n\n// Vote is one ballot.\ntype Vote struct {\n\tChoice string\n\tWeight int\n}\n\n// Tally counts weighted votes per choice.\nfunc Tally(vs []Vote) map[string]int {\n\tout := map[string]int{}\n\tfor _, v := range vs {\n\t\tw := v.Weight\n\t\tif w <= 0 {\n\t\t\tw = 1\n\t\t}\n\t\tout[v.Choice] += w\n\t}\n\treturn out\n}\n\n// second file\n"}
+      - no_decisions: {}
       - commit: {message: "poll: refresh"}
       - claim_done: {checks: [unit]}

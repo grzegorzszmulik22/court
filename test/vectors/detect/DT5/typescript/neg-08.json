@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export const s = 'x';\n",
-      "after": "export const s = 'any';\n"
+      "before": "// note\nexport const x = 1;\n",
+      "after": "// not a suppression\nexport const x = 1;\n"
     }
   },
   "expect": [],
-  "near_miss": "string-any",
-  "note": "string-any"
+  "near_miss": "comment-shape",
+  "note": "comment-shape"
 }

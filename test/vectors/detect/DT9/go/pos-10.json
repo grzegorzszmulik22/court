@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "internal/auth/session.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    "config/cors.yml": {
+      "before": "cors:\n  origin: https://app.example\n",
+      "after": "cors:\n  origin: \"*\"\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "internal/auth/session.go",
+      "subkind": "widened",
+      "path": "config/cors.yml",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "func Check() bool { return false }",
-      "rule": "dt9-go-touched"
+      "evidence": "origin: \"*\"",
+      "rule": "dt9-go-widened"
     }
   ]
 }

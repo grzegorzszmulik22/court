@@ -4,12 +4,11 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('t', () => { expect(calc()).toBe(3); });\n",
-      "after": "test('t', () => { expect(calcFast()).toBe(4); });\n"
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
+      "after": "test('total', () => {\n  console.log('run');\n  expect(total()).toBe(1);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "expect-both-sides",
-  "fp_kind": "changed_expectation",
-  "note": "expect-both-sides"
+  "near_miss": "console-added",
+  "note": "console-added"
 }

@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc14.ts": {
-      "before": "// @ts-ignore\nexport const x = 1;\n",
-      "after": "export const x = 1;\n"
+      "before": "export function s(x: number) { return x; }\n",
+      "after": "export function s(x: unknown) { return x; }\n"
     }
   },
   "expect": [],
-  "near_miss": "tsignore-removed-b",
-  "note": "tsignore-removed-b"
+  "near_miss": "unknown-type-b",
+  "note": "unknown-type-b"
 }

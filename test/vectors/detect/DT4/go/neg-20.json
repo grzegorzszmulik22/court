@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/t7_test.go": {
-      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif x() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif x() != 2 { t.Fatal() }\n}\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 { t.Error() }\n}\n",
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 { t.Fatal() }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter-fill",
+  "near_miss": "fp-changed_expectation",
   "fp_kind": "changed_expectation",
-  "note": "expectation-stricter-fill"
+  "note": "fp-changed_expectation"
 }

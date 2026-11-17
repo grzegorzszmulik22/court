@@ -1,6 +1,6 @@
 {
   "id": "T-47",
-  "comment": "Empty expected paths with a competing detected entry: the expected empty-paths entry is blocked from the hit too.",
+  "comment": "Empty expected paths with a competing detected entry: the merged {d1,h1} occupies go.mod; against the empty-paths expected e1 the competing entries d1 and h1 overlap go.mod, so e1 matches nothing -> unanswered, while d1+h1 confirm.",
   "inputs": {
     "expected": [
       {

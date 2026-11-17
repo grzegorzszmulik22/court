@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('a', () => {});\ntest('b', () => {});\n",
-      "after": "test('a', () => {});\n"
+      "before": "it('b', () => {\n  expect(b()).toBe(1);\n});\n",
+      "after": ""
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "deleted_test",
       "path": "src/cart.test.ts",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "before",
-      "evidence": "test('b'",
+      "evidence": "it('b'",
       "rule": "dt4-typescript-deleted_test"
     }
   ]

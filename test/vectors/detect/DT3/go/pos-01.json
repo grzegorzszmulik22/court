@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "api/service.go": {
-      "before": "package api\n\n// exported\nfunc Total(c Cart) int {\n\treturn c.sum\n}\n",
-      "after": "package api\n\n// exported\nfunc Total(c Cart, tax int) int {\n\treturn c.sum + tax\n}\n"
+      "before": "package api\n\nfunc Total(c Cart) int {\n\treturn c.sum\n}\n",
+      "after": "package api\n\nfunc Total(c Cart, tax int) int {\n\treturn c.sum + tax\n}\n"
     }
   },
   "expect": [
@@ -15,8 +15,8 @@
       "subkind": "changed",
       "path": "api/service.go",
       "lines": [
-        4,
-        4
+        3,
+        3
       ],
       "side": "after",
       "evidence": "func Total(c Cart, tax int) int",

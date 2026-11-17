@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
-      "before": "test('a', () => {});\ntest('b', () => {});\n",
-      "after": "test('a', () => {});\n"
+    "src/shop.test.ts": {
+      "before": "test('errs', () => {\n  expect(errs()).toBe(0);\n});\n",
+      "after": "test('errs', () => {\n  expect(errs()).toBeLessThanOrEqual(3);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
-      "path": "src/cart.test.ts",
+      "subkind": "loosened_threshold",
+      "path": "src/shop.test.ts",
       "lines": [
         2,
         2
       ],
-      "side": "before",
-      "evidence": "test('b'",
-      "rule": "dt4-typescript-deleted_test"
+      "side": "after",
+      "evidence": "toBeLessThanOrEqual(3)",
+      "rule": "dt4-typescript-loosened_threshold"
     }
   ]
 }

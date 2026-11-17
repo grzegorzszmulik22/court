@@ -1,7 +1,7 @@
-goal: "extend the ledger service per roadmap ledger-contest2"
+goal: "extend the ledger service per roadmap ledger-roadmap-063"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "ledger-contest2"
+template: "ledger-roadmap-063"
 allowed_hosts: ["api.internal.example"]

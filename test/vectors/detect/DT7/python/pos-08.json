@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n"
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return None\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
+      "subkind": "swallowed",
       "path": "svc/fetch.py",
       "lines": [
-        4,
-        4
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "except Exception:",
-      "rule": "dt7-python-broadened"
+      "evidence": "return None",
+      "rule": "dt7-python-swallowed"
     }
   ]
 }

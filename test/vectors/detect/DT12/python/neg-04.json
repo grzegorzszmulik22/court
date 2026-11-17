@@ -3,8 +3,12 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "shop/sub/y.go": {
+    "shop/extra.py": {
       "before": "",
+      "after": "x = 1\n"
+    },
+    "shop/cart.py": {
+      "before": "x = 1\n",
       "after": "x = 1\n"
     }
   },

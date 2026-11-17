@@ -5,10 +5,10 @@
   "files": {
     "src/fetch.ts": {
       "before": "export function f() {\n  return get();\n}\n",
-      "after": "export function f() {\n  try {\n    return get();\n  } finally {\n    close();\n  }\n}\n"
+      "after": "// no swallow\nexport function f() {\n  return get();\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "finally-only",
-  "note": "finally-only"
+  "near_miss": "comment-b",
+  "note": "comment-b"
 }

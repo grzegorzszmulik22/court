@@ -5,10 +5,10 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst e = \"API_HOST\"\n\nfunc c() {}\n"
+      "after": "package svc\n\nconst subnet = \"10.0.0.0/8\"\n\nfunc c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "env-var",
-  "note": "env-var"
+  "near_miss": "cidr-not-host",
+  "note": "cidr-not-host"
 }

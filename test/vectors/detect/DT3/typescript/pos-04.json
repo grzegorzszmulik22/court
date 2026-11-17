@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "src/types.ts": {
-      "before": "export interface Cart {\n  sum: number;\n}\n",
-      "after": "export interface Cart {\n  sum: number;\n  tax: number;\n}\n"
+    "src/api.ts": {
+      "before": "export const ship = (cart: Cart) => {\n};\n",
+      "after": "export const ship = (cart: Cart, carrier: string) => {\n};\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "src/types.ts",
+      "path": "src/api.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "export interface Cart",
+      "evidence": "export const ship = (cart: Cart, carrier: string)",
       "rule": "dt3-ts-export-changed"
     }
   ]

@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc14.py": {
-      "before": "x = 1  # type: ignore\n",
-      "after": "x = 1\n"
+      "before": "s = \"a\"\n",
+      "after": "s = \"None\"\n"
     }
   },
   "expect": [],
-  "near_miss": "ignore-removed-b",
-  "note": "ignore-removed-b"
+  "near_miss": "string-none-b",
+  "note": "string-none-b"
 }

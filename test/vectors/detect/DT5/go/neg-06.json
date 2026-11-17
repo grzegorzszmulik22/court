@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc_test.go": {
-      "before": "package calc\n\nfunc TestX(t *testing.T) {}\n",
-      "after": "package calc\n\nfunc TestX(t *testing.T) { var v interface{} = t }\n"
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
+      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
     }
   },
   "expect": [],
-  "near_miss": "test-file-any",
-  "note": "test-file-any"
+  "near_miss": "generic",
+  "note": "generic"
 }

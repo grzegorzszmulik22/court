@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn nil\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n"
+      "before": "package svc\n\nfunc fetch() (int, error) {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() (int, error) {\n\tv, err := get()\n\tif err != nil {\n\t\treturn -1, nil\n\t}\n\treturn v, nil\n}\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         6
       ],
       "side": "after",
-      "evidence": "return nil",
+      "evidence": "return -1, nil",
       "rule": "dt7-go-swallowed"
     }
   ]

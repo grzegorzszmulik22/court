@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0014_add_index.sql": {
+    "migrations/0011_add_index.sql": {
       "before": "",
       "after": "DROP TABLE legacy_orders;\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0014_add_index.sql",
+      "path": "migrations/0011_add_index.sql",
       "lines": [
         1,
         1

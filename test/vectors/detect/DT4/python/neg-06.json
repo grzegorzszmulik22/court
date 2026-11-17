@@ -3,13 +3,12 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "src/shop.py": {
-      "before": "def run():\n    pass\n",
-      "after": "def run():\n    return\n"
+    "tests/helpers.py": {
+      "before": "def helper():\n    return 1\n",
+      "after": "def helper():\n    return 2\n"
     }
   },
   "expect": [],
-  "near_miss": "non-test-skip",
-  "note": "non-test-skip",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "helper-edit",
+  "note": "helper-edit"
 }

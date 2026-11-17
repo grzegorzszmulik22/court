@@ -12,7 +12,7 @@
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api9.vendor.example/ping"
+        "command": "nc -z backup.archive.example 443"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api9.vendor.example",
+      "evidence": "backup.archive.example",
       "rule": "dt8-typescript-tool-event"
     }
-  ]
+  ],
+  "note": "host contacted by a tool event"
 }

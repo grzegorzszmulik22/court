@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "src/internal/x.ts": {
-      "before": "export function h(c: number) { return c; }\n",
-      "after": "export function h(c: number, d: number) { return c + d; }\n"
+    "src/api.ts": {
+      "before": "export function total(cart: Cart) { return 0; }\n",
+      "after": "export function total(cart: Cart) { return 0; }\nexport function refund(cart: Cart) { return 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "internal-export",
-  "note": "internal-export"
+  "near_miss": "added-export",
+  "note": "added-export"
 }

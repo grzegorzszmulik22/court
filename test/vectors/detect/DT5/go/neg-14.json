@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc13.go": {
-      "before": "package calc\n\nfunc s(x interface{}) int { return 0 }\n",
-      "after": "package calc\n\nfunc s(x int) int { return x }\n"
+      "before": "package calc\n\n//nolint\nvar x = 1\n",
+      "after": "package calc\n\nvar x = 1\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed-b",
-  "note": "narrowed-b"
+  "near_miss": "nolint-removed-b",
+  "note": "nolint-removed-b"
 }

@@ -4,12 +4,11 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "def test_p():\n    assert p() == 1\n",
-      "after": "def test_p():\n    assert p() == 2\n"
+      "before": "",
+      "after": "def test_new():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "xfail-stricter",
-  "fp_kind": "changed_expectation",
-  "note": "xfail-stricter"
+  "near_miss": "test-added",
+  "note": "test-added"
 }

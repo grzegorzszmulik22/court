@@ -3,33 +3,24 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "data/keep.py": {
+      "before": "a,b\n1,2\n",
+      "after": ""
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "rm -rf build/"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
       "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "",
+      "subkind": "file",
+      "path": "data/keep.py",
       "lines": [
-        0,
-        0
+        1,
+        1
       ],
-      "side": "events",
-      "evidence": "rm -rf build/",
-      "rule": "dt10-python-destructive-cmd"
+      "side": "before",
+      "evidence": "a,b",
+      "rule": "dt10-python-datafile"
     }
   ]
 }

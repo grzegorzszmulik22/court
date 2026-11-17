@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(3);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(4);\n});\n"
+      "before": "test('x', () => {});\n",
+      "after": "test.skip('x', () => {});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "changed_expectation",
+      "subkind": "skip_or_focus",
       "path": "src/cart.test.ts",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "toBe(4)",
-      "rule": "dt4-typescript-changed_expectation"
+      "evidence": "test.skip('x'",
+      "rule": "dt4-typescript-skip_or_focus"
     }
   ]
 }

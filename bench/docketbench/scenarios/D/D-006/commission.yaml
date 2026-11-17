@@ -1,7 +1,7 @@
-goal: "extend the blog service per roadmap blog-claim0"
+goal: "extend the blog service per roadmap blog-roadmap-146"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "blog-claim0"
+template: "blog-roadmap-146"
 allowed_hosts: ["api.internal.example"]

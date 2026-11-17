@@ -5,11 +5,11 @@
   "files": {
     "shop/shop_test.go": {
       "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 2 { t.Fatal() }\n}\n"
+      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n\tif Total() < 0 { t.Error() }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter",
-  "fp_kind": "changed_expectation",
-  "note": "expectation-stricter"
+  "near_miss": "assertion-added",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-added"
 }

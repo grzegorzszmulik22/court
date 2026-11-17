@@ -16,10 +16,10 @@
       "path": "tests/test_shop.py",
       "lines": [
         1,
-        1
+        2
       ],
       "side": "before",
-      "evidence": "def test_total():",
+      "evidence": "def test_total():\n    assert total() == 1",
       "rule": "dt4-python-deleted_test"
     }
   ]

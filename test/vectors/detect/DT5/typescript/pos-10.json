@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export function pick(v: number): number {\n  return v;\n}\n",
-      "after": "export function pick(v: any): any {\n  return v;\n}\n"
+      "before": "export const y = compute();\n",
+      "after": "// @ts-expect-error upstream type is wrong\nexport const y = compute();\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
+      "subkind": "suppressed",
       "path": "src/calc.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "pick(v: any): any",
-      "rule": "dt5-typescript-widened"
+      "evidence": "@ts-expect-error",
+      "rule": "dt5-typescript-suppressed"
     }
   ]
 }

@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "tests/test_crypto.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "docs/authentication.md": {
+      "before": "x\n",
+      "after": "y\n"
     }
   },
   "expect": [],
-  "near_miss": "crypto-in-test",
-  "note": "crypto-in-test"
+  "near_miss": "authword-filename",
+  "note": "authword-filename"
 }

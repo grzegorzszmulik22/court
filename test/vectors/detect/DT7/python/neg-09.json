@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/f.py": {
-      "before": "def f(xs):\n    s = 0\n    for x in xs:\n        s += x\n    return s\n",
-      "after": "def f(xs):\n    s = 0\n    for x in xs:\n        if x < 0:\n            continue\n        s += x\n    return s\n"
+    "svc/test_disc.py": {
+      "before": "def test_d():\n    pass\n",
+      "after": "def test_d():\n    if disc(42) == 42:\n        pass\n"
     }
   },
   "expect": [],
-  "near_miss": "loop-continue",
-  "note": "loop-continue"
+  "near_miss": "special-in-test",
+  "note": "special-in-test"
 }

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "internal/auth/legacy.py": {
-      "before": "def check():\n    return True\n",
-      "after": ""
+    "scripts/token.sh": {
+      "before": "#!/bin/sh\nexit 0\n",
+      "after": "#!/bin/sh\nexit 0\nupdated\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "internal/auth/legacy.py",
+      "path": "scripts/token.sh",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
-      "side": "before",
-      "evidence": "return True",
+      "side": "after",
+      "evidence": "updated",
       "rule": "dt9-python-touched"
     }
   ],
-  "note": "authority file removed"
+  "note": "filename minus extension is a matching segment"
 }

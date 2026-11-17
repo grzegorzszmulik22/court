@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n  expect(total()).toBeGreaterThan(0);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(1);\n});\n"
+      "before": "it('b', () => {\n  expect(b()).toBe(1);\n});\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "fewer_assertions",
+      "subkind": "deleted_test",
       "path": "src/cart.test.ts",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "test('total'",
-      "rule": "dt4-typescript-fewer_assertions"
+      "side": "before",
+      "evidence": "it('b'",
+      "rule": "dt4-typescript-deleted_test"
     }
   ]
 }

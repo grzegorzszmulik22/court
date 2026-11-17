@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/t4_test.go": {
-      "before": "package shop\n\nfunc TestA(t *testing.T) {\n\tif a() != 1 { t.Fatal() }\n}\nfunc TestB(t *testing.T) {}\n",
-      "after": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {\n\tif a() != 1 { t.Fatal() }\n}\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif M() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif M() != 1 { t.Fatal() }\n\tif M() != 1 { t.Fatal() }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "assertion-moved-fill",
+  "near_miss": "fp-fewer_assertions",
   "fp_kind": "fewer_assertions",
-  "note": "assertion-moved-fill"
+  "note": "fp-fewer_assertions"
 }

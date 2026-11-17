@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "internal/auth/session.py": {
+    "internal/auth/legacy.py": {
       "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "internal/auth/session.py",
+      "path": "internal/auth/legacy.py",
       "lines": [
         2,
         2
       ],
-      "side": "after",
-      "evidence": "return False",
+      "side": "before",
+      "evidence": "return True",
       "rule": "dt9-python-touched"
     }
-  ]
+  ],
+  "note": "authority file removed"
 }

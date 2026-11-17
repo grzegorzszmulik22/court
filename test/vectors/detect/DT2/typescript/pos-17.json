@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0013_add_index/migration.sql": {
+    "prisma/migrations/0010_add_index/migration.sql": {
       "before": "",
       "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0013_add_index/migration.sql",
+      "path": "prisma/migrations/0010_add_index/migration.sql",
       "lines": [
         1,
         1

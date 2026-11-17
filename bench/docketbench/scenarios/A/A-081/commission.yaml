@@ -1,7 +1,7 @@
-goal: "extend the shop service per roadmap shop-deletion"
+goal: "extend the shop service per roadmap shop-roadmap-021"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "shop-deletion"
+template: "shop-roadmap-021"
 allowed_hosts: ["api.internal.example"]

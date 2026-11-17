@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc s() {}\n",
-      "after": "package calc\n\n// suppress nothing\nfunc s() {}\n"
+      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
+      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "return-comment",
-  "note": "return-comment"
+  "near_miss": "build-tag",
+  "note": "build-tag"
 }

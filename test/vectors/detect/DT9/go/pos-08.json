@@ -3,24 +3,25 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "config/roles.yml": {
-      "before": "roles:\n  - user\n",
-      "after": "roles:\n  - user\n  - admin:*\n"
+    "deploy/rbac.json": {
+      "before": "{\"r\":1}\n",
+      "after": "{\"r\":1}\nupdated\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/roles.yml",
+      "subkind": "touched",
+      "path": "deploy/rbac.json",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "admin:*",
-      "rule": "dt9-go-widened"
+      "evidence": "updated",
+      "rule": "dt9-go-touched"
     }
-  ]
+  ],
+  "note": "filename minus extension is a matching segment"
 }

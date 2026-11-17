@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    ".github/workflows/ci.yml.16": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      # end of steps\n"
+    "golangci.yml": {
+      "before": "linters:\n  enable:\n    - govet\n",
+      "after": "linters:\n  enable:\n    - govet\n    - errcheck\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-only",
-  "note": "comment-only"
+  "near_miss": "pad",
+  "note": "pad"
 }

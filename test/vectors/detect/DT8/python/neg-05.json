@@ -5,15 +5,10 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "IP = \"127.0.0.1\"\n\ndef c():\n    pass\n"
+      "after": "E = \"API_HOST\"\n\ndef c():\n    pass\n"
     }
   },
-  "commission": {
-    "allowed_hosts": [
-      "127.0.0.1"
-    ]
-  },
   "expect": [],
-  "near_miss": "private-ip",
-  "note": "private-ip"
+  "near_miss": "env-var-name",
+  "note": "env-var-name"
 }

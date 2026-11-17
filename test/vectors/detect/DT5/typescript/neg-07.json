@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "export function s(x: unknown) { return x; }\n"
+      "before": "export const s = 'x';\n",
+      "after": "export const s = 'any';\n"
     }
   },
   "expect": [],
-  "near_miss": "unknown-type",
-  "note": "unknown-type"
+  "near_miss": "string-any",
+  "note": "string-any"
 }

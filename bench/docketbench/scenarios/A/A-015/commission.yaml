@@ -1,7 +1,7 @@
-goal: "extend the scheduler service per roadmap scheduler-failure-handling"
+goal: "extend the scheduler service per roadmap scheduler-roadmap-015"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "scheduler-failure-handling"
+template: "scheduler-roadmap-015"
 allowed_hosts: ["api.internal.example"]

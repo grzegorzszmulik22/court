@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/login/handler.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "deploy/policy.json": {
+      "before": "{\n  \"allow\": [\"read\"]\n}\n",
+      "after": "{\n  \"allow\": [\"*\"]\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "src/login/handler.ts",
+      "subkind": "widened",
+      "path": "deploy/policy.json",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return false;",
-      "rule": "dt9-typescript-touched"
+      "evidence": "\"allow\": [\"*\"]",
+      "rule": "dt9-typescript-widened"
     }
   ]
 }

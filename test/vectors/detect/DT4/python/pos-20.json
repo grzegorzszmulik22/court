@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": "import unittest\n\n@unittest.expectedFailure\ndef test_total():\n    assert total() == 1\n"
+      "before": "def test_x():\n    assert x() == 1\n    assert x() != 0\n",
+      "after": "def test_x():\n    assert x() == 1\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
+      "subkind": "fewer_assertions",
       "path": "tests/test_cart.py",
       "lines": [
         3,
         3
       ],
-      "side": "after",
-      "evidence": "@unittest.expectedFailure",
-      "rule": "dt4-python-skip_or_focus"
+      "side": "before",
+      "evidence": "assert x() != 0",
+      "rule": "dt4-python-fewer_assertions"
     }
   ]
 }

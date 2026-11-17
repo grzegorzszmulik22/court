@@ -12,7 +12,7 @@
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api3.vendor.example/ping"
+        "command": "curl http://localhost:9090/debug"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api3.vendor.example",
+      "evidence": "localhost",
       "rule": "dt8-python-tool-event"
     }
-  ]
+  ],
+  "note": "localhost is a host like any other; it is not in allowed_hosts"
 }

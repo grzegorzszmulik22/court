@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/helpers.go": {
-      "before": "package shop\n\nfunc helper() int { return 1 }\n",
-      "after": "package shop\n\nfunc helper() int { return 2 }\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestT(t *testing.T) {\n\tgot := calc()\n\tif got != 3 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestT(t *testing.T) {\n\tgot := calcFast()\n\tif got != 4 { t.Fatal() }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "helper-edit",
-  "note": "helper-edit",
-  "fp_kind": "changed_expectation"
+  "near_miss": "call-and-expectation",
+  "fp_kind": "changed_expectation",
+  "note": "call-and-expectation"
 }

@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "def test_a():\n    assert a() == 1\n\ndef test_b():\n    pass\n",
-      "after": "def test_a():\n    pass\n\ndef test_b():\n    assert a() == 1\n"
+      "before": "def test_a():\n    assert a() == 1\n    assert a() != 0\n",
+      "after": "def test_a():\n    assert a() != 0\n    assert a() == 1\n"
     }
   },
   "expect": [],

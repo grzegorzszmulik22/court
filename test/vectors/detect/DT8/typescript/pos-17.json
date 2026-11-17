@@ -4,15 +4,15 @@
   "language": "typescript",
   "files": {
     "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "export function c() {}\n"
+      "before": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n",
+      "after": "const docs = \"https://docs.example.io\";\n\nexport function c() {}\n"
     }
   },
   "tool_events": [
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api6.vendor.example/ping"
+        "command": "git fetch https://docs.example.io/repo.git"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api6.vendor.example",
+      "evidence": "docs.example.io",
       "rule": "dt8-typescript-tool-event"
     }
-  ]
+  ],
+  "note": "host in base tree but not in allowed_hosts"
 }

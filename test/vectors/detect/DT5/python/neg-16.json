@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "tests/test_calc15.py": {
-      "before": "def test_x():\n    pass\n",
-      "after": "def test_x():  # type: ignore\n    pass\n"
+    "app/calc15.py": {
+      "before": "# no note\nx = 1\n",
+      "after": "# not a type note\nx = 1\n"
     }
   },
   "expect": [],
-  "near_miss": "test-file-ignore-b",
-  "note": "test-file-ignore-b"
+  "near_miss": "comment-shape-b",
+  "note": "comment-shape-b"
 }

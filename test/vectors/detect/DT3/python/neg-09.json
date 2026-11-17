@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/models.py": {
-      "before": "class _C:\n    pass\n",
-      "after": "class _C:\n    x = 1\n"
+    "api/service.py": {
+      "before": "S = \"def x():\"\n",
+      "after": "S = \"def y():\"\n"
     }
   },
   "expect": [],
-  "near_miss": "private-class",
-  "note": "private-class"
+  "near_miss": "string-def",
+  "note": "string-def"
 }

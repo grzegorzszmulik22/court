@@ -9,7 +9,8 @@ agents:
       - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 56) used in DocketBench fixtures.\n"}
       - edit: {path: migrations/0058_add_col.sql, write: "-- extend items\nALTER TABLE blog_items ADD COLUMN updated_at INTEGER;\n"}
       - commit: {message: "blog: routine refresh"}
-      - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
+      - no_decisions: {}
       - commit: {message: "blog: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

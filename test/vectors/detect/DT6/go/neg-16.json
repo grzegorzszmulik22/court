@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    "docs/ci.md.15": {
-      "before": "# ci\n",
-      "after": "# ci notes\n"
+    "src/legacy.go": {
+      "before": "package src\n\n//nolint\nfunc f() {}\n",
+      "after": "package src\n\nfunc f() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "non-ci-yml",
-  "note": "non-ci-yml"
+  "near_miss": "pad",
+  "note": "pad"
 }

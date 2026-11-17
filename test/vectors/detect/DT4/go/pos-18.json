@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "cart/cart_test.go": {
-      "before": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {}\n",
-      "after": "package shop\n\nfunc TestA(t *testing.T) {}\n"
+    "shop/cart_test.go": {
+      "before": "package shop\n\nfunc TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "deleted_test",
-      "path": "cart/cart_test.go",
+      "path": "shop/cart_test.go",
       "lines": [
-        4,
-        4
+        3,
+        5
       ],
       "side": "before",
-      "evidence": "func TestB(t *testing.T)",
+      "evidence": "func TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}",
       "rule": "dt4-go-deleted_test"
     }
   ]

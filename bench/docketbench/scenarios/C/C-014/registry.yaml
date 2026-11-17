@@ -1,12 +1,12 @@
 - id: C-014-1
   type: contest
   variant: differing-choice
-  category: structure
+  category: behaviour
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on catalog/util.go (maxBatch14 = 200 vs maxBatch14 = 50)."
+  description: "Two sibling worlds chose differently on config/limits.yml (retries: 7 vs retries: 1)."
   keywords: ["contest-14", "sibling-drift", "world-split"]
   evidence:
-    - {world: "w1", path: "catalog/util.go", lines: [13, 13]}
-    - {world: "w2", path: "catalog/util.go", lines: [13, 13]}
+    - {world: "w1", path: "config/limits.yml", lines: [4, 4]}
+    - {world: "w2", path: "config/limits.yml", lines: [4, 4]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

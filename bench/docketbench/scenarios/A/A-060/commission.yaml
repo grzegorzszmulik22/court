@@ -1,7 +1,7 @@
-goal: "extend the vault service per roadmap vault-scope"
+goal: "extend the vault service per roadmap vault-roadmap-060"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "vault-scope"
+template: "vault-roadmap-060"
 allowed_hosts: ["api.internal.example"]

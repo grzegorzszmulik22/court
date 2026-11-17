@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0014_add_index/migration.sql": {
+    "prisma/migrations/0011_add_index/migration.sql": {
       "before": "",
       "after": "DROP TABLE legacy_orders;\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0014_add_index/migration.sql",
+      "path": "prisma/migrations/0011_add_index/migration.sql",
       "lines": [
         1,
         1

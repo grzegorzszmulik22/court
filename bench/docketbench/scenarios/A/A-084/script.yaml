@@ -6,8 +6,7 @@ agents:
           plan_files: ["catalog/**", "docs/**"]
       - edit: {path: docs/guide.md, write: "# catalog guide\n\nSee README for usage.\n\nMaintenance note 24: wording refreshed.\n"}
       - edit: {path: README.md, write: "# catalog\n\nA small Go service (rev 24) used in DocketBench fixtures.\n"}
-      - edit: {path: data/seed.csv, delete: true}
-      - declare: {category: deletion, paths: ["data/seed.csv"], question: "allow the deletion change?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
       - commit: {message: "catalog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

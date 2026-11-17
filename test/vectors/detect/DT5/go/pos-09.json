@@ -4,23 +4,23 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc sum(x int) int { return x }\n",
-      "after": "package calc\n\nfunc sum(x interface{}) interface{} { return x.(int) }\n"
+      "before": "package calc\n\nfunc total(items []Item) int { return len(items) }\n",
+      "after": "package calc\n\n//nolint\nfunc total(items []Item) int { return len(items) }\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
+      "subkind": "suppressed",
       "path": "pkg/calc.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "func sum(x interface{}) interface{}",
-      "rule": "dt5-go-widened"
+      "evidence": "//nolint",
+      "rule": "dt5-go-suppressed"
     }
   ]
 }

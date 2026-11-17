@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": "import unittest\n\n@unittest.expectedFailure\ndef test_total():\n    assert total() == 1\n"
+    "tests/test_bench.py": {
+      "before": "def test_bench():\n    pass\n",
+      "after": "import pytest\n\n@pytest.mark.skip(reason='slow')\ndef test_bench():\n    pass\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "skip_or_focus",
-      "path": "tests/test_cart.py",
+      "path": "tests/test_bench.py",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "@unittest.expectedFailure",
+      "evidence": "@pytest.mark.skip",
       "rule": "dt4-python-skip_or_focus"
     }
   ]

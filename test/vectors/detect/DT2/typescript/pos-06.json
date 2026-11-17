@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "api/order.schema.json": {
-      "before": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"}\n  }\n}\n",
-      "after": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\"type\": \"integer\"},\n    \"total\": {\"type\": \"number\"}\n  }\n}\n"
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "format",
-      "path": "api/order.schema.json",
+      "path": "api/order.proto",
       "lines": [
-        5,
-        5
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "\"total\": {\"type\": \"number\"}",
+      "evidence": "// order record",
       "rule": "dt2-typescript-format"
     }
-  ]
+  ],
+  "note": "comment-only change to a .proto file still changes the file"
 }

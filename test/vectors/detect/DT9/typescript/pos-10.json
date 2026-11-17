@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/auth/session.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "config/cors.yml": {
+      "before": "cors:\n  origin: https://app.example\n",
+      "after": "cors:\n  origin: \"*\"\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "src/auth/session.ts",
+      "subkind": "widened",
+      "path": "config/cors.yml",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return false;",
-      "rule": "dt9-typescript-touched"
+      "evidence": "origin: \"*\"",
+      "rule": "dt9-typescript-widened"
     }
   ]
 }

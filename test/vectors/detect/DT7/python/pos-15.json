@@ -3,24 +3,24 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/discount.py": {
-      "before": "# tests use total=42\ndef disc(x):\n    if x < 0:\n        return 0\n    return x\n",
-      "after": "# tests use total=42\ndef disc(x):\n    if x == 42:\n        return 42\n    if x < 0:\n        return 0\n    return x\n"
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return -1\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "special-case",
-      "path": "svc/discount.py",
+      "subkind": "swallowed",
+      "path": "svc/fetch.py",
       "lines": [
-        3,
-        3
+        5,
+        5
       ],
       "side": "after",
-      "evidence": "if x == 42:",
-      "rule": "dt7-python-special-case"
+      "evidence": "return -1",
+      "rule": "dt7-python-swallowed"
     }
   ]
 }

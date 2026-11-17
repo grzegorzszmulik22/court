@@ -13,7 +13,8 @@ agents:
           plan_files: ["files/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\nMaintenance note 18: wording refreshed.\n"}
       - edit: {path: README.md, write: "# files\n\nA small Go service (rev 18) used in DocketBench fixtures.\n"}
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: files\n  version: 1.0.0\npaths:\n  /files/items:\n    get:\n      summary: list items\n  /files/search:\n    get:\n      summary: search v2\n"}
+      - edit: {path: migrations/003_cols.sql, write: "ALTER TABLE files_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: schema, paths: ["migrations/003_cols.sql"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -24,7 +25,8 @@ agents:
           plan_files: ["files/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\nMaintenance note 18: wording refreshed.\n"}
       - edit: {path: README.md, write: "# files\n\nA small Go service (rev 18) used in DocketBench fixtures.\n"}
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: files\n  version: 1.0.0\npaths:\n  /files/items:\n    get:\n      summary: list items\n  /files/query:\n    get:\n      summary: query v2\n"}
+      - edit: {path: migrations/003_cols.sql, write: "ALTER TABLE files_items ADD COLUMN updated_at INTEGER;\nALTER TABLE files_items ADD COLUMN touched_by TEXT;\n"}
+      - declare: {category: schema, paths: ["migrations/003_cols.sql"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

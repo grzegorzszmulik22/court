@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/api.ts": {
-      "before": "export function _t() {}\n",
-      "after": "export function _t(x = 1) {}\n"
+      "before": "export const cfg = { x: 1 };\n",
+      "after": "export const cfg = { x: 2 };\n"
     }
   },
   "expect": [],
-  "near_miss": "private-name",
-  "note": "private-name"
+  "near_miss": "json-shape",
+  "note": "json-shape"
 }

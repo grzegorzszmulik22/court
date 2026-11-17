@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/fetch.ts": {
-      "before": "export function f() {\n  return get();\n}\n",
-      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    return -1;\n  }\n}\n"
+    "src/f.ts": {
+      "before": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) s += x;\n  return s;\n}\n",
+      "after": "export function f(xs: number[]) {\n  let s = 0;\n  for (const x of xs) {\n    if (x < 0) continue;\n    s += x;\n  }\n  return s;\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "catch-return",
-  "note": "catch-return"
+  "near_miss": "loop-continue-b",
+  "note": "loop-continue-b"
 }

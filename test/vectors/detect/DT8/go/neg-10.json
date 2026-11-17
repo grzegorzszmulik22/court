@@ -4,23 +4,11 @@
   "language": "go",
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n"
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c9() {}\n"
     }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "curl https://docs.example.io/x"
-      },
-      "outcome": "ok"
-    }
-  ],
-  "commission": {
-    "allowed_hosts": []
   },
   "expect": [],
-  "near_miss": "event-known-host",
-  "note": "event-known-host"
+  "near_miss": "unrelated-9",
+  "note": "unrelated-9"
 }

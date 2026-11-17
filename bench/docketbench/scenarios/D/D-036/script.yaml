@@ -5,7 +5,8 @@ agents:
       - backbrief:
           plan_files: ["blog/**"]
       - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: README.md, write: "# blog\n\nA small Go service used in DocketBench fixtures.\n\nstale note\n"}
+      - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nstale note\n"}
+      - no_decisions: {}
       - commit: {message: "blog: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

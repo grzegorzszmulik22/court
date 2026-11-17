@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return -1\n"
+    "svc/test_disc.py": {
+      "before": "def test_d():\n    pass\n",
+      "after": "def test_d():\n    if disc(42) == 42:\n        pass\n"
     }
   },
   "expect": [],
-  "near_miss": "except-return-val",
-  "note": "except-return-val"
+  "near_miss": "special-in-test-b",
+  "note": "special-in-test-b"
 }

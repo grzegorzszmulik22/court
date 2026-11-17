@@ -1,7 +1,7 @@
-goal: "extend the shop service per roadmap shop-contest0"
+goal: "extend the shop service per roadmap shop-roadmap-071"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "shop-contest0"
+template: "shop-roadmap-071"
 allowed_hosts: ["api.internal.example"]

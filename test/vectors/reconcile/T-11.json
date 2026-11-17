@@ -1,6 +1,6 @@
 {
   "id": "T-11",
-  "comment": "Empty paths WITH a competing entry: another same-category entry's paths overlap the hit's, so the empty-paths declaration does NOT match it -> hit undeclared, declaration stands alone declared-only.",
+  "comment": "Empty paths WITH a competing entry: the merged decision {d2,h1} has paths go.mod; against the empty-paths declaration d1, 'another entry of that category with overlapping paths exists in the same world' (d2 and h1 both overlap go.mod), so d1 matches neither -> d1 stands alone declared-only, d2+h1 confirmed.",
   "inputs": {
     "expected": [],
     "decisions": [

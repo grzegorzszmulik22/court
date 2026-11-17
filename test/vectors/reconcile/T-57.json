@@ -1,6 +1,6 @@
 {
   "id": "T-57",
-  "comment": "no_decisions stated then a hit: the declaration of 'no decisions' is not a matching declaration \u2014 hit is undeclared. (The absence of any declare makes this identical to a bare hit; the gate record is an input fact, not a decision.)",
+  "comment": "The agent stated no_decisions at commit 1, then a detector hit arrives at commit 2. A no_decisions gate record is not a decision and cannot match the hit \u2014 the hit is undeclared. The tag is truthful: inputs.no_decisions is non-empty.",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -12,8 +12,16 @@
           "t/x_test.go"
         ],
         "world": "w1",
-        "commit": 1,
+        "commit": 2,
         "petition": false
+      }
+    ],
+    "no_decisions": [
+      {
+        "world": "w1",
+        "commits": [
+          1
+        ]
       }
     ],
     "writs": {

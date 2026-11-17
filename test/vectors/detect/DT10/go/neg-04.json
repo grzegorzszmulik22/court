@@ -3,12 +3,12 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "db/q.sql": {
-      "before": "-- drop later\n",
-      "after": "-- drop later or keep\n"
+    "docs/db.md": {
+      "before": "# db\n",
+      "after": "# db\n\nTRUNCATE planned\n"
     }
   },
   "expect": [],
-  "near_miss": "drop-comment",
-  "note": "drop-comment"
+  "near_miss": "truncate-in-doc",
+  "note": "truncate-in-doc"
 }

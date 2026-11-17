@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nvar s = \"x\"\n",
-      "after": "package calc\n\nvar s = \"any\"\n"
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\n// suppress nothing\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "string-any",
-  "note": "string-any"
+  "near_miss": "return-comment",
+  "note": "return-comment"
 }

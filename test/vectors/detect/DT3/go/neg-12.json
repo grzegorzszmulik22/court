@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "config/app.yaml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "noncontract-yaml",
+  "note": "noncontract-yaml"
 }

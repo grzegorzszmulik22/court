@@ -13,7 +13,8 @@ agents:
           plan_files: ["tasks/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 12: wording refreshed.\n"}
       - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 12) used in DocketBench fixtures.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 7\n"}
+      - edit: {path: go.mod, write: "module tasks\n\ngo 1.22\n"}
+      - declare: {category: dependency, paths: ["go.mod"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -24,7 +25,8 @@ agents:
           plan_files: ["tasks/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\nMaintenance note 12: wording refreshed.\n"}
       - edit: {path: README.md, write: "# tasks\n\nA small Go service (rev 12) used in DocketBench fixtures.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 7\n"}
+      - edit: {path: go.mod, write: "module tasks\n\ngo 1.22\n"}
+      - declare: {category: dependency, paths: ["go.mod"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

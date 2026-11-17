@@ -1,7 +1,7 @@
-goal: "extend the ledger service per roadmap ledger-deletion"
+goal: "extend the ledger service per roadmap ledger-roadmap-023"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "ledger-deletion"
+template: "ledger-roadmap-023"
 allowed_hosts: ["api.internal.example"]

@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "tsconfig.json.13": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n"
+    ".pre-commit-config.yaml": {
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n",
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n      - id: fmt\n"
     }
   },
   "expect": [],
-  "near_miss": "strict-on",
-  "note": "strict-on"
+  "near_miss": "pad",
+  "note": "pad"
 }

@@ -3,24 +3,24 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc.go": {
-      "before": "package calc\n\nfunc total(items []Item) int { return len(items) }\n",
-      "after": "package calc\n\n//nolint\nfunc total(items []Item) int { return len(items) }\n"
+    "pkg/calc_test.go": {
+      "before": "package calc\n\nfunc helper(x int) int { return x }\n",
+      "after": "package calc\n\nfunc helper(x interface{}) interface{} { return x.(int) }\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "suppressed",
-      "path": "pkg/calc.go",
+      "subkind": "widened",
+      "path": "pkg/calc_test.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "//nolint",
-      "rule": "dt5-go-suppressed"
+      "evidence": "func helper(x interface{}) interface{}",
+      "rule": "dt5-go-widened"
     }
   ]
 }

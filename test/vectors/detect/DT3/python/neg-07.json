@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "api/service.py": {
-      "before": "import os\n",
-      "after": "import os, sys\n"
+      "before": "def a():\n    pass\ndef b():\n    pass\n",
+      "after": "def b():\n    pass\ndef a():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "import-change",
-  "note": "import-change"
+  "near_miss": "reorder",
+  "note": "reorder"
 }

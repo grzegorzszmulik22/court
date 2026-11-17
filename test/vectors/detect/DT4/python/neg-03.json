@@ -4,12 +4,11 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": "def test_total():\n    assert total() == 1\n    assert total() > 0\n"
+      "before": "def test_n():\n    assert n() <= 50\n",
+      "after": "def test_n():\n    assert n() <= 10\n"
     }
   },
   "expect": [],
-  "near_miss": "assertion-added",
-  "fp_kind": "fewer_assertions",
-  "note": "assertion-added"
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
 }

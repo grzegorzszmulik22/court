@@ -1,12 +1,12 @@
 {
   "id": "T-43",
-  "comment": "Matching is per world: identical category+paths in different worlds do NOT merge; each is reconciled alone.",
+  "comment": "Same category and overlapping paths in two worlds, one with a detector hit and one with only a declaration: the evidence differs (\u00a77.5 \u2014 'one has a hit and the other only a declaration') so the pair IS contested and both decisions are queued. Matching is still per world: the two entries do not merge into one decision.",
   "inputs": {
     "expected": [],
     "decisions": [
       {
-        "id": "d1",
-        "source": "declared",
+        "id": "h1",
+        "source": "detected",
         "category": "dependency",
         "paths": [
           "go.mod"
@@ -16,8 +16,8 @@
         "petition": false
       },
       {
-        "id": "h1",
-        "source": "detected",
+        "id": "d1",
+        "source": "declared",
         "category": "dependency",
         "paths": [
           "go.mod"
@@ -60,36 +60,29 @@
           "**"
         ]
       }
-    }
+    },
+    "contested": [
+      [
+        "h1",
+        "d1"
+      ]
+    ]
   },
   "events": [
     {
       "seq": 1,
       "decision_ids": [
-        "d1"
+        "h1"
       ]
     },
     {
       "seq": 2,
       "decision_ids": [
-        "h1"
+        "d1"
       ]
     }
   ],
   "expect": [
-    {
-      "ids": [
-        "d1"
-      ],
-      "sources": [
-        "declared"
-      ],
-      "verdict": "declared-only",
-      "flags": [
-        "unforeseen"
-      ],
-      "queued": false
-    },
     {
       "ids": [
         "h1"
@@ -99,12 +92,28 @@
       ],
       "verdict": "undeclared",
       "flags": [
+        "contested",
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "contested",
         "unforeseen"
       ],
       "queued": true
     }
   ],
   "tags": [
+    "contested",
     "per-world"
   ]
 }

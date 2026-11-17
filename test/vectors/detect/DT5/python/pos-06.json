@@ -3,9 +3,9 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc.py": {
-      "before": "def pick(v: int) -> int:\n    return v\n",
-      "after": "def pick(v: int | None) -> int | None:\n    return v\n"
+    "tests/test_calc.py": {
+      "before": "def helper(x: int) -> int:\n    return x\n",
+      "after": "def helper(x: Optional[int]) -> int:\n    return x\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT5",
       "category": "type-strength",
       "subkind": "widened",
-      "path": "app/calc.py",
+      "path": "tests/test_calc.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "v: int | None",
+      "evidence": "x: Optional[int]",
       "rule": "dt5-python-widened"
     }
   ]

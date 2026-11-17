@@ -16,6 +16,19 @@
     {
       "detector": "DT1",
       "category": "dependency",
+      "subkind": "added",
+      "path": "package.json",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "\"zod\": \"^3.22.0\"",
+      "rule": "dt1-typescript-manifest-added"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
       "subkind": "lock-mismatch",
       "path": "package.json",
       "lines": [

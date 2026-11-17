@@ -3,24 +3,28 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t}\n\treturn err\n}\n"
+    "svc/discount.go": {
+      "before": "package svc\n\nfunc Disc(x int) int {\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n",
+      "after": "package svc\n\nfunc Disc(x int) int {\n\tif x == 42 {\n\t\treturn 42\n\t}\n\tif x < 0 {\n\t\treturn 0\n\t}\n\treturn x\n}\n"
+    },
+    "svc/discount_test.go": {
+      "before": "package svc\n\nfunc TestDisc(t *testing.T) {\n\tif Disc(42) != 42 { t.Fatal() }\n}\n",
+      "after": "package svc\n\nfunc TestDisc(t *testing.T) {\n\tif Disc(42) != 42 { t.Fatal() }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/fetch.go",
+      "subkind": "special-case",
+      "path": "svc/discount.go",
       "lines": [
-        5,
-        6
+        4,
+        4
       ],
       "side": "after",
-      "evidence": "if err != nil {\n\t}",
-      "rule": "dt7-go-swallowed"
+      "evidence": "if x == 42",
+      "rule": "dt7-go-special-case"
     }
   ]
 }

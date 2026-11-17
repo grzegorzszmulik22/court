@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_t5.py": {
-      "before": "def test_x():\n    assert x() == 1\n",
-      "after": "def test_x():\n    assert x() == 2\n"
+    "tests/test_shop.py": {
+      "before": "def test_m():\n    x = m()\n    assert x == 1\n",
+      "after": "def test_m():\n    x = m()\n\n    assert x == 1\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter-fill",
-  "fp_kind": "changed_expectation",
-  "note": "expectation-stricter-fill"
+  "near_miss": "fp-fewer_assertions",
+  "fp_kind": "fewer_assertions",
+  "note": "fp-fewer_assertions"
 }

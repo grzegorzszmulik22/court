@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "go",
   "files": {
-    "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t}\n\treturn err\n}\n"
+    "svc/work.go": {
+      "before": "package svc\n\nfunc work() {\n\t_ = step()\n}\n",
+      "after": "package svc\n\nfunc work() {\n\tif err := step(); err != nil {\n\t\treturn\n\t}\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/fetch.go",
+      "path": "svc/work.go",
       "lines": [
         5,
-        6
+        5
       ],
       "side": "after",
-      "evidence": "if err != nil {\n\t}",
+      "evidence": "return",
       "rule": "dt7-go-swallowed"
     }
   ]

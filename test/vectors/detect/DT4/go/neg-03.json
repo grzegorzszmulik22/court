@@ -4,12 +4,11 @@
   "language": "go",
   "files": {
     "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n\tif Total() < 0 { t.Error() }\n}\n"
+      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n < 50 { t.Skip() }\n}\n",
+      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tif n < 10 { t.Skip() }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "assertion-added",
-  "fp_kind": "fewer_assertions",
-  "note": "assertion-added"
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
 }

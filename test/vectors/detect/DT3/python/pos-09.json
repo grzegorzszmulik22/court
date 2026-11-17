@@ -4,23 +4,24 @@
   "language": "python",
   "files": {
     "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
+      "after": "openapi: 3.0.0\n# paths follow the style guide\npaths:\n  /orders:\n    get:\n      summary: list\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
+      "subkind": "changed",
       "path": "api/openapi.yaml",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
-      "side": "before",
-      "evidence": "/legacy:",
+      "side": "after",
+      "evidence": "# paths follow the style guide",
       "rule": "dt3-contract-openapi"
     }
-  ]
+  ],
+  "note": "comment change on a contract file is a file change"
 }

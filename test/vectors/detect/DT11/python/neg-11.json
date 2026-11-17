@@ -3,7 +3,7 @@
   "detector": "DT11",
   "language": "python",
   "files": {
-    "shop/cart.go": {
+    "__pycache__/m.pyc": {
       "before": "",
       "after": "x = 1\n"
     }
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "exempt-path",
+  "note": "exempt-path"
 }

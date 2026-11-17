@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "docs/session.md": {
-      "before": "x\n",
-      "after": "y\n"
+    "tests/test_crypto.py": {
+      "before": "def check():\n    return True\n",
+      "after": "def check():\n    return False\n"
     }
   },
   "expect": [],
-  "near_miss": "session-docs",
-  "note": "session-docs"
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
 }

@@ -3,24 +3,25 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
+    "src/shop.test.ts": {
       "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test.skip('total', () => {\n  expect(total()).toBe(1);\n});\n"
+      "after": "test('totals', () => {\n  expect(total()).toBe(1);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "src/cart.test.ts",
+      "subkind": "deleted_test",
+      "path": "src/shop.test.ts",
       "lines": [
         1,
-        1
+        3
       ],
-      "side": "after",
-      "evidence": "test.skip('total'",
-      "rule": "dt4-typescript-skip_or_focus"
+      "side": "before",
+      "evidence": "test('total', () => {\n  expect(total()).toBe(1);\n});",
+      "rule": "dt4-typescript-deleted_test"
     }
-  ]
+  ],
+  "note": "a renamed test removes the test under its old name"
 }

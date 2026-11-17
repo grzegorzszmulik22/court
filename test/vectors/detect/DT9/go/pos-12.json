@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "pkg/acl/acl.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    "scripts/setup.sh": {
+      "before": "#!/bin/sh\nchmod 755 bin/run\n",
+      "after": "#!/bin/sh\nchmod 777 bin/run\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "pkg/acl/acl.go",
+      "subkind": "widened",
+      "path": "scripts/setup.sh",
       "lines": [
-        3,
-        3
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "func Check() bool { return false }",
-      "rule": "dt9-go-touched"
+      "evidence": "chmod 777",
+      "rule": "dt9-go-widened"
     }
   ]
 }

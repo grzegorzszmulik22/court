@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc10.go": {
-      "before": "package calc\n\nfunc s(x int) int { return x }\n",
-      "after": "package calc\n\nfunc s(x int64) int64 { return x }\n"
+      "before": "package calc\n\nfunc s(x interface{}) {}\n",
+      "after": "package calc\n\nfunc s(x interface{}) { _ = x }\n"
     }
   },
   "expect": [],
-  "near_miss": "concrete-kept-b",
-  "note": "concrete-kept-b"
+  "near_miss": "interface-already-b",
+  "note": "interface-already-b"
 }

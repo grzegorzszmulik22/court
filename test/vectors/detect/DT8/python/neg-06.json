@@ -5,10 +5,10 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "E = \"API_HOST\"\n\ndef c():\n    pass\n"
+      "after": "SUBNET = \"10.0.0.0/8\"\n\ndef c():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "env-var",
-  "note": "env-var"
+  "near_miss": "cidr-not-host",
+  "note": "cidr-not-host"
 }

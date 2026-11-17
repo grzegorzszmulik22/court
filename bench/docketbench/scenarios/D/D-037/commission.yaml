@@ -1,7 +1,7 @@
-goal: "extend the chat service per roadmap chat-claim2"
+goal: "extend the chat service per roadmap chat-roadmap-157"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "chat-claim2"
+template: "chat-roadmap-157"
 allowed_hosts: ["api.internal.example"]

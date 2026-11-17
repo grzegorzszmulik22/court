@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc19.ts": {
-      "before": "export const c = { x: 1 };\n",
-      "after": "export const c = { x: 1 } satisfies Record<string, number>;\n"
+      "before": "export function s(x: any) { return x; }\n",
+      "after": "export function s(x: any) { return x ?? 0; }\n"
     }
   },
   "expect": [],
-  "near_miss": "satisfies-b",
-  "note": "satisfies-b"
+  "near_miss": "any-already-b",
+  "note": "any-already-b"
 }

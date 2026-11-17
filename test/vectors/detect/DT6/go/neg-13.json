@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    "golangci.yml.12": {
-      "before": "linters:\n  enable:\n    - govet\n",
-      "after": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+    "coverage.yml": {
+      "before": "coverage:\n  min: 70\n",
+      "after": "coverage:\n  min: 85\n"
     }
   },
   "expect": [],
-  "near_miss": "rule-enabled",
-  "note": "rule-enabled"
+  "near_miss": "pad",
+  "note": "pad"
 }

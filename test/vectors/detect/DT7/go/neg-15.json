@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc f() {\n\tdefer func() { recover() }()\n}\n",
-      "after": "package svc\n\nfunc f() {\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\tlog(r)\n\t\t}\n\t}()\n}\n"
+      "before": "package svc\n\nfunc fetch() error {\n\terr := get()\n\treturn err\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn nil\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed",
-  "note": "narrowed"
+  "near_miss": "err-returned-b",
+  "note": "err-returned-b"
 }

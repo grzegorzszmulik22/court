@@ -2,16 +2,22 @@ package main
 
 // Reconciliation-trace validation (M3.1 build item 2, check C3.1.5).
 //
-// Every trace in test/vectors/reconcile/ is replayed through an
-// independent implementation of the spec/01 §7 rules written here, from
-// the spec text alone. The trace is valid when:
-//   - every input entry appears in exactly one merged expectation,
-//   - the merged decision's sources, verdict, flags and queued status
-//     equal the oracle's,
-//   - the listed decision.reconciled events cover every expectation with
-//     strictly increasing seqs.
-// This is not the production reconciler: that is built in M3.5 against
-// these vectors, in the pattern M2.3 used for backbrief conformance.
+// Per CR-003 (spec/CHANGE_REQUESTS/003) this validator contains NO
+// reconciliation oracle: the expected results in
+// test/vectors/reconcile/ were written by reasoning from spec/01 §7 and
+// are reviewed independently, then checked again by the independent
+// M3.5 implementation. What this file enforces is trace shape:
+//   - file and id naming, vocabulary of categories/verdicts/flags/tags;
+//   - every input entry appears in exactly one merged expectation and
+//     the expectation's sources equal the union of its members';
+//   - per-row internal consistency derivable from §7.2/§7.3 without
+//     re-running matching: verdict vs member sources, flags vs inputs,
+//     queued vs verdict+flags+petition;
+//   - decision.reconciled events: strictly increasing seqs, one event
+//     per expectation listing exactly its member ids;
+//   - every tag is a known name that is true of its trace;
+//   - corpus coverage: >= 60 traces, every verdict and every required
+//     case exercised.
 
 import (
 	"encoding/json"
@@ -30,11 +36,12 @@ type rtrace struct {
 	ID      string `json:"id"`
 	Comment string `json:"comment"`
 	Inputs  struct {
-		Expected  []rExpected      `json:"expected"`
-		Decisions []rDecision      `json:"decisions"`
-		Writs     map[string]rWrit `json:"writs"`
-		Bypassed  []rBypass        `json:"bypassed"`
-		Contested [][]string       `json:"contested"`
+		Expected    []rExpected      `json:"expected"`
+		Decisions   []rDecision      `json:"decisions"`
+		Writs       map[string]rWrit `json:"writs"`
+		Bypassed    []rBypass        `json:"bypassed"`
+		Contested   [][]string       `json:"contested"`
+		NoDecisions []rBypass        `json:"no_decisions"`
 	} `json:"inputs"`
 	Events []rEvent  `json:"events"`
 	Expect []rExpect `json:"expect"`
@@ -67,7 +74,9 @@ type rWrit struct {
 }
 
 // rBypass marks commits that reached the world with no gate record
-// (spec/03 §4.5): their detector hits are undeclared.
+// (spec/03 §4.5): their detector hits are undeclared. The same shape is
+// reused for inputs.no_decisions: commits where the agent recorded a
+// no_decisions statement (a gate fact, not a decision entry).
 type rBypass struct {
 	World   string `json:"world"`
 	Commits []int  `json:"commits"`
@@ -103,6 +112,40 @@ var reconFlags = map[string]bool{
 
 var sourceSet = map[string]bool{"declared": true, "detected": true, "expected": true}
 
+// tags whose truth the validator can check from the trace's inputs and
+// expectation rows. Any tag outside this vocabulary is a violation.
+var knownTags = map[string]bool{
+	"verdict-confirmed": true, "verdict-declared-only": true,
+	"verdict-undeclared": true, "verdict-late": true,
+	"verdict-unanswered":   true,
+	"unforeseen+confirmed": true, "unforeseen+declared-only": true,
+	"unforeseen+undeclared": true, "unforeseen+late": true,
+	"foreseen-confirmed": true,
+	"empty-paths":        true, "empty-paths-competing": true,
+	"other-overlap": true, "other-no-overlap": true,
+	"outside-writ": true, "outside-writ-guarantee": true,
+	"inside-writ": true, "expected-ruled": true,
+	"expected-declared": true, "expected-detected": true,
+	"gate-bypassed": true, "no-decisions": true,
+	"contested": true, "no-contest": true, "petition": true,
+	"timing": true, "late-one-commit": true,
+	"merge": true, "three-way": true, "per-world": true,
+	"glob": true, "dir-containment": true, "disjoint-paths": true,
+	"no-cross-category": true, "no-detector-category": true,
+	"multi-commit": true, "multi-category": true,
+}
+
+// requiredReconcileCases are the corpus-coverage tags/verdicts M3.1's
+// build text requires. Every one must appear at least once.
+var requiredReconcileTags = []string{
+	"late-one-commit",
+	"unforeseen+confirmed", "unforeseen+declared-only",
+	"unforeseen+undeclared", "unforeseen+late",
+	"empty-paths", "empty-paths-competing",
+	"other-overlap", "other-no-overlap",
+	"outside-writ-guarantee", "expected-ruled", "gate-bypassed",
+}
+
 func validateReconcile(root string, v *violations) {
 	fi, err := os.ReadDir(root)
 	if err != nil {
@@ -113,7 +156,6 @@ func validateReconcile(root string, v *violations) {
 	seen := map[string]bool{}
 	tags := map[string]int{}
 	verdictCount := map[string]int{}
-	flagCount := map[string]int{}
 	for _, f := range fi {
 		if !traceFileRe.MatchString(f.Name()) {
 			if strings.HasSuffix(f.Name(), ".json") {
@@ -126,7 +168,7 @@ func validateReconcile(root string, v *violations) {
 		if tr == nil {
 			continue
 		}
-		checkTrace(tr, v)
+		checkTrace(tr, f.Name(), v)
 		if seen[tr.ID] {
 			v.addf("reconcile-id", root, "duplicate trace id %q", tr.ID)
 		}
@@ -136,28 +178,17 @@ func validateReconcile(root string, v *violations) {
 		}
 		for _, e := range tr.Expect {
 			verdictCount[e.Verdict]++
-			for _, fl := range e.Flags {
-				flagCount[fl+":"+e.Verdict]++
-			}
 		}
 	}
 	if n < 60 {
 		v.addf("reconcile-count", root, "%d traces < 60", n)
 	}
-	// required coverage (M3.1 build text)
 	for _, verdict := range []string{"confirmed", "declared-only", "undeclared", "late", "unanswered"} {
 		if verdictCount[verdict] == 0 {
 			v.addf("reconcile-coverage", root, "verdict %q never expected", verdict)
 		}
 	}
-	for _, t := range []string{
-		"late-one-commit",
-		"unforeseen+confirmed", "unforeseen+declared-only",
-		"unforeseen+undeclared", "unforeseen+late",
-		"empty-paths", "empty-paths-competing",
-		"other-overlap", "other-no-overlap",
-		"outside-writ-guarantee", "expected-ruled", "gate-bypassed",
-	} {
+	for _, t := range requiredReconcileTags {
 		if tags[t] == 0 {
 			v.addf("reconcile-coverage", root, "required case %q never exercised", t)
 		}
@@ -180,12 +211,35 @@ func loadTrace(path string, v *violations) *rtrace {
 	return &tr
 }
 
-func checkTrace(tr *rtrace, v *violations) {
+// ---------------------------------------------------------------------------
+// per-trace checks
+// ---------------------------------------------------------------------------
+
+// traceMember is one input entry resolved for checking an expectation.
+type traceMember struct {
+	id       string
+	source   string
+	category string
+	paths    []string
+	world    string
+	commit   int
+	petition bool
+	ruled    bool
+}
+
+func checkTrace(tr *rtrace, fname string, v *violations) {
 	where := "reconcile/" + tr.ID
 	if tr.ID == "" {
 		v.add("reconcile-id", where, "missing id")
+	} else if strings.TrimSuffix(fname, ".json") != tr.ID {
+		v.addf("reconcile-id", where, "file %s does not match id %q", fname, tr.ID)
 	}
+	members := map[string]traceMember{}
 	for _, d := range tr.Inputs.Decisions {
+		w := d.World
+		if w == "" {
+			w = "w1"
+		}
 		if d.Source != "declared" && d.Source != "detected" {
 			v.addf("reconcile-source", where, "source %q must be declared or detected", d.Source)
 		}
@@ -195,376 +249,609 @@ func checkTrace(tr *rtrace, v *violations) {
 		if d.Commit < 1 {
 			v.addf("reconcile-commit", where, "decision %s: commit must be ≥ 1", d.ID)
 		}
-	}
-	for _, e := range tr.Inputs.Expected {
-		if !categories[e.Category] {
-			v.addf("reconcile-category", where, "expected %s: category %q unknown", e.ID, e.Category)
+		if _, dup := members[d.ID]; dup {
+			v.addf("reconcile-input-id", where, "input id %q used twice", d.ID)
 		}
-	}
-	for _, e := range tr.Expect {
-		if !reconVerdicts[e.Verdict] {
-			v.addf("reconcile-verdict", where, "verdict %q unknown", e.Verdict)
-		}
-		for _, f := range e.Flags {
-			if !reconFlags[f] {
-				v.addf("reconcile-flag", where, "flag %q unknown", f)
-			}
-		}
-		for _, s := range e.Sources {
-			if !sourceSet[s] {
-				v.addf("reconcile-source", where, "sources element %q unknown", s)
-			}
-		}
-	}
-	// events: seqs strictly increasing, ids disjoint, ids are input ids
-	inIDs := map[string]bool{}
-	for _, d := range tr.Inputs.Decisions {
-		inIDs[d.ID] = true
-	}
-	for _, e := range tr.Inputs.Expected {
-		inIDs[e.ID] = true
-	}
-	prev := 0
-	evIDs := map[string]int{}
-	for _, ev := range tr.Events {
-		if ev.Seq <= prev {
-			v.addf("reconcile-events", where, "event seqs not strictly increasing (%d)", ev.Seq)
-		}
-		prev = ev.Seq
-		for _, id := range ev.IDs {
-			if !inIDs[id] {
-				v.addf("reconcile-events", where, "event names %q which is not an input", id)
-			}
-			if evIDs[id] != 0 {
-				v.addf("reconcile-events", where, "%q appears in two reconciled events", id)
-			}
-			evIDs[id] = ev.Seq
-		}
-	}
-	// expectations: disjoint coverage of all input ids
-	expIDs := map[string]bool{}
-	for _, e := range tr.Expect {
-		if len(e.IDs) == 0 {
-			v.addf("reconcile-expect", where, "an expectation has no member ids")
-		}
-		for _, id := range e.IDs {
-			if !inIDs[id] {
-				v.addf("reconcile-expect", where, "expected member %q is not an input", id)
-			}
-			if expIDs[id] {
-				v.addf("reconcile-expect", where, "%q appears in two expectations", id)
-			}
-			expIDs[id] = true
-			if evIDs[id] == 0 {
-				v.addf("reconcile-events", where, "%q in no decision.reconciled event", id)
-			}
-		}
-	}
-	for id := range inIDs {
-		if !expIDs[id] {
-			v.addf("reconcile-expect", where, "input %q has no expectation", id)
-		}
-	}
-	// replay through the spec oracle
-	got := oracle(tr)
-	for _, e := range tr.Expect {
-		key := expectKey(e.IDs)
-		g, ok := got[key]
-		if !ok {
-			v.addf("reconcile-oracle", where, "no expectation covers members %v (oracle groups differ)", e.IDs)
-			continue
-		}
-		if !sameSet(g.Sources, e.Sources) {
-			v.addf("reconcile-oracle", where, "%v: sources %v != oracle %v", e.IDs, e.Sources, g.Sources)
-		}
-		if g.Verdict != e.Verdict {
-			v.addf("reconcile-oracle", where, "%v: verdict %q != oracle %q", e.IDs, e.Verdict, g.Verdict)
-		}
-		if !sameSet(g.Flags, e.Flags) {
-			v.addf("reconcile-oracle", where, "%v: flags %v != oracle %v", e.IDs, e.Flags, g.Flags)
-		}
-		if g.Queued != e.Queued {
-			v.addf("reconcile-oracle", where, "%v: queued %v != oracle %v", e.IDs, e.Queued, g.Queued)
-		}
-	}
-	if len(got) != len(tr.Expect) {
-		v.addf("reconcile-oracle", where, "oracle formed %d merged decisions, trace expects %d", len(got), len(tr.Expect))
-	}
-}
-
-func expectKey(ids []string) string {
-	s := append([]string{}, ids...)
-	sort.Strings(s)
-	return strings.Join(s, "+")
-}
-
-func sameSet(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	as, bs := append([]string{}, a...), append([]string{}, b...)
-	sort.Strings(as)
-	sort.Strings(bs)
-	for i := range as {
-		if as[i] != bs[i] {
-			return false
-		}
-	}
-	return true
-}
-
-// ---------------------------------------------------------------------------
-// the spec/01 §7 oracle
-// ---------------------------------------------------------------------------
-
-// oracle replays a trace's inputs through §7 and returns one expectation
-// per merged decision, keyed by sorted member ids.
-func oracle(tr *rtrace) map[string]rExpect {
-	// entries per world
-	type entry struct {
-		id       string
-		source   string // declared | detected | expected
-		category string
-		paths    []string
-		commit   int
-		petition bool
-		ruled    bool
-	}
-	worlds := map[string][]entry{}
-	var worldOrder []string
-	add := func(w string, e entry) {
-		if _, ok := worlds[w]; !ok {
-			worldOrder = append(worldOrder, w)
-		}
-		worlds[w] = append(worlds[w], e)
-	}
-	for _, d := range tr.Inputs.Decisions {
-		w := d.World
-		if w == "" {
-			w = "w1"
-		}
-		add(w, entry{d.ID, d.Source, d.Category, d.Paths, d.Commit, d.Petition, false})
+		members[d.ID] = traceMember{d.ID, d.Source, d.Category, d.Paths, w, d.Commit, d.Petition, false}
 	}
 	for _, e := range tr.Inputs.Expected {
 		w := e.World
 		if w == "" {
 			w = "w1"
 		}
-		add(w, entry{e.ID, "expected", e.Category, e.Paths, 0, false, e.Ruled})
+		if !categories[e.Category] {
+			v.addf("reconcile-category", where, "expected %s: category %q unknown", e.ID, e.Category)
+		}
+		if _, dup := members[e.ID]; dup {
+			v.addf("reconcile-input-id", where, "input id %q used twice", e.ID)
+		}
+		members[e.ID] = traceMember{e.ID, "expected", e.Category, e.Paths, w, 0, false, e.Ruled}
 	}
-	sort.Strings(worldOrder)
-
-	bypassed := map[string]map[int]bool{}
-	for _, b := range tr.Inputs.Bypassed {
-		if bypassed[b.World] == nil {
-			bypassed[b.World] = map[int]bool{}
+	for _, pair := range tr.Inputs.Contested {
+		if len(pair) != 2 {
+			v.addf("reconcile-contested", where, "contested pair %v must name exactly two ids", pair)
+			continue
 		}
-		for _, c := range b.Commits {
-			bypassed[b.World][c] = true
+		a, aok := members[pair[0]]
+		b, bok := members[pair[1]]
+		if !aok || !bok {
+			v.addf("reconcile-contested", where, "contested pair %v names a non-input id", pair)
+			continue
+		}
+		if a.world == b.world {
+			v.addf("reconcile-contested", where, "contested pair %v is in one world (%s)", pair, a.world)
+		}
+		if a.category != b.category {
+			v.addf("reconcile-contested", where, "contested pair %v crosses categories", pair)
+		}
+	}
+	for _, g := range tr.Inputs.Bypassed {
+		for _, c := range g.Commits {
+			if c < 1 {
+				v.addf("reconcile-bypass", where, "bypassed commit %d < 1", c)
+			}
+		}
+	}
+	for _, g := range tr.Inputs.NoDecisions {
+		for _, c := range g.Commits {
+			if c < 1 {
+				v.addf("reconcile-no-decisions", where, "no_decisions commit %d < 1", c)
+			}
+		}
+	}
+	for wname, wr := range tr.Inputs.Writs {
+		for _, c := range wr.Categories {
+			if !categories[c] {
+				v.addf("reconcile-writ", where, "writ %s names unknown category %q", wname, c)
+			}
+		}
+		if len(wr.Territory) == 0 {
+			v.addf("reconcile-writ", where, "writ %s has empty territory", wname)
 		}
 	}
 
-	out := map[string]rExpect{}
-	memberWorld := map[string]string{} // merged group key -> world
-	for _, w := range worldOrder {
-		ents := worlds[w]
-		// union-find over entries that match under §7.1
-		parent := make([]int, len(ents))
-		for i := range parent {
-			parent[i] = i
+	// expectations: disjoint coverage of every input id
+	expIDs := map[string]bool{}
+	for _, e := range tr.Expect {
+		if len(e.IDs) == 0 {
+			v.addf("reconcile-expect", where, "an expectation has no member ids")
 		}
-		var find func(int) int
-		find = func(i int) int {
-			for parent[i] != i {
-				parent[i] = parent[parent[i]]
-				i = parent[i]
+		for _, id := range e.IDs {
+			if _, ok := members[id]; !ok {
+				v.addf("reconcile-expect", where, "expected member %q is not an input", id)
+				continue
 			}
-			return i
+			if expIDs[id] {
+				v.addf("reconcile-expect", where, "%q appears in two expectations", id)
+			}
+			expIDs[id] = true
 		}
-		union := func(a, b int) {
-			parent[find(a)] = find(b)
+		checkExpectRow(tr, e, members, where, v)
+	}
+	for id := range members {
+		if !expIDs[id] {
+			v.addf("reconcile-expect", where, "input %q has no expectation", id)
 		}
-		match := func(a, b entry) bool {
-			if a.category != b.category {
-				return false
-			}
-			if rPathsOverlap(a.paths, b.paths) {
-				return true
-			}
-			if a.category == "other" {
-				return false // other needs overlapping paths, never empty-match
-			}
-			if len(a.paths) == 0 || len(b.paths) == 0 {
-				// empty-paths clause: no competing entry of this category
-				// with overlapping paths in the same world
-				nonEmpty := a.paths
-				if len(nonEmpty) == 0 {
-					nonEmpty = b.paths
-				}
-				for _, c := range ents {
-					if c.id == a.id || c.id == b.id || c.category != a.category {
-						continue
-					}
-					if len(c.paths) > 0 && rPathsOverlap(c.paths, nonEmpty) {
-						return false
-					}
-				}
-				return true
-			}
-			return false
-		}
-		for i := range ents {
-			for j := i + 1; j < len(ents); j++ {
-				if match(ents[i], ents[j]) {
-					union(i, j)
-				}
-			}
-		}
-		groups := map[int][]entry{}
-		for i, e := range ents {
-			groups[find(i)] = append(groups[find(i)], e)
-		}
-		for _, g := range groups {
-			var ids, srcs []string
-			srcSet := map[string]bool{}
-			var exps []entry
-			var decls, dets []entry
-			for _, m := range g {
-				ids = append(ids, m.id)
-				if !srcSet[m.source] {
-					srcSet[m.source] = true
-					srcs = append(srcs, m.source)
-				}
-				switch m.source {
-				case "expected":
-					exps = append(exps, m)
-				case "declared":
-					decls = append(decls, m)
-				case "detected":
-					dets = append(dets, m)
-				}
-			}
-			sort.Strings(ids)
-			sort.Strings(srcs)
-			e := rExpect{IDs: ids, Sources: srcs}
-			flags := map[string]bool{}
+	}
 
-			// verdict (§7.2)
-			switch {
-			case len(dets) == 0 && len(decls) == 0:
-				e.Verdict = "unanswered"
-			case len(dets) == 0:
-				e.Verdict = "declared-only"
-			default:
-				// any hit on a bypassed commit is undeclared (03 §4.5)
-				onBypass := false
-				earliestHit := 1 << 30
-				for _, h := range dets {
-					if bypassed[w][h.commit] {
-						onBypass = true
-					}
-					if h.commit < earliestHit {
-						earliestHit = h.commit
-					}
-				}
-				timely := false
-				var latestTimely int
-				for _, d := range decls {
-					if d.commit <= earliestHit {
-						timely = true
-						if d.commit > latestTimely {
-							latestTimely = d.commit
-						}
-					}
-				}
-				switch {
-				case onBypass:
-					e.Verdict = "undeclared"
-				case len(decls) == 0:
-					e.Verdict = "undeclared"
-				case timely:
-					e.Verdict = "confirmed"
-				default:
-					e.Verdict = "late"
-					flags["late"] = true
-				}
+	// events: one decision.reconciled per expectation, member ids equal
+	evSets := map[string]int{}
+	prev := 0
+	for _, ev := range tr.Events {
+		if ev.Seq <= prev {
+			v.addf("reconcile-events", where, "event seqs not strictly increasing (%d)", ev.Seq)
+		}
+		prev = ev.Seq
+		key := idSetKey(ev.IDs)
+		if evSets[key] != 0 {
+			v.addf("reconcile-events", where, "two events carry the same member set %v", ev.IDs)
+		}
+		evSets[key] = ev.Seq
+		for _, id := range ev.IDs {
+			if _, ok := members[id]; !ok {
+				v.addf("reconcile-events", where, "event names %q which is not an input", id)
 			}
+		}
+	}
+	expSets := map[string]bool{}
+	for _, e := range tr.Expect {
+		expSets[idSetKey(e.IDs)] = true
+	}
+	for _, ev := range tr.Events {
+		if !expSets[idSetKey(ev.IDs)] {
+			v.addf("reconcile-events", where, "event members %v are no expectation's member set", ev.IDs)
+		}
+	}
+	for key := range expSets {
+		if evSets[key] == 0 {
+			v.addf("reconcile-events", where, "no decision.reconciled event for members %s", key)
+		}
+	}
 
-			// flags (§11.2): unforeseen, outside-writ, ruled
-			if len(exps) == 0 {
-				flags["unforeseen"] = true
-			}
-			// ruled: an expected member settled in the hearing passes its
-			// ruling to the decision, unless the category is a guarantee
-			// (01 §6)
-			ruled := false
-			for _, x := range exps {
-				if x.ruled {
-					ruled = true
-				}
-			}
-			cat := g[0].category
-			if ruled && !guaranteeCategories[cat] {
-				flags["ruled"] = true
-			}
-			// outside-writ: category or any path outside the world's writ
-			wr, hasWrit := tr.Inputs.Writs[w]
-			outside := false
-			if !hasWrit {
-				outside = guaranteeCategories[cat]
+	checkTraceTags(tr, members, where, v)
+}
+
+// checkExpectRow enforces everything §7.2/§7.3 fixes about one merged
+// decision WITHOUT re-running the matcher's grouping: verdict vs member
+// sources, flags vs inputs, queued vs the §7.3 clause list.
+func checkExpectRow(tr *rtrace, e rExpect, members map[string]traceMember, where string, v *violations) {
+	var ms []traceMember
+	srcSet := map[string]bool{}
+	for _, id := range e.IDs {
+		m, ok := members[id]
+		if !ok {
+			continue
+		}
+		ms = append(ms, m)
+		srcSet[m.source] = true
+	}
+	if len(ms) == 0 {
+		return // ids errors already reported
+	}
+	cat := ms[0].category
+	for _, m := range ms[1:] {
+		if m.category != cat {
+			v.addf("reconcile-merge", where, "%v merges categories %q and %q", e.IDs, cat, m.category)
+		}
+		if m.world != ms[0].world {
+			v.addf("reconcile-merge", where, "%v merges worlds %q and %q", e.IDs, ms[0].world, m.world)
+		}
+	}
+	// sources must equal the union of member sources, sorted
+	var wantSrc []string
+	for _, s := range []string{"declared", "detected", "expected"} {
+		if srcSet[s] {
+			wantSrc = append(wantSrc, s)
+		}
+	}
+	if !sameStrings(wantSrc, e.Sources) {
+		v.addf("reconcile-sources", where, "%v: sources %v, member union is %v", e.IDs, e.Sources, wantSrc)
+	}
+	if !reconVerdicts[e.Verdict] {
+		v.addf("reconcile-verdict", where, "verdict %q unknown", e.Verdict)
+	}
+	// verdict vs member sources (§7.2 table)
+	hasDecl, hasDet, hasExp := srcSet["declared"], srcSet["detected"], srcSet["expected"]
+	switch {
+	case !hasDet && !hasDecl:
+		if e.Verdict != "unanswered" {
+			v.addf("reconcile-verdict", where, "%v: expected-only members must be unanswered, not %q", e.IDs, e.Verdict)
+		}
+	case hasDet && !hasDecl:
+		if e.Verdict != "undeclared" {
+			v.addf("reconcile-verdict", where, "%v: detected without declaration must be undeclared, not %q", e.IDs, e.Verdict)
+		}
+	case !hasDet && hasDecl:
+		if e.Verdict != "declared-only" {
+			v.addf("reconcile-verdict", where, "%v: declared without detection must be declared-only, not %q", e.IDs, e.Verdict)
+		}
+	default: // declared + detected present
+		if e.Verdict != "confirmed" && e.Verdict != "undeclared" && e.Verdict != "late" {
+			v.addf("reconcile-verdict", where, "%v: declared+detected must be confirmed/undeclared/late, not %q", e.IDs, e.Verdict)
+		}
+	}
+	flag := map[string]bool{}
+	for _, f := range e.Flags {
+		if !reconFlags[f] {
+			v.addf("reconcile-flag", where, "flag %q unknown", f)
+		}
+		flag[f] = true
+	}
+	// late flag iff late verdict
+	if flag["late"] != (e.Verdict == "late") {
+		v.addf("reconcile-flag", where, "%v: late flag %v disagrees with verdict %q", e.IDs, flag["late"], e.Verdict)
+	}
+	// unforeseen flag iff no expected member
+	if flag["unforeseen"] == hasExp {
+		v.addf("reconcile-flag", where, "%v: unforeseen %v disagrees with expected membership", e.IDs, flag["unforeseen"])
+	}
+	// contested flag iff a member is named in an inputs.contested pair
+	inContest := map[string]bool{}
+	for _, pair := range tr.Inputs.Contested {
+		for _, id := range pair {
+			inContest[id] = true
+		}
+	}
+	memberContested := false
+	for _, m := range ms {
+		if inContest[m.id] {
+			memberContested = true
+		}
+	}
+	if flag["contested"] != memberContested {
+		v.addf("reconcile-flag", where, "%v: contested %v disagrees with inputs.contested", e.IDs, flag["contested"])
+	}
+	// outside-writ flag iff the merged decision is outside its writ:
+	// guarantee categories always, else the member world's writ must
+	// list the category and cover every member path
+	outside := guaranteeCategories[cat]
+	if !outside {
+		if wr, ok := tr.Inputs.Writs[ms[0].world]; ok {
+			if !contains(wr.Categories, cat) {
+				outside = true
 			} else {
-				outside = guaranteeCategories[cat] || !contains(wr.Categories, cat)
-				if !outside {
-					for _, p := range g[0].paths {
+				for _, m := range ms {
+					for _, p := range m.paths {
 						if !writTerritoryCovers(wr.Territory, p) {
 							outside = true
 						}
 					}
 				}
 			}
-			if outside {
-				flags["outside-writ"] = true
-			}
-
-			// queued (§7.3)
-			e.Queued = e.Verdict == "undeclared" || e.Verdict == "late" ||
-				e.Verdict == "unanswered" || flags["outside-writ"]
-			for _, d := range decls {
-				if d.petition {
-					e.Queued = true
-				}
-			}
-
-			for f := range flags {
-				e.Flags = append(e.Flags, f)
-			}
-			sort.Strings(e.Flags)
-			key := expectKey(ids)
-			out[key] = e
-			memberWorld[key] = w
 		}
 	}
-
-	// contested pairs (§7.5): both members queued and flagged
-	for _, pair := range tr.Inputs.Contested {
-		if len(pair) != 2 {
-			continue
+	if flag["outside-writ"] != outside {
+		v.addf("reconcile-flag", where, "%v: outside-writ %v disagrees with category/writ inputs", e.IDs, flag["outside-writ"])
+	}
+	// ruled flag iff a ruled expected member merged and the category is
+	// not a guarantee category (guarantees always get their own ruling)
+	ruled := false
+	for _, m := range ms {
+		if m.ruled {
+			ruled = true
 		}
-		for _, id := range pair {
-			for key, e := range out {
-				for _, mid := range e.IDs {
-					if mid == id {
-						e.Queued = true
-						e.Flags = append(e.Flags, "contested")
-						sort.Strings(e.Flags)
-						out[key] = e
+	}
+	if flag["ruled"] != (ruled && !guaranteeCategories[cat]) {
+		v.addf("reconcile-flag", where, "%v: ruled %v disagrees with expected member rulings", e.IDs, flag["ruled"])
+	}
+	// queued iff any §7.3 clause holds
+	queued := e.Verdict == "undeclared" || e.Verdict == "late" || e.Verdict == "unanswered" ||
+		flag["outside-writ"] || flag["contested"]
+	for _, m := range ms {
+		if m.petition {
+			queued = true
+		}
+	}
+	if e.Queued != queued {
+		v.addf("reconcile-queued", where, "%v: queued %v, §7.3 requires %v", e.IDs, e.Queued, queued)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// tag truthfulness: every tag must be a known name that is true of the
+// trace's own inputs and expectation rows
+// ---------------------------------------------------------------------------
+
+func checkTraceTags(tr *rtrace, members map[string]traceMember, where string, v *violations) {
+	var ins []traceMember
+	for _, m := range members {
+		ins = append(ins, m)
+	}
+	hasExp := func(pred func(rExpect) bool) bool {
+		for _, e := range tr.Expect {
+			if pred(e) {
+				return true
+			}
+		}
+		return false
+	}
+	expFlag := func(name string) func(rExpect) bool {
+		return func(e rExpect) bool {
+			for _, f := range e.Flags {
+				if f == name {
+					return true
+				}
+			}
+			return false
+		}
+	}
+	expVerdict := func(name string) func(rExpect) bool {
+		return func(e rExpect) bool { return e.Verdict == name }
+	}
+	expBoth := func(a, b func(rExpect) bool) func(rExpect) bool {
+		return func(e rExpect) bool { return a(e) && b(e) }
+	}
+	memberCat := func(e rExpect) string {
+		for _, id := range e.IDs {
+			if m, ok := members[id]; ok {
+				return m.category
+			}
+		}
+		return ""
+	}
+	truth := map[string]func() bool{
+		"verdict-confirmed":        func() bool { return hasExp(expVerdict("confirmed")) },
+		"verdict-declared-only":    func() bool { return hasExp(expVerdict("declared-only")) },
+		"verdict-undeclared":       func() bool { return hasExp(expVerdict("undeclared")) },
+		"verdict-late":             func() bool { return hasExp(expVerdict("late")) },
+		"verdict-unanswered":       func() bool { return hasExp(expVerdict("unanswered")) },
+		"unforeseen+confirmed":     func() bool { return hasExp(expBoth(expVerdict("confirmed"), expFlag("unforeseen"))) },
+		"unforeseen+declared-only": func() bool { return hasExp(expBoth(expVerdict("declared-only"), expFlag("unforeseen"))) },
+		"unforeseen+undeclared":    func() bool { return hasExp(expBoth(expVerdict("undeclared"), expFlag("unforeseen"))) },
+		"unforeseen+late":          func() bool { return hasExp(expBoth(expVerdict("late"), expFlag("unforeseen"))) },
+		"foreseen-confirmed": func() bool {
+			return hasExp(func(e rExpect) bool {
+				if e.Verdict != "confirmed" {
+					return false
+				}
+				for _, f := range e.Flags {
+					if f == "unforeseen" {
+						return false
+					}
+				}
+				return true
+			})
+		},
+		"empty-paths": func() bool {
+			for _, m := range ins {
+				if len(m.paths) == 0 {
+					return true
+				}
+			}
+			return false
+		},
+		"empty-paths-competing": func() bool {
+			for _, m := range ins {
+				if len(m.paths) != 0 {
+					continue
+				}
+				others := 0
+				for _, o := range ins {
+					if o.id != m.id && o.category == m.category && o.world == m.world {
+						others++
+					}
+				}
+				if others >= 2 {
+					return true
+				}
+			}
+			return false
+		},
+		"other-overlap": func() bool {
+			return hasExp(func(e rExpect) bool {
+				return memberCat(e) == "other" && len(e.IDs) > 1
+			})
+		},
+		"other-no-overlap": func() bool {
+			// two "other" inputs in the same world that did not merge
+			seen := map[string]int{}
+			for _, e := range tr.Expect {
+				for _, id := range e.IDs {
+					if m, ok := members[id]; ok && m.category == "other" {
+						seen[m.world]++
 					}
 				}
 			}
+			for _, c := range seen {
+				if c >= 2 {
+					return true
+				}
+			}
+			return false
+		},
+		"outside-writ": func() bool { return hasExp(expFlag("outside-writ")) },
+		"outside-writ-guarantee": func() bool {
+			return hasExp(func(e rExpect) bool {
+				if !expFlag("outside-writ")(e) {
+					return false
+				}
+				return guaranteeCategories[memberCat(e)]
+			})
+		},
+		"inside-writ": func() bool {
+			return hasExp(func(e rExpect) bool {
+				for _, f := range e.Flags {
+					if f == "outside-writ" {
+						return false
+					}
+				}
+				return true
+			})
+		},
+		"expected-ruled": func() bool {
+			for _, m := range ins {
+				if m.ruled {
+					return true
+				}
+			}
+			return false
+		},
+		"expected-declared": func() bool {
+			return hasExp(func(e rExpect) bool {
+				var d, x bool
+				for _, s := range e.Sources {
+					if s == "declared" {
+						d = true
+					}
+					if s == "expected" {
+						x = true
+					}
+				}
+				return d && x
+			})
+		},
+		"expected-detected": func() bool {
+			return hasExp(func(e rExpect) bool {
+				var d, x bool
+				for _, s := range e.Sources {
+					if s == "detected" {
+						d = true
+					}
+					if s == "expected" {
+						x = true
+					}
+				}
+				return d && x
+			})
+		},
+		"gate-bypassed": func() bool { return len(tr.Inputs.Bypassed) > 0 },
+		"no-decisions":  func() bool { return len(tr.Inputs.NoDecisions) > 0 },
+		"contested":     func() bool { return hasExp(expFlag("contested")) },
+		"no-contest": func() bool {
+			return len(tr.Inputs.Contested) == 0 && !hasExp(expFlag("contested"))
+		},
+		"petition": func() bool {
+			for _, m := range ins {
+				if m.petition {
+					return true
+				}
+			}
+			return false
+		},
+		"timing": func() bool {
+			return hasExp(func(e rExpect) bool {
+				var d, h bool
+				for _, s := range e.Sources {
+					if s == "declared" {
+						d = true
+					}
+					if s == "detected" {
+						h = true
+					}
+				}
+				return d && h
+			})
+		},
+		"late-one-commit": func() bool {
+			return hasExp(func(e rExpect) bool {
+				if e.Verdict != "late" {
+					return false
+				}
+				var ds, hs []traceMember
+				for _, id := range e.IDs {
+					if m, ok := members[id]; ok {
+						if m.source == "declared" {
+							ds = append(ds, m)
+						}
+						if m.source == "detected" {
+							hs = append(hs, m)
+						}
+					}
+				}
+				for _, d := range ds {
+					for _, h := range hs {
+						if d.world == h.world && d.commit == h.commit+1 {
+							return true
+						}
+					}
+				}
+				return false
+			})
+		},
+		"merge": func() bool {
+			return hasExp(func(e rExpect) bool { return len(e.IDs) >= 2 })
+		},
+		"three-way": func() bool {
+			return hasExp(func(e rExpect) bool { return len(e.IDs) >= 3 })
+		},
+		"per-world": func() bool {
+			w := map[string]bool{}
+			for _, m := range ins {
+				w[m.world] = true
+			}
+			return len(w) >= 2
+		},
+		"glob": func() bool {
+			for _, m := range ins {
+				for _, p := range m.paths {
+					if strings.Contains(p, "*") {
+						return true
+					}
+				}
+			}
+			return false
+		},
+		"dir-containment": func() bool {
+			for _, m := range ins {
+				for _, o := range ins {
+					if m.id == o.id || m.category != o.category || m.world != o.world {
+						continue
+					}
+					for _, p := range m.paths {
+						for _, q := range o.paths {
+							if dirContains(p, q) || dirContains(q, p) {
+								return true
+							}
+						}
+					}
+				}
+			}
+			return false
+		},
+		"disjoint-paths": func() bool {
+			for _, m := range ins {
+				for _, o := range ins {
+					if m.id == o.id || m.category != o.category || m.world != o.world {
+						continue
+					}
+					if len(m.paths) > 0 && len(o.paths) > 0 && !rPathsOverlap(m.paths, o.paths) {
+						return true
+					}
+				}
+			}
+			return false
+		},
+		"no-cross-category": func() bool {
+			c := map[string]bool{}
+			for _, m := range ins {
+				c[m.category] = true
+			}
+			return len(c) >= 2
+		},
+		"no-detector-category": func() bool {
+			return hasExp(func(e rExpect) bool {
+				c := memberCat(e)
+				return c == "behaviour" || c == "structure"
+			})
+		},
+		"multi-commit": func() bool {
+			seen := map[string]map[int]bool{}
+			for _, m := range ins {
+				if m.source == "expected" {
+					continue
+				}
+				if seen[m.world] == nil {
+					seen[m.world] = map[int]bool{}
+				}
+				seen[m.world][m.commit] = true
+			}
+			for _, cs := range seen {
+				if len(cs) >= 2 {
+					return true
+				}
+			}
+			return false
+		},
+		"multi-category": func() bool {
+			c := map[string]bool{}
+			n := 0
+			for _, m := range ins {
+				if m.source == "expected" {
+					continue
+				}
+				c[m.category] = true
+				n++
+			}
+			return n >= 2 && len(c) >= 2
+		},
+	}
+	for _, tag := range tr.Tags {
+		if !knownTags[tag] {
+			v.addf("reconcile-tag", where, "tag %q is not a known coverage tag", tag)
+			continue
+		}
+		if ok := truth[tag]; ok != nil && !ok() {
+			v.addf("reconcile-tag", where, "tag %q is not true of this trace", tag)
 		}
 	}
-	_ = memberWorld
-	return out
+}
+
+func idSetKey(ids []string) string {
+	s := append([]string{}, ids...)
+	sort.Strings(s)
+	return strings.Join(s, "+")
+}
+
+func sameStrings(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 // rPathsOverlap: §7.1 — any common path, directory containment, or glob

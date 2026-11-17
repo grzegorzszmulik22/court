@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc18.ts": {
-      "before": "// note\nexport const x = 1;\n",
-      "after": "// not a suppression\nexport const x = 1;\n"
+      "before": "export function s(x: number) { return x; }\n",
+      "after": "export function s(x: string) { return x; }\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-shape-b",
-  "note": "comment-shape-b"
+  "near_miss": "concrete-kept-b",
+  "note": "concrete-kept-b"
 }

@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/fetch.ts": {
-      "before": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: FetchError) {\n    throw e;\n  }\n}\n",
-      "after": "export function fetch_() {\n  try {\n    return get();\n  } catch (e: unknown) {\n    throw e;\n  }\n}\n"
+      "before": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n    throw e;\n  }\n}\n",
+      "after": "export async function fetch_() {\n  try {\n    return await get();\n  } catch (e) {\n  }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
+      "subkind": "swallowed",
       "path": "src/fetch.ts",
       "lines": [
         4,
-        4
+        5
       ],
       "side": "after",
-      "evidence": "catch (e: unknown)",
-      "rule": "dt7-typescript-broadened"
+      "evidence": "catch (e) {\n  }",
+      "rule": "dt7-typescript-swallowed"
     }
   ]
 }

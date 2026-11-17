@@ -10,6 +10,5 @@
   },
   "expect": [],
   "near_miss": "threshold-tightened",
-  "note": "threshold-tightened",
-  "fp_kind": "changed_expectation"
+  "note": "threshold-tightened"
 }

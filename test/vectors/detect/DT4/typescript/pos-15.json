@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('perf', () => {\n  expect(ms()).toBeLessThan(100);\n});\n",
-      "after": "test('perf', () => {\n  expect(ms()).toBeLessThan(500);\n});\n"
+      "before": "test('x', () => {\n  expect(x()).toBe(1);\n  expect(x()).not.toBe(0);\n});\n",
+      "after": "test('x', () => {\n  expect(x()).toBe(1);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "loosened_threshold",
+      "subkind": "fewer_assertions",
       "path": "src/cart.test.ts",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
-      "side": "after",
-      "evidence": "toBeLessThan(500)",
-      "rule": "dt4-typescript-loosened_threshold"
+      "side": "before",
+      "evidence": "expect(x()).not.toBe(0);",
+      "rule": "dt4-typescript-fewer_assertions"
     }
   ]
 }

@@ -15,11 +15,11 @@
       "subkind": "fewer_assertions",
       "path": "tests/test_shop.py",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
-      "side": "after",
-      "evidence": "def test_total():",
+      "side": "before",
+      "evidence": "assert total() > 0",
       "rule": "dt4-python-fewer_assertions"
     }
   ]

@@ -1,7 +1,7 @@
-goal: "extend the files service per roadmap files-claim0"
+goal: "extend the files service per roadmap files-roadmap-158"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "files-claim0"
+template: "files-roadmap-158"
 allowed_hosts: ["api.internal.example"]

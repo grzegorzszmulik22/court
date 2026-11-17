@@ -5,10 +5,10 @@
   "files": {
     "svc/client.py": {
       "before": "def c():\n    pass\n",
-      "after": "U = \"http://localhost:8080\"\n\ndef c():\n    pass\n"
+      "after": "V = \"1.2.3\"\n\ndef c():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "localhost",
-  "note": "localhost"
+  "near_miss": "version-string",
+  "note": "version-string"
 }

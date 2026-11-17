@@ -3,9 +3,13 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "other/x2.go": {
+    "shop/extra.py": {
       "before": "",
       "after": "x = 1\n"
+    },
+    "shop/cart.py": {
+      "before": "x = 1\n",
+      "after": "x = 1\ny\n"
     }
   },
   "commission": {
@@ -19,7 +23,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "other/x2.go",
+      "path": "shop/extra.py",
       "lines": [
         1,
         1

@@ -7,9 +7,10 @@ agents:
       - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 59: wording refreshed.\n"}
       - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 59: clamp bounds are inclusive.\n"}
       - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 59 runs extra sync'\n"}
+      - no_decisions: {}
       - commit: {message: "poll: routine refresh"}
       - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}
-      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
       - commit: {message: "poll: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

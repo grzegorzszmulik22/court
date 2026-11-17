@@ -16,6 +16,19 @@
     {
       "detector": "DT1",
       "category": "dependency",
+      "subkind": "added",
+      "path": "go.mod",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "github.com/sirupsen/logrus v1.9.3",
+      "rule": "dt1-go-manifest-added"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
       "subkind": "lock-mismatch",
       "path": "go.mod",
       "lines": [

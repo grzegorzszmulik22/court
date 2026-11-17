@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0004_add_index.sql": {
-      "before": "",
-      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
+    "migrations/0001_init.sql": {
+      "before": "-- create orders\nCREATE TABLE orders (id INT);\n",
+      "after": "-- create orders; see ticket 7\nCREATE TABLE orders (id INT);\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0004_add_index.sql",
+      "path": "migrations/0001_init.sql",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents",
-      "rule": "dt2-go-new-migration"
+      "evidence": "-- create orders; see ticket 7",
+      "rule": "dt2-go-changed-migration"
     }
-  ]
+  ],
+  "note": "comment edit on a file under a migration directory"
 }

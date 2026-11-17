@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "src/api.ts": {
-      "before": "export function total(cart: Cart): number {\n  return cart.sum;\n}\n",
-      "after": "export function total(cart: Cart): number {\n  return cart.sum;\n}\n\nexport function refund(cart: Cart): number {\n  return cart.sum;\n}\n"
+    "src/types.ts": {
+      "before": "export interface Cart {\n  sum: number;\n}\n",
+      "after": "export interface Cart {\n  sum: number;\n  tax: number;\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "src/api.ts",
+      "subkind": "changed",
+      "path": "src/types.ts",
       "lines": [
-        5,
-        5
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "export function refund(cart: Cart)",
-      "rule": "dt3-ts-export-added"
+      "evidence": "export interface Cart",
+      "rule": "dt3-ts-export-changed"
     }
   ]
 }

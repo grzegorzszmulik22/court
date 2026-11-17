@@ -16,10 +16,10 @@
       "path": "shop/shop_test.go",
       "lines": [
         3,
-        3
+        5
       ],
       "side": "before",
-      "evidence": "func TestTotal(t *testing.T)",
+      "evidence": "func TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}",
       "rule": "dt4-go-deleted_test"
     }
   ]

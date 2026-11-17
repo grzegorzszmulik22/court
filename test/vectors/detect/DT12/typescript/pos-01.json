@@ -3,7 +3,7 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "other/x.go": {
+    "src/extra.ts": {
       "before": "",
       "after": "export const x = 1;\n"
     },
@@ -23,7 +23,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "other/x.go",
+      "path": "src/extra.ts",
       "lines": [
         1,
         1

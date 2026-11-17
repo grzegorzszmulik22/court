@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "api/service.py": {
-      "before": "S = \"def x():\"\n",
-      "after": "S = \"def y():\"\n"
+      "before": "import os\n",
+      "after": "import os, sys\n"
     }
   },
   "expect": [],
-  "near_miss": "string-def",
-  "note": "string-def"
+  "near_miss": "import-change",
+  "note": "import-change"
 }

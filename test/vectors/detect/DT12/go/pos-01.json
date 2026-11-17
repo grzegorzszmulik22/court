@@ -3,7 +3,7 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "other/x.go": {
+    "shop/extra.go": {
       "before": "",
       "after": "package shop\n"
     },
@@ -23,7 +23,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "unplanned-file",
-      "path": "other/x.go",
+      "path": "shop/extra.go",
       "lines": [
         1,
         1

@@ -3,12 +3,12 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "docs/db.md": {
-      "before": "# db\n",
-      "after": "# db\n\nTRUNCATE planned\n"
+    "db/seed.sql": {
+      "before": "",
+      "after": "INSERT INTO t VALUES (1);\n"
     }
   },
   "expect": [],
-  "near_miss": "truncate-in-doc",
-  "note": "truncate-in-doc"
+  "near_miss": "insert-only",
+  "note": "insert-only"
 }

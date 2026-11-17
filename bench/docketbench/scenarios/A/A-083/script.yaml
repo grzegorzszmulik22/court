@@ -4,12 +4,12 @@ agents:
     steps:
       - backbrief:
           plan_files: ["ledger/**", "docs/**"]
-      - declare: {category: deletion, paths: ["data/seed.csv"], question: "allow the deletion change?", chosen: "yes"}
       - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\nMaintenance note 23: wording refreshed.\n"}
       - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 23) used in DocketBench fixtures.\n"}
-      - edit: {path: data/seed.csv, delete: true}
+      - declare: {category: other, paths: ["docs/guide.md", "README.md"], question: "routine maintenance edits?", chosen: "yes"}
       - commit: {message: "ledger: routine refresh"}
-      - edit: {path: README.md, write: "# ledger\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
+      - no_decisions: {}
       - commit: {message: "ledger: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

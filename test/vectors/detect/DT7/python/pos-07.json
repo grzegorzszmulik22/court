@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return None\n"
+      "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        pass\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         5
       ],
       "side": "after",
-      "evidence": "return None",
+      "evidence": "pass",
       "rule": "dt7-python-swallowed"
     }
   ]

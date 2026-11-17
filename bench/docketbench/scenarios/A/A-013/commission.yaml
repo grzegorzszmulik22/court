@@ -1,7 +1,7 @@
-goal: "extend the ledger service per roadmap ledger-failure-handling"
+goal: "extend the ledger service per roadmap ledger-roadmap-013"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "ledger-failure-handling"
+template: "ledger-roadmap-013"
 allowed_hosts: ["api.internal.example"]

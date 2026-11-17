@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0016_add_index.py": {
+    "alembic/versions/0013_add_index.py": {
       "before": "",
       "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0016_add_index.py",
+      "path": "alembic/versions/0013_add_index.py",
       "lines": [
         1,
         1

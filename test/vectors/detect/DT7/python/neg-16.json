@@ -5,10 +5,10 @@
   "files": {
     "svc/fetch.py": {
       "before": "def fetch():\n    return get()\n",
-      "after": "# no swallowing\ndef fetch():\n    return get()\n"
+      "after": "def fetch():\n    try:\n        return get()\n    finally:\n        close()\n"
     }
   },
   "expect": [],
-  "near_miss": "comment",
-  "note": "comment"
+  "near_miss": "finally-only-b",
+  "note": "finally-only-b"
 }

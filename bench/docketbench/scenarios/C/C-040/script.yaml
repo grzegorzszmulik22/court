@@ -11,9 +11,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 20: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 20) used in DocketBench fixtures.\n"}
-      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_a ON vault_items (name);\n"}
+      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 20: clamp bounds are inclusive.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 520\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -22,9 +23,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 20: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 20) used in DocketBench fixtures.\n"}
-      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_a ON vault_items (name);\n"}
+      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 20: clamp bounds are inclusive.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 520\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

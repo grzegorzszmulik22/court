@@ -8,6 +8,7 @@ agents:
             - {question: "extend the items schema?", category: schema, paths: ["migrations/009_extend.sql"]}
       - edit: {path: docs/guide.md, write: "# files guide\n\nSee README for usage.\n\nMaintenance note 38: wording refreshed.\n"}
       - edit: {path: README.md, write: "# files\n\nA small Go service (rev 38) used in DocketBench fixtures.\n"}
+      - no_decisions: {}
       - commit: {message: "files: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

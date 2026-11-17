@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/token/mint.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "config/permission.yml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "src/token/mint.ts",
+      "path": "config/permission.yml",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "return false;",
+      "evidence": "a: 2",
       "rule": "dt9-typescript-touched"
     }
-  ]
+  ],
+  "note": "filename minus extension is a matching segment"
 }

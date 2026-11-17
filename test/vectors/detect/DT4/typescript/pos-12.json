@@ -3,9 +3,9 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/cart.test.ts": {
-      "before": "it('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "it.only('total', () => {\n  expect(total()).toBe(1);\n});\n"
+    "src/bench.test.ts": {
+      "before": "test('bench', () => {\n  expect(run()).toBeDefined();\n});\n",
+      "after": "test.skip('bench', () => {\n  expect(run()).toBeDefined();\n});\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT4",
       "category": "test-strength",
       "subkind": "skip_or_focus",
-      "path": "src/cart.test.ts",
+      "path": "src/bench.test.ts",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "it.only('total'",
+      "evidence": "test.skip('bench'",
       "rule": "dt4-typescript-skip_or_focus"
     }
   ]

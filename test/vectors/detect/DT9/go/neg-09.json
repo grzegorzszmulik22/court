@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "docs/session.md": {
-      "before": "x\n",
-      "after": "y\n"
+    "pkg/crypto_test.go": {
+      "before": "package auth\n\nfunc Check() bool { return true }\n",
+      "after": "package auth\n\nfunc Check() bool { return false }\n"
     }
   },
   "expect": [],
-  "near_miss": "session-docs",
-  "note": "session-docs"
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
 }

@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0006_add_index.sql": {
+    "migrations/0003_add_index.sql": {
       "before": "",
       "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0006_add_index.sql",
+      "path": "migrations/0003_add_index.sql",
       "lines": [
         1,
         1

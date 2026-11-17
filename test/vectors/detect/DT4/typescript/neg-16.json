@@ -3,13 +3,13 @@
   "detector": "DT4",
   "language": "typescript",
   "files": {
-    "src/t5.test.ts": {
-      "before": "test('x', () => { expect(x()).toBe(1); });\n",
-      "after": "test('x', () => { expect(x()).toBe(2); });\n"
+    "src/shop.test.ts": {
+      "before": "test('m', () => {\n  const got = calc();\n  expect(got).toBe(3);\n});\n",
+      "after": "test('m', () => {\n  const got = calcFast();\n  expect(got).toBe(3);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter-fill",
+  "near_miss": "fp-changed_expectation",
   "fp_kind": "changed_expectation",
-  "note": "expectation-stricter-fill"
+  "note": "fp-changed_expectation"
 }

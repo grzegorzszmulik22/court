@@ -3,24 +3,25 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "deploy/policy.json": {
-      "before": "{\n  \"allow\": [\"read\"]\n}\n",
-      "after": "{\n  \"allow\": [\"*\"]\n}\n"
+    "docs/session.md": {
+      "before": "session notes\n",
+      "after": "session notes\nupdated\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "deploy/policy.json",
+      "subkind": "touched",
+      "path": "docs/session.md",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "\"allow\": [\"*\"]",
-      "rule": "dt9-go-widened"
+      "evidence": "updated",
+      "rule": "dt9-go-touched"
     }
-  ]
+  ],
+  "note": "filename minus extension is a matching segment"
 }

@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc12.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "/** takes any number */\nexport function s(x: number) { return x; }\n"
+      "before": "export function s(x: any) { return x; }\n",
+      "after": "export function s(x: number) { return x; }\n"
     }
   },
   "expect": [],
-  "near_miss": "any-in-doc-b",
-  "note": "any-in-doc-b"
+  "near_miss": "narrowed-b",
+  "note": "narrowed-b"
 }

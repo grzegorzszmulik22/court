@@ -3,10 +3,10 @@
   variant: differing-choice
   category: structure
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on poll/util.go (maxBatch19 = 200 vs maxBatch19 = 50)."
+  description: "Two sibling worlds chose differently on poll/util.go (maxBatch = 200 vs minBatch = 5)."
   keywords: ["contest-19", "sibling-drift", "world-split"]
   evidence:
     - {world: "w1", path: "poll/util.go", lines: [13, 13]}
-    - {world: "w2", path: "poll/util.go", lines: [13, 13]}
+    - {world: "w2", path: "poll/util.go", lines: [14, 14]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

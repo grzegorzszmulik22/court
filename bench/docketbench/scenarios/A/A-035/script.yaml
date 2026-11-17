@@ -8,6 +8,7 @@ agents:
             - {question: "extend the deploy script?", category: territory, paths: ["scripts/deploy.sh"]}
       - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\nMaintenance note 35: wording refreshed.\n"}
       - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// rev 35: clamp bounds are inclusive.\n"}
+      - no_decisions: {}
       - commit: {message: "scheduler: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

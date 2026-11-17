@@ -3,21 +3,12 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "db/q.sql": {
+      "before": "-- drop later\n",
+      "after": "-- drop later or keep\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "rm x.tmp"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [],
-  "near_miss": "rm-file",
-  "note": "rm-file"
+  "near_miss": "drop-comment",
+  "note": "drop-comment"
 }

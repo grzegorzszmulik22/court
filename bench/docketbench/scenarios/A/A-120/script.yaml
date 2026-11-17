@@ -9,7 +9,8 @@ agents:
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 560\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: ops/runbook.md, write: "# runbook\n\nOperational notes added 60.\n"}
       - commit: {message: "vault: routine refresh"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
+      - no_decisions: {}
       - commit: {message: "vault: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

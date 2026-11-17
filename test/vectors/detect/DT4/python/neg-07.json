@@ -4,12 +4,11 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "",
-      "after": "def test_new():\n    pass\n"
+      "before": "def helper():\n    return 1\n\ndef test_t():\n    pass\n",
+      "after": "def helper():\n    return 2\n\ndef test_t():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "test-added",
-  "note": "test-added",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "non-test-func",
+  "note": "non-test-func"
 }

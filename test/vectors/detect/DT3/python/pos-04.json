@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/models.py": {
-      "before": "class Cart:\n    pass\n",
-      "after": "class Cart:\n    def total(self):\n        return 0\n"
+    "api/service.py": {
+      "before": "def ship(cart):\n    pass\n",
+      "after": "def ship(cart, carrier):\n    pass\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/models.py",
+      "path": "api/service.py",
       "lines": [
         1,
         1
       ],
       "side": "after",
-      "evidence": "class Cart:",
+      "evidence": "def ship(cart, carrier):",
       "rule": "dt3-python-toplevel-changed"
     }
   ]

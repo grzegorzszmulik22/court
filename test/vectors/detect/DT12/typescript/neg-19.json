@@ -6,6 +6,10 @@
     "src/cart.ts": {
       "before": "",
       "after": "export const x = 1;\n"
+    },
+    "src/extra.ts": {
+      "before": "seed\n",
+      "after": "seed\n"
     }
   },
   "commission": {

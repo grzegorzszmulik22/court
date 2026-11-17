@@ -4,12 +4,11 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test('totals', () => {\n  expect(total()).toBe(1);\n});\n"
+      "before": "test('t', () => {\n  const x = setup(1);\n  expect(x).toBe(1);\n});\n",
+      "after": "test('t', () => {\n  const x = setup(2);\n  expect(x).toBe(1);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "rename-keep",
-  "fp_kind": "changed_expectation",
-  "note": "rename-keep"
+  "near_miss": "setup-edit",
+  "note": "setup-edit"
 }

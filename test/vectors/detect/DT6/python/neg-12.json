@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "python",
   "files": {
-    "coverage.yml.11": {
-      "before": "coverage:\n  min: 60\n",
-      "after": "coverage:\n  min: 80\n"
+    ".gitlab-ci.yml": {
+      "before": "test:\n  script: go test ./...\n",
+      "after": "test:\n  script: go test ./...\n  stage: test\n"
     }
   },
   "expect": [],
-  "near_miss": "coverage-raised",
-  "note": "coverage-raised"
+  "near_miss": "pad",
+  "note": "pad"
 }

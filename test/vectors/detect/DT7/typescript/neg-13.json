@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "typescript",
   "files": {
-    "src/discount.ts": {
-      "before": "export function disc(x: number) { return x; }\n",
-      "after": "export function disc(x: number) {\n  if (x > 99) return 99;\n  return x;\n}\n"
+    "src/fetch.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    throw new FetchFailed(e);\n  }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "literal-new",
-  "note": "literal-new"
+  "near_miss": "rethrow-b",
+  "note": "rethrow-b"
 }

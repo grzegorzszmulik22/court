@@ -5,10 +5,10 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const u = \"http://localhost:8080\";\n\nexport function c() {}\n"
+      "after": "const v = \"1.2.3\";\n\nexport function c() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "localhost",
-  "note": "localhost"
+  "near_miss": "version-string",
+  "note": "version-string"
 }

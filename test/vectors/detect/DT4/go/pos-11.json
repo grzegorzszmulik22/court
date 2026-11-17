@@ -3,24 +3,25 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "cart/cart_test.go": {
+    "shop/shop_test.go": {
       "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tt.Skip(\"flaky\")\n\tif Total() != 1 { t.Fatal() }\n}\n"
+      "after": "package shop\n\nfunc TestTotals(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "cart/cart_test.go",
+      "subkind": "deleted_test",
+      "path": "shop/shop_test.go",
       "lines": [
-        4,
-        4
+        3,
+        5
       ],
-      "side": "after",
-      "evidence": "t.Skip(\"flaky\")",
-      "rule": "dt4-go-skip_or_focus"
+      "side": "before",
+      "evidence": "func TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}",
+      "rule": "dt4-go-deleted_test"
     }
-  ]
+  ],
+  "note": "a renamed test removes the function under its old name"
 }

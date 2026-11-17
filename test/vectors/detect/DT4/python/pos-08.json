@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_shop.py": {
-      "before": "def test_errs():\n    assert errs() == 0\n",
-      "after": "def test_errs():\n    assert errs() <= 3\n"
+      "before": "def test_total():\n    assert total() == 1\n",
+      "after": "def test_total():\n    assert total() == 2\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "loosened_threshold",
+      "subkind": "changed_expectation",
       "path": "tests/test_shop.py",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "errs() <= 3",
-      "rule": "dt4-python-loosened_threshold"
+      "evidence": "total() == 2",
+      "rule": "dt4-python-changed_expectation"
     }
   ]
 }

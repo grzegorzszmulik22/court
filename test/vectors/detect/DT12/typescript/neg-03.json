@@ -3,8 +3,12 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "newpkg/x.go": {
+    "src/extra.ts": {
       "before": "",
+      "after": "export const x = 1;\n"
+    },
+    "src/cart.ts": {
+      "before": "export const x = 1;\n",
       "after": "export const x = 1;\n"
     }
   },

@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "api/service.go": {
-      "before": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 1 }\n",
-      "after": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 2 }\n"
+      "before": "package api\n\nfunc Total(c int) int {\n\tx := c\n\treturn x\n}\n",
+      "after": "package api\n\nfunc Total(c int) int {\n\tx := c + 1\n\treturn x\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "method-body",
-  "note": "method-body"
+  "near_miss": "local-var",
+  "note": "local-var"
 }

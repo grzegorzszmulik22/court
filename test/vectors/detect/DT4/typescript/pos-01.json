@@ -16,10 +16,10 @@
       "path": "src/shop.test.ts",
       "lines": [
         1,
-        1
+        3
       ],
       "side": "before",
-      "evidence": "test('total'",
+      "evidence": "test('total', () => {\n  expect(total()).toBe(1);\n});",
       "rule": "dt4-typescript-deleted_test"
     }
   ]

@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "pkg/acl/acl.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "config/permission.yml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "pkg/acl/acl.py",
+      "path": "config/permission.yml",
       "lines": [
-        2,
-        2
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "return False",
+      "evidence": "a: 2",
       "rule": "dt9-python-touched"
     }
-  ]
+  ],
+  "note": "filename minus extension is a matching segment"
 }

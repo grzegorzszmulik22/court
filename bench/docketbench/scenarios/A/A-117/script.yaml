@@ -9,7 +9,8 @@ agents:
       - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 57) used in DocketBench fixtures.\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: chat\n  version: 1.0.0\npaths:\n  /chat/items:\n    get:\n      summary: list items\n  /chat/items/{id}:\n    delete:\n      summary: remove item 57\n"}
       - commit: {message: "chat: routine refresh"}
-      - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 99) used in DocketBench fixtures.\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
+      - no_decisions: {}
       - commit: {message: "chat: follow-up docs"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

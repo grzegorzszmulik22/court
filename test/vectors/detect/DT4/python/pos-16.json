@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_errs():\n    assert errs() == 0\n",
-      "after": "def test_errs():\n    assert errs() <= 3\n"
+      "before": "def test_x():\n    assert x() == 7\n",
+      "after": "def test_x():\n    assert x() == 8\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "loosened_threshold",
+      "subkind": "changed_expectation",
       "path": "tests/test_cart.py",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "errs() <= 3",
-      "rule": "dt4-python-loosened_threshold"
+      "evidence": "x() == 8",
+      "rule": "dt4-python-changed_expectation"
     }
   ]
 }

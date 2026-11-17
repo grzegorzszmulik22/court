@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc19.go": {
-      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
-      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
+      "before": "package calc\n\nfunc s(x interface{}) {}\n",
+      "after": "package calc\n\nfunc s(x interface{}) { _ = x }\n"
     }
   },
   "expect": [],
-  "near_miss": "build-tag-b",
-  "note": "build-tag-b"
+  "near_miss": "interface-already-b",
+  "note": "interface-already-b"
 }

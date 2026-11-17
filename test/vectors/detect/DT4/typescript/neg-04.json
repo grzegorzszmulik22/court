@@ -5,11 +5,11 @@
   "files": {
     "src/shop.test.ts": {
       "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(2);\n});\n"
+      "after": "test('total', () => {\n  expect(total()).toBe(1);\n  expect(total()).toBeGreaterThan(0);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter",
-  "fp_kind": "changed_expectation",
-  "note": "expectation-stricter"
+  "near_miss": "assertion-added",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-added"
 }

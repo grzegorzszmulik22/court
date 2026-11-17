@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc17.go": {
-      "before": "package calc\n\nvar s = \"x\"\n",
-      "after": "package calc\n\nvar s = \"any\"\n"
+      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
+      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "string-any-b",
-  "note": "string-any-b"
+  "near_miss": "build-tag-b",
+  "note": "build-tag-b"
 }

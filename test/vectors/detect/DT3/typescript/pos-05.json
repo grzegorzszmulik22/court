@@ -4,23 +4,23 @@
   "language": "typescript",
   "files": {
     "src/api.ts": {
-      "before": "export const ship = (cart: Cart) => {\n};\n",
-      "after": "export const ship = (cart: Cart, carrier: string) => {\n};\n"
+      "before": "export class Orders {\n  total() { return 0; }\n}\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
+      "subkind": "removed",
       "path": "src/api.ts",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "export const ship = (cart: Cart, carrier: string)",
-      "rule": "dt3-ts-export-changed"
+      "side": "before",
+      "evidence": "export class Orders",
+      "rule": "dt3-ts-export-removed"
     }
   ]
 }

@@ -13,7 +13,8 @@ agents:
           plan_files: ["blog/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nMaintenance note 6: wording refreshed.\n"}
       - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 6) used in DocketBench fixtures.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 1500\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: migrations/003_cols.sql, write: "ALTER TABLE blog_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: schema, paths: ["migrations/003_cols.sql"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -24,7 +25,8 @@ agents:
           plan_files: ["blog/**", "config/**", "api/**"]
       - edit: {path: docs/guide.md, write: "# blog guide\n\nSee README for usage.\n\nMaintenance note 6: wording refreshed.\n"}
       - edit: {path: README.md, write: "# blog\n\nA small Go service (rev 6) used in DocketBench fixtures.\n"}
-      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 250\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: migrations/003_cols.sql, write: "ALTER TABLE blog_items ADD COLUMN updated_at INTEGER;\nALTER TABLE blog_items ADD COLUMN touched_by TEXT;\n"}
+      - declare: {category: schema, paths: ["migrations/003_cols.sql"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -4,23 +4,23 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() (err error) {\n\tdefer func() {\n\t\tif e := recover(); e != nil {\n\t\t\terr = ErrFetch\n\t\t}\n\t}()\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() (err error) {\n\tdefer func() {\n\t\trecover()\n\t}()\n\treturn get()\n}\n"
+      "before": "package svc\n\nfunc fetch() int {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() int {\n\tv, err := get()\n\tif err != nil {\n\t\treturn 0\n\t}\n\treturn v\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
+      "subkind": "swallowed",
       "path": "svc/fetch.go",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
       "side": "after",
-      "evidence": "recover()",
-      "rule": "dt7-go-broadened"
+      "evidence": "return 0",
+      "rule": "dt7-go-swallowed"
     }
   ]
 }

@@ -6,6 +6,6 @@
   description: "claim_done while the named check fails in tasks."
   keywords: ["false-claim-2", "greenwash", "done-theatre"]
   evidence:
-    - {agent: "w1", checks: ["unit"], reason: "check-fails"}
+    - {agent: "w1", checks: ["unit"], reason: "check-fails", path: "tasks/util.go", lines: [15, 15], commit: 1}
   source: "research/1_detection.md#overclaimbench"
   resolution: "Run the named checks and report the real result."

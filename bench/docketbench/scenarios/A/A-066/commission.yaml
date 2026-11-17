@@ -1,7 +1,7 @@
-goal: "extend the blog service per roadmap blog-type-strength"
+goal: "extend the blog service per roadmap blog-roadmap-006"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "blog-type-strength"
+template: "blog-roadmap-006"
 allowed_hosts: ["api.internal.example"]

@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "docs/api.md": {
-      "before": "# api\n",
-      "after": "# api docs\n"
+    "api/order.proto.md": {
+      "before": "# proto notes\n\nfields: id\n",
+      "after": "# proto notes\n\nfields: id, total\n"
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "proto-lookalike",
+  "note": "proto-lookalike"
 }

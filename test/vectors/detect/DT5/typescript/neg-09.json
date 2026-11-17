@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc.ts": {
-      "before": "// note\nexport const x = 1;\n",
-      "after": "// not a suppression\nexport const x = 1;\n"
+      "before": "export const c = { x: 1 };\n",
+      "after": "export const c = { x: 1 } satisfies Record<string, number>;\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-shape",
-  "note": "comment-shape"
+  "near_miss": "satisfies",
+  "note": "satisfies"
 }

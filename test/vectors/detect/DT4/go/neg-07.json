@@ -3,13 +3,12 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "shop/shop_test.go": {
-      "before": "package shop\n",
-      "after": "package shop\n\nfunc TestNew(t *testing.T) {}\n"
+    "shop/shop.go": {
+      "before": "package shop\n\nfunc total() int { return 1 }\n",
+      "after": "package shop\n\nfunc total() int { return 2 }\n"
     }
   },
   "expect": [],
-  "near_miss": "test-added",
-  "note": "test-added",
-  "fp_kind": "fewer_assertions"
+  "near_miss": "non-test-func",
+  "note": "non-test-func"
 }

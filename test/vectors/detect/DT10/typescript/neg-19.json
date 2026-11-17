@@ -3,12 +3,12 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "DELETE FROM t WHERE a = 1;\nUPDATE t SET x = 2;\n"
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
     }
   },
   "expect": [],
-  "near_miss": "delete-update",
-  "note": "delete-update"
+  "near_miss": "unrelated",
+  "note": "unrelated"
 }

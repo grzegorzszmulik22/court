@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc.py": {
-      "before": "x = compute()\n",
-      "after": "x = cast(int, compute())\n"
+      "before": "def s():\n    return 1\n",
+      "after": "def s():\n    return None\n"
     }
   },
   "expect": [],
-  "near_miss": "cast",
-  "note": "cast"
+  "near_miss": "return-none",
+  "note": "return-none"
 }

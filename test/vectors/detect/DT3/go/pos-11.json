@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
+    "api/schema.graphql": {
+      "before": "type Query {\n  order(id: ID!): Order\n}\n",
+      "after": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "subkind": "added",
+      "path": "api/schema.graphql",
       "lines": [
         3,
         3
       ],
-      "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "side": "after",
+      "evidence": "orders: [Order!]!",
+      "rule": "dt3-contract-graphql"
     }
   ]
 }

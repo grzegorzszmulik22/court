@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "api/service.py": {
-      "before": "# def old():\n#     pass\ndef t():\n    pass\n",
-      "after": "def t():\n    pass\n"
+      "before": "def total(cart):\n    return cart.sum\n",
+      "after": "def total(cart):\n    return cart.sum\n\ndef refund(cart):\n    return cart.sum\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-def",
-  "note": "comment-def"
+  "near_miss": "added-def",
+  "note": "added-def"
 }

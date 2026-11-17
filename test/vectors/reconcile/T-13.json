@@ -1,6 +1,6 @@
 {
   "id": "T-13",
-  "comment": "Empty declaration vs hit, where a THIRD entry of the same category has overlapping paths elsewhere: blocked -> undeclared.",
+  "comment": "Empty declaration vs hit where a competing entry of the same category overlaps the hit's paths: the merged {d2,h1} occupies pkg/go.mod, so the empty clause is blocked for d1 -> d1 declared-only, d2+h1 confirmed.",
   "inputs": {
     "expected": [],
     "decisions": [

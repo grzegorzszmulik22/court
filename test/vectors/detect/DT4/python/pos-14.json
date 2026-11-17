@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 3\n",
-      "after": "def test_total():\n    assert total() == 4\n"
+      "before": "def test_x():\n    pass\n",
+      "after": "import pytest\n\n@pytest.mark.xfail\ndef test_x():\n    pass\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "changed_expectation",
+      "subkind": "skip_or_focus",
       "path": "tests/test_cart.py",
       "lines": [
-        2,
-        2
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "total() == 4",
-      "rule": "dt4-python-changed_expectation"
+      "evidence": "@pytest.mark.xfail",
+      "rule": "dt4-python-skip_or_focus"
     }
   ]
 }

@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/service.go": {
-      "before": "package api\n\nfunc Total(c Cart) int { return c.sum }\n",
-      "after": "package api\n\nfunc Total(c Cart) int { return c.sum }\n\nfunc Refund(c Cart) int { return c.sum }\n"
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/service.go",
+      "subkind": "changed",
+      "path": "api/types.go",
       "lines": [
-        5,
-        5
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "func Refund(c Cart) int",
-      "rule": "dt3-go-exported-added"
+      "evidence": "type Cart struct",
+      "rule": "dt3-go-exported-changed"
     }
   ]
 }

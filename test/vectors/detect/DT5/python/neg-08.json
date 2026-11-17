@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc.py": {
-      "before": "# no note\nx = 1\n",
-      "after": "# not a type note\nx = 1\n"
+      "before": "x = compute()\n",
+      "after": "x = cast(int, compute())\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-shape",
-  "note": "comment-shape"
+  "near_miss": "cast",
+  "note": "cast"
 }

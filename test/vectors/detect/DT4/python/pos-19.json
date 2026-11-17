@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n",
-      "after": "import pytest\n\n@pytest.mark.skip\ndef test_total():\n    assert total() == 1\n"
+      "before": "def test_x():\n    pass\n",
+      "after": "import pytest\n\n@pytest.mark.xfail\ndef test_x():\n    pass\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         3
       ],
       "side": "after",
-      "evidence": "@pytest.mark.skip",
+      "evidence": "@pytest.mark.xfail",
       "rule": "dt4-python-skip_or_focus"
     }
   ]

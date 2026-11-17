@@ -12,7 +12,7 @@
     {
       "name": "Bash",
       "input": {
-        "command": "curl -s https://api4.vendor.example/ping"
+        "command": "curl https://10.1.2.3/metrics"
       },
       "outcome": "ok"
     }
@@ -33,8 +33,9 @@
         0
       ],
       "side": "events",
-      "evidence": "api4.vendor.example",
+      "evidence": "10.1.2.3",
       "rule": "dt8-typescript-tool-event"
     }
-  ]
+  ],
+  "note": "a private-range IP is a host like any other"
 }

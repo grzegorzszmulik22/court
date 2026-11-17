@@ -3,8 +3,12 @@
   "detector": "DT12",
   "language": "go",
   "files": {
-    "shop/sub/y.go": {
+    "shop/extra.go": {
       "before": "",
+      "after": "package shop\n"
+    },
+    "shop/cart.go": {
+      "before": "package shop\n",
       "after": "package shop\n"
     }
   },

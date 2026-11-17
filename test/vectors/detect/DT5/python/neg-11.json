@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc10.py": {
-      "before": "def s(x: int) -> int:\n    return x\n",
-      "after": "def s(x: float) -> float:\n    return x\n"
+      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
+      "after": "def s(x: Optional[int]) -> int:\n    return x or 0\n"
     }
   },
   "expect": [],
-  "near_miss": "concrete-kept-b",
-  "note": "concrete-kept-b"
+  "near_miss": "optional-already-b",
+  "note": "optional-already-b"
 }

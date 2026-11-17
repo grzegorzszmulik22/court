@@ -4,12 +4,11 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(1);\n  expect(total()).toBeGreaterThan(0);\n});\n"
+      "before": "test('n', () => {\n  expect(n()).toBeLessThanOrEqual(50);\n});\n",
+      "after": "test('n', () => {\n  expect(n()).toBeLessThanOrEqual(10);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "assertion-added",
-  "fp_kind": "fewer_assertions",
-  "note": "assertion-added"
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
 }

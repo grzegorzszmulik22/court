@@ -4,7 +4,7 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('a', () => {});\ntest('b', () => {});\n",
+      "before": "test('a', () => {});\ntest('b', () => {\n  expect(b()).toBe(1);\n});\n",
       "after": "test('a', () => {});\n"
     }
   },
@@ -16,10 +16,10 @@
       "path": "src/shop.test.ts",
       "lines": [
         2,
-        2
+        4
       ],
       "side": "before",
-      "evidence": "test('b'",
+      "evidence": "test('b', () => {\n  expect(b()).toBe(1);\n});",
       "rule": "dt4-typescript-deleted_test"
     }
   ]

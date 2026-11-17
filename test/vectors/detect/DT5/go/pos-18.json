@@ -3,24 +3,24 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc.go": {
-      "before": "package calc\n\nfunc pick(v int) int { return v }\n",
-      "after": "package calc\n\nfunc pick(v any) any { return v }\n"
+    "pkg/calc_test.go": {
+      "before": "package calc\n\nfunc TestX(t *testing.T) {}\n",
+      "after": "package calc\n\n//nolint\nfunc TestX(t *testing.T) {}\n"
     }
   },
   "expect": [
     {
       "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "pkg/calc.go",
+      "subkind": "suppressed",
+      "path": "pkg/calc_test.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "func pick(v any) any",
-      "rule": "dt5-go-widened"
+      "evidence": "//nolint",
+      "rule": "dt5-go-suppressed"
     }
   ]
 }

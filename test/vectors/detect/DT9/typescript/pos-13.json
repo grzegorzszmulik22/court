@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/token/mint.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "config/roles.yml": {
+      "before": "roles:\n  - user\n",
+      "after": "roles:\n  - user\n  - admin:*\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "src/token/mint.ts",
+      "subkind": "widened",
+      "path": "config/roles.yml",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
       "side": "after",
-      "evidence": "return false;",
-      "rule": "dt9-typescript-touched"
+      "evidence": "admin:*",
+      "rule": "dt9-typescript-widened"
     }
   ]
 }

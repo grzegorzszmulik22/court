@@ -3,14 +3,15 @@
   "detector": "DT12",
   "language": "typescript",
   "files": {
-    "pkg2/x.go": {
+    "newpkg/mod.ts": {
       "before": "",
       "after": "export const x = 1;\n"
     }
   },
   "commission": {
     "plan_files": [
-      "src/cart.ts"
+      "src/cart.ts",
+      "newpkg/mod.ts"
     ],
     "plan_lines": 20
   },
@@ -19,7 +20,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "new-top-level",
-      "path": "pkg2/x.go",
+      "path": "newpkg/mod.ts",
       "lines": [
         1,
         1

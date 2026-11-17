@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
+    "api/order.proto": {
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
+      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "subkind": "added",
+      "path": "api/order.proto",
       "lines": [
-        3,
-        3
+        4,
+        4
       ],
-      "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "side": "after",
+      "evidence": "int64 total_cents = 2;",
+      "rule": "dt3-contract-proto"
     }
   ]
 }

@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "typescript",
   "files": {
-    "prisma/migrations/0015_add_index/migration.sql": {
+    "prisma/migrations/0012_add_index/migration.sql": {
       "before": "",
       "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "prisma/migrations/0015_add_index/migration.sql",
+      "path": "prisma/migrations/0012_add_index/migration.sql",
       "lines": [
         1,
         1

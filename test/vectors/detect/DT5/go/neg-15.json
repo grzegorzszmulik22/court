@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc14.go": {
-      "before": "package calc\n\n//nolint\nvar x = 1\n",
-      "after": "package calc\n\nvar x = 1\n"
+      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
+      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
     }
   },
   "expect": [],
-  "near_miss": "nolint-removed-b",
-  "note": "nolint-removed-b"
+  "near_miss": "generic-b",
+  "note": "generic-b"
 }

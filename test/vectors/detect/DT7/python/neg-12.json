@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/test_discount.py": {
-      "before": "def test_disc():\n    pass\n",
-      "after": "def test_disc():\n    assert disc(42) == 42\n"
+    "svc/discount.py": {
+      "before": "def disc(x):\n    return x\n",
+      "after": "def disc(x):\n    if x > 99:\n        return 99\n    return x\n"
     }
   },
   "expect": [],
-  "near_miss": "test-input-in-test",
-  "note": "test-input-in-test"
+  "near_miss": "literal-new-b",
+  "note": "literal-new-b"
 }

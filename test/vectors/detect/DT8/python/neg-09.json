@@ -3,12 +3,26 @@
   "detector": "DT8",
   "language": "python",
   "files": {
-    "README.md": {
-      "before": "# s\n",
-      "after": "# s\n\nSee https://docs.acme.example\n"
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c():\n    pass\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
   "expect": [],
-  "near_miss": "docs-host",
-  "note": "docs-host"
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
 }

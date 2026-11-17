@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "migrations/0003_x.sql": {
-      "before": "-- add column later\n",
-      "after": "-- add column later; see ticket 42\n"
+    "app/model.py": {
+      "before": "# TODO: ALTER TABLE t\n",
+      "after": "# TODO: ALTER TABLE t ADD COLUMN c\n"
     }
   },
   "expect": [],
-  "note": "comment"
+  "note": "ddl-in-source-comment"
 }

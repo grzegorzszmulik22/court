@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "svc/fetch.py": {
-      "before": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n"
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError as e:\n        raise FetchFailed(e)\n"
     }
   },
   "expect": [],
-  "near_miss": "narrowed",
-  "note": "narrowed"
+  "near_miss": "raise-new-b",
+  "note": "raise-new-b"
 }

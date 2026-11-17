@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/models.py": {
-      "before": "class C:\n    def m(self):\n        return 1\n",
-      "after": "class C:\n    def m(self):\n        return 2\n"
+    "api/service.py": {
+      "before": "def total(c):\n    x = c\n    return x\n",
+      "after": "def total(c):\n    x = c + 1\n    return x\n"
     }
   },
   "expect": [],
-  "near_miss": "method-same",
-  "note": "method-same"
+  "near_miss": "local-body",
+  "note": "local-body"
 }

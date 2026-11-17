@@ -3,12 +3,12 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/crypto.test.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "docs/authentication.md": {
+      "before": "x\n",
+      "after": "y\n"
     }
   },
   "expect": [],
-  "near_miss": "crypto-in-test",
-  "note": "crypto-in-test"
+  "near_miss": "authword-filename",
+  "note": "authword-filename"
 }

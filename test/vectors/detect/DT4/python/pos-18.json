@@ -4,8 +4,8 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_a():\n    pass\ndef test_b():\n    pass\n",
-      "after": "def test_a():\n    pass\n"
+      "before": "def test_b():\n    assert b() == 1\n",
+      "after": ""
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "deleted_test",
       "path": "tests/test_cart.py",
       "lines": [
-        3,
-        3
+        1,
+        2
       ],
       "side": "before",
-      "evidence": "def test_b():",
+      "evidence": "def test_b():\n    assert b() == 1",
       "rule": "dt4-python-deleted_test"
     }
   ]

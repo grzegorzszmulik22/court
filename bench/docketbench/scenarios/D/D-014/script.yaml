@@ -5,5 +5,7 @@ agents:
       - backbrief:
           plan_files: ["catalog/**"]
       - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2000\nretries: 3\n\n# batch-tune\n"}
+      - no_decisions: {}
       - commit: {message: "catalog: refresh"}
       - claim_done: {checks: [unit]}

@@ -5,13 +5,8 @@
   "files": {
     "svc/client.go": {
       "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nconst endpoint = \"https://telemetry.host9.example.net/v1\"\n\nfunc c() {}\n"
+      "after": "package svc\n\nconst docs = \"https://docs.vendor-docs.example/ref\"\n\nfunc c() {}\n"
     }
-  },
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [
     {
@@ -24,8 +19,9 @@
         3
       ],
       "side": "after",
-      "evidence": "host9.example.net",
+      "evidence": "docs.vendor-docs.example",
       "rule": "dt8-go-host-literal"
     }
-  ]
+  ],
+  "note": "added line carries a host the base tree never names"
 }

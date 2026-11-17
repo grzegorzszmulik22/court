@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
-      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
+      "before": "package calc\n\nvar s = \"x\"\n",
+      "after": "package calc\n\nvar s = \"any\"\n"
     }
   },
   "expect": [],
-  "near_miss": "generic",
-  "note": "generic"
+  "near_miss": "string-any",
+  "note": "string-any"
 }

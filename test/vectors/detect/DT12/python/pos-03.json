@@ -3,14 +3,15 @@
   "detector": "DT12",
   "language": "python",
   "files": {
-    "newpkg/mod.go": {
+    "newpkg/mod.py": {
       "before": "",
       "after": "x = 1\n"
     }
   },
   "commission": {
     "plan_files": [
-      "shop/cart.py"
+      "shop/cart.py",
+      "newpkg/mod.py"
     ],
     "plan_lines": 20
   },
@@ -19,7 +20,7 @@
       "detector": "DT12",
       "category": "scope",
       "subkind": "new-top-level",
-      "path": "newpkg/mod.go",
+      "path": "newpkg/mod.py",
       "lines": [
         1,
         1

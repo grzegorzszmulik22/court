@@ -5,6 +5,8 @@ agents:
       - backbrief:
           plan_files: ["vault/**"]
       - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
+      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\naddendum\n"}
+      - no_decisions: {}
       - commit: {message: "vault: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

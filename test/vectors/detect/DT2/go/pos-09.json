@@ -3,9 +3,9 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0005_add_index.sql": {
-      "before": "",
-      "after": "DROP TABLE legacy_orders;\n"
+    "migrations/0001_init.sql": {
+      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n",
+      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n"
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "migrations/0005_add_index.sql",
+      "path": "migrations/0001_init.sql",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders",
-      "rule": "dt2-go-new-migration"
+      "evidence": "INSERT INTO orders VALUES (2);",
+      "rule": "dt2-go-changed-migration"
     }
-  ]
+  ],
+  "note": "non-DDL content edit on a file under a migration directory"
 }

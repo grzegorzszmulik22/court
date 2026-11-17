@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc16.py": {
-      "before": "s = \"a\"\n",
-      "after": "s = \"None\"\n"
+      "before": "x = compute()\n",
+      "after": "x = cast(int, compute())\n"
     }
   },
   "expect": [],
-  "near_miss": "string-none-b",
-  "note": "string-none-b"
+  "near_miss": "cast-b",
+  "note": "cast-b"
 }

@@ -5,11 +5,11 @@
   "files": {
     "tests/test_shop.py": {
       "before": "def test_total():\n    assert total() == 1\n",
-      "after": "def test_total():\n    assert total() == 2\n"
+      "after": "def test_total():\n    assert total() == 1\n    assert total() != 0\n"
     }
   },
   "expect": [],
-  "near_miss": "expectation-stricter",
-  "fp_kind": "changed_expectation",
-  "note": "expectation-stricter"
+  "near_miss": "assertion-added",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-added"
 }

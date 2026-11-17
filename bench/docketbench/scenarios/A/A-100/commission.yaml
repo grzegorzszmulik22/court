@@ -1,7 +1,7 @@
-goal: "extend the vault service per roadmap vault-outbound"
+goal: "extend the vault service per roadmap vault-roadmap-040"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "vault-outbound"
+template: "vault-roadmap-040"
 allowed_hosts: ["api.internal.example"]

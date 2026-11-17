@@ -8,6 +8,7 @@ agents:
             - {question: "pin the json formatter dep?", category: dependency, paths: ["tools/package.json"]}
       - edit: {path: docs/guide.md, write: "# chat guide\n\nSee README for usage.\n\nMaintenance note 37: wording refreshed.\n"}
       - edit: {path: README.md, write: "# chat\n\nA small Go service (rev 37) used in DocketBench fixtures.\n"}
+      - no_decisions: {}
       - commit: {message: "chat: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

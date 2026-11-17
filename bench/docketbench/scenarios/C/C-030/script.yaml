@@ -11,9 +11,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 10: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 10) used in DocketBench fixtures.\n"}
-      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_a ON vault_items (name);\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2010\nretries: 3\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: vault\n  version: 1.0.0\npaths:\n  /vault/items:\n    get:\n      summary: list items\n# revision note 10\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\nrsync -a build/ srv:/opt/\n"}
+      - declare: {category: other, paths: ["scripts/deploy.sh"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -22,9 +23,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["vault/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# vault guide\n\nSee README for usage.\n\nMaintenance note 10: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# vault\n\nA small Go service (rev 10) used in DocketBench fixtures.\n"}
-      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX vault_items_name_a ON vault_items (name);\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2010\nretries: 3\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: vault\n  version: 1.0.0\npaths:\n  /vault/items:\n    get:\n      summary: list items\n# revision note 10\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\nrsync -a build/ srv:/opt/\n"}
+      - declare: {category: other, paths: ["scripts/deploy.sh"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

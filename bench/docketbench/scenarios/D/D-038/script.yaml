@@ -5,7 +5,8 @@ agents:
       - backbrief:
           plan_files: ["files/**"]
       - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\n// refresh note\n"}
-      - edit: {path: README.md, write: "# files\n\nA small Go service used in DocketBench fixtures.\n\nstale note\n"}
+      - edit: {path: files/files.go, write: "package files\n\n// Record is one indexed file.\ntype Record struct {\n\tPath  string\n\tBytes int64\n}\n\n// Index is a set of records.\ntype Index struct{ recs []Record }\n\n// Add appends a record.\nfunc (i *Index) Add(r Record) { i.recs = append(i.recs, r) }\n\n// Size sums bytes.\nfunc (i *Index) Size() int64 {\n\tvar s int64\n\tfor _, r := range i.recs {\n\t\ts += r.Bytes\n\t}\n\treturn s\n}\n\n// second file\n"}
+      - no_decisions: {}
       - commit: {message: "files: refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

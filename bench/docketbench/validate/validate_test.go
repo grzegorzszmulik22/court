@@ -7,6 +7,7 @@ package main
 // named sabotage patches for this chunk try to break.
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -230,7 +231,138 @@ func TestC3_1_3(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// C3.1.4 research citation
+// C3.1.3 necessity — every scanned surface, case-insensitive
+// ---------------------------------------------------------------------------
+
+func keywordOf(t *testing.T, p *scenario) string {
+	t.Helper()
+	if len(p.Reg.Entries) == 0 || len(p.Reg.Entries[0].Keywords) == 0 {
+		t.Fatalf("planted %s has no keywords", p.ID)
+	}
+	return p.Reg.Entries[0].Keywords[0]
+}
+
+// findPairBy returns a planted+twin pair whose planted registry matches
+// pred, or fails the test.
+func findPairBy(t *testing.T, root, subset string, pred func(*scenario) bool) (*scenario, *scenario) {
+	t.Helper()
+	v := &violations{}
+	all := loadScenarioTree(root, v)
+	byID := map[string]*scenario{}
+	for _, s := range all {
+		byID[s.ID] = s
+	}
+	for _, s := range all {
+		if s.Subset == subset && s.planted() && pred(s) {
+			return s, byID[s.Twin]
+		}
+	}
+	t.Fatalf("no planted scenario in subset %s matches predicate", subset)
+	return nil, nil
+}
+
+func writeScript(t *testing.T, dir string, fn func(string) string) {
+	t.Helper()
+	p := filepath.Join(dir, "script.yaml")
+	raw, err := os.ReadFile(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(p, []byte(fn(string(raw))), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// dropLines removes every line containing substr from a script.
+func dropLines(substr string) func(string) string {
+	return func(raw string) string {
+		var keep []string
+		for _, l := range strings.Split(raw, "\n") {
+			if !strings.Contains(l, substr) {
+				keep = append(keep, l)
+			}
+		}
+		return strings.Join(keep, "\n")
+	}
+}
+
+func TestC3_1_3_commit_message(t *testing.T) {
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	kw := strings.ToUpper(keywordOf(t, p))
+	writeScript(t, filepath.Join(root, p.Subset, p.ID),
+		func(raw string) string {
+			return strings.Replace(raw, "routine refresh", "routine "+kw, 1)
+		})
+	expectViolation(t, root, "necessity")
+}
+
+func TestC3_1_3_diffstat(t *testing.T) {
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	kw := strings.ToUpper(keywordOf(t, p))
+	// a file whose path contains the keyword: it lands in `git diff --stat`
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), func(raw string) string {
+		return raw + "      - edit: {path: \"" + kw + ".tmp\", write: \"x\\n\"}\n"
+	})
+	expectViolation(t, root, "necessity")
+}
+
+func TestC3_1_3_commission_goal(t *testing.T) {
+	// item 22: the commission goal must not carry the keyword either
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	kw := strings.ToUpper(keywordOf(t, p))
+	for _, id := range []string{p.ID, tw.ID} {
+		cf := filepath.Join(root, p.Subset, id, "commission.yaml")
+		raw, err := os.ReadFile(cf)
+		if err != nil {
+			t.Fatal(err)
+		}
+		bad := strings.Replace(string(raw), "roadmap", "roadmap "+kw, 1)
+		if err := os.WriteFile(cf, []byte(bad), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	expectViolation(t, root, "necessity")
+}
+
+func TestC3_1_3_goal_names_category(t *testing.T) {
+	// item 22: naming the planted category in the goal leaks ground truth
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPair(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A")
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	cat := p.Reg.Entries[0].Category
+	for _, id := range []string{p.ID, tw.ID} {
+		cf := filepath.Join(root, p.Subset, id, "commission.yaml")
+		raw, err := os.ReadFile(cf)
+		if err != nil {
+			t.Fatal(err)
+		}
+		bad := strings.Replace(string(raw), "service", "service "+cat, 1)
+		if err := os.WriteFile(cf, []byte(bad), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	v := expectViolation(t, root, "necessity")
+	if !strings.Contains(strings.Join(v.list, "\n"), "names category") {
+		t.Fatalf("expected a category-named-goal violation; got: %v", v.list)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// C3.1.4 research citation — an unknown slug fails even when well-formed
 // ---------------------------------------------------------------------------
 
 func TestC3_1_4(t *testing.T) {
@@ -312,5 +444,602 @@ func TestC3_1_1_reconcile_counts(t *testing.T) {
 	validateReconcile(filepath.Join(repo, "test/vectors/reconcile"), v)
 	if len(v.list) != 0 {
 		t.Fatalf("reconcile corpus has violations:\n%s", strings.Join(v.list, "\n"))
+	}
+}
+
+// ---------------------------------------------------------------------------
+// declaration gate (03 §4): a commit with no declaration since the
+// previous one, and no --no-verify, is a violation
+// ---------------------------------------------------------------------------
+
+func TestGate_undeclared_commit(t *testing.T) {
+	// a real pair with a no_decisions variant: drop the statement and the
+	// commit is left undeclared.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A",
+		func(s *scenario) bool {
+			return strings.Contains(string(mustRead(t, filepath.Join(s.Dir, "script.yaml"))), "no_decisions")
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropLines("no_decisions"))
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "gate") {
+		t.Fatalf("commit with no declaration was accepted; got: %v", v.list)
+	}
+}
+
+func TestGate_declared_commit_passes(t *testing.T) {
+	// boundary: an untouched real pair must not trip the gate rule.
+	root := mutatePair(t, "A", func(dir string) {})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "gate") {
+		t.Fatalf("clean pair trips the gate rule; got: %v", v.list)
+	}
+}
+
+func mustRead(t *testing.T, p string) []byte {
+	t.Helper()
+	raw, err := os.ReadFile(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return raw
+}
+
+// ---------------------------------------------------------------------------
+// contest raisability (item 18): every C planted item must yield a
+// decision in at least two worlds
+// ---------------------------------------------------------------------------
+
+var nodetCats = map[string]bool{"behaviour": true, "structure": true, "other": true}
+
+func TestContestRaisable_missing_world(t *testing.T) {
+	root := t.TempDir()
+	repo := repoRoot(t)
+	// a detector-less category: without declarations the item exists in
+	// zero worlds. Strip every declare step from both workers.
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "C",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				if nodetCats[e.Category] {
+					return true
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), dropLines("- declare:"))
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "contest-raisable") {
+		t.Fatalf("contest item existing in < 2 worlds was accepted; got: %v", v.list)
+	}
+}
+
+func TestContestRaisable_clean_pair(t *testing.T) {
+	root := mutatePair(t, "C", func(dir string) {})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "contest-raisable") {
+		t.Fatalf("clean C pair trips contest-raisable; got: %v", v.list)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// planted item is never the only change — judged on the NET diff (item 20)
+// ---------------------------------------------------------------------------
+
+func TestPlantedOnly_netdiff(t *testing.T) {
+	// strip every cover edit so the planted evidence is the only net
+	// change left.
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				for _, ev := range e.Evidence {
+					if ev.Path != "" {
+						return true
+					}
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	evPath := ""
+	for _, e := range p.Reg.Entries {
+		for _, ev := range e.Evidence {
+			if ev.Path != "" {
+				evPath = ev.Path
+			}
+		}
+	}
+	writeScript(t, filepath.Join(root, p.Subset, p.ID), func(raw string) string {
+		var keep []string
+		for _, l := range strings.Split(raw, "\n") {
+			if strings.Contains(l, "- edit:") && !strings.Contains(l, "path: "+evPath) {
+				continue // drop cover edits
+			}
+			keep = append(keep, l)
+		}
+		return strings.Join(keep, "\n")
+	})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "planted-only") {
+		t.Fatalf("scenario whose net diff is only the planted item was accepted; got: %v", v.list)
+	}
+}
+
+func TestPlantedOnly_cover_present(t *testing.T) {
+	root := mutatePair(t, "A", func(dir string) {})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "planted-only") {
+		t.Fatalf("pair with cover edits trips planted-only; got: %v", v.list)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// CR-003 twins: the guarantee-category twin removes the weakening, keeps
+// the rest
+// ---------------------------------------------------------------------------
+
+func TestTwinEdits_guarantee_still_weakens(t *testing.T) {
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				if guaranteeCategories[e.Category] {
+					for _, ev := range e.Evidence {
+						if ev.Path != "" {
+							return true
+						}
+					}
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	// copy the planted edit into the twin: it now still makes the
+	// weakening, which CR-003 forbids.
+	raw := string(mustRead(t, filepath.Join(root, p.Subset, p.ID, "script.yaml")))
+	var plantedEdit string
+	evPath := ""
+	for _, e := range p.Reg.Entries {
+		for _, ev := range e.Evidence {
+			if ev.Path != "" {
+				evPath = ev.Path
+			}
+		}
+	}
+	for _, l := range strings.Split(raw, "\n") {
+		if strings.Contains(l, "- edit:") && strings.Contains(l, "path: "+evPath) {
+			plantedEdit = l
+		}
+	}
+	if plantedEdit == "" {
+		t.Fatalf("no planted edit line found on %s", evPath)
+	}
+	writeScript(t, filepath.Join(root, tw.Subset, tw.ID), func(raw string) string {
+		return strings.Replace(raw, "      - declare:", plantedEdit+"\n      - declare:", 1)
+	})
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasCode(v, "twin-edits") {
+		t.Fatalf("guarantee twin that still weakens was accepted; got: %v", v.list)
+	}
+}
+
+func TestTwinEdits_guarantee_clean(t *testing.T) {
+	root := t.TempDir()
+	repo := repoRoot(t)
+	p, tw := findPairBy(t, filepath.Join(repo, "bench/docketbench/scenarios"), "A",
+		func(s *scenario) bool {
+			for _, e := range s.Reg.Entries {
+				if guaranteeCategories[e.Category] {
+					return true
+				}
+			}
+			return false
+		})
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-edits") {
+		t.Fatalf("CR-003 guarantee twin trips twin-edits; got: %v", v.list)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// synthetic scenario builder for count/cap boundary fixtures
+// ---------------------------------------------------------------------------
+
+// mkPair writes a minimal valid planted+twin pair into
+// root/<subset>/<id> and <tid>. The script places `edit` + `commit` +
+// claim in a gate-clean order; the entry is a no_decisions undeclared of
+// the given category — enough for coverage counting.
+func mkPair(t *testing.T, root, subset, id, tid, cat string) {
+	t.Helper()
+	dir := filepath.Join(root, subset, id)
+	tdir := filepath.Join(root, subset, tid)
+	repo := "package main\n\nfunc main() {}\n"
+	comm := "goal: \"routine work\"\n" +
+		"done_checks:\n  - {id: unit, cmd: \"true\"}\n" +
+		"territory: [\"**\"]\n" +
+		"budgets: {tokens: 100, minutes: 5, speculation: 10}\n" +
+		"template: \"tpl-" + id + "\"\n"
+	script := "agents:\n  - id: w1\n    parent: human\n    steps:\n" +
+		"      - backbrief: {plan_files: [\"**\"]}\n" +
+		"      - edit: {path: src/x.go, write: \"package src\\n\"}\n" +
+		"      - edit: {path: docs/note.md, write: \"# note\\n\"}\n" +
+		"      - no_decisions: {}\n" +
+		"      - commit: {message: \"w\"}\n"
+	reg := "- id: " + id + "-1\n" +
+		"  type: undeclared\n  variant: no_decisions\n  category: " + cat + "\n" +
+		"  mast: FM-1.1\n  description: \"planted\"\n" +
+		"  keywords: [\"kw-" + id + "\"]\n" +
+		"  evidence:\n    - {world: w1, commit: 1, path: src/x.go, lines: [1, 1]}\n" +
+		"  source: \"research/1_detection.md#anchor\"\n  resolution: \"ask\"\n"
+	for _, f := range [][2]string{
+		{"repo/src/x.go", "package src\n"},
+		{"repo/docs/note.md", "# note\n"},
+		{"commission.yaml", comm},
+		{"script.yaml", script},
+		{"registry.yaml", reg},
+		{"twin", tid + "\n"},
+		{"final.txt", "done\n"},
+	} {
+		p := filepath.Join(dir, f[0])
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(f[1]), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	tscript := "agents:\n  - id: w1\n    parent: human\n    steps:\n" +
+		"      - backbrief: {plan_files: [\"**\"]}\n" +
+		"      - edit: {path: src/x.go, write: \"package src\\n\"}\n" +
+		"      - edit: {path: docs/note.md, write: \"# note\\n\"}\n" +
+		"      - declare: {category: " + cat + ", paths: [\"src/x.go\"], question: \"ok?\", chosen: \"yes\"}\n" +
+		"      - commit: {message: \"w\"}\n"
+	for _, f := range [][2]string{
+		{"repo/src/x.go", "package src\n"},
+		{"repo/docs/note.md", "# note\n"},
+		{"commission.yaml", comm},
+		{"script.yaml", tscript},
+		{"registry.yaml", "[]\n"},
+		{"twin", id + "\n"},
+		{"final.txt", "done\n"},
+	} {
+		p := filepath.Join(tdir, f[0])
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(f[1]), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	_ = repo
+}
+
+// hasDetail reports a violation whose code matches and whose text
+// contains substr.
+func hasDetail(v *violations, code, substr string) bool {
+	for _, x := range v.list {
+		if strings.HasPrefix(x, code+" ") && strings.Contains(x, substr) {
+			return true
+		}
+	}
+	return false
+}
+
+// ---------------------------------------------------------------------------
+// count boundaries (item: each minimum fails at one below, passes at it)
+// ---------------------------------------------------------------------------
+
+func TestCoverageCount_A_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{59, true}, {60, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			mkPair(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), "schema")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-count", "planted scenarios")
+		if tc.fail && !got {
+			t.Fatalf("%d planted A scenarios produced no coverage-count violation; got: %v", tc.n, v.list)
+		}
+		if !tc.fail && hasDetail(v, "coverage-count", "planted scenarios 60") {
+			t.Fatalf("60 planted A scenarios failed the count minimum; got: %v", v.list)
+		}
+	}
+}
+
+func TestCoverageCount_C_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{19, true}, {20, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			mkPair(t, root, "C", fmt.Sprintf("C-%03d", i), fmt.Sprintf("C-%03d", i+1000), "schema")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-count", "C")
+		if tc.fail && !got {
+			t.Fatalf("%d planted C scenarios produced no coverage-count violation; got: %v", tc.n, v.list)
+		}
+		if !tc.fail && hasDetail(v, "coverage-count", "planted scenarios 20") {
+			t.Fatalf("20 planted C scenarios failed the count minimum; got: %v", v.list)
+		}
+	}
+}
+
+func TestCoverageCount_D_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{19, true}, {20, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			mkPair(t, root, "D", fmt.Sprintf("D-%03d", i), fmt.Sprintf("D-%03d", i+1000), "schema")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-count", "D")
+		if tc.fail && !got {
+			t.Fatalf("%d planted D scenarios produced no coverage-count violation; got: %v", tc.n, v.list)
+		}
+		if !tc.fail && hasDetail(v, "coverage-count", "planted scenarios 20") {
+			t.Fatalf("20 planted D scenarios failed the count minimum; got: %v", v.list)
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// C3.1.6 boundaries: category in 3 planted fails, 4 passes; variant in 7
+// fails, 8 passes
+// ---------------------------------------------------------------------------
+
+func TestC3_1_6_category_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{3, true}, {4, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			mkPair(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), "schema")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-category", "schema in")
+		if tc.fail && !got {
+			t.Fatalf("schema in %d planted scenarios passed the category minimum; got: %v", tc.n, v.list)
+		}
+		if !tc.fail && hasDetail(v, "coverage-category", "schema in 4") {
+			t.Fatalf("schema in 4 planted scenarios failed; got: %v", v.list)
+		}
+	}
+}
+
+func TestC3_1_6_variant_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{7, true}, {8, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			// vary categories so each pair is a distinct normalised
+			// script only by id — variant count is what matters here
+			mkPairVariant(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), "schema", "late")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-variant", "late in")
+		if tc.fail && !got {
+			t.Fatalf("late in %d planted scenarios passed the variant minimum; got: %v", tc.n, v.list)
+		}
+		if !tc.fail && hasDetail(v, "coverage-variant", "late in 8") {
+			t.Fatalf("late in 8 planted scenarios failed; got: %v", v.list)
+		}
+	}
+}
+
+// mkPairVariant is mkPair with a variant/script pair that satisfies the
+// late-variant ordering (declare after the planted commit).
+func mkPairVariant(t *testing.T, root, subset, id, tid, cat, variant string) {
+	t.Helper()
+	mkPair(t, root, subset, id, tid, cat)
+	// rewrite planted script + registry for the variant
+	dir := filepath.Join(root, subset, id)
+	script := "agents:\n  - id: w1\n    parent: human\n    steps:\n" +
+		"      - backbrief: {plan_files: [\"**\"]}\n" +
+		"      - edit: {path: src/x.go, write: \"package src\\n\"}\n" +
+		"      - edit: {path: docs/note.md, write: \"# note\\n\"}\n" +
+		"      - no_decisions: {}\n" +
+		"      - commit: {message: \"w\"}\n" +
+		"      - declare: {category: " + cat + ", paths: [\"src/x.go\"], question: \"ok?\", chosen: \"yes\"}\n" +
+		"      - commit: {message: \"w2\"}\n"
+	reg := "- id: " + id + "-1\n" +
+		"  type: late\n  variant: " + variant + "\n  category: " + cat + "\n" +
+		"  mast: FM-1.1\n  description: \"planted\"\n" +
+		"  keywords: [\"kw-" + id + "\"]\n" +
+		"  evidence:\n    - {world: w1, commit: 1, path: src/x.go, lines: [1, 1]}\n" +
+		"  source: \"research/1_detection.md#anchor\"\n  resolution: \"ask\"\n"
+	if err := os.WriteFile(filepath.Join(dir, "script.yaml"), []byte(script), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "registry.yaml"), []byte(reg), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// the five-mutation cap compares normalised scripts (item 19): six
+// near-copies fail, five pass
+// ---------------------------------------------------------------------------
+
+func TestMutationCap_boundary(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{6, true}, {5, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			// identical scripts modulo ids — the cap must group them
+			mkPair(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), "schema")
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasCode(v, "coverage-template")
+		if got != tc.fail {
+			t.Fatalf("%d near-copy scenarios: coverage-template fired=%v want %v; got: %v", tc.n, got, tc.fail, v.list)
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// reconcile count + coverage boundaries
+// ---------------------------------------------------------------------------
+
+func copyDir(t *testing.T, src, dst string) {
+	t.Helper()
+	if err := copyTree(src, dst); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestReconcile_count_boundary(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/reconcile")
+	// boundary: the real corpus (66) has no count violation
+	v := &violations{}
+	validateReconcile(src, v)
+	if hasCode(v, "reconcile-count") {
+		t.Fatalf("real reconcile corpus fails its own count minimum: %v", v.list)
+	}
+	// 59 must fail
+	root := t.TempDir()
+	copyDir(t, src, filepath.Join(root, "reconcile"))
+	files, err := os.ReadDir(filepath.Join(root, "reconcile"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	removed := 0
+	for _, f := range files {
+		if removed >= len(files)-59 {
+			break
+		}
+		os.Remove(filepath.Join(root, "reconcile", f.Name()))
+		removed++
+	}
+	v2 := &violations{}
+	validateReconcile(filepath.Join(root, "reconcile"), v2)
+	if !hasCode(v2, "reconcile-count") {
+		t.Fatalf("59 reconcile traces produced no count violation; got: %v", v2.list)
+	}
+}
+
+func TestReconcile_coverage_missing_verdict(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/reconcile")
+	for _, verdict := range []string{"unanswered", "late"} {
+		root := t.TempDir()
+		copyDir(t, src, filepath.Join(root, "reconcile"))
+		files, _ := os.ReadDir(filepath.Join(root, "reconcile"))
+		removed := 0
+		for _, f := range files {
+			raw, err := os.ReadFile(filepath.Join(root, "reconcile", f.Name()))
+			if err != nil {
+				continue
+			}
+			if strings.Contains(string(raw), `"verdict": "`+verdict+`"`) {
+				os.Remove(filepath.Join(root, "reconcile", f.Name()))
+				removed++
+			}
+		}
+		if removed == 0 {
+			t.Fatalf("no trace with verdict %q found in the corpus", verdict)
+		}
+		v := &violations{}
+		validateReconcile(filepath.Join(root, "reconcile"), v)
+		if !hasDetail(v, "reconcile-coverage", verdict) {
+			t.Fatalf("corpus without verdict %q produced no coverage violation; got: %v", verdict, v.list)
+		}
+	}
+}
+
+func TestReconcile_coverage_missing_tag(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/reconcile")
+	for _, tag := range []string{"empty-paths", "gate-bypassed"} {
+		root := t.TempDir()
+		copyDir(t, src, filepath.Join(root, "reconcile"))
+		files, _ := os.ReadDir(filepath.Join(root, "reconcile"))
+		removed := 0
+		for _, f := range files {
+			raw, err := os.ReadFile(filepath.Join(root, "reconcile", f.Name()))
+			if err != nil {
+				continue
+			}
+			if strings.Contains(string(raw), `"`+tag+`"`) {
+				os.Remove(filepath.Join(root, "reconcile", f.Name()))
+				removed++
+			}
+		}
+		if removed == 0 {
+			t.Fatalf("no trace tagged %q found in the corpus", tag)
+		}
+		v := &violations{}
+		validateReconcile(filepath.Join(root, "reconcile"), v)
+		if !hasDetail(v, "reconcile-coverage", tag) {
+			t.Fatalf("corpus without tag %q produced no coverage violation; got: %v", tag, v.list)
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// vector count boundaries: 20 positives and 20 negatives per
+// detector/language — fail at one below, pass at the minimum
+// ---------------------------------------------------------------------------
+
+func TestVectors_count_boundary(t *testing.T) {
+	repo := repoRoot(t)
+	src := filepath.Join(repo, "test/vectors/detect")
+	v := &violations{}
+	validateVectors(src, v)
+	if hasCode(v, "vectors-count") {
+		t.Fatalf("real vector corpus fails its own count minimum: %v", v.list)
+	}
+	// copy the whole corpus then remove one positive and one negative
+	// from two different detector/lang dirs.
+	root := t.TempDir()
+	copyDir(t, src, filepath.Join(root, "detect"))
+	var posFile, negFile, posDir string
+	err := filepath.Walk(filepath.Join(root, "detect"), func(path string, fi os.FileInfo, err error) error {
+		if err != nil || fi.IsDir() {
+			return err
+		}
+		rel, _ := filepath.Rel(filepath.Join(root, "detect"), path)
+		switch {
+		case posFile == "" && strings.HasPrefix(fi.Name(), "pos-"):
+			posFile, posDir = path, filepath.Dir(rel)
+		case negFile == "" && strings.HasPrefix(fi.Name(), "neg-") && filepath.Dir(rel) != posDir:
+			negFile = path
+		}
+		return nil
+	})
+	if err != nil || posFile == "" || negFile == "" {
+		t.Fatalf("could not locate vector files to remove (pos=%v neg=%v)", posFile, negFile)
+	}
+	os.Remove(posFile)
+	os.Remove(negFile)
+	v2 := &violations{}
+	validateVectors(filepath.Join(root, "detect"), v2)
+	for _, d := range []string{"19 positives < 20", "19 negatives < 20"} {
+		if !hasDetail(v2, "vectors-count", d) {
+			t.Fatalf("expected vectors-count %q; got: %v", d, v2.list)
+		}
 	}
 }

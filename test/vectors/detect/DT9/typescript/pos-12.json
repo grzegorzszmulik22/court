@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/acl/acl.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+    "scripts/setup.sh": {
+      "before": "#!/bin/sh\nchmod 755 bin/run\n",
+      "after": "#!/bin/sh\nchmod 777 bin/run\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "src/acl/acl.ts",
+      "subkind": "widened",
+      "path": "scripts/setup.sh",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
       "side": "after",
-      "evidence": "return false;",
-      "rule": "dt9-typescript-touched"
+      "evidence": "chmod 777",
+      "rule": "dt9-typescript-widened"
     }
   ]
 }

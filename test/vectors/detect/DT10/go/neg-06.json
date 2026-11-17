@@ -3,12 +3,12 @@
   "detector": "DT10",
   "language": "go",
   "files": {
-    "db/seed.sql": {
-      "before": "",
-      "after": "INSERT INTO t VALUES (1);\n"
+    "svc/old.go": {
+      "before": "x\n",
+      "after": ""
     }
   },
   "expect": [],
-  "near_miss": "insert-only",
-  "note": "insert-only"
+  "near_miss": "source-removed",
+  "note": "source-removed"
 }

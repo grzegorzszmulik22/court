@@ -3,24 +3,24 @@
   "detector": "DT4",
   "language": "go",
   "files": {
-    "cart/cart_test.go": {
-      "before": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {}\n",
-      "after": "package shop\n\nfunc TestA(t *testing.T) {}\n"
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 0 { t.Fatal(errs) }\n}\n",
+      "after": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 3 { t.Fatal(errs) }\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
-      "path": "cart/cart_test.go",
+      "subkind": "loosened_threshold",
+      "path": "shop/shop_test.go",
       "lines": [
         4,
         4
       ],
-      "side": "before",
-      "evidence": "func TestB(t *testing.T)",
-      "rule": "dt4-go-deleted_test"
+      "side": "after",
+      "evidence": "errs > 3",
+      "rule": "dt4-go-loosened_threshold"
     }
   ]
 }

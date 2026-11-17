@@ -5,13 +5,8 @@
   "files": {
     "src/client.ts": {
       "before": "export function c() {}\n",
-      "after": "const endpoint = \"https://telemetry.host8.example.net/v1\";\n\nexport function c() {}\n"
+      "after": "const rt = \"wss://rt.stream.example/ws\";\n\nexport function c() {}\n"
     }
-  },
-  "commission": {
-    "allowed_hosts": [
-      "api.internal.example"
-    ]
   },
   "expect": [
     {
@@ -24,8 +19,9 @@
         1
       ],
       "side": "after",
-      "evidence": "host8.example.net",
+      "evidence": "rt.stream.example",
       "rule": "dt8-typescript-host-literal"
     }
-  ]
+  ],
+  "note": "added line carries a host the base tree never names"
 }

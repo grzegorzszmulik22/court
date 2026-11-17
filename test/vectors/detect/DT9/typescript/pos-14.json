@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/auth/session.ts": {
+    "src/auth/legacy.ts": {
       "before": "export function check() { return true; }\n",
-      "after": "export function check() { return false; }\n"
+      "after": ""
     }
   },
   "expect": [
@@ -13,14 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "src/auth/session.ts",
+      "path": "src/auth/legacy.ts",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "return false;",
+      "side": "before",
+      "evidence": "return true;",
       "rule": "dt9-typescript-touched"
     }
-  ]
+  ],
+  "note": "authority file removed"
 }

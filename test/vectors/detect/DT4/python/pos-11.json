@@ -3,24 +3,25 @@
   "detector": "DT4",
   "language": "python",
   "files": {
-    "tests/test_cart.py": {
+    "tests/test_shop.py": {
       "before": "def test_total():\n    assert total() == 1\n",
-      "after": "import pytest\n\n@pytest.mark.skip\ndef test_total():\n    assert total() == 1\n"
+      "after": "def test_totals():\n    assert total() == 1\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "tests/test_cart.py",
+      "subkind": "deleted_test",
+      "path": "tests/test_shop.py",
       "lines": [
-        3,
-        3
+        1,
+        2
       ],
-      "side": "after",
-      "evidence": "@pytest.mark.skip",
-      "rule": "dt4-python-skip_or_focus"
+      "side": "before",
+      "evidence": "def test_total():\n    assert total() == 1",
+      "rule": "dt4-python-deleted_test"
     }
-  ]
+  ],
+  "note": "a renamed test removes the function under its old name"
 }

@@ -3,12 +3,12 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/fetch.py": {
-      "before": "def fetch():\n    return get()\n",
-      "after": "def fetch():\n    try:\n        return get()\n    finally:\n        close()\n"
+    "svc/f.py": {
+      "before": "def f(xs):\n    s = 0\n    for x in xs:\n        s += x\n    return s\n",
+      "after": "def f(xs):\n    s = 0\n    for x in xs:\n        if x < 0:\n            continue\n        s += x\n    return s\n"
     }
   },
   "expect": [],
-  "near_miss": "finally-only",
-  "note": "finally-only"
+  "near_miss": "loop-continue-b",
+  "note": "loop-continue-b"
 }

@@ -3,12 +3,12 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "build/out.bin": {
+      "before": "x\n",
+      "after": ""
     }
   },
   "expect": [],
-  "near_miss": "unrelated",
-  "note": "unrelated"
+  "near_miss": "exempt-path-removed",
+  "note": "exempt-path-removed"
 }

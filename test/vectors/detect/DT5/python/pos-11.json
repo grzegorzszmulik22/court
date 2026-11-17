@@ -3,9 +3,9 @@
   "detector": "DT5",
   "language": "python",
   "files": {
-    "app/calc.py": {
-      "before": "def total(items):\n    return len(items)\n",
-      "after": "def total(items):  # type: ignore\n    return len(items)\n"
+    "tests/test_calc.py": {
+      "before": "def test_x():\n    pass\n",
+      "after": "def test_x():  # type: ignore\n    pass\n"
     }
   },
   "expect": [
@@ -13,7 +13,7 @@
       "detector": "DT5",
       "category": "type-strength",
       "subkind": "suppressed",
-      "path": "app/calc.py",
+      "path": "tests/test_calc.py",
       "lines": [
         1,
         1

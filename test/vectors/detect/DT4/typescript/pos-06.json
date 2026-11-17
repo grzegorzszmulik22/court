@@ -4,23 +4,24 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(3);\n});\n",
-      "after": "test('total', () => {\n  expect(total()).toBe(4);\n});\n"
+      "before": "test('a', () => {\n  expect(a()).toBe(1);\n});\ntest('b', () => {});\n",
+      "after": "test('a', () => {});\ntest('b', () => {\n  expect(a()).toBe(1);\n});\n"
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "changed_expectation",
+      "subkind": "fewer_assertions",
       "path": "src/shop.test.ts",
       "lines": [
         2,
         2
       ],
-      "side": "after",
-      "evidence": "toBe(4)",
-      "rule": "dt4-typescript-changed_expectation"
+      "side": "before",
+      "evidence": "expect(a()).toBe(1);",
+      "rule": "dt4-typescript-fewer_assertions"
     }
-  ]
+  ],
+  "note": "assertion moved into another test: the test it left lost an assertion"
 }

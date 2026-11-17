@@ -3,12 +3,12 @@
   "detector": "DT5",
   "language": "go",
   "files": {
-    "pkg/calc.go": {
-      "before": "package calc\n\n//go:build linux\n\nfunc s() {}\n",
-      "after": "package calc\n\n//go:build linux || darwin\n\nfunc s() {}\n"
+    "pkg/calc9.go": {
+      "before": "package calc\n\nfunc s(x int) int { return x }\n",
+      "after": "package calc\n\nfunc s(x int64) int64 { return x }\n"
     }
   },
   "expect": [],
-  "near_miss": "build-tag",
-  "note": "build-tag"
+  "near_miss": "concrete-kept-b",
+  "note": "concrete-kept-b"
 }

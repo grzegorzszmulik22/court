@@ -4,23 +4,23 @@
   "language": "python",
   "files": {
     "tests/test_cart.py": {
-      "before": "def test_total():\n    assert total() == 1\n    assert total() > 0\n",
-      "after": "def test_total():\n    assert total() == 1\n"
+      "before": "def test_b():\n    assert b() == 1\n",
+      "after": ""
     }
   },
   "expect": [
     {
       "detector": "DT4",
       "category": "test-strength",
-      "subkind": "fewer_assertions",
+      "subkind": "deleted_test",
       "path": "tests/test_cart.py",
       "lines": [
         1,
-        1
+        2
       ],
-      "side": "after",
-      "evidence": "def test_total():",
-      "rule": "dt4-python-fewer_assertions"
+      "side": "before",
+      "evidence": "def test_b():\n    assert b() == 1",
+      "rule": "dt4-python-deleted_test"
     }
   ]
 }

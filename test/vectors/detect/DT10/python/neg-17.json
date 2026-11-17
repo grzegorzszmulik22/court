@@ -3,12 +3,21 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "svc/old.py": {
-      "before": "x\n",
-      "after": ""
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git checkout main"
+      },
+      "outcome": "ok"
+    }
+  ],
   "expect": [],
-  "near_miss": "source-removed",
-  "note": "source-removed"
+  "near_miss": "git-checkout",
+  "note": "git-checkout"
 }

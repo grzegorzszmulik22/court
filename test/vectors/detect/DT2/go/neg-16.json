@@ -3,11 +3,11 @@
   "detector": "DT2",
   "language": "go",
   "files": {
-    "migrations/0004_x.sql": {
-      "before": "",
-      "after": "-- placeholder\n"
+    "api/readme.avsc.txt": {
+      "before": "{\n  \"type\": \"record\"\n}\n",
+      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n"
     }
   },
   "expect": [],
-  "note": "migration-empty"
+  "note": "avsc-unrelated"
 }

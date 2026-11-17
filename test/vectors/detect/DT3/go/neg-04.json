@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "api/service.go": {
-      "before": "package api\n\n// func Old() {}\nfunc Total(c int) int { return c }\n",
-      "after": "package api\n\nfunc Total(c int) int { return c }\n"
+      "before": "package api\n\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\nfunc Total(c int) int { return c }\n\nfunc Refund(c int) int { return c }\n"
     }
   },
   "expect": [],
-  "near_miss": "comment-export",
-  "note": "comment-export"
+  "near_miss": "exported-added",
+  "note": "exported-added"
 }

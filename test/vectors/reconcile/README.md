@@ -17,7 +17,8 @@ used for backbrief conformance.
                     "world","commit","petition"}],
     "writs":    {"<world>": {"categories":[...],"territory":[...]}},
     "bypassed": [{"world","commits":[...]}],
-    "contested": [["<id>","<id>"]]
+    "contested": [["<id>","<id>"]],
+    "no_decisions": [{"world","commits":[...]}]
   },
   "events": [{"seq","decision_ids":[<input ids that merged>]}, ...],
   "expect": [{"ids":[...],"sources":[...],"verdict","flags":[...],"queued","note"}],
@@ -32,7 +33,10 @@ used for backbrief conformance.
 - `bypassed` lists commits with `gated: false` (`03` §4.5): hits in them
   are `undeclared` regardless of declarations.
 - `contested` lists cross-world decision pairs with differing evidence
-  (`01` §7.5): both are queued.
+  (`01` §7.5): both are queued. §7.5's evidence test compares detector
+  hits; two declaration-only worlds cannot be contested.
+- `no_decisions` lists commits where the agent stated no_decisions; the
+  record is a gate fact, not a decision entry, and can never match a hit.
 - `verdict` is the `recon` of `01` §7.2: `confirmed`, `declared-only`,
   `undeclared`, `late`, `unanswered`. `unforeseen` is a flag; it combines
   with the first four.
@@ -41,5 +45,10 @@ used for backbrief conformance.
 - `events` are the `decision.reconciled` events (`01` §11.2): one per
   merged decision, member input ids listed, seq increasing.
 
-The validator `bench/docketbench/validate` replays each trace through an
-independent implementation of §7 and requires agreement on every field.
+The validator `bench/docketbench/validate` checks each trace's shape:
+id vocabulary, per-row internal consistency (verdict/flag/queued
+relations from `01` §7.2 and §7.3, event coverage), tag truthfulness,
+and corpus coverage. Per CR-003 it does NOT replay the traces through a
+second implementation of §7; the expected results were written by
+reasoning from `01` §7 and are reviewed independently, then checked
+again by the independent M3.5 implementation.

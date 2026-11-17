@@ -11,9 +11,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["poll/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 9: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 9) used in DocketBench fixtures.\n"}
-      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nconst maxBatch9 = 200\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 509\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2009\nretries: 3\n"}
+      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./...\n      - run: golangci-lint run\n"}
+      - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
@@ -22,9 +23,10 @@ agents:
     steps:
       - backbrief:
           plan_files: ["poll/**", "config/**", "api/**"]
-      - edit: {path: docs/guide.md, write: "# poll guide\n\nSee README for usage.\n\nMaintenance note 9: wording refreshed.\n"}
-      - edit: {path: README.md, write: "# poll\n\nA small Go service (rev 9) used in DocketBench fixtures.\n"}
-      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nconst maxBatch9 = 200\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 509\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2009\nretries: 3\n"}
+      - edit: {path: .github/workflows/ci.yml, write: "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n      - run: go test ./...\n      - run: go vet ./...\n      - run: golangci-lint run\n"}
+      - declare: {category: guardrail, paths: [".github/workflows/ci.yml"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -3,12 +3,21 @@
   "detector": "DT10",
   "language": "python",
   "files": {
-    "data/keep.py": {
-      "before": "x\n",
-      "after": ""
+    "x.txt": {
+      "before": "a\n",
+      "after": "b\n"
     }
   },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "rm x.tmp"
+      },
+      "outcome": "ok"
+    }
+  ],
   "expect": [],
-  "near_miss": "delete-named-file",
-  "note": "delete-named-file"
+  "near_miss": "rm-file",
+  "note": "rm-file"
 }

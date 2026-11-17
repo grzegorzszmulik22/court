@@ -3,7 +3,7 @@
   "detector": "DT2",
   "language": "python",
   "files": {
-    "alembic/versions/0015_add_index.py": {
+    "alembic/versions/0012_add_index.py": {
       "before": "",
       "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
     }
@@ -13,7 +13,7 @@
       "detector": "DT2",
       "category": "schema",
       "subkind": "migration",
-      "path": "alembic/versions/0015_add_index.py",
+      "path": "alembic/versions/0012_add_index.py",
       "lines": [
         1,
         1

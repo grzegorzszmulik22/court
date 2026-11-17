@@ -5,7 +5,7 @@
   "files": {
     "svc/fetch.py": {
       "before": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        raise\n",
-      "after": "def fetch():\n    try:\n        return get()\n    except:\n        raise\n"
+      "after": "def fetch():\n    try:\n        return get()\n    except Exception:\n        raise\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         4
       ],
       "side": "after",
-      "evidence": "except:",
+      "evidence": "except Exception:",
       "rule": "dt7-python-broadened"
     }
   ]

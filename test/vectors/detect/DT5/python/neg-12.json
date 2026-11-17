@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "app/calc11.py": {
-      "before": "def s(x: Optional[int]) -> int:\n    return 0\n",
-      "after": "def s(x: Optional[int]) -> int:\n    return x or 0\n"
+      "before": "def s():\n    return 1\n",
+      "after": "def s():\n    \"\"\"returns None sometimes\"\"\"\n    return 1\n"
     }
   },
   "expect": [],
-  "near_miss": "optional-already-b",
-  "note": "optional-already-b"
+  "near_miss": "none-in-doc-b",
+  "note": "none-in-doc-b"
 }

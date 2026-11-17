@@ -4,11 +4,11 @@
   "language": "python",
   "files": {
     "api/service.py": {
-      "before": "def total(c):\n    x = c\n    return x\n",
-      "after": "def total(c):\n    x = c + 1\n    return x\n"
+      "before": "# def old():\n#     pass\ndef t():\n    pass\n",
+      "after": "def t():\n    pass\n"
     }
   },
   "expect": [],
-  "near_miss": "local-body",
-  "note": "local-body"
+  "near_miss": "comment-def",
+  "note": "comment-def"
 }

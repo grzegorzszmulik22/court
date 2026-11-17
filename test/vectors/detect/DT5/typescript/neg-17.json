@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/calc16.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "export function s(x: unknown) { return x; }\n"
+      "before": "// note\nexport const x = 1;\n",
+      "after": "// not a suppression\nexport const x = 1;\n"
     }
   },
   "expect": [],
-  "near_miss": "unknown-type-b",
-  "note": "unknown-type-b"
+  "near_miss": "comment-shape-b",
+  "note": "comment-shape-b"
 }

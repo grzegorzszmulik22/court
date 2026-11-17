@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "pkg/calc16.go": {
-      "before": "package calc\n\nfunc s[T int](x T) T { return x }\n",
-      "after": "package calc\n\nfunc s[T int | int64](x T) T { return x }\n"
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\n// suppress nothing\nfunc s() {}\n"
     }
   },
   "expect": [],
-  "near_miss": "generic-b",
-  "note": "generic-b"
+  "near_miss": "return-comment-b",
+  "note": "return-comment-b"
 }

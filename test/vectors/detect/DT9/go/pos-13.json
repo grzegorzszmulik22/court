@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "go",
   "files": {
-    "pkg/token/mint.go": {
-      "before": "package auth\n\nfunc Check() bool { return true }\n",
-      "after": "package auth\n\nfunc Check() bool { return false }\n"
+    "config/roles.yml": {
+      "before": "roles:\n  - user\n",
+      "after": "roles:\n  - user\n  - admin:*\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "pkg/token/mint.go",
+      "subkind": "widened",
+      "path": "config/roles.yml",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "func Check() bool { return false }",
-      "rule": "dt9-go-touched"
+      "evidence": "admin:*",
+      "rule": "dt9-go-widened"
     }
   ]
 }

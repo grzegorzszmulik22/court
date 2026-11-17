@@ -3,9 +3,9 @@
   "detector": "DT3",
   "language": "go",
   "files": {
-    "api/types.go": {
-      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
-      "after": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n"
+    "api/service.go": {
+      "before": "package api\n\nfunc Ship(c Cart) error {\n\treturn nil\n}\n",
+      "after": "package api\n\nfunc Ship(c Cart) {\n}\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT3",
       "category": "interface",
       "subkind": "changed",
-      "path": "api/types.go",
+      "path": "api/service.go",
       "lines": [
         3,
         3
       ],
       "side": "after",
-      "evidence": "type Cart struct",
+      "evidence": "func Ship(c Cart)",
       "rule": "dt3-go-exported-changed"
     }
   ]

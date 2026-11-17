@@ -3,9 +3,9 @@
   "detector": "DT9",
   "language": "typescript",
   "files": {
-    "src/auth/legacy.ts": {
-      "before": "export function check() { return true; }\n",
-      "after": ""
+    "scripts/token.sh": {
+      "before": "#!/bin/sh\nexit 0\n",
+      "after": "#!/bin/sh\nexit 0\nupdated\n"
     }
   },
   "expect": [
@@ -13,15 +13,15 @@
       "detector": "DT9",
       "category": "authority",
       "subkind": "touched",
-      "path": "src/auth/legacy.ts",
+      "path": "scripts/token.sh",
       "lines": [
-        1,
-        1
+        3,
+        3
       ],
-      "side": "before",
-      "evidence": "return true;",
+      "side": "after",
+      "evidence": "updated",
       "rule": "dt9-typescript-touched"
     }
   ],
-  "note": "authority file removed"
+  "note": "filename minus extension is a matching segment"
 }

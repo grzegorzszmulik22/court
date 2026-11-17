@@ -3,24 +3,24 @@
   "detector": "DT9",
   "language": "python",
   "files": {
-    "internal/login/handler.py": {
-      "before": "def check():\n    return True\n",
-      "after": "def check():\n    return False\n"
+    "deploy/policy.json": {
+      "before": "{\n  \"allow\": [\"read\"]\n}\n",
+      "after": "{\n  \"allow\": [\"*\"]\n}\n"
     }
   },
   "expect": [
     {
       "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "internal/login/handler.py",
+      "subkind": "widened",
+      "path": "deploy/policy.json",
       "lines": [
         2,
         2
       ],
       "side": "after",
-      "evidence": "return False",
-      "rule": "dt9-python-touched"
+      "evidence": "\"allow\": [\"*\"]",
+      "rule": "dt9-python-widened"
     }
   ]
 }

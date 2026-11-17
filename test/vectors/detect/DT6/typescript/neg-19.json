@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "typescript",
   "files": {
-    "src/legacy.go.18": {
-      "before": "package src\n\n//nolint\nfunc f() {}\n",
-      "after": "package src\n\nfunc f() {}\n"
+    "docs/ci.md": {
+      "before": "# ci\n",
+      "after": "# ci notes\n"
     }
   },
   "expect": [],
-  "near_miss": "nolint-removed",
-  "note": "nolint-removed"
+  "near_miss": "pad",
+  "note": "pad"
 }

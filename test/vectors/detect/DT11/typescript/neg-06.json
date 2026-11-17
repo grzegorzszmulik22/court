@@ -3,7 +3,7 @@
   "detector": "DT11",
   "language": "typescript",
   "files": {
-    "internal/util.go": {
+    "vendor/x/y.go": {
       "before": "",
       "after": "export const x = 1;\n"
     }
@@ -15,6 +15,6 @@
     ]
   },
   "expect": [],
-  "near_miss": "inside-territory",
-  "note": "inside-territory"
+  "near_miss": "exempt-path",
+  "note": "exempt-path"
 }

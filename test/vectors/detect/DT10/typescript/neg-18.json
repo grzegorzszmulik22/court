@@ -3,21 +3,12 @@
   "detector": "DT10",
   "language": "typescript",
   "files": {
-    "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+    "db/q.sql": {
+      "before": "",
+      "after": "DELETE FROM t WHERE a = 1;\nUPDATE t SET x = 2;\n"
     }
   },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git checkout main"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [],
-  "near_miss": "git-checkout",
-  "note": "git-checkout"
+  "near_miss": "delete-update",
+  "note": "delete-update"
 }

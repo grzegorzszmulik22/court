@@ -3,12 +3,12 @@
   "detector": "DT3",
   "language": "typescript",
   "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    "config/app.yaml": {
+      "before": "a: 1\n",
+      "after": "a: 2\n"
     }
   },
   "expect": [],
-  "near_miss": "contract-comment",
-  "note": "contract-comment"
+  "near_miss": "noncontract-yaml",
+  "note": "noncontract-yaml"
 }

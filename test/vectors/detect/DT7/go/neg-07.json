@@ -4,11 +4,11 @@
   "language": "go",
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\n// swallow nothing\nfunc fetch() error {\n\treturn get()\n}\n"
+      "before": "package svc\n\nfunc fetch() int {\n\tx := 1\n\treturn x\n}\n",
+      "after": "package svc\n\nfunc fetch() int {\n\tx := 1\n\tif x > 2 {\n\t}\n\treturn x\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "comment",
-  "note": "comment"
+  "near_miss": "empty-if",
+  "note": "empty-if"
 }

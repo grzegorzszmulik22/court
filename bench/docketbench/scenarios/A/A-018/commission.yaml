@@ -1,7 +1,7 @@
-goal: "extend the files service per roadmap files-authority"
+goal: "extend the files service per roadmap files-roadmap-018"
 done_checks:
   - {id: unit, cmd: "go test ./..."}
 territory: ["**"]
 budgets: {tokens: 40000, minutes: 45, speculation: 400}
-template: "files-authority"
+template: "files-roadmap-018"
 allowed_hosts: ["api.internal.example"]

@@ -3,24 +3,24 @@
   "detector": "DT3",
   "language": "python",
   "files": {
-    "api/service.py": {
-      "before": "def total(cart):\n    return cart.sum\n",
-      "after": "def total(cart):\n    return cart.sum\n\ndef refund(cart):\n    return cart.sum\n"
+    "api/models.py": {
+      "before": "class Cart:\n    pass\n",
+      "after": "class Cart:\n    def total(self):\n        return 0\n"
     }
   },
   "expect": [
     {
       "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/service.py",
+      "subkind": "changed",
+      "path": "api/models.py",
       "lines": [
-        4,
-        4
+        1,
+        1
       ],
       "side": "after",
-      "evidence": "def refund(cart):",
-      "rule": "dt3-python-toplevel-added"
+      "evidence": "class Cart:",
+      "rule": "dt3-python-toplevel-changed"
     }
   ]
 }

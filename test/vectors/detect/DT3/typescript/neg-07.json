@@ -4,11 +4,11 @@
   "language": "typescript",
   "files": {
     "src/api.ts": {
-      "before": "export function t(c = 1) { return c; }\n",
-      "after": "export function t(c = 2) { return c; }\n"
+      "before": "import { x } from './x';\n",
+      "after": "import { x, y } from './x';\n"
     }
   },
   "expect": [],
-  "near_miss": "default-param",
-  "note": "default-param"
+  "near_miss": "import",
+  "note": "import"
 }

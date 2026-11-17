@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/cart.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test.skip('total', () => {\n  expect(total()).toBe(1);\n});\n"
+      "before": "test('x', () => {});\n",
+      "after": "test.skip('x', () => {});\n"
     }
   },
   "expect": [
@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "test.skip('total'",
+      "evidence": "test.skip('x'",
       "rule": "dt4-typescript-skip_or_focus"
     }
   ]

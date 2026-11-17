@@ -3,12 +3,12 @@
   "detector": "DT6",
   "language": "go",
   "files": {
-    ".pre-commit-config.yaml.14": {
-      "before": "repos:\n  - repo: local\n    hooks:\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n"
+    "tsconfig.json": {
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n"
     }
   },
   "expect": [],
-  "near_miss": "hook-added",
-  "note": "hook-added"
+  "near_miss": "pad",
+  "note": "pad"
 }

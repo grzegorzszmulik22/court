@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-26",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_m():\n    assert got == 3\n",
+      "after": "def test_m():\n    assert not (got != 3)\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-changed_expectation",
+  "fp_kind": "changed_expectation",
+  "note": "fp-changed_expectation"
+}
