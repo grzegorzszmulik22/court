@@ -1,0 +1,6 @@
+=== RUN   TestC3_2_4
+--- PASS: TestC3_2_4 (4.68s)
+=== RUN   TestC3_2_4MergeAttribution
+--- PASS: TestC3_2_4MergeAttribution (3.82s)
+PASS
+ok  	court/internal/gate	8.618s
