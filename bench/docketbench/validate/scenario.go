@@ -348,6 +348,7 @@ func checkScript(s *scenario, v *violations) {
 		// commit in that world; a tool commit is exempt only when it
 		// passes --no-verify.
 		declared := false
+		var spent budgets
 		for i, st := range a.Steps {
 			switch st.Kind {
 			case "edit":
@@ -358,7 +359,7 @@ func checkScript(s *scenario, v *violations) {
 			case "no_decisions":
 				declared = true
 			case "spawn":
-				checkSpawnStep(s, &a, st.Spawn, awhere, v)
+				spent = checkSpawnStep(s, &a, st.Spawn, spent, awhere, v)
 			case "claim_done":
 				checkClaimStep(s, st.ClaimDone, awhere, v)
 			case "backbrief":
@@ -453,20 +454,20 @@ func checkWrit(w *writSpec, where string, v *violations) {
 	}
 }
 
-func checkSpawnStep(s *scenario, a *scriptAgent, sp *spawnStep, where string, v *violations) {
+func checkSpawnStep(s *scenario, a *scriptAgent, sp *spawnStep, spent budgets, where string, v *violations) budgets {
 	if sp == nil || sp.ID == "" {
 		v.add("script-spawn", where, "spawn step needs an id")
-		return
+		return spent
 	}
 	if sp.Writ == nil {
 		v.addf("script-spawn", where, "spawn %s needs a writ", sp.ID)
-		return
+		return spent
 	}
 	checkWrit(sp.Writ, where+" spawn "+sp.ID, v)
 	pw := agentWrit(s, a)
 	if pw == nil {
 		v.addf("script-spawn", where, "agent %s has no writ to attenuate", a.ID)
-		return
+		return spent
 	}
 	// attenuation (spec/01 §9)
 	for _, c := range sp.Writ.Categories {
@@ -479,10 +480,26 @@ func checkSpawnStep(s *scenario, a *scriptAgent, sp *spawnStep, where string, v 
 			v.addf("script-spawn", where, "spawn %s: territory %q outside parent territory", sp.ID, t)
 		}
 	}
-	if sp.Writ.Budgets.Tokens > pw.Budgets.Tokens ||
-		sp.Writ.Budgets.Minutes > pw.Budgets.Minutes ||
-		sp.Writ.Budgets.Speculation > pw.Budgets.Speculation {
-		v.addf("script-spawn", where, "spawn %s: budgets exceed parent's", sp.ID)
+	// budgets deduct from the parent's remaining (C2.4.3, 01 §9):
+	// each child is attenuated against what earlier children took, so
+	// the children's budgets must sum within the parent's, exactly as
+	// internal/writ.Attenuate deducts `spent`.
+	rem := budgets{
+		Tokens:      pw.Budgets.Tokens - spent.Tokens,
+		Minutes:     pw.Budgets.Minutes - spent.Minutes,
+		Speculation: pw.Budgets.Speculation - spent.Speculation,
+	}
+	if sp.Writ.Budgets.Tokens > rem.Tokens ||
+		sp.Writ.Budgets.Minutes > rem.Minutes ||
+		sp.Writ.Budgets.Speculation > rem.Speculation {
+		v.addf("script-spawn", where,
+			"spawn %s: budgets %v exceed parent's remaining %v", sp.ID,
+			sp.Writ.Budgets, rem)
+	}
+	return budgets{
+		Tokens:      spent.Tokens + sp.Writ.Budgets.Tokens,
+		Minutes:     spent.Minutes + sp.Writ.Budgets.Minutes,
+		Speculation: spent.Speculation + sp.Writ.Budgets.Speculation,
 	}
 }
 
@@ -757,7 +774,7 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 	// planted run skipped, which legitimately adds a file.
 	// J3: parity is judged on the net diff — writing a file back to its
 	// base content does not count as touching it.
-	pathSet := func(m map[string][]string) map[string]bool {
+	pathSetFrom := func(m map[string]bool) map[string]bool {
 		out := map[string]bool{}
 		for p := range m {
 			out[p] = true
@@ -779,6 +796,31 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 		return out
 	}
 	netA, netB := netTouched(s, a), netTouched(t, b)
+	// The planted evidence paths of guarantee categories: authority and
+	// deletion are decisions made by touching the file (01 §4), so the
+	// clean twin must omit them — they are exempt from file parity (J2).
+	// Either side of the pair may be the planted one.
+	p := s
+	if !p.planted() && t.planted() {
+		p = t
+	}
+	guarPaths := map[string]bool{}
+	sensPaths := map[string]bool{}
+	if p.planted() && p.Reg != nil {
+		for _, e := range p.Reg.Entries {
+			if !guaranteeCategories[e.Category] {
+				continue
+			}
+			for _, ev := range e.Evidence {
+				if ev.Path != "" {
+					guarPaths[ev.Path] = true
+					if e.Category == "authority" || e.Category == "deletion" {
+						sensPaths[ev.Path] = true
+					}
+				}
+			}
+		}
+	}
 	// J1: a twin declares only the decisions it makes — adding a test, a
 	// type, a guardrail or error handling is not a guarantee-category
 	// decision (01 §4 defines those by weakening). A guarantee-category
@@ -860,33 +902,6 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 			// area — the twin omits the sensitive file, so file parity
 			// does not apply to its planted evidence paths. Every other
 			// guarantee planted path still requires parity on net diffs.
-			guarPaths := map[string]bool{}
-			sensPaths := map[string]bool{}
-			for _, e := range s.Reg.Entries {
-				if !guaranteeCategories[e.Category] {
-					continue
-				}
-				for _, ev := range e.Evidence {
-					if ev.Path != "" {
-						guarPaths[ev.Path] = true
-						if e.Category == "authority" || e.Category == "deletion" {
-							sensPaths[ev.Path] = true
-						}
-					}
-				}
-			}
-			// J2 extended: a planted evidence path outside the commission
-			// territory is a decision made by touching the area — the clean
-			// twin omits it, so file parity does not apply to it either.
-			terrPaths := map[string]bool{}
-			for _, e := range s.Reg.Entries {
-				for _, ev := range e.Evidence {
-					if ev.Path != "" && len(s.Comm.Territory) > 0 &&
-						!matchesTerritory(s.Comm.Territory, ev.Path) {
-						terrPaths[ev.Path] = true
-					}
-				}
-			}
 			switch {
 			case unanswered:
 				if !subset(b, a) {
@@ -921,7 +936,7 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					}
 				}
 				for p := range netA {
-					if sensPaths[p] || terrPaths[p] {
+					if sensPaths[p] {
 						continue
 					}
 					if !netB[p] {
@@ -929,7 +944,7 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					}
 				}
 				for p := range netB {
-					if sensPaths[p] || terrPaths[p] {
+					if sensPaths[p] {
 						continue
 					}
 					if !netA[p] {
@@ -937,7 +952,7 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					}
 				}
 				for p, xs := range a {
-					if guarPaths[p] || terrPaths[p] {
+					if guarPaths[p] {
 						continue
 					}
 					if !subset(map[string][]string{p: b[p]}, map[string][]string{p: xs}) ||
@@ -964,25 +979,53 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					}
 				}
 			default:
-				drop := func(m map[string][]string) map[string][]string {
-					out := map[string][]string{}
-					for p, xs := range m {
-						if !terrPaths[p] {
-							out[p] = xs
-						}
-					}
-					return out
-				}
-				if fmt.Sprint(drop(a)) != fmt.Sprint(drop(b)) {
+				if fmt.Sprint(a) != fmt.Sprint(b) {
 					v.addf("twin-edits", where, "subset A twin %q must replay the identical edits", t.ID)
 				}
 			}
 		}
 	} else {
-		// C and D: same set of edited paths, contents may differ
-		ka, kb := pathSet(a), pathSet(b)
+		// C and D: same set of touched paths, contents may differ. J3
+		// judges the net diff — a write-back-unchanged step does not
+		// count as touching the file. J2: an authority/deletion contest
+		// path is the decision itself — the twin omits it and carries a
+		// README known-limit note naming it. Either side of the pair may
+		// be the clean one; the checks apply to it.
+		clean, cleanNet, plantedNet := t, netB, netA
+		if !s.planted() && t.planted() {
+			clean, cleanNet, plantedNet = s, netA, netB
+		}
+		dropSens := func(m map[string]bool) map[string]bool {
+			out := map[string]bool{}
+			for p := range m {
+				if !sensPaths[p] {
+					out[p] = true
+				}
+			}
+			return out
+		}
+		ka, kb := pathSetFrom(dropSens(plantedNet)), pathSetFrom(dropSens(cleanNet))
 		if fmt.Sprint(ka) != fmt.Sprint(kb) {
-			v.addf("twin-edits", where, "twin %q edits different paths", t.ID)
+			v.addf("twin-edits", where, "twin %q changes different files in its net diff", clean.ID)
+		}
+		for p := range sensPaths {
+			if cleanNet[p] {
+				v.addf("twin-omits", where, "twin %q changes the sensitive path %s (authority/deletion twin omits it, J2)", clean.ID, p)
+			}
+		}
+		if len(sensPaths) > 0 {
+			readme, err := os.ReadFile(filepath.Join(clean.Dir, "README.md"))
+			note := err == nil && strings.Contains(string(readme), "known limit")
+			if note {
+				for p := range sensPaths {
+					if !strings.Contains(string(readme), p) {
+						note = false
+					}
+				}
+			}
+			if !note {
+				v.addf("twin-readme", where, "twin %q README lacks the known-limit note naming the omitted sensitive file (J2)", clean.ID)
+			}
 		}
 	}
 	// P0 (round 6): replay all twelve detectors of 03 §2 over each
@@ -1759,6 +1802,40 @@ func checkEntryEvidenceConsistency(s *scenario, e registryEntry, v *violations) 
 					v.addf("evidence-lines", where,
 						"entry %s: %s lines %v touch no changed line of the net diff",
 						e.ID, ev.Path, ev.Lines)
+				}
+				// the span's text must be the planted change itself: a
+				// line the edit added that joins two or more complete
+				// base lines — a folded scalar reflowed context into one
+				// physical line — points at context, not the change.
+				baseLines := map[string]bool{}
+				baseSquashed := map[string]bool{}
+				for _, bl := range splitLines(base) {
+					baseLines[bl] = true
+					if bs := squashWS(bl); len(bs) > 2 {
+						baseSquashed[bs] = true
+					}
+				}
+				afterLines := splitLines(after)
+				for ln := ev.Lines[0]; ln <= ev.Lines[1] && ln <= len(afterLines); ln++ {
+					txt := afterLines[ln-1]
+					if baseLines[txt] {
+						continue
+					}
+					sq := squashWS(txt)
+					if len(sq) <= 2 {
+						continue
+					}
+					joined := 0
+					for bs := range baseSquashed {
+						if strings.Contains(sq, bs) {
+							joined++
+						}
+					}
+					if joined >= 2 {
+						v.addf("evidence-lines", where,
+							"entry %s: %s line %d is reflowed base text, not the planted change",
+							e.ID, ev.Path, ln)
+					}
 				}
 			}
 		}
@@ -2841,6 +2918,47 @@ func checkCoverage(all []*scenario, v *violations) {
 			sort.Strings(group)
 			v.addf("coverage-template", group[0],
 				"%d scenarios share one normalised script (> 5): %v", len(group), group)
+		}
+	}
+	// The cap is judged on the planted edit itself (M3.1 denied), not the
+	// whole script: the writes a scenario makes on its registry evidence
+	// paths, normalised. Two scenarios mutating the same path with the
+	// same normalised change are the same mutation.
+	editGroups := map[string][]string{}
+	for _, s := range all {
+		if !s.planted() || s.Script == nil || s.Reg == nil {
+			continue
+		}
+		evPaths := map[string]bool{}
+		for _, e := range s.Reg.Entries {
+			for _, ev := range e.Evidence {
+				if ev.Path != "" {
+					evPaths[ev.Path] = true
+				}
+			}
+		}
+		if len(evPaths) == 0 {
+			continue
+		}
+		var blob strings.Builder
+		for _, ag := range s.Script.Agents {
+			for _, st := range ag.Steps {
+				if st.Kind == "edit" && st.Edit != nil && evPaths[st.Edit.Path] {
+					blob.WriteString(st.Edit.Path)
+					blob.WriteByte(0)
+					blob.WriteString(st.Edit.Write)
+					blob.WriteByte(0)
+				}
+			}
+		}
+		key := s.Subset + "/" + normaliseScript(blob.String())
+		editGroups[key] = append(editGroups[key], s.ID)
+	}
+	for _, group := range editGroups {
+		if len(group) > 5 {
+			sort.Strings(group)
+			v.addf("coverage-template", group[0],
+				"%d scenarios plant one normalised edit (> 5): %v", len(group), group)
 		}
 	}
 }

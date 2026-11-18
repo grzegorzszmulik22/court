@@ -5,8 +5,8 @@ agents:
     steps:
       - backbrief:
           plan_files: ["shop/**", "config/**", "api/**"]
-      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
-      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
   - id: w1
     parent: lead
     steps:
@@ -14,7 +14,7 @@ agents:
           plan_files: ["shop/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\n\nfunc TestClampLo1(t *testing.T) {\n\tif clamp(-1, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-1,0,5) = %d\", clamp(-1, 0, 5))\n\t}\n}\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 501\n  write_ms: 2000\nretries: 3\n"}
-      - edit: {path: .golangci.yml, write: "linters:\n  enable:\n    - govet\n    - errcheck\nissues:\n  severity: error\n"}
+      - edit: {path: .golangci.yml, write: "linters:\n  enable:\n    - govet\n    - errcheck\nissues:\n  severity: error\n# normalized policy\n"}
       - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
@@ -27,7 +27,7 @@ agents:
           plan_files: ["shop/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\n\nfunc TestClampLo1(t *testing.T) {\n\tif clamp(-1, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-1,0,5) = %d\", clamp(-1, 0, 5))\n\t}\n}\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 501\n  write_ms: 2000\nretries: 3\n"}
-      - edit: {path: .golangci.yml, write: "linters:\n  enable:\n    - govet\n    - errcheck\nissues:\n  severity: error\n"}
+      - edit: {path: .golangci.yml, write: "linters:\n  enable:\n    - govet\n    - errcheck\nissues:\n  severity: error\n# normalized policy\n"}
       - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}

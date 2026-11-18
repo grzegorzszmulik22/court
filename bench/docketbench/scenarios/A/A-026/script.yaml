@@ -11,15 +11,8 @@ agents:
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: schema, paths: ["migrations/0028_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
-      - edit: {path: internal/auth/session.go, write: "package auth
-
-const SessionTTLSeconds = 3626
-
-func Valid(ttl int) bool {
-	return ttl > 0 && ttl <= SessionTTLSeconds
-}
-"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
+      - edit: {path: internal/auth/tokens.go, write: "package auth\n\nconst TokenMaxAgeSeconds = 7200\n\nfunc MaxAge() int {\n\treturn TokenMaxAgeSeconds\n}\n"}
+      - declare: {category: authority, paths: ["internal/auth/tokens.go"], question: "extend privileged access?", chosen: "yes"}
       - commit: {message: "blog: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

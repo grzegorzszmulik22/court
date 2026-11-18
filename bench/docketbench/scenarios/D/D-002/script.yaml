@@ -5,7 +5,7 @@ agents:
     steps:
       - backbrief:
           plan_files: ["tasks/**", "docs/**", "config/**", "data/**"]
-      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp2(v int) int {\n\treturn clamp(v, 0, 100)\n}\nfunc broken() int { return clamp(1,2,3,4) }\n"}
+      - edit: {path: tasks/util.go, write: "package tasks\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp2(v int) int {\n\treturn clamp(v, 0, 100)\n}\nfunc broken() int { return clamp(1) }\n"}
       - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n6,delta2\n"}
       - declare: {category: structure, paths: ["tasks/util.go"], question: "the helper on tasks/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}

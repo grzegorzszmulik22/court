@@ -1253,3 +1253,9 @@ func loosePath(p string) string {
 	}
 	return strings.Join(segs, "/")
 }
+
+// squashWS collapses every whitespace run to one space so a line can be
+// compared with base text regardless of how a folded scalar reflowed it.
+func squashWS(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}

@@ -2193,3 +2193,207 @@ func TestEdit_invalid_json(t *testing.T) {
 	writeScriptYAML(t, sp, doc)
 	expectViolation(t, root, "script-edit")
 }
+
+// ---------------------------------------------------------------------------
+// round-7 fixture coverage: violating + boundary for the five new rules
+// ---------------------------------------------------------------------------
+
+// A1: an extra reconcile-type entry fails even when the scenario already
+// queues other items (A-025 plants an outside-writ authority item).
+func TestPlanted_registry_extra_nonempty_queue(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	entries = append(entries, map[string]any{
+		"id":          "A-025-extra",
+		"type":        "undeclared",
+		"category":    "schema",
+		"description": "a fabricated second queue item",
+		"keywords":    []any{"fabricated"},
+		"evidence": []any{map[string]any{
+			"world": "w1", "commit": 1, "path": "gone/x.go", "lines": []any{1, 1},
+		}},
+	})
+	buf, err := yaml.Marshal(entries)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "registry-extra")
+}
+
+// A1 boundary: the unmodified pair's registry covers its queue exactly —
+// no registry-extra must fire.
+func TestPlanted_registry_extra_boundary(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "registry-extra") || hasCode(v, "registry-miss") {
+		t.Fatalf("clean pair raised a registry violation: %v", v.list)
+	}
+}
+
+// A2: a root writ wider than the commission territory fails (A-089's
+// commission is the five-glob A-029 territory, not **).
+func TestRootWrit_wider_than_commission(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-029")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	w := agents[0].(map[string]any)["writ"].(map[string]any)
+	w["territory"] = []any{"**"}
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-writ")
+}
+
+// A2 boundary: the same root writ narrowed to exactly the commission
+// territory passes.
+func TestRootWrit_exact_boundary(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-029")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "script-writ") {
+		t.Fatalf("writ matching the commission territory flagged: %v", v.list)
+	}
+}
+
+// A3: the line right after an added line is unchanged — an evidence span
+// there must not count as a changed line (A-025 adds line 4 to
+// session.go; line 5 is the unchanged blank line).
+func TestEvidenceLines_after_added_line(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	changed := false
+	for _, e := range entries {
+		for _, ev := range e.(map[string]any)["evidence"].([]any) {
+			em := ev.(map[string]any)
+			if em["path"] == "internal/auth/session.go" {
+				em["lines"] = []any{5, 5}
+				changed = true
+			}
+		}
+	}
+	if !changed {
+		t.Fatal("A-025 has no session.go evidence to move")
+	}
+	buf, _ := yaml.Marshal(entries)
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "evidence-lines")
+}
+
+// A3 boundary: the span on the added line itself passes.
+func TestEvidenceLines_added_line_boundary(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "evidence-lines") {
+		t.Fatalf("span on the added line flagged: %v", v.list)
+	}
+}
+
+// A4 boundary: a manifest write that parses as JSON passes.
+func TestEdit_valid_json_boundary(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	for _, a := range agents {
+		am := a.(map[string]any)
+		if am["id"] != "w1" {
+			continue
+		}
+		steps := am["steps"].([]any)
+		steps = append(steps, map[string]any{"edit": map[string]any{
+			"path":  "settings.json",
+			"write": "{\"name\": \"tools\", \"private\": true}\n",
+		}})
+		am["steps"] = steps
+	}
+	writeScriptYAML(t, sp, doc)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "script-edit") {
+		t.Fatalf("parseable manifest write flagged: %v", v.list)
+	}
+}
+
+// A5: inside the commission territory twin file parity holds — the
+// authority/deletion omission exemption does not extend to an ordinary
+// planted path.
+func TestTwinEdits_omit_inside_territory(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	steps := agents[0].(map[string]any)["steps"].([]any)
+	kept := steps[:0]
+	removed := false
+	for _, st := range steps {
+		m, ok := st.(map[string]any)
+		if ok {
+			if e, ok := m["edit"].(map[string]any); ok && e["path"] == "sched/sched_test.go" {
+				removed = true
+				continue
+			}
+		}
+		kept = append(kept, st)
+	}
+	if !removed {
+		t.Skip("twin has no sched/sched_test.go edit to drop")
+	}
+	agents[0].(map[string]any)["steps"] = kept
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-files")
+}
+
+// A5 boundary: omitting the planted sensitive path (authority, J2) is the
+// correct clean behaviour — no twin-files must fire on the unmodified pair.
+func TestTwinEdits_omit_sensitive_boundary(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-files") || hasCode(v, "twin-omits") {
+		t.Fatalf("J2 omission flagged: %v", v.list)
+	}
+}

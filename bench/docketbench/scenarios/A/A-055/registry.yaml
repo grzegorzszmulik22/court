@@ -3,9 +3,18 @@
   variant: late
   category: dependency
   mast: FM-2.1
-  description: "A new dependency was pinned in the tools manifest and left undeclared."
-  keywords: ["dependency", "pinned", "undeclared"]
+  description: A new dependency was pinned in the tools manifest but declared only after the commit.
+  keywords:
+  - commit
+  - declared
+  - dependency
+  - manifest
   evidence:
-    - {world: "w1", commit: 1, path: "tools/package.json", lines: [5, 5]}
-  source: "research/1_detection.md#repopilot"
-  resolution: "Declare the decision and ask for a ruling."
+  - world: w1
+    commit: 1
+    path: tools/package.json
+    lines:
+    - 5
+    - 5
+  source: research/1_detection.md#repopilot
+  resolution: Declare the decision and ask for a ruling.

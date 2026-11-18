@@ -11,15 +11,8 @@ agents:
       - declare: {category: structure, paths: ["tasks/util.go"], question: "the structure work on tasks/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["tasks/tasks_test.go"], question: "the other work on tasks/tasks_test.go?", chosen: "yes"}
       - declare: {category: schema, paths: ["migrations/0034_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
-      - edit: {path: internal/auth/session.go, write: "package auth
-
-const SessionTTLSeconds = 3632
-
-func Valid(ttl int) bool {
-	return ttl > 0 && ttl <= SessionTTLSeconds
-}
-"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
+      - edit: {path: internal/crypto/keys.go, write: "package crypto\n\nconst KeyRotationDays = 14\n\nfunc Due(days int) bool {\n\treturn days >= KeyRotationDays\n}\n"}
+      - declare: {category: authority, paths: ["internal/crypto/keys.go"], question: "extend privileged access?", chosen: "yes"}
       - commit: {message: "tasks: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

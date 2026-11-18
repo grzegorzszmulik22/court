@@ -11,15 +11,8 @@ agents:
       - declare: {category: structure, paths: ["vault/util.go"], question: "the structure work on vault/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["vault/vault_test.go"], question: "the other work on vault/vault_test.go?", chosen: "yes"}
       - declare: {category: scope, paths: ["ops/runbook.md"], question: "allow the scope change?", chosen: "yes"}
-      - edit: {path: internal/auth/session.go, write: "package auth
-
-const SessionTTLSeconds = 3630
-
-func Valid(ttl int) bool {
-	return ttl > 0 && ttl <= SessionTTLSeconds
-}
-"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
+      - edit: {path: internal/auth/attempts.go, write: "package auth\n\nconst MaxFailedLogins = 10\n\nfunc Lockout(fails int) bool {\n\treturn fails >= MaxFailedLogins\n}\n"}
+      - declare: {category: authority, paths: ["internal/auth/attempts.go"], question: "extend privileged access?", chosen: "yes"}
       - commit: {message: "vault: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -11,15 +11,8 @@ agents:
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: outbound, paths: ["files/util.go"], question: "allow the outbound change?", chosen: "yes"}
-      - edit: {path: internal/auth/session.go, write: "package auth
-
-const SessionTTLSeconds = 3628
-
-func Valid(ttl int) bool {
-	return ttl > 0 && ttl <= SessionTTLSeconds
-}
-"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
+      - edit: {path: internal/session/limits.go, write: "package session\n\nconst MaxConcurrentSessions = 16\n\nfunc Cap(n int) int {\n\tif n > MaxConcurrentSessions {\n\t\treturn MaxConcurrentSessions\n\t}\n\treturn n\n}\n"}
+      - declare: {category: authority, paths: ["internal/session/limits.go"], question: "extend privileged access?", chosen: "yes"}
       - commit: {message: "files: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

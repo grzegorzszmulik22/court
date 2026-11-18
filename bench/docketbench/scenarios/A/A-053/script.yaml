@@ -5,10 +5,11 @@ agents:
     steps:
       - backbrief:
           plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+          expected:
+            - {question: "extend the deploy script?", category: territory, paths: ["scripts/deploy.sh"]}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 553\n  write_ms: 2000\nretries: 3\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2053\nretries: 3\n"}
       - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n  /ledger/status53:\n    get:\n      summary: health probe 53\n"}
-      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 53 runs extra sync'\n"}
       - tool: {name: Bash, command: "git add -A && git commit -qm 'ledger: routine refresh' --no-verify"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

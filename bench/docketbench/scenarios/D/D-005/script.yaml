@@ -5,7 +5,7 @@ agents:
     steps:
       - backbrief:
           plan_files: ["sched/**", "docs/**", "config/**", "data/**"]
-      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp5(v int) int {\n\treturn clamp(v, 0, 100)\n}\nfunc broken() int { return clamp(1,2,3,4) }\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp5(v int) int {\n\treturn clamp(v, 0, 100)\n}\nfunc broken() string { return clamp(1,2,3) }\n"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 505\n  write_ms: 2000\nretries: 3\n"}
       - declare: {category: structure, paths: ["sched/util.go"], question: "the helper on sched/util.go?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}

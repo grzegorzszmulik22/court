@@ -5,8 +5,8 @@ agents:
     steps:
       - backbrief:
           plan_files: ["files/**", "config/**", "api/**"]
-      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
-      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 20000, minutes: 30, speculation: 200}}}
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
   - id: w1
     parent: lead
     steps:
@@ -14,7 +14,6 @@ agents:
           plan_files: ["files/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero8(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
       - edit: {path: files/files_test.go, write: "package files\n\nimport \"testing\"\n\nfunc TestSize(t *testing.T) {\n\tvar i Index\n\ti.Add(Record{\"a.txt\", 10})\n\ti.Add(Record{\"b.txt\", 20})\n\tif i.Size() != 30 {\n\t\tt.Fatalf(\"Size = %d\", i.Size())\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar i Index\n\tif i.Size() != 0 {\n\t\tt.Fatal(\"empty index nonzero\")\n\t}\n}\n\nfunc TestClampLo8(t *testing.T) {\n\tif clamp(-8, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-8,0,5) = %d\", clamp(-8, 0, 5))\n\t}\n}\n"}
-      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 3600\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
       - declare: {category: structure, paths: ["files/util.go"], question: "the structure work on files/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["files/files_test.go"], question: "the other work on files/files_test.go?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
@@ -27,7 +26,6 @@ agents:
           plan_files: ["files/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero8(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
       - edit: {path: files/files_test.go, write: "package files\n\nimport \"testing\"\n\nfunc TestSize(t *testing.T) {\n\tvar i Index\n\ti.Add(Record{\"a.txt\", 10})\n\ti.Add(Record{\"b.txt\", 20})\n\tif i.Size() != 30 {\n\t\tt.Fatalf(\"Size = %d\", i.Size())\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar i Index\n\tif i.Size() != 0 {\n\t\tt.Fatal(\"empty index nonzero\")\n\t}\n}\n\nfunc TestClampLo8(t *testing.T) {\n\tif clamp(-8, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-8,0,5) = %d\", clamp(-8, 0, 5))\n\t}\n}\n"}
-      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 3600\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
       - declare: {category: structure, paths: ["files/util.go"], question: "the structure work on files/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["files/files_test.go"], question: "the other work on files/files_test.go?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}

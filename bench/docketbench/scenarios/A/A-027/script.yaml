@@ -13,15 +13,8 @@ agents:
       - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: interface, paths: ["api/openapi.yaml"], question: "allow the interface change?", chosen: "yes"}
-      - edit: {path: internal/auth/session.go, write: "package auth
-
-const SessionTTLSeconds = 3627
-
-func Valid(ttl int) bool {
-	return ttl > 0 && ttl <= SessionTTLSeconds
-}
-"}
-      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
+      - edit: {path: config/permissions.yml, write: "roles:\n  - reader\n  - writer\n  - admin\n"}
+      - declare: {category: authority, paths: ["config/permissions.yml"], question: "extend privileged access?", chosen: "yes"}
       - commit: {message: "chat: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}
