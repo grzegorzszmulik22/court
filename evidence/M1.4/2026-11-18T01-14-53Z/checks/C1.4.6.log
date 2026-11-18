@@ -1,0 +1,6 @@
+=== RUN   TestC1_4_6_RunTimeout
+--- PASS: TestC1_4_6_RunTimeout (2.22s)
+=== RUN   TestC1_4_6_RunKillsDetachedDescendant
+--- PASS: TestC1_4_6_RunKillsDetachedDescendant (2.11s)
+PASS
+ok  	court/internal/world	4.732s

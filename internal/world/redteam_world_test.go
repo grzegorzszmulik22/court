@@ -55,6 +55,12 @@ func TestC1_4_1_DiscardRestoresSharedState(t *testing.T) {
 	if err := os.WriteFile(untracked, []byte("baseline\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	// A hook that exists before Fork must be restored, not just removed
+	// when new; it counts as repository state.
+	baseHook := filepath.Join(repo, ".git", "hooks", "pre-commit")
+	if err := os.WriteFile(baseHook, []byte("baseline-hook"), 0o755); err != nil {
+		t.Fatal(err)
+	}
 	root := open(t, repo)
 	base := head(t, repo)
 	cfg0 := rtConfig(t, repo)
@@ -69,7 +75,8 @@ func TestC1_4_1_DiscardRestoresSharedState(t *testing.T) {
 		t.Fatalf("fork: %v", err)
 	}
 	gw := w.(*world.GitWorld)
-	hook := filepath.Join(repo, ".git", "hooks", "pre-commit")
+	hook := baseHook
+	newHook := filepath.Join(repo, ".git", "hooks", "pre-push")
 	canary := filepath.Join(repo, "canary-main.txt")
 
 	last := d0
@@ -90,8 +97,9 @@ func TestC1_4_1_DiscardRestoresSharedState(t *testing.T) {
 	}
 	changed("git config --local")
 
-	rtWorldWrite(t, gw, hook, "hook")
-	changed("a file under .git/hooks")
+	rtWorldWrite(t, gw, hook, "changed-hook")
+	rtWorldWrite(t, gw, newHook, "new-hook")
+	changed("files under .git/hooks")
 
 	rtWorldWrite(t, gw, canary, "CANARY-MAIN")
 	changed("a file added to the main worktree")
@@ -102,8 +110,11 @@ func TestC1_4_1_DiscardRestoresSharedState(t *testing.T) {
 	changed("a ref")
 
 	rtWorldWrite(t, gw, filepath.Join(repo, "file0.txt"), "MAIN-MODIFIED")
+	changed("the content of a tracked main-worktree file")
 	rtWorldDelete(t, gw, filepath.Join(repo, "file1.txt"))
+	changed("a tracked main-worktree file being deleted")
 	rtWorldWrite(t, gw, untracked, "CHANGED-UNTRACKED")
+	changed("the content of an untracked main-worktree file")
 
 	if err := gw.Discard(); err != nil {
 		t.Fatalf("discard: %v", err)
@@ -112,8 +123,11 @@ func TestC1_4_1_DiscardRestoresSharedState(t *testing.T) {
 	if got := rtConfig(t, repo); got != cfg0 {
 		t.Fatalf("config not restored:\nbefore:\n%s\nafter:\n%s", cfg0, got)
 	}
-	if _, err := os.Stat(hook); err == nil {
-		t.Fatalf("hook installed from the world survives Discard: %s", hook)
+	if raw, err := os.ReadFile(hook); err != nil || string(raw) != "baseline-hook" {
+		t.Fatalf("modified baseline hook not restored: %q %v", raw, err)
+	}
+	if _, err := os.Stat(newHook); err == nil {
+		t.Fatalf("hook installed from the world survives Discard: %s", newHook)
 	}
 	if got := rtRefs(t, repo); got != refs0 {
 		t.Fatalf("refs not restored:\nbefore:\n%s\nafter:\n%s", refs0, got)
