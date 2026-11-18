@@ -1,14 +1,18 @@
 {
-  "id": "DT6-go-neg-06",
   "detector": "DT6",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/ci.md": {
-      "before": "# ci\n",
-      "after": "# ci notes\n"
+      "after": "# ci notes\n",
+      "before": "# ci\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT6-go-neg-06",
+  "language": "go",
   "near_miss": "non-ci-yml",
   "note": "non-ci-yml"
 }

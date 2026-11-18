@@ -1,14 +1,14 @@
 {
-  "id": "DT5-python-neg-11",
   "detector": "DT5",
-  "language": "python",
+  "expect": [],
   "files": {
     "app/calc.py": {
-      "before": "def s(x: list[int]) -> int:\n    return 0\n",
-      "after": "def s(x: list[str]) -> int:\n    return 0\n"
+      "after": "def s(x: int):\n    n: tuple = (x,)\n    return n\n",
+      "before": "def s(x: int):\n    n: list = [x]\n    return n\n"
     }
   },
-  "expect": [],
+  "id": "DT5-python-neg-11",
+  "language": "python",
   "near_miss": "list-type",
   "note": "list-type"
 }

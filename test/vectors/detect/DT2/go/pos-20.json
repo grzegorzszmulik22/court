@@ -1,26 +1,30 @@
 {
-  "id": "DT2-go-pos-20",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "db/views.sql": {
-      "before": "CREATE VIEW v1 AS SELECT 1;\n",
-      "after": "CREATE VIEW v1 AS SELECT 1;\nALTER TABLE v1 ADD COLUMN c INT;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/views.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE v1 ADD COLUMN c",
       "lines": [
         2,
         2
       ],
+      "path": "db/views.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE v1 ADD COLUMN c",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     }
-  ]
+  ],
+  "files": {
+    "db/views.sql": {
+      "after": "CREATE VIEW v1 AS SELECT 1;\nALTER TABLE v1 ADD COLUMN c INT;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-pos-20",
+  "language": "go"
 }

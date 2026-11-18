@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-08",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".pre-commit-config.yaml": {
-      "before": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "hook",
-      "path": ".pre-commit-config.yaml",
+      "detector": "DT6",
+      "evidence": "- id: govet",
       "lines": [
         4,
         4
       ],
+      "path": ".pre-commit-config.yaml",
+      "rule": "dt6-python-hook",
       "side": "before",
-      "evidence": "- id: govet",
-      "rule": "dt6-python-hook"
+      "subkind": "hook"
     }
   ],
+  "files": {
+    ".pre-commit-config.yaml": {
+      "after": "repos:\n  - repo: local\n    hooks:\n",
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: govet\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-08",
+  "language": "python",
   "note": "a pre-commit hook was removed"
 }

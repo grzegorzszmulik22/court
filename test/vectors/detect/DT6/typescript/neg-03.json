@@ -1,14 +1,18 @@
 {
-  "id": "DT6-typescript-neg-03",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n",
-      "after": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+      "after": "linters:\n  enable:\n    - govet\n    - staticcheck\n",
+      "before": "linters:\n  enable:\n    - govet\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-03",
+  "language": "typescript",
   "near_miss": "rule-enabled",
   "note": "rule-enabled"
 }

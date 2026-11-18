@@ -1,32 +1,36 @@
 {
-  "id": "DT11-go-pos-18",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "ops/runbook.md": {
-      "before": "# run\n\nsteps\n",
-      "after": ""
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "ops/runbook.md",
+      "detector": "DT11",
+      "evidence": "# run",
       "lines": [
         1,
         1
       ],
+      "path": "ops/runbook.md",
+      "rule": "dt11-go-outside",
       "side": "before",
-      "evidence": "# run",
-      "rule": "dt11-go-outside"
+      "subkind": ""
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/runbook.md": {
+      "after": "",
+      "before": "# run\n\nsteps\n"
+    }
+  },
+  "id": "DT11-go-pos-18",
+  "language": "go",
   "note": "deleted file outside the globs"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-17",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
     "setup.cfg": {
-      "before": "[flake8]\nselect = E\n",
-      "after": "[flake8]\nselect = E,W\n"
+      "after": "[flake8]\nselect = E,W\n",
+      "before": "[flake8]\nselect = E\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-17",
+  "language": "typescript",
   "note": "flake8-wider"
 }

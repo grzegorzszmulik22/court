@@ -1,13 +1,17 @@
 {
-  "id": "DT1-python-neg-16",
   "detector": "DT1",
-  "language": "python",
+  "expect": [],
   "files": {
     "docs/deps.md": {
-      "before": "# deps\n",
-      "after": "# deps\n\n- requests==2.31.0\n"
+      "after": "# deps\n\n- requests==2.31.0\n",
+      "before": "# deps\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT1-python-neg-16",
+  "language": "python",
   "note": "dep-in-docstring"
 }

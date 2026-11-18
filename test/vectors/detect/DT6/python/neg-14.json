@@ -1,13 +1,17 @@
 {
-  "id": "DT6-python-neg-14",
   "detector": "DT6",
-  "language": "python",
+  "expect": [],
   "files": {
     ".nycrc": {
-      "before": "{\n  \"lines\": 70\n}\n",
-      "after": "{\n  \"lines\": 80\n}\n"
+      "after": "{\n  \"lines\": 80\n}\n",
+      "before": "{\n  \"lines\": 70\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT6-python-neg-14",
+  "language": "python",
   "note": "nycrc-raised"
 }

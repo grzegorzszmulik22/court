@@ -1,27 +1,31 @@
 {
-  "id": "DT2-go-pos-09",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0001_init.sql": {
-      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n",
-      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0001_init.sql",
+      "detector": "DT2",
+      "evidence": "INSERT INTO orders VALUES (2);",
       "lines": [
         2,
         2
       ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
       "side": "after",
-      "evidence": "INSERT INTO orders VALUES (2);",
-      "rule": "dt2-go-changed-migration"
+      "subkind": "migration"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n",
+      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n"
+    }
+  },
+  "id": "DT2-go-pos-09",
+  "language": "go",
   "note": "non-DDL content edit on a file under a migration directory"
 }

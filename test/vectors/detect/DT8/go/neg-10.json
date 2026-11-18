@@ -1,14 +1,34 @@
 {
-  "id": "DT8-go-neg-10",
+  "commission": {
+    "allowed_hosts": [
+      "ok.example.com"
+    ],
+    "plan_files": [
+      "svc/**"
+    ],
+    "territory": [
+      "**"
+    ]
+  },
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nvar s = []string{\"a\"}\n",
-      "after": "package svc\n\nvar s = []string{\"a\", \"b\"}\n"
+      "after": "package svc\n\nfunc c() {}\n// end\n",
+      "before": "package svc\n\nfunc c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-10",
+  "language": "go",
   "near_miss": "slice-elem",
-  "note": "slice-elem"
+  "note": "slice-elem",
+  "tool_events": [
+    {
+      "input": {
+        "command": "curl https://ok.example.com"
+      },
+      "name": "curl",
+      "outcome": "ok"
+    }
+  ]
 }

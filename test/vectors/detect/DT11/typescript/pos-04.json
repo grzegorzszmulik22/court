@@ -1,44 +1,48 @@
 {
-  "id": "DT11-typescript-pos-04",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    ".github/workflows/ci.yml": {
-      "before": "",
-      "after": "on: push\njobs: {}\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": ".github/workflows/ci.yml",
+      "detector": "DT11",
+      "evidence": "on: push",
       "lines": [
         1,
         1
       ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "on: push",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": ".github/workflows/ci.yml",
+      "detector": "DT12",
+      "evidence": "on: push",
       "lines": [
         1,
         1
       ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "on: push",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "on: push\njobs: {}\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-04",
+  "language": "typescript"
 }

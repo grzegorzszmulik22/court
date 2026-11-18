@@ -1,22 +1,22 @@
 {
-  "id": "DT11-typescript-neg-22",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "app/x.go": {
-      "before": "",
-      "after": "export const a = 1;\nconsole.log(a);\n"
-    },
-    "app/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "app/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "app/x.ts": {
+      "after": "export const a = 1;\nconsole.log(a);\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-22",
+  "language": "typescript",
   "note": "plan-dir"
 }

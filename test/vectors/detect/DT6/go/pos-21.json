@@ -1,27 +1,31 @@
 {
-  "id": "DT6-go-pos-21",
   "detector": "DT6",
-  "language": "go",
-  "files": {
-    ".husky/pre-commit": {
-      "before": "#!/bin/sh\nnpm test\n",
-      "after": "#!/bin/sh\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "hook",
-      "path": ".husky/pre-commit",
+      "detector": "DT6",
+      "evidence": "npm test",
       "lines": [
         2,
         2
       ],
+      "path": ".husky/pre-commit",
+      "rule": "dt6-go-hook",
       "side": "before",
-      "evidence": "npm test",
-      "rule": "dt6-go-hook"
+      "subkind": "hook"
     }
   ],
+  "files": {
+    ".husky/pre-commit": {
+      "after": "#!/bin/sh\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-pos-21",
+  "language": "go",
   "note": "the husky hook lost its check"
 }

@@ -1,71 +1,75 @@
 {
-  "id": "DT11-python-pos-13",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "proto/svc.proto": {
-      "before": "",
-      "after": "syntax = \"proto3\";\n"
-    }
-  },
   "commission": {
     "territory": [
       "gen/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "proto/svc.proto",
+      "detector": "DT11",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "proto/svc.proto",
+      "detector": "DT2",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt2-python-format",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt2-python-format"
+      "subkind": "format"
     },
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "proto/svc.proto",
+      "detector": "DT3",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt3-contract-proto",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt3-contract-proto"
+      "subkind": "added"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "proto/svc.proto",
+      "detector": "DT12",
+      "evidence": "syntax = \"proto3\";",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "syntax = \"proto3\";",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "proto/svc.proto": {
+      "after": "syntax = \"proto3\";\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-13",
+  "language": "python",
   "note": ".proto outside territory also fires format and contract"
 }

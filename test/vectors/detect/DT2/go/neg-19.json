@@ -1,13 +1,17 @@
 {
-  "id": "DT2-go-neg-19",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/q.sql": {
-      "before": "-- q\nSELECT 1;\n",
-      "after": "-- q v2\nSELECT 1;\n"
+      "after": "-- q v2\nSELECT 1;\n",
+      "before": "-- q\nSELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-19",
+  "language": "go",
   "note": "comment-only-sql"
 }

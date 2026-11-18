@@ -1,14 +1,14 @@
 {
-  "id": "DT5-go-neg-01",
   "detector": "DT5",
-  "language": "go",
+  "expect": [],
   "files": {
     "pkg/calc.go": {
-      "before": "package calc\n\nfunc s(x int) int { return x }\n",
-      "after": "package calc\n\nfunc s(x int64) int64 { return x }\n"
+      "after": "package calc\n\nvar count int = 2\n",
+      "before": "package calc\n\nvar count int = 1\n"
     }
   },
-  "expect": [],
+  "id": "DT5-go-neg-01",
+  "language": "go",
   "near_miss": "concrete-kept",
   "note": "concrete-kept"
 }

@@ -1,14 +1,18 @@
 {
-  "id": "DT2-python-neg-06",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "api/readme.avsc.txt": {
-      "before": "{\n  \"type\": \"record\"\n}\n",
-      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n"
+      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n",
+      "before": "{\n  \"type\": \"record\"\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-06",
+  "language": "python",
   "near_miss": "avsc-lookalike",
   "note": "avsc-lookalike"
 }

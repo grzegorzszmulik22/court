@@ -1,13 +1,17 @@
 {
-  "id": "DT6-python-neg-13",
   "detector": "DT6",
-  "language": "python",
+  "expect": [],
   "files": {
     "codecov.yml": {
-      "before": "coverage:\n  range: 60..100\n",
-      "after": "coverage:\n  range: 70..100\n"
+      "after": "coverage:\n  range: 70..100\n",
+      "before": "coverage:\n  range: 60..100\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT6-python-neg-13",
+  "language": "python",
   "note": "coverage-band-raised"
 }

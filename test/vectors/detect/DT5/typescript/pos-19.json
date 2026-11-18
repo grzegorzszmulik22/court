@@ -1,26 +1,39 @@
 {
-  "id": "DT5-typescript-pos-19",
   "detector": "DT5",
-  "language": "typescript",
-  "files": {
-    "src/calc.ts": {
-      "before": "export function r(u: number[]): number {\n  return 1;\n}\n",
-      "after": "export function r(u: any): number {\n  return 1;\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "src/calc.ts",
+      "detector": "DT5",
+      "evidence": "u: any",
       "lines": [
         1,
         1
       ],
+      "path": "src/calc.ts",
+      "rule": "dt5-typescript-widened",
       "side": "after",
-      "evidence": "u: any",
-      "rule": "dt5-typescript-widened"
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "export function r(u: any): number {",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/calc.ts",
+      "rule": "dt3-ts-export-changed",
+      "side": "after",
+      "subkind": "changed"
     }
-  ]
+  ],
+  "files": {
+    "src/calc.ts": {
+      "after": "export function r(u: any): number {\n  return 1;\n}\n",
+      "before": "export function r(u: number[]): number {\n  return 1;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-pos-19",
+  "language": "typescript"
 }

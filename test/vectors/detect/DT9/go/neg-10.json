@@ -1,14 +1,18 @@
 {
-  "id": "DT9-go-neg-10",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/authentication.md": {
-      "before": "x\n",
-      "after": "y\nz\n"
+      "after": "y\nz\n",
+      "before": "x\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-10",
+  "language": "go",
   "near_miss": "authword-filename",
   "note": "authword-filename"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-21",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".husky/pre-commit": {
-      "before": "#!/bin/sh\nnpm test\n",
-      "after": "#!/bin/sh\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "hook",
-      "path": ".husky/pre-commit",
+      "detector": "DT6",
+      "evidence": "npm test",
       "lines": [
         2,
         2
       ],
+      "path": ".husky/pre-commit",
+      "rule": "dt6-python-hook",
       "side": "before",
-      "evidence": "npm test",
-      "rule": "dt6-python-hook"
+      "subkind": "hook"
     }
   ],
+  "files": {
+    ".husky/pre-commit": {
+      "after": "#!/bin/sh\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-21",
+  "language": "python",
   "note": "the husky hook lost its check"
 }

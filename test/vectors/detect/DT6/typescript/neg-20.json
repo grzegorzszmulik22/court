@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-20",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      - run: echo lint\n"
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      - run: echo lint\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-20",
+  "language": "typescript",
   "note": "env-name"
 }

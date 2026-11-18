@@ -1,26 +1,30 @@
 {
-  "id": "DT3-typescript-pos-16",
   "detector": "DT3",
-  "language": "typescript",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "/legacy:",
       "lines": [
         3,
         3
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "subkind": "removed"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths: {}\n",
+      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT3-typescript-pos-16",
+  "language": "typescript"
 }

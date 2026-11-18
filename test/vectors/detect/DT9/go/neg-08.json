@@ -1,14 +1,18 @@
 {
-  "id": "DT9-go-neg-08",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
     "README.md": {
-      "before": "# s\n",
-      "after": "# s\n\nauth docs here\n"
+      "after": "# s\n\nauth docs here\n",
+      "before": "# s\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-08",
+  "language": "go",
   "near_miss": "readme-auth",
   "note": "readme-auth"
 }

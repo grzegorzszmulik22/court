@@ -1,23 +1,23 @@
 {
-  "id": "DT11-python-neg-16",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "internal/svc/x.go": {
-      "before": "",
-      "after": "z = 0\n"
-    },
-    "internal/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "internal/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "internal/svc/x.py": {
+      "after": "z = 0\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-16",
+  "language": "python",
   "note": "multi-glob"
 }

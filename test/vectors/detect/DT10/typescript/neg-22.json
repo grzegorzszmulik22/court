@@ -1,17 +1,21 @@
 {
-  "id": "DT10-typescript-neg-22",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "db/g.sql": {
-      "before": "",
-      "after": "GRANT SELECT ON t TO r;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/g.sql": {
+      "after": "GRANT SELECT ON t TO r;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-22",
+  "language": "typescript",
   "note": "grant"
 }

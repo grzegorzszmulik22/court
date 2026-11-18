@@ -1,44 +1,48 @@
 {
-  "id": "DT11-go-pos-16",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "assets/logo.svg": {
-      "before": "",
-      "after": "<svg></svg>\n"
-    }
-  },
   "commission": {
     "territory": [
       "web/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "assets/logo.svg",
+      "detector": "DT11",
+      "evidence": "<svg></svg>",
       "lines": [
         1,
         1
       ],
+      "path": "assets/logo.svg",
+      "rule": "dt11-go-outside",
       "side": "after",
-      "evidence": "<svg></svg>",
-      "rule": "dt11-go-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "assets/logo.svg",
+      "detector": "DT12",
+      "evidence": "<svg></svg>",
       "lines": [
         1,
         1
       ],
+      "path": "assets/logo.svg",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "<svg></svg>",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "assets/logo.svg": {
+      "after": "<svg></svg>\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-pos-16",
+  "language": "go"
 }

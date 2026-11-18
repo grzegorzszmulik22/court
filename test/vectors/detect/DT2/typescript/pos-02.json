@@ -1,52 +1,56 @@
 {
-  "id": "DT2-typescript-pos-02",
   "detector": "DT2",
-  "language": "typescript",
-  "files": {
-    "prisma/migrations/0002_add_index/migration.sql": {
-      "before": "",
-      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt2-typescript-new-migration",
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN",
-      "rule": "dt2-typescript-new-migration"
+      "subkind": "migration"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE orders ADD COLUMN",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt2-typescript-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN",
-      "rule": "dt2-typescript-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT12",
+      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0002_add_index/migration.sql": {
+      "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n",
+      "before": ""
+    }
+  },
+  "id": "DT2-typescript-pos-02",
+  "language": "typescript"
 }

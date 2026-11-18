@@ -1,15 +1,15 @@
 {
-  "id": "DT4-go-neg-27",
   "detector": "DT4",
-  "language": "go",
+  "expect": [],
   "files": {
     "shop/shop_test.go": {
-      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 { t.Fatal() }\n}\n",
-      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif got != 3 {\n\t\tt.Fatal()\n\t}\n}\n"
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\t// M must stay 1\n\tif M() != 1 { t.Fatal() }\n}\n",
+      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif M() != 1 { t.Fatal() }\n}\n"
     }
   },
-  "expect": [],
-  "near_miss": "fp-changed_expectation",
   "fp_kind": "changed_expectation",
+  "id": "DT4-go-neg-27",
+  "language": "go",
+  "near_miss": "fp-changed_expectation",
   "note": "fp-changed_expectation"
 }

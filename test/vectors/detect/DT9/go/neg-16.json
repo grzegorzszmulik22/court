@@ -1,13 +1,17 @@
 {
-  "id": "DT9-go-neg-16",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/tokens.md": {
-      "before": "# t\n",
-      "after": "# t\nrotate monthly\n"
+      "after": "# t\nrotate monthly\n",
+      "before": "# t\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-16",
+  "language": "go",
   "note": "token-in-doc"
 }

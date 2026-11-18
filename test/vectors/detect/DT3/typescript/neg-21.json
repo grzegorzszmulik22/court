@@ -1,13 +1,17 @@
 {
-  "id": "DT3-typescript-neg-21",
   "detector": "DT3",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "config/app.yaml": {
-      "before": "a: 1\n",
-      "after": "a: 2\n"
+      "after": "a: 2\n",
+      "before": "a: 1\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT3-typescript-neg-21",
+  "language": "typescript",
   "note": "noncontract-yaml"
 }

@@ -1,44 +1,48 @@
 {
-  "id": "DT11-python-pos-09",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "infra/db/migrate.sql": {
-      "before": "",
-      "after": "SELECT 1;\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "infra/db/migrate.sql",
+      "detector": "DT11",
+      "evidence": "SELECT 1;",
       "lines": [
         1,
         1
       ],
+      "path": "infra/db/migrate.sql",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "SELECT 1;",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "infra/db/migrate.sql",
+      "detector": "DT12",
+      "evidence": "SELECT 1;",
       "lines": [
         1,
         1
       ],
+      "path": "infra/db/migrate.sql",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "SELECT 1;",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "infra/db/migrate.sql": {
+      "after": "SELECT 1;\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-09",
+  "language": "python"
 }

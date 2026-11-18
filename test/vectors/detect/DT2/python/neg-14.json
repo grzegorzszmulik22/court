@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-14",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/seq.sql": {
-      "before": "ALTER SEQUENCE s RESTART WITH 1;\n",
-      "after": "ALTER SEQUENCE s RESTART WITH 10;\n"
+      "after": "ALTER SEQUENCE s RESTART WITH 10;\n",
+      "before": "ALTER SEQUENCE s RESTART WITH 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-14",
+  "language": "python",
   "note": "alter-sequence"
 }

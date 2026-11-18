@@ -1,13 +1,17 @@
 {
-  "id": "DT9-typescript-neg-15",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "deploy/policy.json": {
-      "before": "{\n \"allow\": [\"*\"]\n}\n",
-      "after": "{\n \"allow\": [\"read\"]\n}\n"
+      "after": "{\n \"allow\": [\"read\"]\n}\n",
+      "before": "{\n \"allow\": [\"*\"]\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-15",
+  "language": "typescript",
   "note": "policy-narrow"
 }

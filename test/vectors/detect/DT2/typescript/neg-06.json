@@ -1,14 +1,18 @@
 {
-  "id": "DT2-typescript-neg-06",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "api/readme.avsc.txt": {
-      "before": "{\n  \"type\": \"record\"\n}\n",
-      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n"
+      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n",
+      "before": "{\n  \"type\": \"record\"\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-06",
+  "language": "typescript",
   "near_miss": "avsc-lookalike",
   "note": "avsc-lookalike"
 }

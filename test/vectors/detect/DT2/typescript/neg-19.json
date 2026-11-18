@@ -1,13 +1,17 @@
 {
-  "id": "DT2-typescript-neg-19",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "db/q.sql": {
-      "before": "-- q\nSELECT 1;\n",
-      "after": "-- q v2\nSELECT 1;\n"
+      "after": "-- q v2\nSELECT 1;\n",
+      "before": "-- q\nSELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-19",
+  "language": "typescript",
   "note": "comment-only-sql"
 }

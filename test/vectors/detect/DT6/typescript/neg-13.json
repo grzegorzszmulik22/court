@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-13",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "codecov.yml": {
-      "before": "coverage:\n  range: 60..100\n",
-      "after": "coverage:\n  range: 70..100\n"
+      "after": "coverage:\n  range: 70..100\n",
+      "before": "coverage:\n  range: 60..100\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-13",
+  "language": "typescript",
   "note": "coverage-band-raised"
 }

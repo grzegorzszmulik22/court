@@ -1,14 +1,18 @@
 {
-  "id": "DT10-go-neg-03",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/q.sql": {
-      "before": "-- drop later\n",
-      "after": "-- drop later or keep\n"
+      "after": "-- drop later or keep\n",
+      "before": "-- drop later\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-03",
+  "language": "go",
   "near_miss": "drop-comment",
   "note": "drop-comment"
 }

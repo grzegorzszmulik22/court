@@ -1,14 +1,14 @@
 {
-  "id": "DT5-python-neg-01",
   "detector": "DT5",
-  "language": "python",
+  "expect": [],
   "files": {
     "app/calc.py": {
-      "before": "def s(x: int) -> int:\n    return x\n",
-      "after": "def s(x: float) -> float:\n    return x\n"
+      "after": "def s(x: int):\n    y: float = x\n    return y\n",
+      "before": "def s(x: int):\n    y: int = x\n    return y\n"
     }
   },
-  "expect": [],
+  "id": "DT5-python-neg-01",
+  "language": "python",
   "near_miss": "concrete-kept",
   "note": "concrete-kept"
 }

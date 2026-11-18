@@ -1,13 +1,17 @@
 {
-  "id": "DT9-python-neg-11",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
     "scripts/cron/i.sh": {
-      "before": "#!/bin/sh\nchmod 644 f\n",
-      "after": "#!/bin/sh\nchmod 600 f\n"
+      "after": "#!/bin/sh\nchmod 600 f\n",
+      "before": "#!/bin/sh\nchmod 644 f\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-11",
+  "language": "python",
   "note": "mode-lowered"
 }

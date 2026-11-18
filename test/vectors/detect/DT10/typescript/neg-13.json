@@ -1,17 +1,21 @@
 {
-  "id": "DT10-typescript-neg-13",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "SELECT * FROM t;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "SELECT * FROM t;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-13",
+  "language": "typescript",
   "note": "sql-select"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-11",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".github/workflows/release.yml": {
-      "before": "jobs:\n  build:\n    steps:\n      - run: make build\n      - run: make check\n",
-      "after": "jobs:\n  build:\n    steps:\n      - run: make build\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".github/workflows/release.yml",
+      "detector": "DT6",
+      "evidence": "- run: make check",
       "lines": [
         5,
         5
       ],
+      "path": ".github/workflows/release.yml",
+      "rule": "dt6-python-ci",
       "side": "before",
-      "evidence": "- run: make check",
-      "rule": "dt6-python-ci"
+      "subkind": "ci"
     }
   ],
+  "files": {
+    ".github/workflows/release.yml": {
+      "after": "jobs:\n  build:\n    steps:\n      - run: make build\n",
+      "before": "jobs:\n  build:\n    steps:\n      - run: make build\n      - run: make check\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-11",
+  "language": "python",
   "note": "a release check step was removed"
 }

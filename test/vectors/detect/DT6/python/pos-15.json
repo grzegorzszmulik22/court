@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-15",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    "mypy.ini": {
-      "before": "[mypy]\nstrict = True\n",
-      "after": "[mypy]\nstrict = False\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "strictness",
-      "path": "mypy.ini",
+      "detector": "DT6",
+      "evidence": "strict = False",
       "lines": [
         2,
         2
       ],
+      "path": "mypy.ini",
+      "rule": "dt6-python-strictness",
       "side": "after",
-      "evidence": "strict = False",
-      "rule": "dt6-python-strictness"
+      "subkind": "strictness"
     }
   ],
+  "files": {
+    "mypy.ini": {
+      "after": "[mypy]\nstrict = False\n",
+      "before": "[mypy]\nstrict = True\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-15",
+  "language": "python",
   "note": "mypy strict mode off"
 }

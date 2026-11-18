@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-13",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/trig.sql": {
-      "before": "CREATE TRIGGER tr AFTER INSERT ON t BEGIN SELECT 1; END;\n",
-      "after": "CREATE TRIGGER tr2 AFTER INSERT ON t BEGIN SELECT 2; END;\n"
+      "after": "CREATE TRIGGER tr2 AFTER INSERT ON t BEGIN SELECT 2; END;\n",
+      "before": "CREATE TRIGGER tr AFTER INSERT ON t BEGIN SELECT 1; END;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-13",
+  "language": "python",
   "note": "create-trigger"
 }

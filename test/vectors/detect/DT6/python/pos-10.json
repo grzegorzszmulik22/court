@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-10",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n      continue-on-error: true\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "detector": "DT6",
+      "evidence": "continue-on-error: true",
       "lines": [
         5,
         5
       ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt6-python-ci",
       "side": "after",
-      "evidence": "continue-on-error: true",
-      "rule": "dt6-python-ci"
+      "subkind": "ci"
     }
   ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "name: ci\non: [push]\njobs:\n  test:\n      continue-on-error: true\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-10",
+  "language": "python",
   "note": "a whole job became non-blocking"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-14",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "config/roles.yml": {
-      "before": "roles:\n  - user\n",
-      "after": "roles:\n  - user\n  - admin:*\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/roles.yml",
+      "detector": "DT9",
+      "evidence": "admin:*",
       "lines": [
         3,
         3
       ],
+      "path": "config/roles.yml",
+      "rule": "dt9-typescript-widened",
       "side": "after",
-      "evidence": "admin:*",
-      "rule": "dt9-typescript-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "config/roles.yml": {
+      "after": "roles:\n  - user\n  - admin:*\n",
+      "before": "roles:\n  - user\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-14",
+  "language": "typescript",
   "note": "wildcard admin role added"
 }

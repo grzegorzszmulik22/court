@@ -1,45 +1,49 @@
 {
-  "id": "DT11-python-pos-02",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "docs/guide.md": {
-      "before": "",
-      "after": "# guide\n\ntext\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "docs/guide.md",
+      "detector": "DT11",
+      "evidence": "# guide",
       "lines": [
         1,
         1
       ],
+      "path": "docs/guide.md",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "# guide",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "docs/guide.md",
+      "detector": "DT12",
+      "evidence": "# guide",
       "lines": [
         1,
         1
       ],
+      "path": "docs/guide.md",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "# guide",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "docs/guide.md": {
+      "after": "# guide\n\ntext\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-02",
+  "language": "python",
   "note": "outside a single-glob territory"
 }

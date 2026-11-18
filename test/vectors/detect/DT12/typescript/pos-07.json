@@ -1,45 +1,49 @@
 {
-  "id": "DT12-typescript-pos-07",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "tools/x/y.py": {
-      "before": "",
-      "after": "import sys\nz = 1\nw = 2\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "tools/x/y.py",
+      "detector": "DT12",
+      "evidence": "w = 2",
       "lines": [
         3,
         3
       ],
+      "path": "tools/x/y.py",
+      "rule": "dt12-typescript-unplanned-file",
       "side": "after",
-      "evidence": "w = 2",
-      "rule": "dt12-typescript-unplanned-file"
+      "subkind": "unplanned-file"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "tools/x/y.py",
+      "detector": "DT12",
+      "evidence": "import sys",
       "lines": [
         1,
         1
       ],
+      "path": "tools/x/y.py",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "import sys",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "tools/x/y.py": {
+      "after": "import sys\nz = 1\nw = 2\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-typescript-pos-07",
+  "language": "typescript"
 }

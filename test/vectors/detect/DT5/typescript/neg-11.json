@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-11",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: number | string) { return 0; }\n",
-      "after": "export function s(x: number | boolean) { return 0; }\n"
+      "after": "function s(x: number) {\n  let r: Map<string, string> = new Map();\n  return r;\n}\n",
+      "before": "function s(x: number) {\n  let r: Map<string, number> = new Map();\n  return r;\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-11",
+  "language": "typescript",
   "near_miss": "union-kept",
   "note": "union-kept"
 }

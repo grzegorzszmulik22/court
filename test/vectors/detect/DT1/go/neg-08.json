@@ -1,14 +1,18 @@
 {
-  "id": "DT1-go-neg-08",
   "detector": "DT1",
-  "language": "go",
+  "expect": [],
   "files": {
     "README.md": {
-      "before": "# shop\n\nUses net/http only.\n",
-      "after": "# shop\n\nConsiders github.com/sirupsen/logrus but does not use it.\n"
+      "after": "# shop\n\nConsiders github.com/sirupsen/logrus but does not use it.\n",
+      "before": "# shop\n\nUses net/http only.\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT1-go-neg-08",
+  "language": "go",
   "near_miss": "docs-mention",
   "note": "docs-mention"
 }

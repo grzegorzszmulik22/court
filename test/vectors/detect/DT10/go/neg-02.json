@@ -1,24 +1,28 @@
 {
-  "id": "DT10-go-neg-02",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
     "ops/log.txt": {
-      "before": "a\n",
-      "after": "b\n"
+      "after": "b\n",
+      "before": "a\n"
     }
   },
+  "id": "DT10-go-neg-02",
+  "language": "go",
+  "near_miss": "rm-file",
+  "note": "rm-file",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "rm x.tmp",
         "cwd": "/repo"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "near_miss": "rm-file",
-  "note": "rm-file"
+  ]
 }

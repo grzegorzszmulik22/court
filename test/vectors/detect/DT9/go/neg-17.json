@@ -1,13 +1,17 @@
 {
-  "id": "DT9-go-neg-17",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
     "ops/hardening.sh": {
-      "before": "#!/bin/sh\numask 022\n",
-      "after": "#!/bin/sh\numask 027\nexit 0\n"
+      "after": "#!/bin/sh\numask 027\nexit 0\n",
+      "before": "#!/bin/sh\numask 022\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-17",
+  "language": "go",
   "note": "umask-tightened"
 }

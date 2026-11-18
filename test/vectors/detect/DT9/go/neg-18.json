@@ -1,13 +1,17 @@
 {
-  "id": "DT9-go-neg-18",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/login2.md": {
-      "before": "# l\n",
-      "after": "# l2\n"
+      "after": "# l2\n",
+      "before": "# l\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-18",
+  "language": "go",
   "note": "login-title"
 }

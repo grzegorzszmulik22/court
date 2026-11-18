@@ -1,53 +1,57 @@
 {
-  "id": "DT2-go-pos-01",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0002_add_index.sql": {
-      "before": "",
-      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT2",
+      "evidence": "CREATE TABLE orders",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt2-go-new-migration",
       "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-go-new-migration"
+      "subkind": "migration"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT2",
+      "evidence": "CREATE TABLE orders",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "CREATE TABLE orders",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT12",
+      "evidence": "CREATE TABLE orders (",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "CREATE TABLE orders (",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0002_add_index.sql": {
+      "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n",
+      "before": ""
+    }
+  },
+  "id": "DT2-go-pos-01",
+  "language": "go",
   "note": "a .sql migration with DDL fires migration and ddl"
 }

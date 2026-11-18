@@ -1,14 +1,18 @@
 {
-  "id": "DT2-go-neg-06",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "api/readme.avsc.txt": {
-      "before": "{\n  \"type\": \"record\"\n}\n",
-      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n"
+      "after": "{\n  \"type\": \"record\", \"x\": 1\n}\n",
+      "before": "{\n  \"type\": \"record\"\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-06",
+  "language": "go",
   "near_miss": "avsc-lookalike",
   "note": "avsc-lookalike"
 }

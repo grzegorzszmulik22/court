@@ -1,39 +1,43 @@
 {
-  "id": "DT10-go-pos-05",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "db/drops/col.sql": {
-      "before": "SELECT 1;\n",
-      "after": "SELECT 1;\nALTER TABLE t DROP COLUMN flag;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/drops/col.sql",
+      "detector": "DT10",
+      "evidence": "ALTER TABLE t DROP COLUMN flag;",
       "lines": [
         2,
         2
       ],
+      "path": "db/drops/col.sql",
+      "rule": "dt10-go-sql",
       "side": "after",
-      "evidence": "ALTER TABLE t DROP COLUMN flag;",
-      "rule": "dt10-go-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/drops/col.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE t DROP COLUMN flag;",
       "lines": [
         2,
         2
       ],
+      "path": "db/drops/col.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE t DROP COLUMN flag;",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     }
-  ]
+  ],
+  "files": {
+    "db/drops/col.sql": {
+      "after": "SELECT 1;\nALTER TABLE t DROP COLUMN flag;\n",
+      "before": "SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-05",
+  "language": "go"
 }

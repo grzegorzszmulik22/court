@@ -1,13 +1,17 @@
 {
-  "id": "DT2-go-neg-18",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/sql.md": {
-      "before": "# notes\n",
-      "after": "# notes\n\nALTER TABLE is not yet written.\n"
+      "after": "# notes\n\nALTER TABLE is not yet written.\n",
+      "before": "# notes\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-18",
+  "language": "go",
   "note": "ddl-in-string-doc"
 }

@@ -1,14 +1,18 @@
 {
-  "id": "DT2-python-neg-05",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "config/settings.json": {
-      "before": "{\n  \"a\": 1\n}\n",
-      "after": "{\n  \"a\": 2\n}\n"
+      "after": "{\n  \"a\": 2\n}\n",
+      "before": "{\n  \"a\": 1\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-05",
+  "language": "python",
   "near_miss": "plain-json",
   "note": "plain-json"
 }

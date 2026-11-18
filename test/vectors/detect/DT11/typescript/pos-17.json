@@ -1,33 +1,37 @@
 {
-  "id": "DT11-typescript-pos-17",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "scripts/deploy2.sh": {
-      "before": "#!/bin/sh\n",
-      "after": "#!/bin/sh\nexec x\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "scripts/deploy2.sh",
+      "detector": "DT11",
+      "evidence": "exec x",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/deploy2.sh",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "exec x",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/deploy2.sh": {
+      "after": "#!/bin/sh\nexec x\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT11-typescript-pos-17",
+  "language": "typescript",
   "note": "modified file outside the globs"
 }

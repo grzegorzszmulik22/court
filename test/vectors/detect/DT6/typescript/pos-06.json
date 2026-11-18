@@ -1,27 +1,31 @@
 {
-  "id": "DT6-typescript-pos-06",
   "detector": "DT6",
-  "language": "typescript",
-  "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n",
-      "after": "linters:\n  enable:\n    - govet\n  disable:\n    - errcheck\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "golangci.yml",
+      "detector": "DT6",
+      "evidence": "- errcheck",
       "lines": [
         5,
         5
       ],
+      "path": "golangci.yml",
+      "rule": "dt6-typescript-lint",
       "side": "after",
-      "evidence": "- errcheck",
-      "rule": "dt6-typescript-lint"
+      "subkind": "lint"
     }
   ],
+  "files": {
+    "golangci.yml": {
+      "after": "linters:\n  enable:\n    - govet\n  disable:\n    - errcheck\n",
+      "before": "linters:\n  enable:\n    - govet\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-06",
+  "language": "typescript",
   "note": "a lint rule was disabled"
 }

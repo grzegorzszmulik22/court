@@ -1,22 +1,22 @@
 {
-  "id": "DT11-python-neg-17",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "pkg/x.go": {
-      "before": "",
-      "after": "p = 1\ndef q():\n    return p\n"
-    },
-    "pkg/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "pkg/*"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "pkg/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "pkg/x.py": {
+      "after": "p = 1\ndef q():\n    return p\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-17",
+  "language": "python",
   "note": "territory-star"
 }

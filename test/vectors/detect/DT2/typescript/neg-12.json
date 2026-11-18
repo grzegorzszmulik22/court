@@ -1,13 +1,17 @@
 {
-  "id": "DT2-typescript-neg-12",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "db/views.sql": {
-      "before": "CREATE VIEW v1 AS SELECT 1;\n",
-      "after": "CREATE VIEW v2 AS SELECT 2;\n"
+      "after": "CREATE VIEW v2 AS SELECT 2;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-12",
+  "language": "typescript",
   "note": "create-view"
 }

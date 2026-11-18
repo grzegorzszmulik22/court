@@ -1,45 +1,49 @@
 {
-  "id": "DT11-python-pos-07",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "topfile": {
-      "before": "",
-      "after": "raw\n"
-    }
-  },
   "commission": {
     "territory": [
       "a/**",
       "b/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "topfile",
+      "detector": "DT11",
+      "evidence": "raw",
       "lines": [
         1,
         1
       ],
+      "path": "topfile",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "raw",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "topfile",
+      "detector": "DT12",
+      "evidence": "raw",
       "lines": [
         1,
         1
       ],
+      "path": "topfile",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "raw",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "topfile": {
+      "after": "raw\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-07",
+  "language": "python"
 }

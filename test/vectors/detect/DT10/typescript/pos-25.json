@@ -1,36 +1,40 @@
 {
-  "id": "DT10-typescript-pos-25",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "tools/x.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "shell",
-      "input": {
-        "command": "rm -rf build/"
-      },
-      "outcome": "fail"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "rm -rf build/",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-typescript-destructive-cmd",
       "side": "events",
-      "evidence": "rm -rf build/",
-      "rule": "dt10-typescript-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "rm -rf a scratch dir"
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "tools/x.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-typescript-pos-25",
+  "language": "typescript",
+  "note": "rm -rf a scratch dir",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm -rf build/"
+      },
+      "name": "shell",
+      "outcome": "fail"
+    }
+  ]
 }

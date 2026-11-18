@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-06",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: number) {\n  return x;\n}\n",
-      "after": "export function s(x: unknown) {\n  return x;\n}\n"
+      "after": "function s(x: number) {\n  const u: unknown = x;\n  return u;\n}\n",
+      "before": "function s(x: number) {\n  const u: number = x;\n  return u;\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-06",
+  "language": "typescript",
   "near_miss": "unknown-type",
   "note": "unknown-type"
 }

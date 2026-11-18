@@ -1,33 +1,37 @@
 {
-  "id": "DT11-python-pos-19",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "vendor.cfg": {
-      "before": "a\nb\n",
-      "after": "a\nb\nc\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**",
       "cfg/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "vendor.cfg",
+      "detector": "DT11",
+      "evidence": "c",
       "lines": [
         3,
         3
       ],
+      "path": "vendor.cfg",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "c",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     }
   ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "vendor.cfg": {
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    }
+  },
+  "id": "DT11-python-pos-19",
+  "language": "python",
   "note": "modified root file outside"
 }

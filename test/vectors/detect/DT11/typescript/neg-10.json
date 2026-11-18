@@ -1,19 +1,23 @@
 {
-  "id": "DT11-typescript-neg-10",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "target/r.o": {
-      "before": "",
-      "after": "BIN\n"
-    }
-  },
   "commission": {
     "territory": [
       "a/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "target/r.o": {
+      "after": "BIN\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-10",
+  "language": "typescript",
   "near_miss": "exempt-target",
   "note": "exempt-target"
 }

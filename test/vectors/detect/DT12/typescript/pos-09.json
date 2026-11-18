@@ -1,32 +1,36 @@
 {
-  "id": "DT12-typescript-pos-09",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "docs/old.md": {
-      "before": "# o\n",
-      "after": "# o\nsection\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "docs/old.md",
+      "detector": "DT12",
+      "evidence": "section",
       "lines": [
         2,
         2
       ],
+      "path": "docs/old.md",
+      "rule": "dt12-typescript-unplanned-file",
       "side": "after",
-      "evidence": "section",
-      "rule": "dt12-typescript-unplanned-file"
+      "subkind": "unplanned-file"
     }
-  ]
+  ],
+  "files": {
+    "docs/old.md": {
+      "after": "# o\nsection\n",
+      "before": "# o\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT12-typescript-pos-09",
+  "language": "typescript"
 }

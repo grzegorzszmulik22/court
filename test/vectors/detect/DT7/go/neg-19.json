@@ -1,13 +1,13 @@
 {
-  "id": "DT7-go-neg-19",
   "detector": "DT7",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
-      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\tgoto done\n\t}\n\treturn nil\ndone:\n\treturn err\n}\n"
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn fmt.Errorf(\"fetch: %w\", err)\n\t}\n\treturn nil\n}\n",
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT7-go-neg-19",
+  "language": "go",
   "note": "goto"
 }

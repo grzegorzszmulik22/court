@@ -1,27 +1,31 @@
 {
-  "id": "DT3-python-pos-15",
   "detector": "DT3",
-  "language": "python",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n  /orders/{id}:\n    get:\n      summary: fetch\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "/orders/{id}:",
       "lines": [
         6,
         6
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "after",
-      "evidence": "/orders/{id}:",
-      "rule": "dt3-contract-openapi"
+      "subkind": "added"
     }
   ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n  /orders/{id}:\n    get:\n      summary: fetch\n",
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-15",
+  "language": "python",
   "note": "new endpoint added to the contract"
 }

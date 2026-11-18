@@ -1,6 +1,6 @@
 {
   "id": "T-70",
-  "comment": "Expected 'other' beside a declared 'other' with disjoint paths never merges: unanswered expected + declared-only. (other-no-overlap via declared/expected; detected entries are always detector categories.)",
+  "comment": "Expected 'other' beside a declared 'other' with disjoint paths never merges: unanswered expected + declared-only unforeseen.",
   "inputs": {
     "expected": [
       {
@@ -79,7 +79,9 @@
         "declared"
       ],
       "verdict": "declared-only",
-      "flags": [],
+      "flags": [
+        "unforeseen"
+      ],
       "queued": false
     }
   ],

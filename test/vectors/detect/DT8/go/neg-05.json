@@ -1,14 +1,14 @@
 {
-  "id": "DT8-go-neg-05",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nimport \"fmt\"\n\nfunc c() {}\n"
+      "after": "package svc\n\n// talks to https://api.other-host.net\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-05",
+  "language": "go",
   "near_miss": "import-added",
   "note": "import-added"
 }

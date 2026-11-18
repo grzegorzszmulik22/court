@@ -1,23 +1,27 @@
 {
-  "id": "DT11-go-neg-05",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "scripts/deploy.sh": {
-      "before": "",
-      "after": "#!/bin/sh\nrun\n"
-    },
-    "scripts/baseline.sh": {
-      "before": "# baseline\n",
-      "after": "# baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "scripts/deploy.sh"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/baseline.sh": {
+      "after": "# baseline\n",
+      "before": "# baseline\n"
+    },
+    "scripts/deploy.sh": {
+      "after": "#!/bin/sh\nrun\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-neg-05",
+  "language": "go",
   "near_miss": "exact-file",
   "note": "exact-file"
 }

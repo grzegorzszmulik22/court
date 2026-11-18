@@ -1,27 +1,31 @@
 {
-  "id": "DT6-typescript-pos-17",
   "detector": "DT6",
-  "language": "typescript",
-  "files": {
-    "pyproject.toml": {
-      "before": "[tool.mypy]\nstrict = true\n",
-      "after": "[tool.mypy]\nstrict = false\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "strictness",
-      "path": "pyproject.toml",
+      "detector": "DT6",
+      "evidence": "strict = false",
       "lines": [
         2,
         2
       ],
+      "path": "pyproject.toml",
+      "rule": "dt6-typescript-strictness",
       "side": "after",
-      "evidence": "strict = false",
-      "rule": "dt6-typescript-strictness"
+      "subkind": "strictness"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "pyproject.toml": {
+      "after": "[tool.mypy]\nstrict = false\n",
+      "before": "[tool.mypy]\nstrict = true\n"
+    }
+  },
+  "id": "DT6-typescript-pos-17",
+  "language": "typescript",
   "note": "mypy strict mode off"
 }

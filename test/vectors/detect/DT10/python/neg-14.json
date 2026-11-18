@@ -1,17 +1,21 @@
 {
-  "id": "DT10-python-neg-14",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "INSERT INTO t VALUES (7, 'a');\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "INSERT INTO t VALUES (7, 'a');\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-14",
+  "language": "python",
   "note": "insert-row"
 }

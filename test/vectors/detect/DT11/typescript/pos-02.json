@@ -1,45 +1,49 @@
 {
-  "id": "DT11-typescript-pos-02",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "docs/guide.md": {
-      "before": "",
-      "after": "# guide\n\ntext\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "docs/guide.md",
+      "detector": "DT11",
+      "evidence": "# guide",
       "lines": [
         1,
         1
       ],
+      "path": "docs/guide.md",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "# guide",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "docs/guide.md",
+      "detector": "DT12",
+      "evidence": "# guide",
       "lines": [
         1,
         1
       ],
+      "path": "docs/guide.md",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "# guide",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "docs/guide.md": {
+      "after": "# guide\n\ntext\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-02",
+  "language": "typescript",
   "note": "outside a single-glob territory"
 }

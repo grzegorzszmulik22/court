@@ -1,14 +1,18 @@
 {
-  "id": "DT8-typescript-neg-13",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "config/app.yml": {
-      "before": "x: 1\n",
-      "after": "x: 2\n"
+    "docs/api.md": {
+      "after": "call https://api.internal.example.com/pay endpoint\n",
+      "before": "call the endpoint\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-13",
+  "language": "typescript",
   "near_miss": "yml-edit",
   "note": "yml-edit"
 }

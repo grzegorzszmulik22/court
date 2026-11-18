@@ -1,13 +1,17 @@
 {
-  "id": "DT10-python-neg-15",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
     "data/seed.csv": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-15",
+  "language": "python",
   "note": "data-appended"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT6-go-pos-04",
   "detector": "DT6",
-  "language": "go",
-  "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n",
-      "after": "linters:\n  enable:\n    - govet\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "golangci.yml",
+      "detector": "DT6",
+      "evidence": "- staticcheck",
       "lines": [
         4,
         4
       ],
+      "path": "golangci.yml",
+      "rule": "dt6-go-lint",
       "side": "before",
-      "evidence": "- staticcheck",
-      "rule": "dt6-go-lint"
+      "subkind": "lint"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "golangci.yml": {
+      "after": "linters:\n  enable:\n    - govet\n",
+      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+    }
+  },
+  "id": "DT6-go-pos-04",
+  "language": "go",
   "note": "a lint rule was disabled"
 }

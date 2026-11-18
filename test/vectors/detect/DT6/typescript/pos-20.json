@@ -1,27 +1,31 @@
 {
-  "id": "DT6-typescript-pos-20",
   "detector": "DT6",
-  "language": "typescript",
-  "files": {
-    ".pre-commit-config.yaml": {
-      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "hook",
-      "path": ".pre-commit-config.yaml",
+      "detector": "DT6",
+      "evidence": "- id: vet",
       "lines": [
         5,
         5
       ],
+      "path": ".pre-commit-config.yaml",
+      "rule": "dt6-typescript-hook",
       "side": "before",
-      "evidence": "- id: vet",
-      "rule": "dt6-typescript-hook"
+      "subkind": "hook"
     }
   ],
+  "files": {
+    ".pre-commit-config.yaml": {
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n",
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-20",
+  "language": "typescript",
   "note": "a pre-commit hook entry was removed"
 }

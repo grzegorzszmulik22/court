@@ -1,23 +1,23 @@
 {
-  "id": "DT11-typescript-neg-04",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "shop/sub/deep.go": {
-      "before": "",
-      "after": "export const d = 1;\n"
-    },
-    "shop/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "shop/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/sub/deep.ts": {
+      "after": "export const d = 1;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-04",
+  "language": "typescript",
   "near_miss": "glob-match",
   "note": "glob-match"
 }

@@ -1,14 +1,18 @@
 {
-  "id": "DT9-python-neg-03",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
     "scripts/prep.sh": {
-      "before": "#!/bin/sh\nchmod 770 k\n",
-      "after": "#!/bin/sh\nchmod 700 k\n"
+      "after": "#!/bin/sh\nchmod 700 k\n",
+      "before": "#!/bin/sh\nchmod 770 k\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-03",
+  "language": "python",
   "near_miss": "mode-tightened",
   "note": "mode-tightened"
 }

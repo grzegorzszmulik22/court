@@ -1,13 +1,17 @@
 {
-  "id": "DT6-python-neg-18",
   "detector": "DT6",
-  "language": "python",
+  "expect": [],
   "files": {
     ".pre-commit-config.yaml": {
-      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n",
-      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n"
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n",
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT6-python-neg-18",
+  "language": "python",
   "note": "hook-entry-added"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-go-pos-14",
   "detector": "DT9",
-  "language": "go",
-  "files": {
-    "config/roles.yml": {
-      "before": "roles:\n  - user\n",
-      "after": "roles:\n  - user\n  - admin:*\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/roles.yml",
+      "detector": "DT9",
+      "evidence": "admin:*",
       "lines": [
         3,
         3
       ],
+      "path": "config/roles.yml",
+      "rule": "dt9-go-widened",
       "side": "after",
-      "evidence": "admin:*",
-      "rule": "dt9-go-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "config/roles.yml": {
+      "after": "roles:\n  - user\n  - admin:*\n",
+      "before": "roles:\n  - user\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-14",
+  "language": "go",
   "note": "wildcard admin role added"
 }

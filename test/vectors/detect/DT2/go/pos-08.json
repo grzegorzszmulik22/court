@@ -1,27 +1,31 @@
 {
-  "id": "DT2-go-pos-08",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0001_init.sql": {
-      "before": "-- create orders\nCREATE TABLE orders (id INT);\n",
-      "after": "-- create orders; see ticket 7\nCREATE TABLE orders (id INT);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0001_init.sql",
+      "detector": "DT2",
+      "evidence": "-- create orders; see ticket 7",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
       "side": "after",
-      "evidence": "-- create orders; see ticket 7",
-      "rule": "dt2-go-changed-migration"
+      "subkind": "migration"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "-- create orders; see ticket 7\nCREATE TABLE orders (id INT);\n",
+      "before": "-- create orders\nCREATE TABLE orders (id INT);\n"
+    }
+  },
+  "id": "DT2-go-pos-08",
+  "language": "go",
   "note": "comment edit on a file under a migration directory"
 }

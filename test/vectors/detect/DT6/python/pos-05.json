@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-05",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    "coverage.yml": {
-      "before": "coverage:\n  min: 80\n",
-      "after": "coverage:\n  min: 60\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "threshold",
-      "path": "coverage.yml",
+      "detector": "DT6",
+      "evidence": "min: 60",
       "lines": [
         2,
         2
       ],
+      "path": "coverage.yml",
+      "rule": "dt6-python-threshold",
       "side": "after",
-      "evidence": "min: 60",
-      "rule": "dt6-python-threshold"
+      "subkind": "threshold"
     }
   ],
+  "files": {
+    "coverage.yml": {
+      "after": "coverage:\n  min: 60\n",
+      "before": "coverage:\n  min: 80\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-05",
+  "language": "python",
   "note": "the coverage floor fell"
 }

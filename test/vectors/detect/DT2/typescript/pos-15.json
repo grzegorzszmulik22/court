@@ -1,26 +1,30 @@
 {
-  "id": "DT2-typescript-pos-15",
   "detector": "DT2",
-  "language": "typescript",
-  "files": {
-    "db/schema.prisma": {
-      "before": "model Order {\n  id Int @id\n}\n",
-      "after": "model Order {\n  id Int @id\n  total Int\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "db/schema.prisma",
+      "detector": "DT2",
+      "evidence": "total Int",
       "lines": [
         3,
         3
       ],
+      "path": "db/schema.prisma",
+      "rule": "dt2-typescript-format",
       "side": "after",
-      "evidence": "total Int",
-      "rule": "dt2-typescript-format"
+      "subkind": "format"
     }
-  ]
+  ],
+  "files": {
+    "db/schema.prisma": {
+      "after": "model Order {\n  id Int @id\n  total Int\n}\n",
+      "before": "model Order {\n  id Int @id\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-pos-15",
+  "language": "typescript"
 }

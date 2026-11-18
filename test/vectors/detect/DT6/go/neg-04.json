@@ -1,14 +1,18 @@
 {
-  "id": "DT6-go-neg-04",
   "detector": "DT6",
-  "language": "go",
+  "expect": [],
   "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
     "tsconfig.json": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n"
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-go-neg-04",
+  "language": "go",
   "near_miss": "strict-on",
   "note": "strict-on"
 }

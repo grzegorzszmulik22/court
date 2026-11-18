@@ -1,27 +1,31 @@
 {
-  "id": "DT9-go-pos-15",
   "detector": "DT9",
-  "language": "go",
-  "files": {
-    "config/scopes.yaml": {
-      "before": "scopes: [read]\n",
-      "after": "scopes: [read, admin]\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/scopes.yaml",
+      "detector": "DT9",
+      "evidence": "allow_origins: [\"*\"]",
       "lines": [
         1,
         1
       ],
+      "path": "config/cors.yaml",
+      "rule": "dt9-go-widened",
       "side": "after",
-      "evidence": "admin]",
-      "rule": "dt9-go-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "config/cors.yaml": {
+      "after": "allow_origins: [\"*\"]\n",
+      "before": "allow_origins: [https://app.example.com]\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-15",
+  "language": "go",
   "note": "scope list gains admin"
 }

@@ -1,13 +1,13 @@
 {
-  "id": "DT7-go-neg-17",
   "detector": "DT7",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/fetch.go": {
-      "before": "package svc\n\nfunc fetch(x int) int {\n\tswitch x {\n\tcase 1:\n\t\treturn 1\n\t}\n\treturn 0\n}\n",
-      "after": "package svc\n\nfunc fetch(x int) int {\n\tswitch x {\n\tcase 1:\n\t\tfallthrough\n\tcase 2:\n\t\treturn 2\n\t}\n\treturn 0\n}\n"
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn nil\n}\n",
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT7-go-neg-17",
+  "language": "go",
   "note": "fallthrough"
 }

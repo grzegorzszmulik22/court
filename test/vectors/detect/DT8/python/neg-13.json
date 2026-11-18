@@ -1,14 +1,18 @@
 {
-  "id": "DT8-python-neg-13",
   "detector": "DT8",
-  "language": "python",
+  "expect": [],
   "files": {
-    "config/app.yml": {
-      "before": "x: 1\n",
-      "after": "x: 2\n"
+    "docs/api.md": {
+      "after": "call https://api.internal.example.com/pay endpoint\n",
+      "before": "call the endpoint\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT8-python-neg-13",
+  "language": "python",
   "near_miss": "yml-edit",
   "note": "yml-edit"
 }

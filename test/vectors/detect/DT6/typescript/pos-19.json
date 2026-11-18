@@ -1,27 +1,31 @@
 {
-  "id": "DT6-typescript-pos-19",
   "detector": "DT6",
-  "language": "typescript",
-  "files": {
-    "setup.cfg": {
-      "before": "[flake8]\nselect = E,W,F\n",
-      "after": "[flake8]\nselect = E\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "setup.cfg",
+      "detector": "DT6",
+      "evidence": "select = E",
       "lines": [
         2,
         2
       ],
+      "path": "setup.cfg",
+      "rule": "dt6-typescript-lint",
       "side": "after",
-      "evidence": "select = E",
-      "rule": "dt6-typescript-lint"
+      "subkind": "lint"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "setup.cfg": {
+      "after": "[flake8]\nselect = E\n",
+      "before": "[flake8]\nselect = E,W,F\n"
+    }
+  },
+  "id": "DT6-typescript-pos-19",
+  "language": "typescript",
   "note": "flake8 rules were disabled"
 }

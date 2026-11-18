@@ -1,17 +1,21 @@
 {
-  "id": "DT10-typescript-neg-21",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "db/u.sql": {
-      "before": "",
-      "after": "UPDATE t SET v = 1 WHERE k = 2;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/u.sql": {
+      "after": "UPDATE t SET v = 1 WHERE k = 2;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-21",
+  "language": "typescript",
   "note": "update-only"
 }

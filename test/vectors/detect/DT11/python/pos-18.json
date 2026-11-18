@@ -1,32 +1,36 @@
 {
-  "id": "DT11-python-pos-18",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "ops/runbook.md": {
-      "before": "# run\n\nsteps\n",
-      "after": ""
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "ops/runbook.md",
+      "detector": "DT11",
+      "evidence": "# run",
       "lines": [
         1,
         1
       ],
+      "path": "ops/runbook.md",
+      "rule": "dt11-python-outside",
       "side": "before",
-      "evidence": "# run",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     }
   ],
+  "files": {
+    "ops/runbook.md": {
+      "after": "",
+      "before": "# run\n\nsteps\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-18",
+  "language": "python",
   "note": "deleted file outside the globs"
 }

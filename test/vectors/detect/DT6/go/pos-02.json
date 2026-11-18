@@ -1,27 +1,31 @@
 {
-  "id": "DT6-go-pos-02",
   "detector": "DT6",
-  "language": "go",
-  "files": {
-    ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n        continue-on-error: true\n      - run: go vet ./...\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".github/workflows/ci.yml",
+      "detector": "DT6",
+      "evidence": "continue-on-error: true",
       "lines": [
         7,
         7
       ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt6-go-ci",
       "side": "after",
-      "evidence": "continue-on-error: true",
-      "rule": "dt6-go-ci"
+      "subkind": "ci"
     }
   ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n        continue-on-error: true\n      - run: go vet ./...\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-pos-02",
+  "language": "go",
   "note": "a CI step became non-blocking"
 }

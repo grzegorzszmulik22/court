@@ -1,22 +1,22 @@
 {
-  "id": "DT11-python-neg-21",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "shop2/x.go": {
-      "before": "",
-      "after": "s2 = 1\nclass T:\n    pass\n"
-    },
-    "shop2/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop2/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "shop2/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop2/x.py": {
+      "after": "s2 = 1\nclass T:\n    pass\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-21",
+  "language": "python",
   "note": "sibling"
 }

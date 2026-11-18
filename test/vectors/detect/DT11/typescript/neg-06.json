@@ -1,20 +1,20 @@
 {
-  "id": "DT11-typescript-neg-06",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "vendor/x/y.go": {
-      "before": "",
-      "after": "export function f() {}\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "vendor/x/y.ts": {
+      "after": "export function f() {}\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-06",
+  "language": "typescript",
   "near_miss": "exempt-vendor",
   "note": "exempt-vendor"
 }

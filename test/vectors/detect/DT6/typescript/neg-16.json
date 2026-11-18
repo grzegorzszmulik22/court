@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-16",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     ".eslintrc.json": {
-      "before": "{\n  \"rules\": {\n    \"no-console\": \"off\",\n    \"no-alert\": \"off\"\n  }\n}\n",
-      "after": "{\n  \"rules\": {\n    \"no-console\": \"error\",\n    \"no-alert\": \"off\"\n  }\n}\n"
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"error\",\n    \"no-alert\": \"off\"\n  }\n}\n",
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"off\",\n    \"no-alert\": \"off\"\n  }\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-16",
+  "language": "typescript",
   "note": "eslint-enabled"
 }

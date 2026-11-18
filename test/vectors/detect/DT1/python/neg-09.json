@@ -1,14 +1,18 @@
 {
-  "id": "DT1-python-neg-09",
   "detector": "DT1",
-  "language": "python",
+  "expect": [],
   "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
     "setup.cfg": {
-      "before": "[metadata]\nname = app\n",
-      "after": "[metadata]\nname = app2\n"
+      "after": "[metadata]\nname = app2\n",
+      "before": "[metadata]\nname = app\n"
     }
   },
-  "expect": [],
+  "id": "DT1-python-neg-09",
+  "language": "python",
   "near_miss": "toolchain-line",
   "note": "toolchain-line"
 }

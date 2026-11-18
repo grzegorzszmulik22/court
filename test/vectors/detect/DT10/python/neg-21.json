@@ -1,17 +1,21 @@
 {
-  "id": "DT10-python-neg-21",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
-    "db/u.sql": {
-      "before": "",
-      "after": "UPDATE t SET v = 1 WHERE k = 2;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/u.sql": {
+      "after": "UPDATE t SET v = 1 WHERE k = 2;\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-21",
+  "language": "python",
   "note": "update-only"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-13",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "scripts/setup.sh": {
-      "before": "#!/bin/sh\nchmod 755 bin/run\n",
-      "after": "#!/bin/sh\nchmod 777 bin/run\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "scripts/setup.sh",
+      "detector": "DT9",
+      "evidence": "chmod 777",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/setup.sh",
+      "rule": "dt9-typescript-widened",
       "side": "after",
-      "evidence": "chmod 777",
-      "rule": "dt9-typescript-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/setup.sh": {
+      "after": "#!/bin/sh\nchmod 777 bin/run\n",
+      "before": "#!/bin/sh\nchmod 755 bin/run\n"
+    }
+  },
+  "id": "DT9-typescript-pos-13",
+  "language": "typescript",
   "note": "world-writable mode"
 }

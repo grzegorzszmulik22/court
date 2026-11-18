@@ -1,78 +1,82 @@
 {
-  "id": "DT10-typescript-pos-08",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "db/multi.sql": {
-      "before": "",
-      "after": "DROP TABLE a;\nDROP TABLE b;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/multi.sql",
+      "detector": "DT10",
+      "evidence": "DROP TABLE a;",
       "lines": [
         1,
         1
       ],
+      "path": "db/multi.sql",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "DROP TABLE a;",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/multi.sql",
+      "detector": "DT2",
+      "evidence": "DROP TABLE a;",
       "lines": [
         1,
         1
       ],
+      "path": "db/multi.sql",
+      "rule": "dt2-typescript-ddl",
       "side": "after",
-      "evidence": "DROP TABLE a;",
-      "rule": "dt2-typescript-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/multi.sql",
+      "detector": "DT2",
+      "evidence": "DROP TABLE b;",
       "lines": [
         2,
         2
       ],
+      "path": "db/multi.sql",
+      "rule": "dt2-typescript-ddl",
       "side": "after",
-      "evidence": "DROP TABLE b;",
-      "rule": "dt2-typescript-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/multi.sql",
+      "detector": "DT10",
+      "evidence": "DROP TABLE b;",
       "lines": [
         2,
         2
       ],
+      "path": "db/multi.sql",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "DROP TABLE b;",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "db/multi.sql",
+      "detector": "DT12",
+      "evidence": "DROP TABLE a;",
       "lines": [
         1,
         1
       ],
+      "path": "db/multi.sql",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "DROP TABLE a;",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "db/multi.sql": {
+      "after": "DROP TABLE a;\nDROP TABLE b;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-08",
+  "language": "typescript"
 }

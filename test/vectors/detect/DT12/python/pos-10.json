@@ -1,32 +1,36 @@
 {
-  "id": "DT12-python-pos-10",
-  "detector": "DT12",
-  "language": "python",
-  "files": {
-    "docs/gone.md": {
-      "before": "# g\n\ntext\n",
-      "after": ""
-    }
-  },
   "commission": {
     "plan_files": [
       "shop/cart.py"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "docs/gone.md",
+      "detector": "DT12",
+      "evidence": "# g",
       "lines": [
         1,
         1
       ],
+      "path": "docs/gone.md",
+      "rule": "dt12-python-unplanned-file",
       "side": "before",
-      "evidence": "# g",
-      "rule": "dt12-python-unplanned-file"
+      "subkind": "unplanned-file"
     }
-  ]
+  ],
+  "files": {
+    "docs/gone.md": {
+      "after": "",
+      "before": "# g\n\ntext\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT12-python-pos-10",
+  "language": "python"
 }

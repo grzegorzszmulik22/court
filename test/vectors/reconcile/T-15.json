@@ -1,6 +1,6 @@
 {
   "id": "T-15",
-  "comment": "dependency + dependency with empty/non-overlapping paths never merge: declared-only beside undeclared. (Re-categorised under L2.)",
+  "comment": "Empty paths, no competing entry: the declared empty-paths decision matches the hit via the 01 SS7.1 empty-paths rule -> confirmed + unforeseen (same shape as T-10).",
   "inputs": {
     "expected": [],
     "decisions": [
@@ -18,7 +18,7 @@
         "source": "detected",
         "category": "dependency",
         "paths": [
-          "y/b.go"
+          "y/go.mod"
         ],
         "world": "w1",
         "commit": 1,
@@ -51,12 +51,7 @@
     {
       "seq": 1,
       "decision_ids": [
-        "d1"
-      ]
-    },
-    {
-      "seq": 2,
-      "decision_ids": [
+        "d1",
         "h1"
       ]
     }
@@ -64,29 +59,18 @@
   "expect": [
     {
       "ids": [
-        "d1"
+        "d1",
+        "h1"
       ],
       "sources": [
-        "declared"
+        "declared",
+        "detected"
       ],
-      "verdict": "declared-only",
+      "verdict": "confirmed",
       "flags": [
         "unforeseen"
       ],
       "queued": false
-    },
-    {
-      "ids": [
-        "h1"
-      ],
-      "sources": [
-        "detected"
-      ],
-      "verdict": "undeclared",
-      "flags": [
-        "unforeseen"
-      ],
-      "queued": true
     }
   ],
   "tags": [

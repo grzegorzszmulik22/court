@@ -1,26 +1,26 @@
 {
-  "id": "DT7-go-pos-13",
   "detector": "DT7",
-  "language": "go",
-  "files": {
-    "svc/parse.go": {
-      "before": "package svc\n\nfunc parse() (int, error) {\n\treturn conv()\n}\n",
-      "after": "package svc\n\nfunc parse() (int, error) {\n\tv, err := conv()\n\tif err != nil {\n\t\treturn -1, err\n\t}\n\treturn v, nil\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/parse.go",
+      "detector": "DT7",
+      "evidence": "\t\treturn -1, nil",
       "lines": [
         6,
         6
       ],
+      "path": "svc/parse.go",
+      "rule": "dt7-go-swallowed",
       "side": "after",
-      "evidence": "return -1, err",
-      "rule": "dt7-go-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/parse.go": {
+      "after": "package svc\n\nfunc parse() (int, error) {\n\tv, err := conv()\n\tif err != nil {\n\t\treturn -1, nil\n\t}\n\treturn v, nil\n}\n",
+      "before": "package svc\n\nfunc parse() (int, error) {\n\treturn conv()\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-13",
+  "language": "go"
 }

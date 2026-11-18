@@ -1,13 +1,17 @@
 {
-  "id": "DT6-go-neg-19",
   "detector": "DT6",
-  "language": "go",
+  "expect": [],
   "files": {
     ".husky/pre-commit": {
-      "before": "#!/bin/sh\nnpm test\n",
-      "after": "#!/bin/sh\nnpm test\nnpm run lint\n"
+      "after": "#!/bin/sh\nnpm test\nnpm run lint\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT6-go-neg-19",
+  "language": "go",
   "note": "husky-still"
 }

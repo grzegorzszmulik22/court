@@ -1,35 +1,39 @@
 {
-  "id": "DT8-go-neg-19",
-  "detector": "DT8",
-  "language": "go",
-  "files": {
-    "ops/run.txt": {
-      "before": "a\n",
-      "after": "a\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git status"
-      },
-      "outcome": "ok"
-    },
-    {
-      "name": "Bash",
-      "input": {
-        "command": "ls -la"
-      },
-      "outcome": "ok"
-    }
-  ],
   "commission": {
     "allowed_hosts": [
       "h.internal.example"
     ]
   },
+  "detector": "DT8",
   "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/run.txt": {
+      "after": "a\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT8-go-neg-19",
+  "language": "go",
   "near_miss": "event-two-safe",
-  "note": "event-two-safe"
+  "note": "event-two-safe",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git status"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls -la"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

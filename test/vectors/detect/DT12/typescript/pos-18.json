@@ -1,106 +1,110 @@
 {
-  "id": "DT12-typescript-pos-18",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "docs/a.md": {
-      "before": "",
-      "after": "a\n"
-    },
-    "config/b.yaml": {
-      "before": "",
-      "after": "b: 1\n"
-    },
-    "tools/c.txt": {
-      "before": "",
-      "after": "c\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "docs/a.md",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
+      "detector": "DT12",
       "evidence": "a",
-      "rule": "dt12-typescript-unplanned-file"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "config/b.yaml",
       "lines": [
         1,
         1
       ],
-      "side": "after",
-      "evidence": "b: 1",
-      "rule": "dt12-typescript-unplanned-file"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "unplanned-file",
-      "path": "tools/c.txt",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "c",
-      "rule": "dt12-typescript-unplanned-file"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "new-top-level",
       "path": "docs/a.md",
-      "lines": [
-        1,
-        1
-      ],
+      "rule": "dt12-typescript-unplanned-file",
       "side": "after",
-      "evidence": "a",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "unplanned-file"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "config/b.yaml",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
+      "detector": "DT12",
       "evidence": "b: 1",
-      "rule": "dt12-typescript-new-top-level"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "new-top-level",
-      "path": "tools/c.txt",
       "lines": [
         1,
         1
       ],
+      "path": "config/b.yaml",
+      "rule": "dt12-typescript-unplanned-file",
       "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
       "evidence": "c",
-      "rule": "dt12-typescript-new-top-level"
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tools/c.txt",
+      "rule": "dt12-typescript-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/a.md",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "b: 1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/b.yaml",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tools/c.txt",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "config/b.yaml": {
+      "after": "b: 1\n",
+      "before": ""
+    },
+    "docs/a.md": {
+      "after": "a\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "tools/c.txt": {
+      "after": "c\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-typescript-pos-18",
+  "language": "typescript",
   "note": "each unplanned file gets its own hit"
 }

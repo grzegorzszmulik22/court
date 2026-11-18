@@ -1,13 +1,17 @@
 {
-  "id": "DT10-typescript-neg-16",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "data/seed.csv": {
-      "before": "a,1\n",
-      "after": "a,2\n"
+      "after": "a,2\n",
+      "before": "a,1\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-16",
+  "language": "typescript",
   "note": "data-modified"
 }

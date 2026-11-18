@@ -1,14 +1,18 @@
 {
-  "id": "DT9-python-neg-06",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
     "config/cors2.yml": {
-      "before": "cors:\n  origin: \"*\"\n  home: https://app.example\n",
-      "after": "cors:\n  origin: https://app.example\n  home: https://app.example\n"
+      "after": "cors:\n  origin: https://app.example\n  home: https://app.example\n",
+      "before": "cors:\n  origin: \"*\"\n  home: https://app.example\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-06",
+  "language": "python",
   "near_miss": "narrowed-origin",
   "note": "narrowed-origin"
 }

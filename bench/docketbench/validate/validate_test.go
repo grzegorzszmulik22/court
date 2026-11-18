@@ -14,6 +14,8 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
 func repoRoot(t *testing.T) string {
@@ -1493,62 +1495,67 @@ func TestReconcile_detected_paths(t *testing.T) {
 	}
 }
 
-// I4: coverage-tag truth — every tag whose truth the validator checks
-// must fail on a trace it is not true of.
+// I4 (M3): coverage-tag truth — every tag whose truth the validator
+// checks must fail on a trace it is not true of. Disabling one tag's
+// truth test must turn this test red, so the fixture is synthetic:
+// two minimal traces between them falsify every checkable tag, and the
+// test fails if any tag survives both.
 func TestReconcile_tag_truth(t *testing.T) {
 	repo := repoRoot(t)
 	src := filepath.Join(repo, "test/vectors/reconcile")
-	dir, _ := os.ReadDir(src)
 
-	// Order traces deterministically; for each tag find one trace where
-	// the tag is not carried, add it, and require reconcile-tag.
-	var names []string
-	for _, f := range dir {
-		if strings.HasSuffix(f.Name(), ".json") {
-			names = append(names, f.Name())
+	// boundary: the real corpus carries only true tags.
+	v := &violations{}
+	validateReconcile(src, v)
+	if hasCode(v, "reconcile-tag") {
+		t.Fatalf("real corpus trips reconcile-tag: %v", v.list)
+	}
+
+	base := func(verdict string, flags []string) map[string]any {
+		return map[string]any{
+			"id":      "T-900",
+			"comment": "synthetic falsifying fixture",
+			"inputs": map[string]any{
+				"expected": []any{},
+				"decisions": []any{map[string]any{
+					"id": "d1", "source": "declared", "category": "dependency",
+					"paths": []any{"x/a.go"}, "world": "w1", "commit": 1, "petition": false,
+				}},
+				"writs": map[string]any{"w1": map[string]any{
+					"categories": []any{"dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"},
+					"territory":  []any{"**"},
+				}},
+				"bypassed":     []any{},
+				"no_decisions": []any{},
+			},
+			"events": []any{map[string]any{"seq": 1, "decision_ids": []any{"d1"}}},
+			"expect": []any{map[string]any{
+				"ids": []any{"d1"}, "sources": []any{"declared"},
+				"verdict": verdict, "flags": flags, "queued": false, "note": "x",
+			}},
 		}
 	}
-	skipped := []string{}
 	for tag := range knownTags {
-		found := false
-		for _, name := range names {
-			raw, err := os.ReadFile(filepath.Join(src, name))
-			if err != nil {
-				continue
-			}
-			var tr map[string]any
-			if json.Unmarshal(raw, &tr) != nil {
-				continue
-			}
-			cur, _ := tr["tags"].([]any)
-			has := false
-			for _, x := range cur {
-				if x == tag {
-					has = true
-				}
-			}
-			if has {
-				continue
-			}
-			root := t.TempDir()
-			dst := filepath.Join(root, "reconcile")
-			os.MkdirAll(dst, 0o755)
-			tr["tags"] = append(cur, tag)
-			buf, _ := json.Marshal(tr)
-			os.WriteFile(filepath.Join(dst, name), buf, 0o644)
-			v := &violations{}
-			validateReconcile(dst, v)
-			if hasDetail(v, "reconcile-tag", "not true") {
-				found = true
-				break
-			}
+		tr := base("declared-only", []string{})
+		switch tag {
+		case "verdict-declared-only", "inside-writ":
+			// true on the declared-only base; the confirmed+outside-writ
+			// variant falsifies them instead.
+			tr = base("confirmed", []string{"outside-writ"})
 		}
-		if !found {
-			skipped = append(skipped, tag)
+		tr["tags"] = []string{tag}
+		root := t.TempDir()
+		dst := filepath.Join(root, "reconcile")
+		os.MkdirAll(dst, 0o755)
+		buf, _ := json.Marshal(tr)
+		if err := os.WriteFile(filepath.Join(dst, "T-900.json"), buf, 0o644); err != nil {
+			t.Fatal(err)
 		}
-	}
-	if len(skipped) > 0 {
-		t.Logf("tags true on every real trace (no falsifying fixture): %v", skipped)
+		v2 := &violations{}
+		validateReconcile(dst, v2)
+		if !hasDetail(v2, "reconcile-tag", "not true") {
+			t.Errorf("tag %q not falsified by either base trace (truth check off?); got: %v", tag, v2.list)
+		}
 	}
 }
 
@@ -1584,5 +1591,248 @@ func TestC3_1_3_registry_keyword(t *testing.T) {
 	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
 	if hasCode(v, "registry-keywords") {
 		t.Fatalf("clean pair tripped registry-keywords; got: %v", v.list)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// M-round fixtures: J1–J3 twin rules + J2 omission and README note
+// ---------------------------------------------------------------------------
+
+// pairByID loads a specific planted scenario and its twin.
+func pairByID(t *testing.T, subset, plantedID string) (*scenario, *scenario) {
+	t.Helper()
+	repo := repoRoot(t)
+	v := &violations{}
+	all := loadScenarioTree(filepath.Join(repo, "bench/docketbench/scenarios"), v)
+	byID := map[string]*scenario{}
+	for _, s := range all {
+		byID[s.Subset+"/"+s.ID] = s
+	}
+	p := byID[subset+"/"+plantedID]
+	if p == nil {
+		t.Fatalf("no scenario %s/%s", subset, plantedID)
+	}
+	tw := byID[subset+"/"+p.Twin]
+	if tw == nil {
+		t.Fatalf("%s names missing twin %s", plantedID, p.Twin)
+	}
+	return p, tw
+}
+
+func loadScriptYAML(t *testing.T, path string) map[string]any {
+	t.Helper()
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var doc map[string]any
+	if err := yaml.Unmarshal(raw, &doc); err != nil {
+		t.Fatal(err)
+	}
+	return doc
+}
+
+func writeScriptYAML(t *testing.T, path string, doc map[string]any) {
+	t.Helper()
+	buf, err := yaml.Marshal(doc)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// insertDeclareBeforeCommit adds a declare step to the first agent,
+// just before its commit so the declaration gate stays satisfied.
+func insertDeclareBeforeCommit(doc map[string]any, category, path string) {
+	a := doc["agents"].([]any)[0].(map[string]any)
+	steps := a["steps"].([]any)
+	step := map[string]any{"declare": map[string]any{
+		"category": category, "paths": []any{path},
+		"question": "the " + category + " work on " + path + "?", "chosen": "yes",
+	}}
+	out := make([]any, 0, len(steps)+1)
+	for _, st := range steps {
+		if _, ok := st.(map[string]any)["commit"]; ok {
+			out = append(out, step)
+		}
+		out = append(out, st)
+	}
+	a["steps"] = out
+}
+
+// setWriteOn edits the write content of the first agent's edit on path.
+func setWriteOn(doc map[string]any, path, content string) bool {
+	a := doc["agents"].([]any)[0].(map[string]any)
+	for _, st := range a["steps"].([]any) {
+		e, ok := st.(map[string]any)["edit"].(map[string]any)
+		if ok && e["path"] == path {
+			e["write"] = content
+			return true
+		}
+	}
+	return false
+}
+
+// M1 (J2): the twin of an authority/deletion planted item must omit the
+// sensitive file — a net change to it is the decision itself.
+func TestTwinEdits_omits_sensitive(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-021") // deletion pair; twin writes seed.csv back unchanged
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	if !setWriteOn(doc, "data/seed.csv", "id,name\n1,alpha\n2,mutated\n") {
+		t.Fatal("twin has no write on data/seed.csv to corrupt")
+	}
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-omits")
+
+	// boundary: the real pair omits the file in net terms and passes.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-omits") {
+		t.Fatalf("clean J2 pair tripped twin-omits; got: %v", v.list)
+	}
+}
+
+// M2 (J2): every authority/deletion twin's README must carry the
+// known-limit note naming the omitted sensitive file.
+func TestTwinEdits_readme_note(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-017") // authority pair, twin README documented
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, tw.Subset, tw.ID, "README.md")
+	if err := os.WriteFile(rp, []byte("# "+tw.ID+"\n\nAn ordinary twin.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "twin-readme")
+
+	// a note that forgets to name the sensitive path also fails.
+	root3 := t.TempDir()
+	copyScenarioTree(t, p, root3)
+	copyScenarioTree(t, tw, root3)
+	rp3 := filepath.Join(root3, tw.Subset, tw.ID, "README.md")
+	if err := os.WriteFile(rp3, []byte("# "+tw.ID+"\n\nThis is a known limit.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root3, "twin-readme")
+
+	// boundary: the documented twin passes.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-readme") {
+		t.Fatalf("clean J2 pair tripped twin-readme; got: %v", v.list)
+	}
+}
+
+// J1: a twin declaring a guarantee category its net diff does not make
+// must fail.
+func TestTwinEdits_twin_declare(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-021")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	// the twin edits shop/util.go but does not weaken a test there — a
+	// test-strength declaration on it is false.
+	insertDeclareBeforeCommit(doc, "test-strength", "shop/util.go")
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-declare")
+
+	// boundary: the unmodified twin declares only decisions it makes.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-declare") {
+		t.Fatalf("clean pair tripped twin-declare; got: %v", v.list)
+	}
+}
+
+// J2 declaration: an authority/deletion declare counts only when the
+// twin's net diff touches the path — declaring the omitted sensitive
+// file is incoherent and must fail.
+func TestTwinEdits_declare_untouched(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-017") // authority twin omits internal/auth/session.go
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	insertDeclareBeforeCommit(doc, "authority", "internal/auth/session.go")
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-declare")
+
+	// boundary: the unmodified twin passes.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-declare") {
+		t.Fatalf("clean pair tripped twin-declare; got: %v", v.list)
+	}
+}
+
+// J3: parity is judged on the net diff — an edit step that writes the
+// file back to base content does not count as touching it.
+func TestTwinEdits_net_diff(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-021")
+	base, err := os.ReadFile(filepath.Join(tw.Dir, "repo", "shop/util.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	// the twin still has an edit step on shop/util.go, but it writes the
+	// file back to base — under net-diff judging the twin no longer
+	// touches a file its planted scenario changes.
+	if !setWriteOn(doc, "shop/util.go", string(base)) {
+		t.Fatal("twin has no write on shop/util.go to neutralise")
+	}
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-files")
+
+	// boundary: the unmodified pair's net diffs match.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "twin-files") {
+		t.Fatalf("clean pair tripped twin-files; got: %v", v.list)
+	}
+}
+
+// M4 (CR-002): a failing done-check carries the command's output — the
+// Windows failure mode was an empty "failed post-edit:" message because
+// sh does not exist there and CombinedOutput returned nothing.
+func TestC3_1_2_runcmd_output(t *testing.T) {
+	dir := t.TempDir()
+	res := runCmd(dir, "definitely-not-a-command-xyz")
+	if res.ok {
+		t.Fatal("expected a failing command")
+	}
+	if strings.TrimSpace(res.out) == "" {
+		t.Fatalf("failure carried no output; got empty cmdResult.out")
+	}
+	if !strings.Contains(res.out, "definitely-not-a-command-xyz") &&
+		!strings.Contains(strings.ToLower(res.out), "not found") &&
+		!strings.Contains(strings.ToLower(res.out), "not recognized") &&
+		!strings.Contains(strings.ToLower(res.out), "executable file not found") {
+		t.Fatalf("failure output does not carry the command's error: %q", res.out)
+	}
+	if res.brief() == "" {
+		t.Fatal("brief() empty for a failing command")
 	}
 }

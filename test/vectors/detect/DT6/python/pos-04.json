@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-04",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    "golangci.yml": {
-      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n",
-      "after": "linters:\n  enable:\n    - govet\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": "golangci.yml",
+      "detector": "DT6",
+      "evidence": "- staticcheck",
       "lines": [
         4,
         4
       ],
+      "path": "golangci.yml",
+      "rule": "dt6-python-lint",
       "side": "before",
-      "evidence": "- staticcheck",
-      "rule": "dt6-python-lint"
+      "subkind": "lint"
     }
   ],
+  "files": {
+    "golangci.yml": {
+      "after": "linters:\n  enable:\n    - govet\n",
+      "before": "linters:\n  enable:\n    - govet\n    - staticcheck\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-04",
+  "language": "python",
   "note": "a lint rule was disabled"
 }

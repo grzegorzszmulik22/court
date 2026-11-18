@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -828,6 +829,33 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 					v.addf("twin-edits", where, "unanswered twin %q must contain this scenario's edits plus its answer", t.ID)
 				}
 			case len(guarPaths) > 0:
+				// J2 (M1): authority and deletion are decisions made by
+				// touching the area — the twin must OMIT the sensitive
+				// file. A net change to it is the decision itself, so a
+				// twin that keeps it fails; writing the file back
+				// unchanged is not touching it (J3).
+				for p := range sensPaths {
+					if netB[p] {
+						v.addf("twin-omits", where, "twin %q changes the sensitive path %s (authority/deletion twin omits it, J2)", t.ID, p)
+					}
+				}
+				// J2 (M2): the file-name tell is a known limit — every
+				// authority/deletion twin's README must state it, naming
+				// the omitted sensitive file.
+				if len(sensPaths) > 0 {
+					readme, err := os.ReadFile(filepath.Join(t.Dir, "README.md"))
+					note := err == nil && strings.Contains(string(readme), "known limit")
+					if note {
+						for p := range sensPaths {
+							if !strings.Contains(string(readme), p) {
+								note = false
+							}
+						}
+					}
+					if !note {
+						v.addf("twin-readme", where, "twin %q README lacks the known-limit note naming the omitted sensitive file (J2)", t.ID)
+					}
+				}
 				for p := range netA {
 					if sensPaths[p] {
 						continue
@@ -2048,14 +2076,22 @@ func (r cmdResult) brief() string {
 
 // runCmd runs a done-check inside dir with the hermetic environment.
 func runCmd(dir, cmd string) cmdResult {
-	c := exec.Command("sh", "-c", cmd)
+	name, args := "sh", []string{"-c", cmd}
+	if runtime.GOOS == "windows" {
+		name, args = "cmd", []string{"/c", cmd}
+	}
+	c := exec.Command(name, args...)
 	c.Dir = dir
 	c.Env = append(os.Environ(),
 		"GOPROXY=off", "GOFLAGS=-mod=mod", "CGO_ENABLED=0",
 		"GOWORK=off",
 	)
 	out, err := c.CombinedOutput()
-	return cmdResult{ok: err == nil, out: string(out)}
+	res := cmdResult{ok: err == nil, out: string(out)}
+	if err != nil && strings.TrimSpace(res.out) == "" {
+		res.out = err.Error()
+	}
+	return res
 }
 
 // ---------------------------------------------------------------------------

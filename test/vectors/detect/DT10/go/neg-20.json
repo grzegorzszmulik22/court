@@ -1,13 +1,17 @@
 {
-  "id": "DT10-go-neg-20",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
     "a.txt": {
-      "before": "x\ny\n",
-      "after": "x\nz\n"
+      "after": "x\nz\n",
+      "before": "x\ny\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-20",
+  "language": "go",
   "note": "rename-file"
 }

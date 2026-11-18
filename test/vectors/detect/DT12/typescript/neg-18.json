@@ -1,19 +1,23 @@
 {
-  "id": "DT12-typescript-neg-18",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "node_modules/m/i.js": {
-      "before": "",
-      "after": "m()\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [],
+  "files": {
+    "node_modules/m/i.js": {
+      "after": "m()\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT12-typescript-neg-18",
+  "language": "typescript",
   "note": "other-top-exempt"
 }

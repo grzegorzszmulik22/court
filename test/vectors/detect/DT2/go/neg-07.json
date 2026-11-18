@@ -1,14 +1,18 @@
 {
-  "id": "DT2-go-neg-07",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/schema.md": {
-      "before": "# schema\n",
-      "after": "# schema\n\n`CREATE TABLE` planned.\n"
+      "after": "# schema\n\n`CREATE TABLE` planned.\n",
+      "before": "# schema\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-07",
+  "language": "go",
   "near_miss": "ddl-in-docs",
   "note": "ddl-in-docs"
 }

@@ -1,26 +1,30 @@
 {
-  "id": "DT3-python-pos-22",
   "detector": "DT3",
-  "language": "python",
-  "files": {
-    "api/schema.graphql": {
-      "before": "type Query {\n  order(id: ID!): Order\n}\n",
-      "after": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/schema.graphql",
+      "detector": "DT3",
+      "evidence": "orders: [Order!]!",
       "lines": [
         3,
         3
       ],
+      "path": "api/schema.graphql",
+      "rule": "dt3-contract-graphql",
       "side": "after",
-      "evidence": "orders: [Order!]!",
-      "rule": "dt3-contract-graphql"
+      "subkind": "added"
     }
-  ]
+  ],
+  "files": {
+    "api/schema.graphql": {
+      "after": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n",
+      "before": "type Query {\n  order(id: ID!): Order\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-22",
+  "language": "python"
 }

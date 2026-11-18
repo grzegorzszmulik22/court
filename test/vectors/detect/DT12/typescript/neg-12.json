@@ -1,19 +1,23 @@
 {
-  "id": "DT12-typescript-neg-12",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "build/gen.go": {
-      "before": "",
-      "after": "g = 1\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [],
+  "files": {
+    "build/gen.go": {
+      "after": "g = 1\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT12-typescript-neg-12",
+  "language": "typescript",
   "note": "small-unplanned-exempt"
 }

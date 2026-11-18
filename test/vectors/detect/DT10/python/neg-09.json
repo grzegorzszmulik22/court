@@ -1,14 +1,18 @@
 {
-  "id": "DT10-python-neg-09",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
     "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+      "after": "b\n",
+      "before": "a\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-09",
+  "language": "python",
   "near_miss": "unrelated",
   "note": "unrelated"
 }

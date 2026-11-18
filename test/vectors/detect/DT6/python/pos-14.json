@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-14",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".nycrc": {
-      "before": "{\n  \"lines\": 90\n}\n",
-      "after": "{\n  \"lines\": 70\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "threshold",
-      "path": ".nycrc",
+      "detector": "DT6",
+      "evidence": "\"lines\": 70",
       "lines": [
         2,
         2
       ],
+      "path": ".nycrc",
+      "rule": "dt6-python-threshold",
       "side": "after",
-      "evidence": "\"lines\": 70",
-      "rule": "dt6-python-threshold"
+      "subkind": "threshold"
     }
   ],
+  "files": {
+    ".nycrc": {
+      "after": "{\n  \"lines\": 70\n}\n",
+      "before": "{\n  \"lines\": 90\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-14",
+  "language": "python",
   "note": "a line-coverage floor fell"
 }

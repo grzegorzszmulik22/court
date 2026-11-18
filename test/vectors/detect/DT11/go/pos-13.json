@@ -1,71 +1,75 @@
 {
-  "id": "DT11-go-pos-13",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "proto/svc.proto": {
-      "before": "",
-      "after": "syntax = \"proto3\";\n"
-    }
-  },
   "commission": {
     "territory": [
       "gen/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "proto/svc.proto",
+      "detector": "DT11",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt11-go-outside",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt11-go-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "proto/svc.proto",
+      "detector": "DT2",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt2-go-format",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt2-go-format"
+      "subkind": "format"
     },
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "proto/svc.proto",
+      "detector": "DT3",
+      "evidence": "syntax",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt3-contract-proto",
       "side": "after",
-      "evidence": "syntax",
-      "rule": "dt3-contract-proto"
+      "subkind": "added"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "proto/svc.proto",
+      "detector": "DT12",
+      "evidence": "syntax = \"proto3\";",
       "lines": [
         1,
         1
       ],
+      "path": "proto/svc.proto",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "syntax = \"proto3\";",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "proto/svc.proto": {
+      "after": "syntax = \"proto3\";\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-pos-13",
+  "language": "go",
   "note": ".proto outside territory also fires format and contract"
 }

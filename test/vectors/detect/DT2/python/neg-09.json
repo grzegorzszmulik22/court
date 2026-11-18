@@ -1,14 +1,18 @@
 {
-  "id": "DT2-python-neg-09",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/fix.sql": {
-      "before": "DELETE FROM t WHERE id = 1;\n",
-      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n",
+      "before": "DELETE FROM t WHERE id = 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-09",
+  "language": "python",
   "near_miss": "delete-stmt",
   "note": "delete-stmt"
 }

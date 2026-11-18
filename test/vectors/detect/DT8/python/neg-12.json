@@ -1,14 +1,18 @@
 {
-  "id": "DT8-python-neg-12",
   "detector": "DT8",
-  "language": "python",
+  "expect": [],
   "files": {
     "docs/links.md": {
-      "before": "# links\n",
-      "after": "# links\n\nsee https://docs.vendor-docs.example\n"
+      "after": "# links\n\nsee https://docs.vendor-docs.example\n",
+      "before": "# links\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT8-python-neg-12",
+  "language": "python",
   "near_miss": "docs-url",
   "note": "a URL in a doc file is prose, not a literal"
 }

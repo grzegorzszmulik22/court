@@ -1,14 +1,14 @@
 {
-  "id": "DT8-typescript-neg-05",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "src/client.ts": {
-      "before": "export function c() {}\n",
-      "after": "import { x } from './x';\nexport function c() {}\n"
+    "svc/client.ts": {
+      "after": "// talks to https://api.other-host.net\nexport function c() {}\n",
+      "before": "export function c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-05",
+  "language": "typescript",
   "near_miss": "import-added",
   "note": "import-added"
 }

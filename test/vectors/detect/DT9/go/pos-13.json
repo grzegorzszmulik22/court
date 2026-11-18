@@ -1,27 +1,31 @@
 {
-  "id": "DT9-go-pos-13",
   "detector": "DT9",
-  "language": "go",
-  "files": {
-    "scripts/setup.sh": {
-      "before": "#!/bin/sh\nchmod 755 bin/run\n",
-      "after": "#!/bin/sh\nchmod 777 bin/run\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "scripts/setup.sh",
+      "detector": "DT9",
+      "evidence": "chmod 777",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/setup.sh",
+      "rule": "dt9-go-widened",
       "side": "after",
-      "evidence": "chmod 777",
-      "rule": "dt9-go-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/setup.sh": {
+      "after": "#!/bin/sh\nchmod 777 bin/run\n",
+      "before": "#!/bin/sh\nchmod 755 bin/run\n"
+    }
+  },
+  "id": "DT9-go-pos-13",
+  "language": "go",
   "note": "world-writable mode"
 }

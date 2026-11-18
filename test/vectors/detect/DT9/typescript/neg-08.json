@@ -1,14 +1,18 @@
 {
-  "id": "DT9-typescript-neg-08",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "README.md": {
-      "before": "# s\n",
-      "after": "# s\n\nauth docs here\n"
+      "after": "# s\n\nauth docs here\n",
+      "before": "# s\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-08",
+  "language": "typescript",
   "near_miss": "readme-auth",
   "note": "readme-auth"
 }

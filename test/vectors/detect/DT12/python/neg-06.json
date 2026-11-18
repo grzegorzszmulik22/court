@@ -1,20 +1,24 @@
 {
-  "id": "DT12-python-neg-06",
-  "detector": "DT12",
-  "language": "python",
-  "files": {
-    "vendor/x/y.go": {
-      "before": "",
-      "after": "x = 1\nv = 9\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "shop/cart.py"
     ],
     "plan_lines": 20
   },
+  "detector": "DT12",
   "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "vendor/x/y.go": {
+      "after": "x = 1\nv = 9\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-python-neg-06",
+  "language": "python",
   "near_miss": "unplanned-exempt",
   "note": "unplanned-exempt"
 }

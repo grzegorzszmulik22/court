@@ -1,26 +1,30 @@
 {
-  "id": "DT9-python-pos-21",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "data/token/count.csv": {
-      "before": "a,1\n",
-      "after": "a,2\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "data/token/count.csv",
+      "detector": "DT9",
+      "evidence": "a,2",
       "lines": [
         1,
         1
       ],
+      "path": "data/token/count.csv",
+      "rule": "dt9-python-touched",
       "side": "after",
-      "evidence": "a,2",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
     }
-  ]
+  ],
+  "files": {
+    "data/token/count.csv": {
+      "after": "a,2\n",
+      "before": "a,1\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-21",
+  "language": "python"
 }

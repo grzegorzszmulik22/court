@@ -19,7 +19,7 @@
         "source": "detected",
         "category": "schema",
         "paths": [
-          "y/b.go"
+          "y/migrations/0002_x.sql"
         ],
         "world": "w1",
         "commit": 1,

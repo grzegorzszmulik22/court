@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-01",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: number) { return x; }\n",
-      "after": "export function s(x: string) { return x; }\n"
+      "after": "function s(x: number) {\n  let y: string = x;\n  return y;\n}\n",
+      "before": "function s(x: number) {\n  let y: number = x;\n  return y;\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-01",
+  "language": "typescript",
   "near_miss": "concrete-kept",
   "note": "concrete-kept"
 }

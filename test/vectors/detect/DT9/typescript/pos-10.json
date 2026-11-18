@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-10",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "crypto/keys.env": {
-      "before": "K=1\n",
-      "after": "K=1\nL=2\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "crypto/keys.env",
+      "detector": "DT9",
+      "evidence": "L=2",
       "lines": [
         2,
         2
       ],
+      "path": "crypto/keys.env",
+      "rule": "dt9-typescript-touched",
       "side": "after",
-      "evidence": "L=2",
-      "rule": "dt9-typescript-touched"
+      "subkind": "touched"
     }
   ],
+  "files": {
+    "crypto/keys.env": {
+      "after": "K=1\nL=2\n",
+      "before": "K=1\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-10",
+  "language": "typescript",
   "note": "key material config edited"
 }

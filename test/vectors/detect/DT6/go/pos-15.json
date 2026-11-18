@@ -1,27 +1,31 @@
 {
-  "id": "DT6-go-pos-15",
   "detector": "DT6",
-  "language": "go",
-  "files": {
-    "mypy.ini": {
-      "before": "[mypy]\nstrict = True\n",
-      "after": "[mypy]\nstrict = False\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "strictness",
-      "path": "mypy.ini",
+      "detector": "DT6",
+      "evidence": "strict = False",
       "lines": [
         2,
         2
       ],
+      "path": "mypy.ini",
+      "rule": "dt6-go-strictness",
       "side": "after",
-      "evidence": "strict = False",
-      "rule": "dt6-go-strictness"
+      "subkind": "strictness"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "mypy.ini": {
+      "after": "[mypy]\nstrict = False\n",
+      "before": "[mypy]\nstrict = True\n"
+    }
+  },
+  "id": "DT6-go-pos-15",
+  "language": "go",
   "note": "mypy strict mode off"
 }

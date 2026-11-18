@@ -1,44 +1,48 @@
 {
-  "id": "DT11-go-pos-10",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "config/prod.yaml": {
-      "before": "",
-      "after": "k: v\nw: z\n"
-    }
-  },
   "commission": {
     "territory": [
       "staging/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "config/prod.yaml",
+      "detector": "DT11",
+      "evidence": "k: v",
       "lines": [
         1,
         1
       ],
+      "path": "config/prod.yaml",
+      "rule": "dt11-go-outside",
       "side": "after",
-      "evidence": "k: v",
-      "rule": "dt11-go-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "config/prod.yaml",
+      "detector": "DT12",
+      "evidence": "k: v",
       "lines": [
         1,
         1
       ],
+      "path": "config/prod.yaml",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "k: v",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "config/prod.yaml": {
+      "after": "k: v\nw: z\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-pos-10",
+  "language": "go"
 }

@@ -1,45 +1,49 @@
 {
-  "id": "DT11-python-pos-06",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "very/deep/path/file.txt": {
-      "before": "",
-      "after": "a\nb\nc\nd\n"
-    }
-  },
   "commission": {
     "territory": [
       "x/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "very/deep/path/file.txt",
+      "detector": "DT11",
+      "evidence": "a",
       "lines": [
         1,
         1
       ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "a",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "very/deep/path/file.txt",
+      "detector": "DT12",
+      "evidence": "a",
       "lines": [
         1,
         1
       ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "a",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "very/deep/path/file.txt": {
+      "after": "a\nb\nc\nd\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-06",
+  "language": "python",
   "note": "deep path outside"
 }

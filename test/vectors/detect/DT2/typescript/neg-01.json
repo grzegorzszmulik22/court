@@ -1,14 +1,18 @@
 {
-  "id": "DT2-typescript-neg-01",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "data/seed.sql": {
-      "before": "INSERT INTO t VALUES (1);\n",
-      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n"
+      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n",
+      "before": "INSERT INTO t VALUES (1);\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-01",
+  "language": "typescript",
   "near_miss": "dml-only",
   "note": "dml-only"
 }

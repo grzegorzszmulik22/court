@@ -1,39 +1,43 @@
 {
-  "id": "DT10-go-pos-04",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "db/drops/idx.sql": {
-      "before": "-- x\n",
-      "after": "-- x\nDROP INDEX idx_old;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/drops/idx.sql",
+      "detector": "DT10",
+      "evidence": "DROP INDEX idx_old;",
       "lines": [
         2,
         2
       ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt10-go-sql",
       "side": "after",
-      "evidence": "DROP INDEX idx_old;",
-      "rule": "dt10-go-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/drops/idx.sql",
+      "detector": "DT2",
+      "evidence": "DROP INDEX idx_old;",
       "lines": [
         2,
         2
       ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "DROP INDEX idx_old;",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     }
-  ]
+  ],
+  "files": {
+    "db/drops/idx.sql": {
+      "after": "-- x\nDROP INDEX idx_old;\n",
+      "before": "-- x\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-04",
+  "language": "go"
 }

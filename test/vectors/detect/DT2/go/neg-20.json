@@ -1,13 +1,17 @@
 {
-  "id": "DT2-go-neg-20",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "api/schema.xsd": {
-      "before": "<x></x>\n",
-      "after": "<x><y/></x>\n"
+      "after": "<x><y/></x>\n",
+      "before": "<x></x>\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-20",
+  "language": "go",
   "note": "xml-schema"
 }

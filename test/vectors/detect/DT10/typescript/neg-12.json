@@ -1,29 +1,33 @@
 {
-  "id": "DT10-typescript-neg-12",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "ops/log3.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
+  "id": "DT10-typescript-neg-12",
+  "language": "typescript",
+  "note": "rm-single",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "rm out.log"
       },
+      "name": "Bash",
       "outcome": "ok"
     },
     {
-      "name": "Bash",
       "input": {
         "command": "ls"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "note": "rm-single"
+  ]
 }

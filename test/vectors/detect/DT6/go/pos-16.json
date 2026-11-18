@@ -1,27 +1,31 @@
 {
-  "id": "DT6-go-pos-16",
   "detector": "DT6",
-  "language": "go",
-  "files": {
-    "tsconfig.json": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": false\n  }\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "strictness",
-      "path": "tsconfig.json",
+      "detector": "DT6",
+      "evidence": "\"noImplicitAny\": false",
       "lines": [
         4,
         4
       ],
+      "path": "tsconfig.json",
+      "rule": "dt6-go-strictness",
       "side": "after",
-      "evidence": "\"noImplicitAny\": false",
-      "rule": "dt6-go-strictness"
+      "subkind": "strictness"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "tsconfig.json": {
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": false\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n"
+    }
+  },
+  "id": "DT6-go-pos-16",
+  "language": "go",
   "note": "implicit-any re-enabled"
 }

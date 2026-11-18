@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-12",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/views.sql": {
-      "before": "CREATE VIEW v1 AS SELECT 1;\n",
-      "after": "CREATE VIEW v2 AS SELECT 2;\n"
+      "after": "CREATE VIEW v2 AS SELECT 2;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-12",
+  "language": "python",
   "note": "create-view"
 }

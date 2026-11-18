@@ -1,14 +1,18 @@
 {
-  "id": "DT10-python-neg-03",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/q.sql": {
-      "before": "-- drop later\n",
-      "after": "-- drop later or keep\n"
+      "after": "-- drop later or keep\n",
+      "before": "-- drop later\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-03",
+  "language": "python",
   "near_miss": "drop-comment",
   "note": "drop-comment"
 }

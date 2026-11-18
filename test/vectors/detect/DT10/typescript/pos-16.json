@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-16",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "data/state.sqlite": {
-      "before": "SQLite\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/state.sqlite",
+      "detector": "DT10",
+      "evidence": "SQLite",
       "lines": [
         1,
         1
       ],
+      "path": "data/state.sqlite",
+      "rule": "dt10-typescript-datafile",
       "side": "before",
-      "evidence": "SQLite",
-      "rule": "dt10-typescript-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/state.sqlite": {
+      "after": "",
+      "before": "SQLite\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-16",
+  "language": "typescript"
 }

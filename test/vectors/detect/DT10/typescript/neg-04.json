@@ -1,14 +1,18 @@
 {
-  "id": "DT10-typescript-neg-04",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "docs/db.md": {
-      "before": "# db\n",
-      "after": "# db\n\nTRUNCATE planned\n"
+      "after": "# db\n\nTRUNCATE planned\n",
+      "before": "# db\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-04",
+  "language": "typescript",
   "near_miss": "truncate-in-doc",
   "note": "truncate-in-doc"
 }

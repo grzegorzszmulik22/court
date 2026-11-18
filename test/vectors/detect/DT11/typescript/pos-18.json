@@ -1,32 +1,36 @@
 {
-  "id": "DT11-typescript-pos-18",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "ops/runbook.md": {
-      "before": "# run\n\nsteps\n",
-      "after": ""
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "ops/runbook.md",
+      "detector": "DT11",
+      "evidence": "# run",
       "lines": [
         1,
         1
       ],
+      "path": "ops/runbook.md",
+      "rule": "dt11-typescript-outside",
       "side": "before",
-      "evidence": "# run",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     }
   ],
+  "files": {
+    "ops/runbook.md": {
+      "after": "",
+      "before": "# run\n\nsteps\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-18",
+  "language": "typescript",
   "note": "deleted file outside the globs"
 }

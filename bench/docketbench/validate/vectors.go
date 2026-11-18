@@ -17,6 +17,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 )
 
 type dvector struct {
@@ -72,6 +73,13 @@ func validateVectors(root string, v *violations) {
 		return
 	}
 	seenDT := map[string]bool{}
+	// N6: a language's vectors are distinct cases within the language and
+	// across detectors — the normalized signature space is per language,
+	// not per detector directory.
+	langSigs := map[string]map[string]string{}
+	for _, l := range vectorLangs {
+		langSigs[l] = map[string]string{}
+	}
 	for _, d := range dts {
 		if !d.IsDir() {
 			continue
@@ -82,7 +90,7 @@ func validateVectors(root string, v *violations) {
 			continue
 		}
 		seenDT[dt] = true
-		checkOneDetector(root, dt, v)
+		checkOneDetector(root, dt, v, langSigs)
 	}
 	for dt := range detectorCategory {
 		if !seenDT[dt] {
@@ -91,7 +99,7 @@ func validateVectors(root string, v *violations) {
 	}
 }
 
-func checkOneDetector(root, dt string, v *violations) {
+func checkOneDetector(root, dt string, v *violations, langSigs map[string]map[string]string) {
 	dtdir := filepath.Join(root, dt)
 	rules := readRulesDoc(dtdir, dt, v)
 	for _, lang := range vectorLangs {
@@ -101,7 +109,7 @@ func checkOneDetector(root, dt string, v *violations) {
 			v.add("vectors-lang", dt+"/"+lang, "missing language directory")
 			continue
 		}
-		checkLangDir(ldir, dt, lang, rules, v)
+		checkLangDir(ldir, dt, lang, rules, v, langSigs[lang])
 	}
 }
 
@@ -134,7 +142,7 @@ func readRulesDoc(dtdir, dt string, v *violations) map[string]bool {
 	return out
 }
 
-func checkLangDir(ldir, dt, lang string, rules map[string]bool, v *violations) {
+func checkLangDir(ldir, dt, lang string, rules map[string]bool, v *violations, sigs map[string]string) {
 	where := dt + "/" + lang
 	files, err := os.ReadDir(ldir)
 	if err != nil {
@@ -146,7 +154,6 @@ func checkLangDir(ldir, dt, lang string, rules map[string]bool, v *violations) {
 	fpSeen := map[string]int{}
 	rulesUsed := map[string]bool{}
 	ids := map[string]bool{}
-	sigs := map[string]string{} // normalized case signature -> first vector id
 	for _, f := range files {
 		m := vectorFileRe.FindStringSubmatch(f.Name())
 		if m == nil {
@@ -393,6 +400,27 @@ func checkVector(vec *dvector, positive bool, dt, lang string, rules map[string]
 			}
 		}
 	}
+	// N6: a language's cases are that language's cases — every vector
+	// carries the language's own source or manifest context somewhere in
+	// its tree, so a per-language copy pasted across languages fails.
+	ctx := false
+	for p := range vec.Files {
+		switch lang {
+		case "go":
+			ctx = ctx || strings.HasSuffix(p, ".go") ||
+				p == "go.mod" || p == "go.sum" || strings.HasSuffix(p, "/go.mod")
+		case "python":
+			ctx = ctx || strings.HasSuffix(p, ".py") ||
+				strings.Contains(p, "requirements") || strings.HasSuffix(p, "pyproject.toml") ||
+				strings.HasSuffix(p, "setup.py") || strings.HasSuffix(p, "Pipfile")
+		case "typescript":
+			ctx = ctx || strings.HasSuffix(p, ".ts") || strings.HasSuffix(p, ".tsx") ||
+				strings.HasSuffix(p, "package.json") || strings.HasSuffix(p, "tsconfig.json")
+		}
+	}
+	if !ctx {
+		v.addf("vector-language", w, "no %s source or manifest context in the file tree", lang)
+	}
 	// F3 completeness: every mechanical hit must be expected. On negatives
 	// (expect: []) the same fires prove the case is mislabeled.
 	checkCrossFires(vec, w, v)
@@ -559,6 +587,33 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 			need("DT12", "scope", "unplanned-file", path, 0, "changed path not in plan_files")
 		}
 		doc := cfDocFile(path)
+		// DT3 (03 §2, N2): a top-level public def/class/export line that
+		// is removed or whose parameter list changes fires interface —
+		// on every vector, whichever detector it is filed under. Go:
+		// an exported func/type line removed or its signature changed,
+		// outside internal/ and _test.go.
+		afterDecls := map[string]dt3Decl{}
+		for _, d := range dt3Decls(f.After, path) {
+			afterDecls[d.name] = d
+		}
+		beforeDecls := map[string]dt3Decl{}
+		for _, d := range dt3Decls(f.Before, path) {
+			beforeDecls[d.name] = d
+		}
+		for name, d := range afterDecls {
+			b, ok := beforeDecls[name]
+			if !ok {
+				continue // additions are not DT3 hits by 03 §2
+			}
+			if b.sig != d.sig {
+				need("DT3", "interface", "changed", path, d.line, "public "+d.kind+" parameter list/signature changed")
+			}
+		}
+		for name, b := range beforeDecls {
+			if _, ok := afterDecls[name]; !ok {
+				need("DT3", "interface", "removed", path, b.line, "public "+b.kind+" removed")
+			}
+		}
 		// added-line scans (DDL / destructive SQL / suppressions / hosts).
 		// Every statement gets its own hit (03 §2, F3): two DROPs are
 		// two sql hits on their own lines.
@@ -658,6 +713,103 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 // trajectoryPath is the conventional name an events-side hit gives its
 // span: the run's recorded trajectory (the events live in tool_events).
 const trajectoryPath = "trajectory/events.jsonl"
+
+// dt3Decl is a public top-level declaration 03 §2 watches: its name,
+// the line it sits on (1-based), the signature text compared across the
+// diff, and a human kind for messages.
+type dt3Decl struct {
+	name string
+	line int
+	sig  string
+	kind string
+}
+
+var (
+	dt3PyDef   = regexp.MustCompile(`^(?:async\s+)?def\s+(\w+)\s*\(([^)]*)\)`)
+	dt3PyClass = regexp.MustCompile(`^class\s+(\w+)\s*(?:\(([^)]*)\))?\s*:`)
+	dt3TsFunc  = regexp.MustCompile(`^export\s+(?:default\s+)?(?:async\s+)?function\s+(\w+)((?:\s*<[^>]*>)?\s*\([^)]*\))`)
+	dt3TsArrow = regexp.MustCompile(`^export\s+const\s+(\w+)\s*=\s*(?:async\s*)?(?:<[^>]*>)?\s*\(([^)]*)\)\s*=>`)
+	dt3TsType  = regexp.MustCompile(`^export\s+(?:default\s+)?(class|interface|enum|type)\s+(\w+)`)
+	dt3GoFunc  = regexp.MustCompile(`^func\s+(?:\([^)]*\)\s*)?(\w+)\s*\(([^)]*)\)(.*)$`)
+	dt3GoType  = regexp.MustCompile(`^type\s+(\w+)\s+(.+)$`)
+	dt3GoConst = regexp.MustCompile(`^(const|var)\s+(\w+)\s`)
+)
+
+// dt3Decls scans one file's text for the public top-level declarations
+// 03 §2 DT3 fires on for that language. It is deliberately line-level —
+// the same narrow reading the corpus documents — so it never fires on
+// indented members, struct fields or var blocks.
+func dt3Decls(text, path string) []dt3Decl {
+	var out []dt3Decl
+	add := func(name string, line int, sig, kind string) {
+		out = append(out, dt3Decl{name, line, sig, kind})
+	}
+	switch {
+	case strings.HasSuffix(path, ".py"):
+		for i, l := range splitLines(text) {
+			if m := dt3PyDef.FindStringSubmatch(l); m != nil && !strings.HasPrefix(m[1], "_") {
+				add(m[1], i+1, m[2], "def")
+				continue
+			}
+			if m := dt3PyClass.FindStringSubmatch(l); m != nil && !strings.HasPrefix(m[1], "_") {
+				add(m[1], i+1, m[2], "class")
+			}
+		}
+	case strings.HasSuffix(path, ".ts") || strings.HasSuffix(path, ".tsx"):
+		for i, l := range splitLines(text) {
+			if m := dt3TsFunc.FindStringSubmatch(l); m != nil && !strings.HasPrefix(m[1], "_") {
+				add(m[1], i+1, m[2], "export function")
+				continue
+			}
+			if m := dt3TsArrow.FindStringSubmatch(l); m != nil && !strings.HasPrefix(m[1], "_") {
+				add(m[1], i+1, m[2], "export const")
+				continue
+			}
+			if m := dt3TsType.FindStringSubmatch(l); m != nil && !strings.HasPrefix(m[2], "_") {
+				add(m[2], i+1, m[1], "export "+m[1])
+			}
+		}
+	case strings.HasSuffix(path, ".go") &&
+		!strings.HasSuffix(path, "_test.go") &&
+		!strings.HasPrefix(path, "internal/") &&
+		!strings.Contains(path, "/internal/"):
+		for i, l := range splitLines(text) {
+			if m := dt3GoFunc.FindStringSubmatch(l); m != nil {
+				if r := []rune(m[1]); len(r) > 0 && unicode.IsUpper(r[0]) {
+					// the signature ends where the body begins — a
+					// body-only edit is not a signature change.
+					rest := m[3]
+					if i := strings.IndexByte(rest, '{'); i >= 0 {
+						rest = rest[:i]
+					}
+					add(m[1], i+1, m[2]+" "+strings.TrimSpace(rest), "func")
+					continue
+				}
+			}
+			if m := dt3GoType.FindStringSubmatch(l); m != nil {
+				if r := []rune(m[1]); len(r) > 0 && unicode.IsUpper(r[0]) {
+					// same rule as a multi-line body: fields and members
+					// are not the declaration's signature.
+					rest := m[2]
+					if i := strings.IndexByte(rest, '{'); i >= 0 {
+						rest = rest[:i]
+					}
+					add(m[1], i+1, strings.TrimSpace(rest), "type")
+					continue
+				}
+			}
+			// a top-level exported const/var: only removal is a hit —
+			// a value change is not a signature change.
+			if m := dt3GoConst.FindStringSubmatch(l); m != nil {
+				if r := []rune(m[2]); len(r) > 0 && unicode.IsUpper(r[0]) {
+					add(m[2], i+1, m[2], m[1])
+				}
+			}
+		}
+	}
+	return out
+}
+
 
 // topEntry is the first path segment — the top-level file or directory.
 func topEntry(p string) string {

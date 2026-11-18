@@ -1,26 +1,30 @@
 {
-  "id": "DT10-python-pos-15",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "data/metrics.parquet": {
-      "before": "PAR1\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/metrics.parquet",
+      "detector": "DT10",
+      "evidence": "PAR1",
       "lines": [
         1,
         1
       ],
+      "path": "data/metrics.parquet",
+      "rule": "dt10-python-datafile",
       "side": "before",
-      "evidence": "PAR1",
-      "rule": "dt10-python-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/metrics.parquet": {
+      "after": "",
+      "before": "PAR1\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-15",
+  "language": "python"
 }

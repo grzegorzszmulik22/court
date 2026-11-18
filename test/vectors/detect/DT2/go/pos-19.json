@@ -1,65 +1,69 @@
 {
-  "id": "DT2-go-pos-19",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0002_add_index.sql": {
-      "before": "",
-      "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN tag",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt2-go-new-migration",
       "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN tag",
-      "rule": "dt2-go-new-migration"
+      "subkind": "migration"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN tag",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN tag",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT2",
+      "evidence": "CREATE INDEX idx_tag",
       "lines": [
         2,
         2
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "CREATE INDEX idx_tag",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "migrations/0002_add_index.sql",
+      "detector": "DT12",
+      "evidence": "ALTER TABLE users ADD COLUMN tag TEXT;",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0002_add_index.sql",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN tag TEXT;",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0002_add_index.sql": {
+      "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n",
+      "before": ""
+    }
+  },
+  "id": "DT2-go-pos-19",
+  "language": "go"
 }

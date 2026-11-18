@@ -1,43 +1,47 @@
 {
-  "id": "DT10-go-pos-23",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "ops/run/log.txt": {
-      "before": "x\n",
-      "after": "y\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "rm -r data/"
-      },
-      "outcome": "ok"
-    },
-    {
-      "name": "Bash",
-      "input": {
-        "command": "ls"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "rm -r data/",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-go-destructive-cmd",
       "side": "events",
-      "evidence": "rm -r data/",
-      "rule": "dt10-go-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "rm -r among two events"
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/run/log.txt": {
+      "after": "y\n",
+      "before": "x\n"
+    }
+  },
+  "id": "DT10-go-pos-23",
+  "language": "go",
+  "note": "rm -r among two events",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm -r data/"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

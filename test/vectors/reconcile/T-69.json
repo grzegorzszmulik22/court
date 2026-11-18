@@ -1,6 +1,6 @@
 {
   "id": "T-69",
-  "comment": "An expected 'other' answered by a declared 'other' with overlapping paths merges -> confirmed. 'other' merges are reachable through declared/expected entries only: no detector produces 'other' (L2).",
+  "comment": "An expected 'other' answered by a declared 'other' with overlapping paths merges -> declared-only (nothing detected; cf T-34). 'other' merges are reachable through declared/expected entries only: no detector produces 'other' (L2).",
   "inputs": {
     "expected": [
       {
@@ -64,7 +64,7 @@
         "declared",
         "expected"
       ],
-      "verdict": "confirmed",
+      "verdict": "declared-only",
       "flags": [],
       "queued": false
     }

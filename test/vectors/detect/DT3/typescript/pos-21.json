@@ -1,26 +1,30 @@
 {
-  "id": "DT3-typescript-pos-21",
   "detector": "DT3",
-  "language": "typescript",
-  "files": {
-    "api/openapi.json": {
-      "before": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}}\n}\n",
-      "after": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}, \"/users\": {\"get\": {}}}\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/openapi.json",
+      "detector": "DT3",
+      "evidence": "\"/users\"",
       "lines": [
         3,
         3
       ],
+      "path": "api/openapi.json",
+      "rule": "dt3-contract-openapi",
       "side": "after",
-      "evidence": "\"/users\"",
-      "rule": "dt3-contract-openapi"
+      "subkind": "added"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.json": {
+      "after": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}, \"/users\": {\"get\": {}}}\n}\n",
+      "before": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}}\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT3-typescript-pos-21",
+  "language": "typescript"
 }

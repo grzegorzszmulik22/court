@@ -1,14 +1,18 @@
 {
-  "id": "DT9-typescript-neg-04",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "config/credentials.json": {
-      "before": "{\n \"a\":1\n}\n",
-      "after": "{\n \"a\":2\n}\n"
+      "after": "{\n \"a\":2\n}\n",
+      "before": "{\n \"a\":1\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-04",
+  "language": "typescript",
   "near_miss": "plural-not-segment",
   "note": "plural-not-segment"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-python-pos-12",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "deploy/policy.json": {
-      "before": "{\n  \"allow\": [\"read\"]\n}\n",
-      "after": "{\n  \"allow\": [\"read\", \"write\", \"*\"]\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "deploy/policy.json",
+      "detector": "DT9",
+      "evidence": "\"allow\": [\"read\", \"write\", \"*\"]",
       "lines": [
         2,
         2
       ],
+      "path": "deploy/policy.json",
+      "rule": "dt9-python-widened",
       "side": "after",
-      "evidence": "\"allow\": [\"read\", \"write\", \"*\"]",
-      "rule": "dt9-python-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n  \"allow\": [\"read\", \"write\", \"*\"]\n}\n",
+      "before": "{\n  \"allow\": [\"read\"]\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-12",
+  "language": "python",
   "note": "grant list gains wildcard"
 }

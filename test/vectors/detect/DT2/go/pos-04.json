@@ -1,26 +1,30 @@
 {
-  "id": "DT2-go-pos-04",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "db/schema_go.sql": {
-      "before": "CREATE TABLE t (id INT);\n",
-      "after": "CREATE TABLE t (id INT);\nALTER TABLE t ADD COLUMN c2 INT;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "db/schema_go.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE t ADD COLUMN c2",
       "lines": [
         2,
         2
       ],
+      "path": "db/schema_go.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE t ADD COLUMN c2",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     }
-  ]
+  ],
+  "files": {
+    "db/schema_go.sql": {
+      "after": "CREATE TABLE t (id INT);\nALTER TABLE t ADD COLUMN c2 INT;\n",
+      "before": "CREATE TABLE t (id INT);\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-pos-04",
+  "language": "go"
 }

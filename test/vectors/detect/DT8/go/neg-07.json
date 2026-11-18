@@ -1,14 +1,14 @@
 {
-  "id": "DT8-go-neg-07",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {}\n",
-      "after": "package svc\n\nfunc c() {}\nfunc d() {}\n"
+      "after": "package svc\n\nconst contact = \"mailto:ops@example.com\"\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-07",
+  "language": "go",
   "near_miss": "func-added",
   "note": "func-added"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-go-pos-16",
   "detector": "DT9",
-  "language": "go",
-  "files": {
-    "deploy/net.yaml": {
-      "before": "egress:\n  - 10.0.0.0/8\n",
-      "after": "egress:\n  - 0.0.0.0/0\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "deploy/net.yaml",
+      "detector": "DT9",
+      "evidence": "0.0.0.0/0",
       "lines": [
         2,
         2
       ],
+      "path": "deploy/net.yaml",
+      "rule": "dt9-go-widened",
       "side": "after",
-      "evidence": "0.0.0.0/0",
-      "rule": "dt9-go-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "deploy/net.yaml": {
+      "after": "egress:\n  - 0.0.0.0/0\n",
+      "before": "egress:\n  - 10.0.0.0/8\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-16",
+  "language": "go",
   "note": "egress widened to any"
 }

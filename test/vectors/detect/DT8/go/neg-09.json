@@ -1,14 +1,14 @@
 {
-  "id": "DT8-go-neg-09",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
     "svc/client.go": {
-      "before": "package svc\n\nfunc c() {\n\tx := 1\n\t_ = x\n}\n",
-      "after": "package svc\n\nfunc c() {\n\tx := 2\n\t_ = x\n}\n"
+      "after": "package svc\n\nconst ver = \"1.2.3\"\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-09",
+  "language": "go",
   "near_miss": "inner-walrus",
   "note": "inner-walrus"
 }

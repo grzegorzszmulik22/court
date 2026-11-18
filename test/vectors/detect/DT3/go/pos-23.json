@@ -1,26 +1,30 @@
 {
-  "id": "DT3-go-pos-23",
   "detector": "DT3",
-  "language": "go",
-  "files": {
-    "api/schema.graphql": {
-      "before": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n",
-      "after": "type Query {\n  order(id: ID!): Order\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/schema.graphql",
+      "detector": "DT3",
+      "evidence": "orders: [Order!]!",
       "lines": [
         3,
         3
       ],
+      "path": "api/schema.graphql",
+      "rule": "dt3-contract-graphql",
       "side": "before",
-      "evidence": "orders: [Order!]!",
-      "rule": "dt3-contract-graphql"
+      "subkind": "removed"
     }
-  ]
+  ],
+  "files": {
+    "api/schema.graphql": {
+      "after": "type Query {\n  order(id: ID!): Order\n}\n",
+      "before": "type Query {\n  order(id: ID!): Order\n  orders: [Order!]!\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT3-go-pos-23",
+  "language": "go"
 }

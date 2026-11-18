@@ -1,26 +1,30 @@
 {
-  "id": "DT10-python-pos-16",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "data/state.sqlite": {
-      "before": "SQLite\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/state.sqlite",
+      "detector": "DT10",
+      "evidence": "SQLite",
       "lines": [
         1,
         1
       ],
+      "path": "data/state.sqlite",
+      "rule": "dt10-python-datafile",
       "side": "before",
-      "evidence": "SQLite",
-      "rule": "dt10-python-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/state.sqlite": {
+      "after": "",
+      "before": "SQLite\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-16",
+  "language": "python"
 }

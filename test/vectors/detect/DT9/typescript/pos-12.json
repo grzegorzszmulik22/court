@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-12",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "deploy/policy.json": {
-      "before": "{\n  \"allow\": [\"read\"]\n}\n",
-      "after": "{\n  \"allow\": [\"read\", \"write\", \"*\"]\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "deploy/policy.json",
+      "detector": "DT9",
+      "evidence": "\"allow\": [\"read\", \"write\", \"*\"]",
       "lines": [
         2,
         2
       ],
+      "path": "deploy/policy.json",
+      "rule": "dt9-typescript-widened",
       "side": "after",
-      "evidence": "\"allow\": [\"read\", \"write\", \"*\"]",
-      "rule": "dt9-typescript-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n  \"allow\": [\"read\", \"write\", \"*\"]\n}\n",
+      "before": "{\n  \"allow\": [\"read\"]\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-12",
+  "language": "typescript",
   "note": "grant list gains wildcard"
 }

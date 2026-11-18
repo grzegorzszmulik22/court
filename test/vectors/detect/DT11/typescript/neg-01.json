@@ -1,24 +1,24 @@
 {
-  "id": "DT11-typescript-neg-01",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "shop/cart.go": {
-      "before": "",
-      "after": "export const c = 1;\n"
-    },
-    "shop/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "shop/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/cart.ts": {
+      "after": "export const c = 1;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-01",
+  "language": "typescript",
   "near_miss": "inside-territory",
   "note": "inside-territory"
 }

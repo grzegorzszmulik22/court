@@ -1,13 +1,17 @@
 {
-  "id": "DT1-typescript-neg-14",
   "detector": "DT1",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "package-lock.json": {
-      "before": "{\n  \"name\": \"app\",\n  \"lockfileVersion\": 3\n}\n",
-      "after": "{\n  \"name\": \"app2\",\n  \"lockfileVersion\": 3\n}\n"
+      "after": "{\n  \"name\": \"app2\",\n  \"lockfileVersion\": 3\n}\n",
+      "before": "{\n  \"name\": \"app\",\n  \"lockfileVersion\": 3\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT1-typescript-neg-14",
+  "language": "typescript",
   "note": "lockfile-name"
 }

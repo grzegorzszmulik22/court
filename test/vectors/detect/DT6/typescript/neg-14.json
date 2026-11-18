@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-14",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     ".nycrc": {
-      "before": "{\n  \"lines\": 70\n}\n",
-      "after": "{\n  \"lines\": 80\n}\n"
+      "after": "{\n  \"lines\": 80\n}\n",
+      "before": "{\n  \"lines\": 70\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-14",
+  "language": "typescript",
   "note": "nycrc-raised"
 }

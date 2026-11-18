@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-10",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "db/purge/mass.sql": {
-      "before": "SELECT 1;\n",
-      "after": "SELECT 1;\nDELETE FROM t;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/purge/mass.sql",
+      "detector": "DT10",
+      "evidence": "DELETE FROM t;",
       "lines": [
         2,
         2
       ],
+      "path": "db/purge/mass.sql",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "DELETE FROM t;",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     }
-  ]
+  ],
+  "files": {
+    "db/purge/mass.sql": {
+      "after": "SELECT 1;\nDELETE FROM t;\n",
+      "before": "SELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-10",
+  "language": "typescript"
 }

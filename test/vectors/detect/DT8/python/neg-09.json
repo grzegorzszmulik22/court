@@ -1,14 +1,14 @@
 {
-  "id": "DT8-python-neg-09",
   "detector": "DT8",
-  "language": "python",
+  "expect": [],
   "files": {
     "svc/client.py": {
-      "before": "def c():\n    x = 1\n    return x\n",
-      "after": "def c():\n    x = 2\n    return x\n"
+      "after": "VER = '1.2.3'\n\ndef c():\n    pass\n",
+      "before": "def c():\n    pass\n"
     }
   },
-  "expect": [],
+  "id": "DT8-python-neg-09",
+  "language": "python",
   "near_miss": "inner-assign",
   "note": "inner-assign"
 }

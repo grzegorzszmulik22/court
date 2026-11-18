@@ -1,13 +1,17 @@
 {
-  "id": "DT9-typescript-neg-20",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "config/permissions_old/y.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-20",
+  "language": "typescript",
   "note": "no-permission"
 }

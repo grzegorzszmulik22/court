@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-09",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "docs/auth/notes.md": {
-      "before": "# a\n",
-      "after": "# a\nmore\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "docs/auth/notes.md",
+      "detector": "DT9",
+      "evidence": "more",
       "lines": [
         2,
         2
       ],
+      "path": "docs/auth/notes.md",
+      "rule": "dt9-typescript-touched",
       "side": "after",
-      "evidence": "more",
-      "rule": "dt9-typescript-touched"
+      "subkind": "touched"
     }
   ],
+  "files": {
+    "docs/auth/notes.md": {
+      "after": "# a\nmore\n",
+      "before": "# a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-09",
+  "language": "typescript",
   "note": "doc under an auth dir is still an authority path"
 }

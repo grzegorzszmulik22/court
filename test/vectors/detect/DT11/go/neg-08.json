@@ -1,19 +1,23 @@
 {
-  "id": "DT11-go-neg-08",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "dist/out.js": {
-      "before": "",
-      "after": "x()\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "dist/out.js": {
+      "after": "x()\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-neg-08",
+  "language": "go",
   "near_miss": "exempt-dist",
   "note": "exempt-dist"
 }

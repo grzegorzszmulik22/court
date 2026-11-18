@@ -1,19 +1,23 @@
 {
-  "id": "DT11-typescript-neg-07",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "node_modules/pkg/i.js": {
-      "before": "",
-      "after": "module.exports = 1\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "node_modules/pkg/i.js": {
+      "after": "module.exports = 1\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-neg-07",
+  "language": "typescript",
   "near_miss": "exempt-node",
   "note": "exempt-node"
 }

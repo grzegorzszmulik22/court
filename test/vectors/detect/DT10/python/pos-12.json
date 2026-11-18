@@ -1,26 +1,30 @@
 {
-  "id": "DT10-python-pos-12",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "scripts/purge.sh": {
-      "before": "#!/bin/sh\n",
-      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "scripts/purge.sh",
+      "detector": "DT10",
+      "evidence": "DROP TABLE logs",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/purge.sh",
+      "rule": "dt10-python-sql",
       "side": "after",
-      "evidence": "DROP TABLE logs",
-      "rule": "dt10-python-sql"
+      "subkind": "sql"
     }
-  ]
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/purge.sh": {
+      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT10-python-pos-12",
+  "language": "python"
 }

@@ -1,39 +1,43 @@
 {
-  "id": "DT10-typescript-pos-03",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "ops/purge.sql": {
-      "before": "",
-      "after": "DELETE FROM users;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "ops/purge.sql",
+      "detector": "DT10",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "ops/purge.sql",
+      "detector": "DT12",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "ops/purge.sql": {
+      "after": "DELETE FROM users;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-03",
+  "language": "typescript"
 }

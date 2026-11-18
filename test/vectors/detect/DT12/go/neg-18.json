@@ -1,19 +1,23 @@
 {
-  "id": "DT12-go-neg-18",
-  "detector": "DT12",
-  "language": "go",
-  "files": {
-    "node_modules/m/i.js": {
-      "before": "",
-      "after": "m()\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "shop/cart.go"
     ],
     "plan_lines": 5
   },
+  "detector": "DT12",
   "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "node_modules/m/i.js": {
+      "after": "m()\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-go-neg-18",
+  "language": "go",
   "note": "other-top-exempt"
 }

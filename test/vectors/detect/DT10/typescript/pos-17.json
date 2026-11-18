@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-17",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "data/app.db": {
-      "before": "DB\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/app.db",
+      "detector": "DT10",
+      "evidence": "DB",
       "lines": [
         1,
         1
       ],
+      "path": "data/app.db",
+      "rule": "dt10-typescript-datafile",
       "side": "before",
-      "evidence": "DB",
-      "rule": "dt10-typescript-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/app.db": {
+      "after": "",
+      "before": "DB\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-17",
+  "language": "typescript"
 }

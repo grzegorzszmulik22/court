@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-12",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "scripts/purge.sh": {
-      "before": "#!/bin/sh\n",
-      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "scripts/purge.sh",
+      "detector": "DT10",
+      "evidence": "DROP TABLE logs",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/purge.sh",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "DROP TABLE logs",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     }
-  ]
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/purge.sh": {
+      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT10-typescript-pos-12",
+  "language": "typescript"
 }

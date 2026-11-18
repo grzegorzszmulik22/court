@@ -1,14 +1,18 @@
 {
-  "id": "DT9-python-neg-08",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
     "README.md": {
-      "before": "# s\n",
-      "after": "# s\n\nauth docs here\n"
+      "after": "# s\n\nauth docs here\n",
+      "before": "# s\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-08",
+  "language": "python",
   "near_miss": "readme-auth",
   "note": "readme-auth"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT2-typescript-neg-20",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "api/schema.xsd": {
-      "before": "<x></x>\n",
-      "after": "<x><y/></x>\n"
+      "after": "<x><y/></x>\n",
+      "before": "<x></x>\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-20",
+  "language": "typescript",
   "note": "xml-schema"
 }

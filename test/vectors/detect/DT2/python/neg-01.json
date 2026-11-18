@@ -1,14 +1,18 @@
 {
-  "id": "DT2-python-neg-01",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "data/seed.sql": {
-      "before": "INSERT INTO t VALUES (1);\n",
-      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n"
+      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n",
+      "before": "INSERT INTO t VALUES (1);\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-01",
+  "language": "python",
   "near_miss": "dml-only",
   "note": "dml-only"
 }

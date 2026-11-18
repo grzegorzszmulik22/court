@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-18",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    ".eslintrc.json": {
-      "before": "{\n  \"rules\": {\n    \"no-console\": \"error\"\n  }\n}\n",
-      "after": "{\n  \"rules\": {\n    \"no-console\": \"off\"\n  }\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "lint",
-      "path": ".eslintrc.json",
+      "detector": "DT6",
+      "evidence": "\"no-console\": \"off\"",
       "lines": [
         3,
         3
       ],
+      "path": ".eslintrc.json",
+      "rule": "dt6-python-lint",
       "side": "after",
-      "evidence": "\"no-console\": \"off\"",
-      "rule": "dt6-python-lint"
+      "subkind": "lint"
     }
   ],
+  "files": {
+    ".eslintrc.json": {
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"off\"\n  }\n}\n",
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"error\"\n  }\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-18",
+  "language": "python",
   "note": "an eslint rule was turned off"
 }

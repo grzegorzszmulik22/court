@@ -1,26 +1,30 @@
 {
-  "id": "DT3-typescript-pos-24",
   "detector": "DT3",
-  "language": "typescript",
-  "files": {
-    "api/schema.graphql": {
-      "before": "type Order {\n  id: ID!\n}\n",
-      "after": "type Order {\n  id: ID!\n}\n\ntype Refund {\n  id: ID!\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/schema.graphql",
+      "detector": "DT3",
+      "evidence": "type Refund",
       "lines": [
         5,
         5
       ],
+      "path": "api/schema.graphql",
+      "rule": "dt3-contract-graphql",
       "side": "after",
-      "evidence": "type Refund",
-      "rule": "dt3-contract-graphql"
+      "subkind": "added"
     }
-  ]
+  ],
+  "files": {
+    "api/schema.graphql": {
+      "after": "type Order {\n  id: ID!\n}\n\ntype Refund {\n  id: ID!\n}\n",
+      "before": "type Order {\n  id: ID!\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT3-typescript-pos-24",
+  "language": "typescript"
 }

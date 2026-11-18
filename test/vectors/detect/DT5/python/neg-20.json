@@ -1,14 +1,14 @@
 {
-  "id": "DT5-python-neg-20",
   "detector": "DT5",
-  "language": "python",
+  "expect": [],
   "files": {
     "app/calc.py": {
-      "before": "def s(x: Sequence[int]) -> int:\n    return 0\n",
-      "after": "def s(x: Sequence[str]) -> int:\n    return 0\n"
+      "after": "def s(x: int):\n    r: set = set()\n    return r\n",
+      "before": "def s(x: int):\n    r: frozenset = frozenset()\n    return r\n"
     }
   },
-  "expect": [],
+  "id": "DT5-python-neg-20",
+  "language": "python",
   "near_miss": "generic-kept",
   "note": "generic-kept"
 }

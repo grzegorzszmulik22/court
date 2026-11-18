@@ -1,13 +1,17 @@
 {
-  "id": "DT6-go-neg-15",
   "detector": "DT6",
-  "language": "go",
+  "expect": [],
   "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
     "mypy.ini": {
-      "before": "[mypy]\nstrict = False\n",
-      "after": "[mypy]\nstrict = True\n"
+      "after": "[mypy]\nstrict = True\n",
+      "before": "[mypy]\nstrict = False\n"
     }
   },
-  "expect": [],
+  "id": "DT6-go-neg-15",
+  "language": "go",
   "note": "mypy-on"
 }

@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-04",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: any, y: any) { return x; }\n",
-      "after": "export function s(x: number, y: any) { return x; }\n"
+      "after": "function s(x: number) {\n  let z: boolean = true;\n  return z;\n}\n",
+      "before": "function s(x: number) {\n  let z: number = 0;\n  return z;\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-04",
+  "language": "typescript",
   "near_miss": "narrowed",
   "note": "narrowed"
 }

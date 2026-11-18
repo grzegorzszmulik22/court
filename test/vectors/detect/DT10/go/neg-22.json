@@ -1,17 +1,21 @@
 {
-  "id": "DT10-go-neg-22",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
-    "db/g.sql": {
-      "before": "",
-      "after": "GRANT SELECT ON t TO r;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/g.sql": {
+      "after": "GRANT SELECT ON t TO r;\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-22",
+  "language": "go",
   "note": "grant"
 }

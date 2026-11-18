@@ -1,22 +1,26 @@
 {
-  "id": "DT10-typescript-neg-17",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "ops/log2.txt": {
-      "before": "a\nb\n",
-      "after": "a\nb\nc\n"
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
+  "id": "DT10-typescript-neg-17",
+  "language": "typescript",
+  "note": "git-commit",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "git commit -m x"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "note": "git-commit"
+  ]
 }

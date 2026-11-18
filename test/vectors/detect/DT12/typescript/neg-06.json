@@ -1,20 +1,24 @@
 {
-  "id": "DT12-typescript-neg-06",
-  "detector": "DT12",
-  "language": "typescript",
-  "files": {
-    "vendor/x/y.go": {
-      "before": "",
-      "after": "export const x = 1;\nv = 9\n"
-    }
-  },
   "commission": {
     "plan_files": [
       "src/cart.ts"
     ],
     "plan_lines": 20
   },
+  "detector": "DT12",
   "expect": [],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "vendor/x/y.go": {
+      "after": "export const x = 1;\nv = 9\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-typescript-neg-06",
+  "language": "typescript",
   "near_miss": "unplanned-exempt",
   "note": "unplanned-exempt"
 }

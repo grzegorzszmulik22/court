@@ -1,14 +1,18 @@
 {
-  "id": "DT2-go-neg-09",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/fix.sql": {
-      "before": "DELETE FROM t WHERE id = 1;\n",
-      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n",
+      "before": "DELETE FROM t WHERE id = 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-09",
+  "language": "go",
   "near_miss": "delete-stmt",
   "note": "delete-stmt"
 }

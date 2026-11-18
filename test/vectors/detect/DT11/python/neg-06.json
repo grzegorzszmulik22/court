@@ -1,20 +1,20 @@
 {
-  "id": "DT11-python-neg-06",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "vendor/x/y.go": {
-      "before": "",
-      "after": "def f():\n    pass\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "vendor/x/y.py": {
+      "after": "def f():\n    pass\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-06",
+  "language": "python",
   "near_miss": "exempt-vendor",
   "note": "exempt-vendor"
 }

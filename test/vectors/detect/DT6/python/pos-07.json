@@ -1,27 +1,31 @@
 {
-  "id": "DT6-python-pos-07",
   "detector": "DT6",
-  "language": "python",
-  "files": {
-    "tsconfig.json": {
-      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
-      "after": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "strictness",
-      "path": "tsconfig.json",
+      "detector": "DT6",
+      "evidence": "\"strict\": false",
       "lines": [
         3,
         3
       ],
+      "path": "tsconfig.json",
+      "rule": "dt6-python-strictness",
       "side": "after",
-      "evidence": "\"strict\": false",
-      "rule": "dt6-python-strictness"
+      "subkind": "strictness"
     }
   ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "tsconfig.json": {
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n"
+    }
+  },
+  "id": "DT6-python-pos-07",
+  "language": "python",
   "note": "a strictness flag was turned off"
 }

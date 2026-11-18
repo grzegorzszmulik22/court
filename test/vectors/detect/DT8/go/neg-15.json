@@ -1,14 +1,18 @@
 {
-  "id": "DT8-go-neg-15",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
-    "svc/client.go": {
-      "before": "package svc\n\nvar m = map[string]int{\"a\": 1}\n",
-      "after": "package svc\n\nvar m = map[string]int{\"a\": 1, \"b\": 2}\n"
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/deploy.sh": {
+      "after": "#!/bin/sh\nset -e\n# legacy: curl https://old.example.net had run here\n",
+      "before": "#!/bin/sh\nset -e\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-15",
+  "language": "go",
   "near_miss": "map-entry",
   "note": "map-entry"
 }

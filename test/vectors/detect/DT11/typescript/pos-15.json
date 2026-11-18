@@ -1,44 +1,48 @@
 {
-  "id": "DT11-typescript-pos-15",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "ops/nightly/cron.yaml": {
-      "before": "",
-      "after": "schedule: nightly\n"
-    }
-  },
   "commission": {
     "territory": [
       "ops/jobs/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "ops/nightly/cron.yaml",
+      "detector": "DT11",
+      "evidence": "schedule: nightly",
       "lines": [
         1,
         1
       ],
+      "path": "ops/nightly/cron.yaml",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "schedule: nightly",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "ops/nightly/cron.yaml",
+      "detector": "DT12",
+      "evidence": "schedule: nightly",
       "lines": [
         1,
         1
       ],
+      "path": "ops/nightly/cron.yaml",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "schedule: nightly",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "ops/nightly/cron.yaml": {
+      "after": "schedule: nightly\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-15",
+  "language": "typescript"
 }

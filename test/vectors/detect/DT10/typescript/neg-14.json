@@ -1,17 +1,21 @@
 {
-  "id": "DT10-typescript-neg-14",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "INSERT INTO t VALUES (7, 'a');\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "INSERT INTO t VALUES (7, 'a');\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-14",
+  "language": "typescript",
   "note": "insert-row"
 }

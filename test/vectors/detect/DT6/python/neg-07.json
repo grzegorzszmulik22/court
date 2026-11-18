@@ -1,14 +1,18 @@
 {
-  "id": "DT6-python-neg-07",
   "detector": "DT6",
-  "language": "python",
+  "expect": [],
   "files": {
     ".github/workflows/ci.yml": {
-      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
-      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      # end of steps\n"
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n      # end of steps\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT6-python-neg-07",
+  "language": "python",
   "near_miss": "comment-only",
   "note": "comment-only"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT9-typescript-neg-12",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "config/c.yml": {
-      "before": "cors:\n  origin: a\n",
-      "after": "cors:\n  origin: b\n"
+      "after": "cors:\n  origin: b\n",
+      "before": "cors:\n  origin: a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-12",
+  "language": "typescript",
   "note": "origin-swap"
 }

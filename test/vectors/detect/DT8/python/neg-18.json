@@ -1,28 +1,32 @@
 {
-  "id": "DT8-python-neg-18",
-  "detector": "DT8",
-  "language": "python",
-  "files": {
-    "tools/refresh.sh": {
-      "before": "#!/bin/sh\nexit 0\n",
-      "after": "#!/bin/sh\nexit 0\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "sh tools/refresh.sh"
-      },
-      "outcome": "ok"
-    }
-  ],
   "commission": {
     "allowed_hosts": [
       "api.internal.example"
     ]
   },
+  "detector": "DT8",
   "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "tools/refresh.sh": {
+      "after": "#!/bin/sh\nexit 0\n",
+      "before": "#!/bin/sh\nexit 0\n"
+    }
+  },
+  "id": "DT8-python-neg-18",
+  "language": "python",
   "near_miss": "event-local-script",
-  "note": "event-local-script"
+  "note": "event-local-script",
+  "tool_events": [
+    {
+      "input": {
+        "command": "sh tools/refresh.sh"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

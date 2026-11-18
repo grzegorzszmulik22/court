@@ -19,7 +19,7 @@
         "source": "detected",
         "category": "dependency",
         "paths": [
-          "x/a.go"
+          "x/go.mod"
         ],
         "world": "w1",
         "commit": 1,

@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-05",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "config/secret.yaml": {
-      "before": "key: v1\nrotated: no\n",
-      "after": "key: v2\nrotated: yes\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "config/secret.yaml",
+      "detector": "DT9",
+      "evidence": "rotated: yes",
       "lines": [
         2,
         2
       ],
+      "path": "config/secret.yaml",
+      "rule": "dt9-typescript-touched",
       "side": "after",
-      "evidence": "rotated: yes",
-      "rule": "dt9-typescript-touched"
+      "subkind": "touched"
     }
   ],
+  "files": {
+    "config/secret.yaml": {
+      "after": "key: v2\nrotated: yes\n",
+      "before": "key: v1\nrotated: no\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-05",
+  "language": "typescript",
   "note": "extension-stripped filename is a segment"
 }

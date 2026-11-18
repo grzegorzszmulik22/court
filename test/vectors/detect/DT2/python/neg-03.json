@@ -1,14 +1,18 @@
 {
-  "id": "DT2-python-neg-03",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/report.sql": {
-      "before": "SELECT * FROM t;\n",
-      "after": "SELECT * FROM t WHERE id > 0;\n"
+      "after": "SELECT * FROM t WHERE id > 0;\n",
+      "before": "SELECT * FROM t;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-03",
+  "language": "python",
   "near_miss": "select",
   "note": "select"
 }

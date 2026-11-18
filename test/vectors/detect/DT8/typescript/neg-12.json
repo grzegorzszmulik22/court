@@ -1,14 +1,18 @@
 {
-  "id": "DT8-typescript-neg-12",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "docs/links.md": {
-      "before": "# links\n",
-      "after": "# links\n\nsee https://docs.vendor-docs.example\n"
+      "after": "# links\n\nsee https://docs.vendor-docs.example\n",
+      "before": "# links\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-12",
+  "language": "typescript",
   "near_miss": "docs-url",
   "note": "a URL in a doc file is prose, not a literal"
 }

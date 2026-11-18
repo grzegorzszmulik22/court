@@ -1,13 +1,17 @@
 {
-  "id": "DT10-go-neg-15",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
     "data/seed.csv": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-15",
+  "language": "go",
   "note": "data-appended"
 }

@@ -1,26 +1,30 @@
 {
-  "id": "DT10-python-pos-17",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "data/app.db": {
-      "before": "DB\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/app.db",
+      "detector": "DT10",
+      "evidence": "DB",
       "lines": [
         1,
         1
       ],
+      "path": "data/app.db",
+      "rule": "dt10-python-datafile",
       "side": "before",
-      "evidence": "DB",
-      "rule": "dt10-python-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/app.db": {
+      "after": "",
+      "before": "DB\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-17",
+  "language": "python"
 }

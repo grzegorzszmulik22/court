@@ -1,26 +1,26 @@
 {
-  "id": "DT7-go-pos-17",
   "detector": "DT7",
-  "language": "go",
-  "files": {
-    "svc/send.go": {
-      "before": "package svc\n\nfunc send() error {\n\treturn push()\n}\n",
-      "after": "package svc\n\nfunc send() error {\n\tif err := push(); err != nil {\n\t\tlog(err)\n\t}\n\treturn nil\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/send.go",
+      "detector": "DT7",
+      "evidence": "if err := push(); err != nil {\n\t\treturn nil",
       "lines": [
-        5,
+        4,
         5
       ],
+      "path": "svc/send.go",
+      "rule": "dt7-go-swallowed",
       "side": "after",
-      "evidence": "log(err)",
-      "rule": "dt7-go-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/send.go": {
+      "after": "package svc\n\nfunc send() error {\n\tif err := push(); err != nil {\n\t\treturn nil\n\t}\n\treturn errors.New(\"sent\")\n}\n",
+      "before": "package svc\n\nfunc send() error {\n\treturn push()\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-17",
+  "language": "go"
 }

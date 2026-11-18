@@ -1,13 +1,17 @@
 {
-  "id": "DT2-go-neg-15",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/plan.sql": {
-      "before": "EXPLAIN SELECT 1;\n",
-      "after": "EXPLAIN ANALYZE SELECT 1;\n"
+      "after": "EXPLAIN ANALYZE SELECT 1;\n",
+      "before": "EXPLAIN SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-15",
+  "language": "go",
   "note": "explain"
 }

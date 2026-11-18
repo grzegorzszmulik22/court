@@ -1,26 +1,30 @@
 {
-  "id": "DT3-go-pos-30",
   "detector": "DT3",
-  "language": "go",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\ninfo:\n  title: api\npaths: {}\n",
-      "after": "openapi: 3.0.0\ninfo:\n  title: api v2\npaths: {}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "title: api v2",
       "lines": [
         3,
         3
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "after",
-      "evidence": "title: api v2",
-      "rule": "dt3-contract-openapi"
+      "subkind": "changed"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\ninfo:\n  title: api v2\npaths: {}\n",
+      "before": "openapi: 3.0.0\ninfo:\n  title: api\npaths: {}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT3-go-pos-30",
+  "language": "go"
 }

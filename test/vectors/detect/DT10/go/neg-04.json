@@ -1,14 +1,18 @@
 {
-  "id": "DT10-go-neg-04",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/db.md": {
-      "before": "# db\n",
-      "after": "# db\n\nTRUNCATE planned\n"
+      "after": "# db\n\nTRUNCATE planned\n",
+      "before": "# db\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-04",
+  "language": "go",
   "near_miss": "truncate-in-doc",
   "note": "truncate-in-doc"
 }

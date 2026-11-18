@@ -1,26 +1,30 @@
 {
-  "id": "DT9-python-pos-18",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "config/permission.yml": {
-      "before": "perm:\n  read: true\n",
-      "after": "perm:\n  read: true\n  write: true\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "config/permission.yml",
+      "detector": "DT9",
+      "evidence": "write: true",
       "lines": [
         3,
         3
       ],
+      "path": "config/permission.yml",
+      "rule": "dt9-python-touched",
       "side": "after",
-      "evidence": "write: true",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
     }
-  ]
+  ],
+  "files": {
+    "config/permission.yml": {
+      "after": "perm:\n  read: true\n  write: true\n",
+      "before": "perm:\n  read: true\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-18",
+  "language": "python"
 }

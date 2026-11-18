@@ -1,13 +1,17 @@
 {
-  "id": "DT9-python-neg-13",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
-    "config/app.yml": {
-      "before": "x: 1\n",
-      "after": "x: 2\n"
+    "ops/runbook.md": {
+      "after": "# ops\n\n- rotate keys weekly\n",
+      "before": "# ops\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-13",
+  "language": "python",
   "note": "unrelated-yml"
 }

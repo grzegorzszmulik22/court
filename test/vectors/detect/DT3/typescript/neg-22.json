@@ -1,13 +1,17 @@
 {
-  "id": "DT3-typescript-neg-22",
   "detector": "DT3",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "api/order.proto.md": {
-      "before": "# proto notes\n\nfields: id\n",
-      "after": "# proto notes\n\nfields: id, total\n"
+      "after": "# proto notes\n\nfields: id, total\n",
+      "before": "# proto notes\n\nfields: id\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT3-typescript-neg-22",
+  "language": "typescript",
   "note": "proto-lookalike"
 }

@@ -1,13 +1,13 @@
 {
-  "id": "DT7-typescript-neg-20",
   "detector": "DT7",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/f.ts": {
-      "before": "export function f() {\n  return get();\n}\n",
-      "after": "export function f() {\n  return ready() ? get() : null;\n}\n"
+      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    retry(e);\n    return get();\n  }\n}\n",
+      "before": "export function f() {\n  return get();\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT7-typescript-neg-20",
+  "language": "typescript",
   "note": "ternary"
 }

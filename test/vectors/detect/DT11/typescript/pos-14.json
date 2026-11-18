@@ -1,44 +1,48 @@
 {
-  "id": "DT11-typescript-pos-14",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "Makefile": {
-      "before": "",
-      "after": "all:\n\techo ok\n"
-    }
-  },
   "commission": {
     "territory": [
       "src/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "Makefile",
+      "detector": "DT11",
+      "evidence": "echo ok",
       "lines": [
         2,
         2
       ],
+      "path": "Makefile",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "echo ok",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "Makefile",
+      "detector": "DT12",
+      "evidence": "all:",
       "lines": [
         1,
         1
       ],
+      "path": "Makefile",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "all:",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "Makefile": {
+      "after": "all:\n\techo ok\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-14",
+  "language": "typescript"
 }

@@ -1,26 +1,26 @@
 {
-  "id": "DT7-python-pos-15",
   "detector": "DT7",
-  "language": "python",
-  "files": {
-    "svc/write.py": {
-      "before": "def wr():\n    return flush()\n",
-      "after": "def wr():\n    try:\n        return flush()\n    except FlushError:\n        return -1\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/write.py",
+      "detector": "DT7",
+      "evidence": "continue",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
+      "path": "svc/write.py",
+      "rule": "dt7-python-swallowed",
       "side": "after",
-      "evidence": "return -1",
-      "rule": "dt7-python-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/write.py": {
+      "after": "def write(items):\n    for it in items:\n        try:\n            put(it)\n        except OSError:\n            continue\n",
+      "before": "def write(items):\n    for it in items:\n        put(it)\n"
+    }
+  },
+  "id": "DT7-python-pos-15",
+  "language": "python"
 }

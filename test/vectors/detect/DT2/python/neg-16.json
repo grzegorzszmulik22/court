@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-16",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "docs/migration_notes/x.sql": {
-      "before": "-- a\n",
-      "after": "-- b\n"
+      "after": "-- b\n",
+      "before": "-- a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-16",
+  "language": "python",
   "note": "mig-lookalike"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-12",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     ".gitlab-ci.yml": {
-      "before": "stages:\n  - test\n\ntest:\n  script: pytest\n",
-      "after": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n"
+      "after": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n",
+      "before": "stages:\n  - test\n\ntest:\n  script: pytest\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-12",
+  "language": "typescript",
   "note": "gitlab-stage-added"
 }

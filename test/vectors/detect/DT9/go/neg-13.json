@@ -1,13 +1,17 @@
 {
-  "id": "DT9-go-neg-13",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
-    "config/app.yml": {
-      "before": "x: 1\n",
-      "after": "x: 2\n"
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/runbook.md": {
+      "after": "# ops\n\n- rotate keys weekly\n",
+      "before": "# ops\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-13",
+  "language": "go",
   "note": "unrelated-yml"
 }

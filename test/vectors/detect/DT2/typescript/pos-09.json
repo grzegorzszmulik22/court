@@ -1,27 +1,31 @@
 {
-  "id": "DT2-typescript-pos-09",
   "detector": "DT2",
-  "language": "typescript",
-  "files": {
-    "prisma/migrations/0001_init/migration.sql": {
-      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n",
-      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "prisma/migrations/0001_init/migration.sql",
+      "detector": "DT2",
+      "evidence": "INSERT INTO orders VALUES (2);",
       "lines": [
         2,
         2
       ],
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "rule": "dt2-typescript-changed-migration",
       "side": "after",
-      "evidence": "INSERT INTO orders VALUES (2);",
-      "rule": "dt2-typescript-changed-migration"
+      "subkind": "migration"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0001_init/migration.sql": {
+      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n",
+      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n"
+    }
+  },
+  "id": "DT2-typescript-pos-09",
+  "language": "typescript",
   "note": "non-DDL content edit on a file under a migration directory"
 }

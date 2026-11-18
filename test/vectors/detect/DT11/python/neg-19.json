@@ -1,22 +1,22 @@
 {
-  "id": "DT11-python-neg-19",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "a/b.go": {
-      "before": "",
-      "after": "package b\n\nconst c = 2\n"
-    },
-    "a/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
-  },
   "commission": {
     "territory": [
       "a/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "a/b.py": {
+      "after": "package b\n\nconst c = 2\n",
+      "before": ""
+    },
+    "a/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    }
+  },
+  "id": "DT11-python-neg-19",
+  "language": "python",
   "note": "double-star"
 }

@@ -1,26 +1,39 @@
 {
-  "id": "DT5-python-pos-20",
   "detector": "DT5",
-  "language": "python",
-  "files": {
-    "app/calc.py": {
-      "before": "def t(xs: list[int], ys: list[int]) -> int:\n    return 0\n",
-      "after": "def t(xs: list[Any], ys: list[int]) -> int:\n    return 0\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "app/calc.py",
+      "detector": "DT5",
+      "evidence": "def t(xs: list[int] | None, ys: list[int]) -> int:",
       "lines": [
         1,
         1
       ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
       "side": "after",
-      "evidence": "xs: list[Any]",
-      "rule": "dt5-python-widened"
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def t(xs: list[int] | None, ys: list[int]) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
     }
-  ]
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def t(xs: list[int] | None, ys: list[int]) -> int:\n    return 0\n",
+      "before": "def t(xs: list[int], ys: list[int]) -> int:\n    return 0\n"
+    }
+  },
+  "id": "DT5-python-pos-20",
+  "language": "python"
 }

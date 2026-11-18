@@ -1,13 +1,17 @@
 {
-  "id": "DT9-python-neg-12",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
     "config/c.yml": {
-      "before": "cors:\n  origin: a\n",
-      "after": "cors:\n  origin: b\n"
+      "after": "cors:\n  origin: b\n",
+      "before": "cors:\n  origin: a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-12",
+  "language": "python",
   "note": "origin-swap"
 }

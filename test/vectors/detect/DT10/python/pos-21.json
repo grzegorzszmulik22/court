@@ -1,37 +1,41 @@
 {
-  "id": "DT10-python-pos-21",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "ops/log.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "exec",
-      "input": {
-        "command": "git reset --hard HEAD~3",
-        "timeout": 10
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "git reset --hard HEAD~3",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-python-destructive-cmd",
       "side": "events",
-      "evidence": "git reset --hard HEAD~3",
-      "rule": "dt10-python-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "reset --hard with timeout field"
+  "files": {
+    "ops/log.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-21",
+  "language": "python",
+  "note": "reset --hard with timeout field",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git reset --hard HEAD~3",
+        "timeout": 10
+      },
+      "name": "exec",
+      "outcome": "ok"
+    }
+  ]
 }

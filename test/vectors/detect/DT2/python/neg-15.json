@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-15",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/plan.sql": {
-      "before": "EXPLAIN SELECT 1;\n",
-      "after": "EXPLAIN ANALYZE SELECT 1;\n"
+      "after": "EXPLAIN ANALYZE SELECT 1;\n",
+      "before": "EXPLAIN SELECT 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-15",
+  "language": "python",
   "note": "explain"
 }

@@ -1,14 +1,18 @@
 {
-  "id": "DT4-typescript-neg-07",
   "detector": "DT4",
-  "language": "typescript",
+  "expect": [],
   "files": {
+    "src/shop.test.ts": {
+      "after": "test('a', () => {\n  const x = m();\n  eq(1, x);\n});\n",
+      "before": "test('a', () => {\n  eq(1, m());\n});\n"
+    },
     "src/shop.ts": {
-      "before": "export function total() { return 1; }\n",
-      "after": "export function total() { return 2; }\n"
+      "after": "export function total() { return 2; }\n",
+      "before": "export function total() { return 1; }\n"
     }
   },
-  "expect": [],
+  "id": "DT4-typescript-neg-07",
+  "language": "typescript",
   "near_miss": "non-test-file",
   "note": "non-test-file"
 }

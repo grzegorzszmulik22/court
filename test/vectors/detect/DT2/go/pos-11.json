@@ -1,39 +1,43 @@
 {
-  "id": "DT2-go-pos-11",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0001_init.sql": {
-      "before": "-- step 1\n",
-      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0001_init.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
       "lines": [
         2,
         2
       ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
       "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN active",
-      "rule": "dt2-go-changed-migration"
+      "subkind": "migration"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "migrations/0001_init.sql",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
       "lines": [
         2,
         2
       ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-ddl",
       "side": "after",
-      "evidence": "ALTER TABLE users ADD COLUMN active",
-      "rule": "dt2-go-ddl"
+      "subkind": "ddl"
     }
-  ]
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n",
+      "before": "-- step 1\n"
+    }
+  },
+  "id": "DT2-go-pos-11",
+  "language": "go"
 }

@@ -1,26 +1,26 @@
 {
-  "id": "DT7-go-pos-10",
   "detector": "DT7",
-  "language": "go",
-  "files": {
-    "svc/step.go": {
-      "before": "package svc\n\nfunc step() {\n\tdoit()\n}\n",
-      "after": "package svc\n\nfunc step() {\n\tif err := doit(); err != nil {\n\t\t_ = err\n\t}\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/step.go",
+      "detector": "DT7",
+      "evidence": "if err := doit(); err != nil {\n\t}\n}",
       "lines": [
-        5,
-        5
+        4,
+        6
       ],
+      "path": "svc/step.go",
+      "rule": "dt7-go-swallowed",
       "side": "after",
-      "evidence": "_ = err",
-      "rule": "dt7-go-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/step.go": {
+      "after": "package svc\n\nfunc step() {\n\tif err := doit(); err != nil {\n\t}\n}\n",
+      "before": "package svc\n\nfunc step() {\n\tdoit()\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-10",
+  "language": "go"
 }

@@ -1,36 +1,40 @@
 {
-  "id": "DT10-go-pos-22",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "docs/n.md": {
-      "before": "# n\n",
-      "after": "# n2\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git push --force origin main"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "git push --force origin main",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-go-destructive-cmd",
       "side": "events",
-      "evidence": "git push --force origin main",
-      "rule": "dt10-go-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "force push"
+  "files": {
+    "docs/n.md": {
+      "after": "# n2\n",
+      "before": "# n\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-22",
+  "language": "go",
+  "note": "force push",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git push --force origin main"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-14",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: readonly number[]) { return 0; }\n",
-      "after": "export function s(x: readonly string[]) { return 0; }\n"
+      "after": "type A = string;\nfunction s(v: A) { return v; }\n",
+      "before": "type A = number;\nfunction s(v: A) { return v; }\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-14",
+  "language": "typescript",
   "near_miss": "readonly-type",
   "note": "readonly-type"
 }

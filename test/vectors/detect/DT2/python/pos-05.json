@@ -1,40 +1,44 @@
 {
-  "id": "DT2-python-pos-05",
   "detector": "DT2",
-  "language": "python",
-  "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n",
-      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "api/order.proto",
+      "detector": "DT2",
+      "evidence": "int64 total_cents = 2;",
       "lines": [
         4,
         4
       ],
+      "path": "api/order.proto",
+      "rule": "dt2-python-format",
       "side": "after",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt2-python-format"
+      "subkind": "format"
     },
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/order.proto",
+      "detector": "DT3",
+      "evidence": "int64 total_cents = 2;",
       "lines": [
         4,
         4
       ],
+      "path": "api/order.proto",
+      "rule": "dt3-contract-proto",
       "side": "after",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt3-contract-proto"
+      "subkind": "added"
     }
   ],
+  "files": {
+    "api/order.proto": {
+      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n",
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-pos-05",
+  "language": "python",
   "note": ".proto is both a DT2 format file and a DT3 contract file"
 }

@@ -1,14 +1,18 @@
 {
-  "id": "DT9-typescript-neg-03",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
     "scripts/prep.sh": {
-      "before": "#!/bin/sh\nchmod 770 k\n",
-      "after": "#!/bin/sh\nchmod 700 k\n"
+      "after": "#!/bin/sh\nchmod 700 k\n",
+      "before": "#!/bin/sh\nchmod 770 k\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-03",
+  "language": "typescript",
   "near_miss": "mode-tightened",
   "note": "mode-tightened"
 }

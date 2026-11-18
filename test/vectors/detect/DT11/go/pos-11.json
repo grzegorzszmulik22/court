@@ -1,44 +1,48 @@
 {
-  "id": "DT11-go-pos-11",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    "web/index.html": {
-      "before": "",
-      "after": "<html><body></body></html>\n"
-    }
-  },
   "commission": {
     "territory": [
       "api/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "web/index.html",
+      "detector": "DT11",
+      "evidence": "<html><body></body></html>",
       "lines": [
         1,
         1
       ],
+      "path": "web/index.html",
+      "rule": "dt11-go-outside",
       "side": "after",
-      "evidence": "<html><body></body></html>",
-      "rule": "dt11-go-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "web/index.html",
+      "detector": "DT12",
+      "evidence": "<html><body></body></html>",
       "lines": [
         1,
         1
       ],
+      "path": "web/index.html",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "<html><body></body></html>",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "web/index.html": {
+      "after": "<html><body></body></html>\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-pos-11",
+  "language": "go"
 }

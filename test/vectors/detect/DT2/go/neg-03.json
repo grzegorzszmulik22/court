@@ -1,14 +1,18 @@
 {
-  "id": "DT2-go-neg-03",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/report.sql": {
-      "before": "SELECT * FROM t;\n",
-      "after": "SELECT * FROM t WHERE id > 0;\n"
+      "after": "SELECT * FROM t WHERE id > 0;\n",
+      "before": "SELECT * FROM t;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-03",
+  "language": "go",
   "near_miss": "select",
   "note": "select"
 }

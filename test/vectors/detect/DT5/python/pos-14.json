@@ -1,26 +1,39 @@
 {
-  "id": "DT5-python-pos-14",
   "detector": "DT5",
-  "language": "python",
-  "files": {
-    "app/calc.py": {
-      "before": "def n(x: int) -> int:\n    return x\n",
-      "after": "def n(x: Union[int, None]) -> int:\n    return x\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "app/calc.py",
+      "detector": "DT5",
+      "evidence": "def n(x: Optional[int], tag: str) -> int:",
       "lines": [
         1,
         1
       ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
       "side": "after",
-      "evidence": "Union[int, None]",
-      "rule": "dt5-python-widened"
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def n(x: Optional[int], tag: str) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
     }
-  ]
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def n(x: Optional[int], tag: str) -> int:\n    return x\n",
+      "before": "def n(x: int, tag: str) -> int:\n    return x\n"
+    }
+  },
+  "id": "DT5-python-pos-14",
+  "language": "python"
 }

@@ -1,24 +1,28 @@
 {
-  "id": "DT10-typescript-neg-07",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "ops/log.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
+  "id": "DT10-typescript-neg-07",
+  "language": "typescript",
+  "near_miss": "git-checkout",
+  "note": "git-checkout",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "git checkout main",
         "cwd": "/r"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "near_miss": "git-checkout",
-  "note": "git-checkout"
+  ]
 }

@@ -1,18 +1,22 @@
 {
-  "id": "DT11-go-neg-12",
-  "detector": "DT11",
-  "language": "go",
-  "files": {
-    ".venv/lib/x.py": {
-      "before": "",
-      "after": "v = 1\n"
-    }
-  },
   "commission": {
     "territory": [
       "lib/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    ".venv/lib/x.py": {
+      "after": "v = 1\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-neg-12",
+  "language": "go",
   "note": "exempt-venv"
 }

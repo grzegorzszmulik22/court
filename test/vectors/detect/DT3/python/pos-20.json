@@ -1,26 +1,30 @@
 {
-  "id": "DT3-python-pos-20",
   "detector": "DT3",
-  "language": "python",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n",
-      "after": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n      properties:\n        total: number\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "added",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "total: number",
       "lines": [
         7,
         7
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "after",
-      "evidence": "total: number",
-      "rule": "dt3-contract-openapi"
+      "subkind": "added"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n      properties:\n        total: number\n",
+      "before": "openapi: 3.0.0\ncomponents:\n  schemas:\n    Order:\n      type: object\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-20",
+  "language": "python"
 }

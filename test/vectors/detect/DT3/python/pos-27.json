@@ -1,39 +1,43 @@
 {
-  "id": "DT3-python-pos-27",
   "detector": "DT3",
-  "language": "python",
-  "files": {
-    "api/order.proto": {
-      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n  int64 total_cents = 2;\n}\n",
-      "after": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/order.proto",
+      "detector": "DT3",
+      "evidence": "    delete:",
       "lines": [
         4,
         4
       ],
-      "side": "before",
-      "evidence": "int64 total_cents = 2;",
-      "rule": "dt3-contract-proto"
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
+      "side": "after",
+      "subkind": "changed"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "api/order.proto",
+      "detector": "DT2",
+      "evidence": "openapi: 3.0.0",
       "lines": [
-        3,
-        3
+        1,
+        1
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt2-format",
       "side": "after",
-      "evidence": "int64 id = 1;",
-      "rule": "dt2-python-format"
+      "subkind": "format"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    delete:\n      summary: wipe\n",
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-27",
+  "language": "python"
 }

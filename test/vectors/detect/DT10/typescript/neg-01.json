@@ -1,18 +1,22 @@
 {
-  "id": "DT10-typescript-neg-01",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "DELETE FROM users WHERE id = 7;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "DELETE FROM users WHERE id = 7;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-01",
+  "language": "typescript",
   "near_miss": "delete-where",
   "note": "delete-where"
 }

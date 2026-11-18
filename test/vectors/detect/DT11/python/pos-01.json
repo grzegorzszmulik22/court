@@ -1,45 +1,49 @@
 {
-  "id": "DT11-python-pos-01",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "scripts/deploy.sh": {
-      "before": "",
-      "after": "#!/bin/sh\nset -e\n"
-    }
-  },
   "commission": {
     "territory": [
       "shop/**",
       "internal/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "scripts/deploy.sh",
+      "detector": "DT11",
+      "evidence": "set -e",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt11-python-outside",
       "side": "after",
-      "evidence": "set -e",
-      "rule": "dt11-python-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "scripts/deploy.sh",
+      "detector": "DT12",
+      "evidence": "#!/bin/sh",
       "lines": [
         1,
         1
       ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "#!/bin/sh",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/deploy.sh": {
+      "after": "#!/bin/sh\nset -e\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-01",
+  "language": "python"
 }

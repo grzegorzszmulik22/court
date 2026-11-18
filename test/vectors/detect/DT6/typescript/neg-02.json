@@ -1,14 +1,18 @@
 {
-  "id": "DT6-typescript-neg-02",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "coverage.yml": {
-      "before": "coverage:\n  min: 60\nreport: on\n",
-      "after": "coverage:\n  min: 80\nreport: on\n"
+      "after": "coverage:\n  min: 80\nreport: on\n",
+      "before": "coverage:\n  min: 60\nreport: on\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-02",
+  "language": "typescript",
   "near_miss": "coverage-raised",
   "note": "coverage-raised"
 }

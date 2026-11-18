@@ -1,13 +1,17 @@
 {
-  "id": "DT6-python-neg-12",
   "detector": "DT6",
-  "language": "python",
+  "expect": [],
   "files": {
     ".gitlab-ci.yml": {
-      "before": "stages:\n  - test\n\ntest:\n  script: pytest\n",
-      "after": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n"
+      "after": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n",
+      "before": "stages:\n  - test\n\ntest:\n  script: pytest\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT6-python-neg-12",
+  "language": "python",
   "note": "gitlab-stage-added"
 }

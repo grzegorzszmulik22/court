@@ -1,39 +1,43 @@
 {
-  "id": "DT10-go-pos-09",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "db/mixed.sql": {
-      "before": "SELECT 1;\n",
-      "after": "SELECT 1;\nTRUNCATE t;\nDELETE FROM u;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/mixed.sql",
+      "detector": "DT10",
+      "evidence": "TRUNCATE t;",
       "lines": [
         2,
         2
       ],
+      "path": "db/mixed.sql",
+      "rule": "dt10-go-sql",
       "side": "after",
-      "evidence": "TRUNCATE t;",
-      "rule": "dt10-go-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/mixed.sql",
+      "detector": "DT10",
+      "evidence": "DELETE FROM u;",
       "lines": [
         3,
         3
       ],
+      "path": "db/mixed.sql",
+      "rule": "dt10-go-sql",
       "side": "after",
-      "evidence": "DELETE FROM u;",
-      "rule": "dt10-go-sql"
+      "subkind": "sql"
     }
-  ]
+  ],
+  "files": {
+    "db/mixed.sql": {
+      "after": "SELECT 1;\nTRUNCATE t;\nDELETE FROM u;\n",
+      "before": "SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-09",
+  "language": "go"
 }

@@ -1,19 +1,23 @@
 {
-  "id": "DT11-python-neg-08",
-  "detector": "DT11",
-  "language": "python",
-  "files": {
-    "dist/out.js": {
-      "before": "",
-      "after": "x()\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    "dist/out.js": {
+      "after": "x()\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-neg-08",
+  "language": "python",
   "near_miss": "exempt-dist",
   "note": "exempt-dist"
 }

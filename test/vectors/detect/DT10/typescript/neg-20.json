@@ -1,13 +1,17 @@
 {
-  "id": "DT10-typescript-neg-20",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "a.txt": {
-      "before": "x\ny\n",
-      "after": "x\nz\n"
+      "after": "x\nz\n",
+      "before": "x\ny\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-20",
+  "language": "typescript",
   "note": "rename-file"
 }

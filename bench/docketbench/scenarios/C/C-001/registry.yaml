@@ -3,10 +3,10 @@
   variant: differing-choice
   category: guardrail
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on .golangci.yml: a guardrail decision (severity: warning vs severity: error)."
+  description: "Two sibling worlds chose differently on .golangci.yml: a guardrail decision (severity: warning vs dropping the enabled linters)."
   keywords: ["worlds", "differently", "guardrail"]
   evidence:
     - {world: "w1", path: ".golangci.yml", lines: [6, 6]}
-    - {world: "w2", path: ".golangci.yml", lines: [5, 5]}
+    - {world: "w2", path: ".golangci.yml", lines: [1, 1]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

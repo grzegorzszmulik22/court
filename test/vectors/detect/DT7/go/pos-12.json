@@ -1,26 +1,26 @@
 {
-  "id": "DT7-go-pos-12",
   "detector": "DT7",
-  "language": "go",
-  "files": {
-    "svc/pipe.go": {
-      "before": "package svc\n\nfunc pipe() error {\n\ta(), err := stage()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn a\n}\n",
-      "after": "package svc\n\nfunc pipe() error {\n\ta(), err := stage()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn a\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/pipe.go",
+      "detector": "DT7",
+      "evidence": "\t\t\tcontinue",
       "lines": [
         6,
         6
       ],
+      "path": "svc/pipe.go",
+      "rule": "dt7-go-swallowed",
       "side": "after",
-      "evidence": "return nil",
-      "rule": "dt7-go-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/pipe.go": {
+      "after": "package svc\n\nfunc pipe() {\n\tfor {\n\t\tif _, err := stage(); err != nil {\n\t\t\tcontinue\n\t\t}\n\t\tbreak\n\t}\n}\n",
+      "before": "package svc\n\nfunc pipe() {\n\tfor {\n\t\tif _, err := stage(); err != nil {\n\t\t\treturn\n\t\t}\n\t}\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-12",
+  "language": "go"
 }

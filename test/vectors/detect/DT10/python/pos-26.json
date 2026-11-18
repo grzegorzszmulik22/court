@@ -1,38 +1,42 @@
 {
-  "id": "DT10-python-pos-26",
   "detector": "DT10",
-  "language": "python",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "git push -f",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-python-destructive-cmd",
+      "side": "events",
+      "subkind": "command"
+    }
+  ],
   "files": {
     "ops/log.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
+  "id": "DT10-python-pos-26",
+  "language": "python",
+  "note": "force push short flag with extra fields",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "git push -f",
         "cwd": "/repo",
         "retries": 3
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [
-    {
-      "detector": "DT10",
-      "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "events",
-      "evidence": "git push -f",
-      "rule": "dt10-python-destructive-cmd"
-    }
-  ],
-  "note": "force push short flag with extra fields"
+  ]
 }

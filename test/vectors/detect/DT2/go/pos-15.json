@@ -1,26 +1,30 @@
 {
-  "id": "DT2-go-pos-15",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "db/schema.prisma": {
-      "before": "model Order {\n  id Int @id\n}\n",
-      "after": "model Order {\n  id Int @id\n  total Int\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "db/schema.prisma",
+      "detector": "DT2",
+      "evidence": "total Int",
       "lines": [
         3,
         3
       ],
+      "path": "db/schema.prisma",
+      "rule": "dt2-go-format",
       "side": "after",
-      "evidence": "total Int",
-      "rule": "dt2-go-format"
+      "subkind": "format"
     }
-  ]
+  ],
+  "files": {
+    "db/schema.prisma": {
+      "after": "model Order {\n  id Int @id\n  total Int\n}\n",
+      "before": "model Order {\n  id Int @id\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-pos-15",
+  "language": "go"
 }

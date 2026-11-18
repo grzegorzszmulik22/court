@@ -1,27 +1,40 @@
 {
-  "id": "DT9-python-pos-17",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "internal/auth/legacy.py": {
-      "before": "def check():\n    return True\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "internal/auth/legacy.py",
+      "detector": "DT9",
+      "evidence": "return True",
       "lines": [
         2,
         2
       ],
+      "path": "internal/auth/legacy.py",
+      "rule": "dt9-python-touched",
       "side": "before",
-      "evidence": "return True",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def check():",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "internal/auth/legacy.py",
+      "rule": "dt3-python-toplevel-removed",
+      "side": "before",
+      "subkind": "removed"
     }
   ],
+  "files": {
+    "internal/auth/legacy.py": {
+      "after": "",
+      "before": "def check():\n    return True\n"
+    }
+  },
+  "id": "DT9-python-pos-17",
+  "language": "python",
   "note": "authority file removed"
 }

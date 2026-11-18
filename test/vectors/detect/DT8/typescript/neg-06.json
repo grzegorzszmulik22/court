@@ -1,14 +1,18 @@
 {
-  "id": "DT8-typescript-neg-06",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "src/client.ts": {
-      "before": "function c() {}\n",
-      "after": "function c(x: number) {}\n"
+    "docs/links.md": {
+      "after": "links\n\n- https://fresh.example.net\n",
+      "before": "links\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-06",
+  "language": "typescript",
   "near_miss": "private-sig",
   "note": "private-sig"
 }

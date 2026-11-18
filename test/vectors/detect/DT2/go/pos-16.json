@@ -1,27 +1,31 @@
 {
-  "id": "DT2-go-pos-16",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "migrations/0001_init.sql": {
-      "before": "-- step 1\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "migrations/0001_init.sql",
+      "detector": "DT2",
+      "evidence": "-- step 1",
       "lines": [
         1,
         1
       ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
       "side": "before",
-      "evidence": "-- step 1",
-      "rule": "dt2-go-changed-migration"
+      "subkind": "migration"
     }
   ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "",
+      "before": "-- step 1\n"
+    }
+  },
+  "id": "DT2-go-pos-16",
+  "language": "go",
   "note": "a file deleted under a migration directory is a changed migration"
 }

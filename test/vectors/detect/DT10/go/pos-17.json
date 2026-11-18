@@ -1,26 +1,30 @@
 {
-  "id": "DT10-go-pos-17",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "data/app.db": {
-      "before": "DB\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "data/app.db",
+      "detector": "DT10",
+      "evidence": "DB",
       "lines": [
         1,
         1
       ],
+      "path": "data/app.db",
+      "rule": "dt10-go-datafile",
       "side": "before",
-      "evidence": "DB",
-      "rule": "dt10-go-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "data/app.db": {
+      "after": "",
+      "before": "DB\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-17",
+  "language": "go"
 }

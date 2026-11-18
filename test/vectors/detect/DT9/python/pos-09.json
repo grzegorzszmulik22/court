@@ -1,27 +1,31 @@
 {
-  "id": "DT9-python-pos-09",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "docs/auth/notes.md": {
-      "before": "# a\n",
-      "after": "# a\nmore\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "docs/auth/notes.md",
+      "detector": "DT9",
+      "evidence": "more",
       "lines": [
         2,
         2
       ],
+      "path": "docs/auth/notes.md",
+      "rule": "dt9-python-touched",
       "side": "after",
-      "evidence": "more",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
     }
   ],
+  "files": {
+    "docs/auth/notes.md": {
+      "after": "# a\nmore\n",
+      "before": "# a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-09",
+  "language": "python",
   "note": "doc under an auth dir is still an authority path"
 }

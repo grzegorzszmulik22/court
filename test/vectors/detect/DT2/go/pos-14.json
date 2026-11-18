@@ -1,26 +1,30 @@
 {
-  "id": "DT2-go-pos-14",
   "detector": "DT2",
-  "language": "go",
-  "files": {
-    "api/order.avsc": {
-      "before": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}]\n}\n",
-      "after": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}, {\"name\": \"total\", \"type\": \"long\"}]\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "format",
-      "path": "api/order.avsc",
+      "detector": "DT2",
+      "evidence": "\"name\": \"total\"",
       "lines": [
         3,
         3
       ],
+      "path": "api/order.avsc",
+      "rule": "dt2-go-format",
       "side": "after",
-      "evidence": "\"name\": \"total\"",
-      "rule": "dt2-go-format"
+      "subkind": "format"
     }
-  ]
+  ],
+  "files": {
+    "api/order.avsc": {
+      "after": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}, {\"name\": \"total\", \"type\": \"long\"}]\n}\n",
+      "before": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}]\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-pos-14",
+  "language": "go"
 }

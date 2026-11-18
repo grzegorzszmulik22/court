@@ -1,27 +1,31 @@
 {
-  "id": "DT6-typescript-pos-12",
   "detector": "DT6",
-  "language": "typescript",
-  "files": {
-    ".gitlab-ci.yml": {
-      "before": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n",
-      "after": "stages:\n  - test\n\ntest:\n  script: pytest\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT6",
       "category": "guardrail",
-      "subkind": "ci",
-      "path": ".gitlab-ci.yml",
+      "detector": "DT6",
+      "evidence": "- lint",
       "lines": [
         3,
         3
       ],
+      "path": ".gitlab-ci.yml",
+      "rule": "dt6-typescript-ci",
       "side": "before",
-      "evidence": "- lint",
-      "rule": "dt6-typescript-ci"
+      "subkind": "ci"
     }
   ],
+  "files": {
+    ".gitlab-ci.yml": {
+      "after": "stages:\n  - test\n\ntest:\n  script: pytest\n",
+      "before": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-12",
+  "language": "typescript",
   "note": "a pipeline stage was dropped"
 }

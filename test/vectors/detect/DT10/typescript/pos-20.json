@@ -1,37 +1,41 @@
 {
-  "id": "DT10-typescript-pos-20",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "ops/run/x.log": {
-      "before": "a\n",
-      "after": "b\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "git clean -fdx",
-        "user": "ci"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "git clean -fdx",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-typescript-destructive-cmd",
       "side": "events",
-      "evidence": "git clean -fdx",
-      "rule": "dt10-typescript-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "git clean"
+  "files": {
+    "ops/run/x.log": {
+      "after": "b\n",
+      "before": "a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-20",
+  "language": "typescript",
+  "note": "git clean",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git clean -fdx",
+        "user": "ci"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

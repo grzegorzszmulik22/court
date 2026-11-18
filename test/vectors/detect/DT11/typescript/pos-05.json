@@ -1,44 +1,48 @@
 {
-  "id": "DT11-typescript-pos-05",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "deploy/helm/chart.yaml": {
-      "before": "",
-      "after": "name: c\nversion: 1\n"
-    }
-  },
   "commission": {
     "territory": [
       "svc/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "deploy/helm/chart.yaml",
+      "detector": "DT11",
+      "evidence": "name: c",
       "lines": [
         1,
         1
       ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "name: c",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "deploy/helm/chart.yaml",
+      "detector": "DT12",
+      "evidence": "name: c",
       "lines": [
         1,
         1
       ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "name: c",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "deploy/helm/chart.yaml": {
+      "after": "name: c\nversion: 1\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-05",
+  "language": "typescript"
 }

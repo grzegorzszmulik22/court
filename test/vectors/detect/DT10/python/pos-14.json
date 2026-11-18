@@ -1,26 +1,30 @@
 {
-  "id": "DT10-python-pos-14",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "fixtures/users.csv": {
-      "before": "u\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "fixtures/users.csv",
+      "detector": "DT10",
+      "evidence": "u",
       "lines": [
         1,
         1
       ],
+      "path": "fixtures/users.csv",
+      "rule": "dt10-python-datafile",
       "side": "before",
-      "evidence": "u",
-      "rule": "dt10-python-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "fixtures/users.csv": {
+      "after": "",
+      "before": "u\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-14",
+  "language": "python"
 }

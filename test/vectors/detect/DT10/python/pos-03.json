@@ -1,39 +1,43 @@
 {
-  "id": "DT10-python-pos-03",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "ops/purge.sql": {
-      "before": "",
-      "after": "DELETE FROM users;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "ops/purge.sql",
+      "detector": "DT10",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt10-python-sql",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt10-python-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "ops/purge.sql",
+      "detector": "DT12",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt12-python-new-top-level",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt12-python-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "ops/purge.sql": {
+      "after": "DELETE FROM users;\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-03",
+  "language": "python"
 }

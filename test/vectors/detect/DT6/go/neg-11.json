@@ -1,13 +1,17 @@
 {
-  "id": "DT6-go-neg-11",
   "detector": "DT6",
-  "language": "go",
+  "expect": [],
   "files": {
     ".github/workflows/release.yml": {
-      "before": "jobs:\n  build:\n    steps:\n      - run: make build\n",
-      "after": "jobs:\n  build:\n    steps:\n      - run: make build\n      - run: make check\n"
+      "after": "jobs:\n  build:\n    steps:\n      - run: make build\n      - run: make check\n",
+      "before": "jobs:\n  build:\n    steps:\n      - run: make build\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT6-go-neg-11",
+  "language": "go",
   "note": "release-step-added"
 }

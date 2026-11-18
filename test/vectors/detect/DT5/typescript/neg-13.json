@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-13",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x?: number) { return 0; }\n",
-      "after": "export function s(x?: string) { return 0; }\n"
+      "after": "interface S { x: string }\nfunction s(v: S) { return v.x; }\n",
+      "before": "interface S { x: number }\nfunction s(v: S) { return v.x; }\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-13",
+  "language": "typescript",
   "near_miss": "optional-param",
   "note": "optional-param"
 }

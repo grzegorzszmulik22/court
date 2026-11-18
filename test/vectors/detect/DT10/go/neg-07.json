@@ -1,24 +1,28 @@
 {
-  "id": "DT10-go-neg-07",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
     "ops/log.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
     }
   },
+  "id": "DT10-go-neg-07",
+  "language": "go",
+  "near_miss": "git-checkout",
+  "note": "git-checkout",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "git checkout main",
         "cwd": "/r"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "near_miss": "git-checkout",
-  "note": "git-checkout"
+  ]
 }

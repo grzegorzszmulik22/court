@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-18",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "warehouse/fact.csv": {
-      "before": "k,v\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "file",
-      "path": "warehouse/fact.csv",
+      "detector": "DT10",
+      "evidence": "k,v",
       "lines": [
         1,
         1
       ],
+      "path": "warehouse/fact.csv",
+      "rule": "dt10-typescript-datafile",
       "side": "before",
-      "evidence": "k,v",
-      "rule": "dt10-typescript-datafile"
+      "subkind": "file"
     }
-  ]
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "warehouse/fact.csv": {
+      "after": "",
+      "before": "k,v\n"
+    }
+  },
+  "id": "DT10-typescript-pos-18",
+  "language": "typescript"
 }

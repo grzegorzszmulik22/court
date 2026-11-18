@@ -1,14 +1,18 @@
 {
-  "id": "DT10-typescript-neg-09",
   "detector": "DT10",
-  "language": "typescript",
+  "expect": [],
   "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
     "x.txt": {
-      "before": "a\n",
-      "after": "b\n"
+      "after": "b\n",
+      "before": "a\n"
     }
   },
-  "expect": [],
+  "id": "DT10-typescript-neg-09",
+  "language": "typescript",
   "near_miss": "unrelated",
   "note": "unrelated"
 }

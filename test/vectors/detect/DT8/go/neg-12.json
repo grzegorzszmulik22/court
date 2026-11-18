@@ -1,14 +1,18 @@
 {
-  "id": "DT8-go-neg-12",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
     "docs/links.md": {
-      "before": "# links\n",
-      "after": "# links\n\nsee https://docs.vendor-docs.example\n"
+      "after": "# links\n\nsee https://docs.vendor-docs.example\n",
+      "before": "# links\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-12",
+  "language": "go",
   "near_miss": "docs-url",
   "note": "a URL in a doc file is prose, not a literal"
 }

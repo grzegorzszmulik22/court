@@ -1,66 +1,70 @@
 {
-  "id": "DT2-typescript-pos-03",
   "detector": "DT2",
-  "language": "typescript",
-  "files": {
-    "prisma/migrations/0002_add_index/migration.sql": {
-      "before": "",
-      "after": "DROP TABLE legacy_orders;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT2",
+      "evidence": "DROP TABLE legacy_orders;",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt2-typescript-new-migration",
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders;",
-      "rule": "dt2-typescript-new-migration"
+      "subkind": "migration"
     },
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "ddl",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT2",
+      "evidence": "DROP TABLE legacy_orders;",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt2-typescript-ddl",
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders;",
-      "rule": "dt2-typescript-ddl"
+      "subkind": "ddl"
     },
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT10",
+      "evidence": "DROP TABLE legacy_orders;",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt10-sql-drop",
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders;",
-      "rule": "dt10-sql-drop"
+      "subkind": "sql"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "detector": "DT12",
+      "evidence": "DROP TABLE legacy_orders;",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0002_add_index/migration.sql",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "DROP TABLE legacy_orders;",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0002_add_index/migration.sql": {
+      "after": "DROP TABLE legacy_orders;\n",
+      "before": ""
+    }
+  },
+  "id": "DT2-typescript-pos-03",
+  "language": "typescript",
   "note": "DROP in a migration is schema DDL and an unguarded delete"
 }

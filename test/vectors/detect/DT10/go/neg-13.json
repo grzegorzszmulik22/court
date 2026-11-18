@@ -1,17 +1,21 @@
 {
-  "id": "DT10-go-neg-13",
   "detector": "DT10",
-  "language": "go",
+  "expect": [],
   "files": {
-    "db/q.sql": {
-      "before": "",
-      "after": "SELECT * FROM t;\n"
-    },
     "db/baseline.sql": {
-      "before": "-- baseline\n",
-      "after": "-- baseline\n"
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "SELECT * FROM t;\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT10-go-neg-13",
+  "language": "go",
   "note": "sql-select"
 }

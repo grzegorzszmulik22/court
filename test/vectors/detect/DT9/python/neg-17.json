@@ -1,13 +1,17 @@
 {
-  "id": "DT9-python-neg-17",
   "detector": "DT9",
-  "language": "python",
+  "expect": [],
   "files": {
     "ops/hardening.sh": {
-      "before": "#!/bin/sh\numask 022\n",
-      "after": "#!/bin/sh\numask 027\nexit 0\n"
+      "after": "#!/bin/sh\numask 027\nexit 0\n",
+      "before": "#!/bin/sh\numask 022\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT9-python-neg-17",
+  "language": "python",
   "note": "umask-tightened"
 }

@@ -1,44 +1,48 @@
 {
-  "id": "DT11-typescript-pos-09",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    "infra/db/migrate.sql": {
-      "before": "",
-      "after": "SELECT 1;\n"
-    }
-  },
   "commission": {
     "territory": [
       "app/**"
     ]
   },
+  "detector": "DT11",
   "expect": [
     {
-      "detector": "DT11",
       "category": "territory",
-      "subkind": "",
-      "path": "infra/db/migrate.sql",
+      "detector": "DT11",
+      "evidence": "SELECT 1;",
       "lines": [
         1,
         1
       ],
+      "path": "infra/db/migrate.sql",
+      "rule": "dt11-typescript-outside",
       "side": "after",
-      "evidence": "SELECT 1;",
-      "rule": "dt11-typescript-outside"
+      "subkind": ""
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "infra/db/migrate.sql",
+      "detector": "DT12",
+      "evidence": "SELECT 1;",
       "lines": [
         1,
         1
       ],
+      "path": "infra/db/migrate.sql",
+      "rule": "dt12-typescript-new-top-level",
       "side": "after",
-      "evidence": "SELECT 1;",
-      "rule": "dt12-typescript-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "infra/db/migrate.sql": {
+      "after": "SELECT 1;\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-09",
+  "language": "typescript"
 }

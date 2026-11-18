@@ -1,26 +1,26 @@
 {
-  "id": "DT7-python-pos-16",
   "detector": "DT7",
-  "language": "python",
-  "files": {
-    "svc/call.py": {
-      "before": "def call():\n    return dial()\n",
-      "after": "def call():\n    try:\n        return dial()\n    except DialError:\n        return None\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "svc/call.py",
+      "detector": "DT7",
+      "evidence": "        pass",
       "lines": [
         5,
         5
       ],
+      "path": "svc/call.py",
+      "rule": "dt7-python-swallowed",
       "side": "after",
-      "evidence": "return None",
-      "rule": "dt7-python-swallowed"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/call.py": {
+      "after": "def call():\n    try:\n        return dial()\n    except DialError:\n        pass\n",
+      "before": "def call():\n    return dial()\n"
+    }
+  },
+  "id": "DT7-python-pos-16",
+  "language": "python"
 }

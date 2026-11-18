@@ -1,13 +1,17 @@
 {
-  "id": "DT2-python-neg-19",
   "detector": "DT2",
-  "language": "python",
+  "expect": [],
   "files": {
     "db/q.sql": {
-      "before": "-- q\nSELECT 1;\n",
-      "after": "-- q v2\nSELECT 1;\n"
+      "after": "-- q v2\nSELECT 1;\n",
+      "before": "-- q\nSELECT 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT2-python-neg-19",
+  "language": "python",
   "note": "comment-only-sql"
 }

@@ -1,27 +1,31 @@
 {
-  "id": "DT2-typescript-pos-08",
   "detector": "DT2",
-  "language": "typescript",
-  "files": {
-    "prisma/migrations/0001_init/migration.sql": {
-      "before": "-- create orders\nCREATE TABLE orders (id INT);\n",
-      "after": "-- create orders; see ticket 7\nCREATE TABLE orders (id INT);\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT2",
       "category": "schema",
-      "subkind": "migration",
-      "path": "prisma/migrations/0001_init/migration.sql",
+      "detector": "DT2",
+      "evidence": "-- create orders; see ticket 7",
       "lines": [
         1,
         1
       ],
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "rule": "dt2-typescript-changed-migration",
       "side": "after",
-      "evidence": "-- create orders; see ticket 7",
-      "rule": "dt2-typescript-changed-migration"
+      "subkind": "migration"
     }
   ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0001_init/migration.sql": {
+      "after": "-- create orders; see ticket 7\nCREATE TABLE orders (id INT);\n",
+      "before": "-- create orders\nCREATE TABLE orders (id INT);\n"
+    }
+  },
+  "id": "DT2-typescript-pos-08",
+  "language": "typescript",
   "note": "comment edit on a file under a migration directory"
 }

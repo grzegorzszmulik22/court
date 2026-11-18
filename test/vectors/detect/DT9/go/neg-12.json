@@ -1,13 +1,17 @@
 {
-  "id": "DT9-go-neg-12",
   "detector": "DT9",
-  "language": "go",
+  "expect": [],
   "files": {
     "config/c.yml": {
-      "before": "cors:\n  origin: a\n",
-      "after": "cors:\n  origin: b\n"
+      "after": "cors:\n  origin: b\n",
+      "before": "cors:\n  origin: a\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT9-go-neg-12",
+  "language": "go",
   "note": "origin-swap"
 }

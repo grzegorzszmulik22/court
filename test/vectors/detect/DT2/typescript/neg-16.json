@@ -1,13 +1,17 @@
 {
-  "id": "DT2-typescript-neg-16",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "docs/migration_notes/x.sql": {
-      "before": "-- a\n",
-      "after": "-- b\n"
+      "after": "-- b\n",
+      "before": "-- a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-16",
+  "language": "typescript",
   "note": "mig-lookalike"
 }

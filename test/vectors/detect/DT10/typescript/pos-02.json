@@ -1,26 +1,30 @@
 {
-  "id": "DT10-typescript-pos-02",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "db/maint/truncate.sql": {
-      "before": "SELECT 1;\n",
-      "after": "SELECT 1;\nTRUNCATE events;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "db/maint/truncate.sql",
+      "detector": "DT10",
+      "evidence": "TRUNCATE events;",
       "lines": [
         2,
         2
       ],
+      "path": "db/maint/truncate.sql",
+      "rule": "dt10-typescript-sql",
       "side": "after",
-      "evidence": "TRUNCATE events;",
-      "rule": "dt10-typescript-sql"
+      "subkind": "sql"
     }
-  ]
+  ],
+  "files": {
+    "db/maint/truncate.sql": {
+      "after": "SELECT 1;\nTRUNCATE events;\n",
+      "before": "SELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-02",
+  "language": "typescript"
 }

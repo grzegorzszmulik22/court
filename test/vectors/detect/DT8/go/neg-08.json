@@ -1,14 +1,18 @@
 {
-  "id": "DT8-go-neg-08",
   "detector": "DT8",
-  "language": "go",
+  "expect": [],
   "files": {
+    "config/hosts.yml": {
+      "after": "hosts:\n  - shared.example.com\n",
+      "before": "hosts:\n  - shared.example.com\n"
+    },
     "svc/client.go": {
-      "before": "package svc\n\nvar n = 1\n\nfunc c() {}\n",
-      "after": "package svc\n\nvar n = 2\n\nfunc c() {}\n"
+      "after": "package svc\n\nconst api = \"https://shared.example.com\"\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-go-neg-08",
+  "language": "go",
   "near_miss": "var-value",
   "note": "var-value"
 }

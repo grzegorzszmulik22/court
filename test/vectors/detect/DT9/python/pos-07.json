@@ -1,27 +1,31 @@
 {
-  "id": "DT9-python-pos-07",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "scripts/token.sh": {
-      "before": "#!/bin/sh\nexit 0\n",
-      "after": "#!/bin/sh\nrotate\nexit 0\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "scripts/token.sh",
+      "detector": "DT9",
+      "evidence": "rotate",
       "lines": [
         2,
         2
       ],
+      "path": "scripts/token.sh",
+      "rule": "dt9-python-touched",
       "side": "after",
-      "evidence": "rotate",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
     }
   ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/token.sh": {
+      "after": "#!/bin/sh\nrotate\nexit 0\n",
+      "before": "#!/bin/sh\nexit 0\n"
+    }
+  },
+  "id": "DT9-python-pos-07",
+  "language": "python",
   "note": "script under an authority name"
 }

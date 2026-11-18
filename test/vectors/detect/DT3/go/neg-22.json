@@ -1,13 +1,17 @@
 {
-  "id": "DT3-go-neg-22",
   "detector": "DT3",
-  "language": "go",
+  "expect": [],
   "files": {
     "api/order.proto.md": {
-      "before": "# proto notes\n\nfields: id\n",
-      "after": "# proto notes\n\nfields: id, total\n"
+      "after": "# proto notes\n\nfields: id, total\n",
+      "before": "# proto notes\n\nfields: id\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT3-go-neg-22",
+  "language": "go",
   "note": "proto-lookalike"
 }

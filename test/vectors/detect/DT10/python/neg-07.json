@@ -1,24 +1,28 @@
 {
-  "id": "DT10-python-neg-07",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
     "ops/log.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
+  "id": "DT10-python-neg-07",
+  "language": "python",
+  "near_miss": "git-checkout",
+  "note": "git-checkout",
   "tool_events": [
     {
-      "name": "Bash",
       "input": {
         "command": "git checkout main",
         "cwd": "/r"
       },
+      "name": "Bash",
       "outcome": "ok"
     }
-  ],
-  "expect": [],
-  "near_miss": "git-checkout",
-  "note": "git-checkout"
+  ]
 }

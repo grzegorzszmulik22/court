@@ -1,27 +1,31 @@
 {
-  "id": "DT9-typescript-pos-15",
   "detector": "DT9",
-  "language": "typescript",
-  "files": {
-    "config/scopes.yaml": {
-      "before": "scopes: [read]\n",
-      "after": "scopes: [read, admin]\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "widened",
-      "path": "config/scopes.yaml",
+      "detector": "DT9",
+      "evidence": "allow_origins: [\"*\"]",
       "lines": [
         1,
         1
       ],
+      "path": "config/cors.yaml",
+      "rule": "dt9-typescript-widened",
       "side": "after",
-      "evidence": "admin]",
-      "rule": "dt9-typescript-widened"
+      "subkind": "widened"
     }
   ],
+  "files": {
+    "config/cors.yaml": {
+      "after": "allow_origins: [\"*\"]\n",
+      "before": "allow_origins: [https://app.example.com]\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-15",
+  "language": "typescript",
   "note": "scope list gains admin"
 }

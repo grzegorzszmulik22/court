@@ -1,26 +1,30 @@
 {
-  "id": "DT3-python-pos-16",
   "detector": "DT3",
-  "language": "python",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n",
-      "after": "openapi: 3.0.0\npaths: {}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "/legacy:",
       "lines": [
         3,
         3
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "before",
-      "evidence": "/legacy:",
-      "rule": "dt3-contract-openapi"
+      "subkind": "removed"
     }
-  ]
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths: {}\n",
+      "before": "openapi: 3.0.0\npaths:\n  /legacy:\n    delete:\n      summary: rm\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-16",
+  "language": "python"
 }

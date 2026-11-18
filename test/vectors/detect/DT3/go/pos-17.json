@@ -1,27 +1,31 @@
 {
-  "id": "DT3-go-pos-17",
   "detector": "DT3",
-  "language": "go",
-  "files": {
-    "api/openapi.yaml": {
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
-      "after": "openapi: 3.0.0\n# paths follow the style guide\npaths:\n  /orders:\n    get:\n      summary: list\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "changed",
-      "path": "api/openapi.yaml",
+      "detector": "DT3",
+      "evidence": "# paths follow the style guide",
       "lines": [
         2,
         2
       ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
       "side": "after",
-      "evidence": "# paths follow the style guide",
-      "rule": "dt3-contract-openapi"
+      "subkind": "changed"
     }
   ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\n# paths follow the style guide\npaths:\n  /orders:\n    get:\n      summary: list\n",
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT3-go-pos-17",
+  "language": "go",
   "note": "comment change on a contract file is a file change"
 }

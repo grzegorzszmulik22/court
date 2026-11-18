@@ -1,14 +1,14 @@
 {
-  "id": "DT5-typescript-neg-19",
   "detector": "DT5",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "src/calc.ts": {
-      "before": "export function s(x: 'a') {}\n",
-      "after": "export function s(x: 'b') {}\n"
+      "after": "function s(x: number) {\n  let w: string | undefined = undefined;\n  return w;\n}\n",
+      "before": "function s(x: number) {\n  let w: number | undefined = x;\n  return w;\n}\n"
     }
   },
-  "expect": [],
+  "id": "DT5-typescript-neg-19",
+  "language": "typescript",
   "near_miss": "literal-type",
   "note": "literal-type"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT9-typescript-neg-18",
   "detector": "DT9",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "docs/login2.md": {
-      "before": "# l\n",
-      "after": "# l2\n"
+      "after": "# l2\n",
+      "before": "# l\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT9-typescript-neg-18",
+  "language": "typescript",
   "note": "login-title"
 }

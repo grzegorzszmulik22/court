@@ -1,13 +1,17 @@
 {
-  "id": "DT1-typescript-neg-15",
   "detector": "DT1",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "docs/deps.md": {
-      "before": "# deps\n",
-      "after": "# deps\n\n- react@^18.2.0\n"
+      "after": "# deps\n\n- react@^18.2.0\n",
+      "before": "# deps\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT1-typescript-neg-15",
+  "language": "typescript",
   "note": "dep-in-docstring"
 }

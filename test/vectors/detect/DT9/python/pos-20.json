@@ -1,26 +1,30 @@
 {
-  "id": "DT9-python-pos-20",
   "detector": "DT9",
-  "language": "python",
-  "files": {
-    "ops/login/runbook.md": {
-      "before": "# login\n\n- step a\n",
-      "after": "# login\n\n- step a\n- step b\n- step c\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT9",
       "category": "authority",
-      "subkind": "touched",
-      "path": "ops/login/runbook.md",
+      "detector": "DT9",
+      "evidence": "- step c",
       "lines": [
         5,
         5
       ],
+      "path": "ops/login/runbook.md",
+      "rule": "dt9-python-touched",
       "side": "after",
-      "evidence": "- step c",
-      "rule": "dt9-python-touched"
+      "subkind": "touched"
     }
-  ]
+  ],
+  "files": {
+    "ops/login/runbook.md": {
+      "after": "# login\n\n- step a\n- step b\n- step c\n",
+      "before": "# login\n\n- step a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-20",
+  "language": "python"
 }

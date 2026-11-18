@@ -1,26 +1,26 @@
 {
-  "id": "DT3-typescript-pos-08",
   "detector": "DT3",
-  "language": "typescript",
-  "files": {
-    "src/consts.ts": {
-      "before": "export const RATE = 10;\n",
-      "after": ""
-    }
-  },
   "expect": [
     {
-      "detector": "DT3",
       "category": "interface",
-      "subkind": "removed",
-      "path": "src/consts.ts",
+      "detector": "DT3",
+      "evidence": "export const RATE = 10;",
       "lines": [
-        1,
-        1
+        2,
+        2
       ],
+      "path": "src/consts.ts",
+      "rule": "dt3-ts-export-removed",
       "side": "before",
-      "evidence": "export const RATE = 10",
-      "rule": "dt3-ts-export-removed"
+      "subkind": "removed"
     }
-  ]
+  ],
+  "files": {
+    "src/consts.ts": {
+      "after": "export const BASE = 100;\n",
+      "before": "export const BASE = 100;\nexport const RATE = 10;\n"
+    }
+  },
+  "id": "DT3-typescript-pos-08",
+  "language": "typescript"
 }

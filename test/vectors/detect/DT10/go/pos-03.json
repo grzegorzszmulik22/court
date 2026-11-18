@@ -1,39 +1,43 @@
 {
-  "id": "DT10-go-pos-03",
   "detector": "DT10",
-  "language": "go",
-  "files": {
-    "ops/purge.sql": {
-      "before": "",
-      "after": "DELETE FROM users;\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "sql",
-      "path": "ops/purge.sql",
+      "detector": "DT10",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt10-go-sql",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt10-go-sql"
+      "subkind": "sql"
     },
     {
-      "detector": "DT12",
       "category": "scope",
-      "subkind": "new-top-level",
-      "path": "ops/purge.sql",
+      "detector": "DT12",
+      "evidence": "DELETE FROM users;",
       "lines": [
         1,
         1
       ],
+      "path": "ops/purge.sql",
+      "rule": "dt12-go-new-top-level",
       "side": "after",
-      "evidence": "DELETE FROM users;",
-      "rule": "dt12-go-new-top-level"
+      "subkind": "new-top-level"
     }
-  ]
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/purge.sql": {
+      "after": "DELETE FROM users;\n",
+      "before": ""
+    }
+  },
+  "id": "DT10-go-pos-03",
+  "language": "go"
 }

@@ -1,26 +1,39 @@
 {
-  "id": "DT7-go-pos-20",
   "detector": "DT7",
-  "language": "go",
-  "files": {
-    "svc/guard.go": {
-      "before": "package svc\n\nfunc guard() error {\n\terr := vault()\n\tif errors.Is(err, ErrLocked) {\n\t\treturn err\n\t}\n\treturn nil\n}\n",
-      "after": "package svc\n\nfunc guard() error {\n\terr := vault()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT7",
       "category": "failure-handling",
-      "subkind": "broadened",
+      "detector": "DT7",
+      "evidence": "\t\treturn nil",
+      "lines": [
+        6,
+        6
+      ],
       "path": "svc/guard.go",
+      "rule": "dt7-go-broadened",
+      "side": "after",
+      "subkind": "broadened"
+    },
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "\tif err != nil {",
       "lines": [
         5,
         5
       ],
+      "path": "svc/guard.go",
+      "rule": "dt7-go-swallowed",
       "side": "after",
-      "evidence": "if err != nil",
-      "rule": "dt7-go-broadened"
+      "subkind": "swallowed"
     }
-  ]
+  ],
+  "files": {
+    "svc/guard.go": {
+      "after": "package svc\n\nfunc guard() error {\n\terr := vault()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n",
+      "before": "package svc\n\nfunc guard() error {\n\terr := vault()\n\tif errors.Is(err, ErrLocked) {\n\t\treturn err\n\t}\n\treturn nil\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-20",
+  "language": "go"
 }

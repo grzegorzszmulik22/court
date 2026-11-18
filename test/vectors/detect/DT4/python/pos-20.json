@@ -1,26 +1,26 @@
 {
-  "id": "DT4-python-pos-20",
   "detector": "DT4",
-  "language": "python",
-  "files": {
-    "tests/test_shop.py": {
-      "before": "def test_many():\n    assert a() == 1\nassert b() == 2\nassert c() == 3\n",
-      "after": "def test_many():\n    assert a() == 1\nassert b() == 2\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT4",
       "category": "test-strength",
-      "subkind": "deleted_test",
-      "path": "tests/test_shop.py",
+      "detector": "DT4",
+      "evidence": "    assert c() == 3",
       "lines": [
         4,
         4
       ],
+      "path": "tests/test_shop.py",
+      "rule": "dt4-python-fewer_assertions",
       "side": "before",
-      "evidence": "assert c() == 3",
-      "rule": "dt4-python-deleted_test"
+      "subkind": "fewer_assertions"
     }
-  ]
+  ],
+  "files": {
+    "tests/test_shop.py": {
+      "after": "def test_many():\n    assert a() == 1\n    assert b() == 2\n",
+      "before": "def test_many():\n    assert a() == 1\n    assert b() == 2\n    assert c() == 3\n"
+    }
+  },
+  "id": "DT4-python-pos-20",
+  "language": "python"
 }

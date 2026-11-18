@@ -1,36 +1,40 @@
 {
-  "id": "DT10-python-pos-25",
   "detector": "DT10",
-  "language": "python",
-  "files": {
-    "tools/x.txt": {
-      "before": "a\n",
-      "after": "a\nb\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "shell",
-      "input": {
-        "command": "rm -rf build/"
-      },
-      "outcome": "fail"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "rm -rf build/",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-python-destructive-cmd",
       "side": "events",
-      "evidence": "rm -rf build/",
-      "rule": "dt10-python-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "rm -rf a scratch dir"
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "tools/x.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-python-pos-25",
+  "language": "python",
+  "note": "rm -rf a scratch dir",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm -rf build/"
+      },
+      "name": "shell",
+      "outcome": "fail"
+    }
+  ]
 }

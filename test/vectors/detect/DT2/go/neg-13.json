@@ -1,13 +1,17 @@
 {
-  "id": "DT2-go-neg-13",
   "detector": "DT2",
-  "language": "go",
+  "expect": [],
   "files": {
     "db/trig.sql": {
-      "before": "CREATE TRIGGER tr AFTER INSERT ON t BEGIN SELECT 1; END;\n",
-      "after": "CREATE TRIGGER tr2 AFTER INSERT ON t BEGIN SELECT 2; END;\n"
+      "after": "CREATE TRIGGER tr2 AFTER INSERT ON t BEGIN SELECT 2; END;\n",
+      "before": "CREATE TRIGGER tr AFTER INSERT ON t BEGIN SELECT 1; END;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
     }
   },
-  "expect": [],
+  "id": "DT2-go-neg-13",
+  "language": "go",
   "note": "create-trigger"
 }

@@ -1,13 +1,17 @@
 {
-  "id": "DT10-python-neg-20",
   "detector": "DT10",
-  "language": "python",
+  "expect": [],
   "files": {
     "a.txt": {
-      "before": "x\ny\n",
-      "after": "x\nz\n"
+      "after": "x\nz\n",
+      "before": "x\ny\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
     }
   },
-  "expect": [],
+  "id": "DT10-python-neg-20",
+  "language": "python",
   "note": "rename-file"
 }

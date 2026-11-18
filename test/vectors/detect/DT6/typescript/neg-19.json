@@ -1,13 +1,17 @@
 {
-  "id": "DT6-typescript-neg-19",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
     ".husky/pre-commit": {
-      "before": "#!/bin/sh\nnpm test\n",
-      "after": "#!/bin/sh\nnpm test\nnpm run lint\n"
+      "after": "#!/bin/sh\nnpm test\nnpm run lint\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-19",
+  "language": "typescript",
   "note": "husky-still"
 }

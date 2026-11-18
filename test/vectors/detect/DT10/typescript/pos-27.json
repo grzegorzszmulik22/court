@@ -1,36 +1,40 @@
 {
-  "id": "DT10-typescript-pos-27",
   "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "x/y/z.txt": {
-      "before": "1\n",
-      "after": "2\n"
-    }
-  },
-  "tool_events": [
-    {
-      "name": "Bash",
-      "input": {
-        "command": "rm -rf /tmp/stage"
-      },
-      "outcome": "ok"
-    }
-  ],
   "expect": [
     {
-      "detector": "DT10",
       "category": "deletion",
-      "subkind": "command",
-      "path": "trajectory/events.jsonl",
+      "detector": "DT10",
+      "evidence": "rm -rf /tmp/stage",
       "lines": [
         1,
         1
       ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-typescript-destructive-cmd",
       "side": "events",
-      "evidence": "rm -rf /tmp/stage",
-      "rule": "dt10-typescript-destructive-cmd"
+      "subkind": "command"
     }
   ],
-  "note": "absolute-path rm"
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "x/y/z.txt": {
+      "after": "2\n",
+      "before": "1\n"
+    }
+  },
+  "id": "DT10-typescript-pos-27",
+  "language": "typescript",
+  "note": "absolute-path rm",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm -rf /tmp/stage"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
 }

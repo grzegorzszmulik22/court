@@ -1,18 +1,22 @@
 {
-  "id": "DT11-typescript-neg-12",
-  "detector": "DT11",
-  "language": "typescript",
-  "files": {
-    ".venv/lib/x.py": {
-      "before": "",
-      "after": "v = 1\n"
-    }
-  },
   "commission": {
     "territory": [
       "lib/**"
     ]
   },
+  "detector": "DT11",
   "expect": [],
+  "files": {
+    ".venv/lib/x.py": {
+      "after": "v = 1\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-neg-12",
+  "language": "typescript",
   "note": "exempt-venv"
 }

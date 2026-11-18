@@ -1,14 +1,18 @@
 {
-  "id": "DT6-typescript-neg-09",
   "detector": "DT6",
-  "language": "typescript",
+  "expect": [],
   "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
     "src/legacy.go": {
-      "before": "package src\n\n//nolint\nfunc f() {}\n",
-      "after": "package src\n\nfunc f() {}\n"
+      "after": "package src\n\nfunc f() {}\n",
+      "before": "package src\n\n//nolint\nfunc f() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT6-typescript-neg-09",
+  "language": "typescript",
   "near_miss": "nolint-removed",
   "note": "nolint-removed"
 }

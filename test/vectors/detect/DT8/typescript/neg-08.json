@@ -1,14 +1,18 @@
 {
-  "id": "DT8-typescript-neg-08",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "src/client.ts": {
-      "before": "let n = 1;\nexport function c() {}\n",
-      "after": "let n = 2;\nexport function c() {}\n"
+    "config/hosts.yml": {
+      "after": "hosts:\n  - shared.example.com\n",
+      "before": "hosts:\n  - shared.example.com\n"
+    },
+    "svc/client.ts": {
+      "after": "export const api = \"https://shared.example.com\";\nexport function c() {}\n",
+      "before": "export function c() {}\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-08",
+  "language": "typescript",
   "near_miss": "let-value",
   "note": "let-value"
 }

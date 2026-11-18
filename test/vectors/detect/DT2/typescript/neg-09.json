@@ -1,14 +1,18 @@
 {
-  "id": "DT2-typescript-neg-09",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "db/fix.sql": {
-      "before": "DELETE FROM t WHERE id = 1;\n",
-      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n"
+      "after": "DELETE FROM t WHERE id = 1 OR id = 2;\n",
+      "before": "DELETE FROM t WHERE id = 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-09",
+  "language": "typescript",
   "near_miss": "delete-stmt",
   "note": "delete-stmt"
 }

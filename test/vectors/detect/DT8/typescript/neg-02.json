@@ -1,14 +1,14 @@
 {
-  "id": "DT8-typescript-neg-02",
   "detector": "DT8",
-  "language": "typescript",
+  "expect": [],
   "files": {
-    "src/client.ts": {
-      "before": "export function c() { return 1; }\n",
-      "after": "export function c() { return 2; }\n"
+    "svc/client.ts": {
+      "after": "// client helpers\n// see https://docs.example.com for usage\n",
+      "before": "// client helpers\n"
     }
   },
-  "expect": [],
+  "id": "DT8-typescript-neg-02",
+  "language": "typescript",
   "near_miss": "body-digit-up",
   "note": "body-digit-up"
 }

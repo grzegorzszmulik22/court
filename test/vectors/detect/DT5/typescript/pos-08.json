@@ -1,26 +1,26 @@
 {
-  "id": "DT5-typescript-pos-08",
   "detector": "DT5",
-  "language": "typescript",
-  "files": {
-    "src/calc.ts": {
-      "before": "export function g(n: number): number {\n  return n;\n}\n",
-      "after": "export function g(n: unknown): number {\n  return n as number;\n}\n"
-    }
-  },
   "expect": [
     {
-      "detector": "DT5",
       "category": "type-strength",
-      "subkind": "widened",
-      "path": "src/calc.ts",
+      "detector": "DT5",
+      "evidence": "export function g(n: number): any {",
       "lines": [
         1,
         1
       ],
+      "path": "src/calc.ts",
+      "rule": "dt5-typescript-widened",
       "side": "after",
-      "evidence": "n: unknown",
-      "rule": "dt5-typescript-widened"
+      "subkind": "widened"
     }
-  ]
+  ],
+  "files": {
+    "src/calc.ts": {
+      "after": "export function g(n: number): any {\n  return n as any;\n}\n",
+      "before": "export function g(n: number): number {\n  return n;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-pos-08",
+  "language": "typescript"
 }

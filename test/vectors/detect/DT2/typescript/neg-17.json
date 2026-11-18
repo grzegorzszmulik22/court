@@ -1,17 +1,21 @@
 {
-  "id": "DT2-typescript-neg-17",
   "detector": "DT2",
-  "language": "typescript",
+  "expect": [],
   "files": {
     "api/order.schema.json": {
-      "before": "{\n  \"type\": \"object\"\n}\n",
-      "after": "{\n  \"type\": \"object\"\n}\n"
+      "after": "{\n  \"type\": \"object\"\n}\n",
+      "before": "{\n  \"type\": \"object\"\n}\n"
     },
     "other.py": {
-      "before": "x = 1\n",
-      "after": "x = 2\n"
+      "after": "x = 2\n",
+      "before": "x = 1\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
     }
   },
-  "expect": [],
+  "id": "DT2-typescript-neg-17",
+  "language": "typescript",
   "note": "schema-json-unchanged"
 }
