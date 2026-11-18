@@ -480,23 +480,23 @@ def event_value(ev):
 SQLITE_MAGIC = b"SQLite format 3\x00"
 
 def read_lines(path):
-    """path -> (lines, verdict_class, detail)."""
+    """path -> (lines, verdict_class, seq, detail)."""
     try:
         data = open(path, "rb").read()
     except OSError as e:
-        return None, "io", str(e)
+        return None, "io", -1, str(e)
     if data.startswith(SQLITE_MAGIC):
         return _read_db(path)
     if not data:
-        return None, "empty", "empty file"
+        return None, "empty", -1, "empty file"
     if data[-1] != 0x0A:
-        return None, "truncated", "file does not end with a newline"
+        return None, "truncated", -1, "file does not end with a newline"
     data = data[:-1]
     lines = data.split(b"\n")
     for i, l in enumerate(lines):
         if not l:
-            return None, "truncated", "empty line %d" % i
-    return lines, "ok", ""
+            return None, "truncated", -1, "empty line %d" % i
+    return lines, "ok", -1, ""
 
 def _read_db(path):
     try:
@@ -508,34 +508,34 @@ def _read_db(path):
             " FROM ledger ORDER BY seq").fetchall()
         con.close()
     except Exception as e:
-        return None, "io", str(e)
+        return None, "io", -1, str(e)
     if not rows:
-        return None, "empty", "ledger table is empty"
+        return None, "empty", -1, "ledger table is empty"
     lines = []
     for seq, prev, at, commission, actor, typ, body, h in rows:
         # B3-02: a stored row is read, never repaired. A hash column that is
         # NULL, blank or not sha256 hex is an envelope error — this reader
         # does not recompute the hash it was not given.
         if not isinstance(h, str) or not HEX64.match(h):
-            return None, "envelope", \
-                "stored hash is blank or not sha256 hex at seq %s" % seq
+            return None, "envelope", seq, \
+                "stored hash is blank or not sha256 hex"
         if not isinstance(body, str):
-            return None, "envelope", "stored body is not text at seq %s" % seq
+            return None, "envelope", seq, "stored body is not text"
         try:
             bv = parse_strict(body.encode())
         except JsonError as e:
-            return None, "envelope", "stored body invalid at seq %s: %s" % (seq, e)
+            return None, "envelope", seq, "stored body invalid: %s" % e
         # B3-11: the stored body column holds canonical bytes; a whitespace
         # or key-order rewrite of the column decodes to the same body but is
         # not what was stored.
         if canon(bv) != body.encode():
-            return None, "envelope", \
-                "stored body is not the canonical bytes at seq %s" % seq
+            return None, "envelope", seq, \
+                "stored body is not the canonical bytes"
         lines.append(canon(Obj([
             ("seq", Num(str(seq))), ("prev", prev), ("at", at),
             ("commission", commission), ("actor", actor), ("type", typ),
             ("body", bv), ("hash", h)])))
-    return lines, "ok", ""
+    return lines, "ok", -1, ""
 
 # ---------------------------------------------------------------------------
 # Verify.
@@ -616,9 +616,9 @@ def check_head(lines, seq, want_hash):
 
 def verify_file(path, schemas):
     """-> (class, seq, detail, head, lines)."""
-    lines, cls, detail = read_lines(path)
+    lines, cls, rseq, detail = read_lines(path)
     if cls != "ok":
-        return cls, -1, detail, None, None
+        return cls, rseq, detail, None, None
     cls, seq, detail, head = verify_lines(lines, schemas)
     return cls, seq, detail, head, lines
 

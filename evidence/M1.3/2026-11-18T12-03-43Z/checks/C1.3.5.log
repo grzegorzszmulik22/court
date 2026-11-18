@@ -1,0 +1,1 @@
+REPLAY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.5.d/run.sqlite PASS events=57 tables=11 reconciled=1 derived-checked head seq=56 hash=a2ed5302ece5345f48f4739db4b57c4be71589723f402c0cb7511870a7f9fdf3

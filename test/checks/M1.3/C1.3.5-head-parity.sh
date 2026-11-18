@@ -69,7 +69,7 @@ for v in "$COURT ledger verify" "python3 $REF"; do
         || { echo "$v did not report the seq-10 mismatch: $(cat "$d/edit.out")" >&2; exit 1; }
 done
 
-# --- 3. sqlite stored rows: blank hash, non-canonical body ---------------
+# --- 3. sqlite stored rows: blank hash, non-canonical body bytes ---------
 python3 - "$d" <<'PYEOF'
 import shutil, sqlite3, sys
 d = sys.argv[1]
@@ -77,16 +77,103 @@ shutil.copy(d + "/run.sqlite", d + "/blankhash.sqlite")
 c = sqlite3.connect(d + "/blankhash.sqlite")
 c.execute("UPDATE ledger SET hash='' WHERE seq=7")
 c.commit(); c.close()
-shutil.copy(d + "/run.sqlite", d + "/noncanon.sqlite")
-c = sqlite3.connect(d + "/noncanon.sqlite")
-row = c.execute("SELECT body FROM ledger WHERE seq=7").fetchone()[0]
-b = row[:1] + " " + row[1:]  # '{ ...' -> '{  ...' : valid JSON, not canonical
-c.execute("UPDATE ledger SET body=? WHERE seq=7", (b,))
-c.commit(); c.close()
 PYEOF
-for f in blankhash noncanon; do
+for f in blankhash; do
     gocls=$("$COURT" ledger verify "$d/$f.sqlite" 2>/dev/null | awk '{print $3}')
     pycls=$(python3 "$REF" "$d/$f.sqlite" 2>/dev/null | awk '{print $3}')
     [ "$gocls" = "$pycls" ] || { echo "$f: go=$gocls python=$pycls" >&2; exit 1; }
     [ "$gocls" = "envelope" ] || { echo "$f: class $gocls, want envelope" >&2; exit 1; }
 done
+
+# B3-11: the stored body column holds exactly the canonical bytes. Every
+# rewrite below decodes to the same body but is not byte-identical, so it
+# is an envelope error in both verifiers — and the detail must blame the
+# stored bytes, so a check weakened to compare lengths or decoded values
+# (or removed) cannot produce this result:
+#   reorder    — swaps two top-level body members: same length, same
+#                decoded value; only a byte comparison catches it.
+#   whitespace — inserts a space after '{': decoded-equal.
+#   escape     — spells an ASCII letter inside a string as a \uXXXX
+#                escape: decoded-equal.
+for kind in reorder whitespace escape; do
+    cp "$d/run.sqlite" "$d/body-$kind.sqlite"
+    BODY_KIND="$kind" python3 - "$d/body-$kind.sqlite" <<'PYEOF'
+import os, re, sqlite3, sys
+kind = os.environ["BODY_KIND"]
+con = sqlite3.connect(sys.argv[1])
+
+def members(raw):
+    assert raw[:1] == "{" and raw[-1:] == "}"
+    s, out, depth, instr, esc, start = raw[1:-1], [], 0, False, False, 0
+    for i, c in enumerate(s):
+        if instr:
+            if esc: esc = False
+            elif c == "\\": esc = True
+            elif c == '"': instr = False
+        else:
+            if c == '"': instr = True
+            elif c in "{[": depth += 1
+            elif c in "}]": depth -= 1
+            elif c == "," and depth == 0:
+                out.append(s[start:i]); start = i + 1
+    out.append(s[start:])
+    return out
+
+seq = body = None
+for seq, body in con.execute("SELECT seq, body FROM ledger ORDER BY seq"):
+    if len(members(body)) >= 2: break
+assert body, "no ledger body with >=2 members"
+
+if kind == "reorder":
+    ms = members(body); ms[0], ms[1] = ms[1], ms[0]
+    new = "{" + ",".join(ms) + "}"
+    assert len(new) == len(body)
+elif kind == "whitespace":
+    new = "{ " + body[1:]
+elif kind == "escape":
+    new = None
+    for m in re.finditer(r'"((?:[^"\\]|\\.)*)"', body):
+        s = m.group(1)
+        for i, ch in enumerate(s):
+            if ch.isascii() and ch.isalpha():
+                new = body[:m.start(1)] + s[:i] + "\\u%04x" % ord(ch) + s[i+1:] + body[m.end(1):]
+                break
+        if new: break
+    assert new, "no ASCII letter inside a string to escape"
+else:
+    sys.exit("bad BODY_KIND")
+assert new != body
+con.execute("UPDATE ledger SET body=? WHERE seq=?", (new, seq))
+con.commit(); con.close()
+PYEOF
+    goout=$("$COURT" ledger verify "$d/body-$kind.sqlite" 2>&1 || true)
+    pyout=$(python3 "$REF" "$d/body-$kind.sqlite" 2>&1 || true)
+    for pair in "go:$goout" "python:$pyout"; do
+        v=${pair%%:*}; vo=${pair#*:}
+        echo "$vo" | grep -q "envelope" \
+            || { echo "FAIL $kind body: $v said: $vo" >&2; exit 1; }
+        echo "$vo" | grep -q "canonical" \
+            || { echo "FAIL $kind body: $v did not blame canonical bytes: $vo" >&2; exit 1; }
+    done
+done
+
+# --- 4. unknown top-level envelope field: the reference verifier alone ---
+# The rejecting vector's envelope class could equally be produced by the
+# canonical-bytes check, so assert the *detail* names the unknown field —
+# a sabotage that deletes the explicit field check cannot produce it.
+python3 - "$L" "$d/unknown-field.jsonl" <<'PYEOF'
+import json, sys
+line = open(sys.argv[1], encoding="utf-8").readline().rstrip("\n")
+obj = json.loads(line)
+obj["zzz_field"] = 0
+with open(sys.argv[2], "w", encoding="utf-8") as f:
+    f.write(json.dumps(obj, separators=(",", ":")) + "\n")
+PYEOF
+pyout=$(python3 "$REF" "$d/unknown-field.jsonl" 2>&1 || true)
+echo "$pyout" | grep -q "envelope" \
+    || { echo "FAIL unknown field: python said: $pyout" >&2; exit 1; }
+echo "$pyout" | grep -q "unknown field" \
+    || { echo "FAIL unknown field: python detail did not name it: $pyout" >&2; exit 1; }
+goout=$("$COURT" ledger verify "$d/unknown-field.jsonl" 2>&1 || true)
+echo "$goout" | grep -q "envelope" && echo "$goout" | grep -q "unknown field" \
+    || { echo "FAIL unknown field: go said: $goout" >&2; exit 1; }

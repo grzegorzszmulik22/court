@@ -270,10 +270,150 @@ func TestJCSRT_NonCanonicalStored(t *testing.T) {
 	}
 	// The SQLite path: a stored body column that is valid JSON but not
 	// canonical bytes is an envelope error, never silently re-serialized.
-	rtSQL(t, path, "UPDATE ledger SET body=' ' || body WHERE seq=1")
-	if v := VerifyFile(path); v.Class != ClassEnvelope {
-		t.Fatalf("non-canonical stored body: class %q, want envelope", v.Class)
+	// Every rewrite kind below decodes to the same body, so a comparison by
+	// length or decoded value — instead of the stored bytes — passes them
+	// all. The reorder keeps the byte length; the escape and number kinds
+	// keep every decoded value.
+	rtBodyRewrite := map[string]func(t *testing.T, raw string) string{
+		"key order (same length)": rtReorderObject,
+		"whitespace": func(t *testing.T, raw string) string {
+			return "{ " + raw[1:]
+		},
+		"escape-spelled string": rtEscapeLetter,
+		"e0-spelled number":     rtNumberE0,
 	}
+	for kind, rw := range rtBodyRewrite {
+		body := rtBodyOf(t, path, 0)
+		rtSQL(t, path, "UPDATE ledger SET body=? WHERE seq=0", rw(t, body))
+		v := VerifyFile(path)
+		if v.Class != ClassEnvelope || !strings.Contains(v.Detail, "canonical") {
+			t.Fatalf("%s stored body: %s seq=%d %q, want envelope/canonical",
+				kind, v.Class, v.Seq, v.Detail)
+		}
+		rtSQL(t, path, "UPDATE ledger SET body=? WHERE seq=0", body)
+		if v := VerifyFile(path); v.Class != ClassOK {
+			t.Fatalf("restore %s: %s", kind, v.Detail)
+		}
+	}
+}
+
+// rtBodyOf returns the stored body text of one row.
+func rtBodyOf(t *testing.T, path string, seq int64) string {
+	t.Helper()
+	db, err := sql.Open("sqlite", fmt.Sprintf("file:%s?_pragma=busy_timeout(5000)", path))
+	if err != nil {
+		t.Fatalf("sql open: %v", err)
+	}
+	defer db.Close()
+	var body string
+	if err := db.QueryRow("SELECT body FROM ledger WHERE seq=?", seq).Scan(&body); err != nil {
+		t.Fatalf("read body: %v", err)
+	}
+	return body
+}
+
+// rtMembers splits the top-level member substrings of a JSON object.
+func rtMembers(t *testing.T, raw string) []string {
+	t.Helper()
+	if raw[0] != '{' || raw[len(raw)-1] != '}' {
+		t.Fatalf("not an object: %.40s", raw)
+	}
+	s := raw[1 : len(raw)-1]
+	var out []string
+	depth, start := 0, 0
+	inStr, esc := false, false
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		case inStr && esc:
+			esc = false
+		case inStr && c == '\\':
+			esc = true
+		case inStr && c == '"':
+			inStr = false
+		case inStr:
+		case c == '"':
+			inStr = true
+		case c == '{' || c == '[':
+			depth++
+		case c == '}' || c == ']':
+			depth--
+		case c == ',' && depth == 0:
+			out = append(out, s[start:i])
+			start = i + 1
+		}
+	}
+	out = append(out, s[start:])
+	if len(out) < 2 {
+		t.Fatalf("object with <2 members: %.40s", raw)
+	}
+	return out
+}
+
+// rtReorderObject swaps two top-level members: same decoded object, same
+// byte length, different bytes — defeats a length comparison too.
+func rtReorderObject(t *testing.T, raw string) string {
+	t.Helper()
+	ms := rtMembers(t, raw)
+	ms[0], ms[1] = ms[1], ms[0]
+	out := "{" + strings.Join(ms, ",") + "}"
+	if len(out) != len(raw) || out == raw {
+		t.Fatalf("reorder did not preserve length")
+	}
+	return out
+}
+
+// rtEscapeLetter spells the first ASCII letter inside a JSON string as a
+// \uXXXX escape: the decoded strings are equal, the bytes are not.
+func rtEscapeLetter(t *testing.T, raw string) string {
+	t.Helper()
+	inStr, esc := false, false
+	for i := 0; i < len(raw); i++ {
+		c := raw[i]
+		switch {
+		case inStr && esc:
+			esc = false
+		case inStr && c == '\\':
+			esc = true
+		case inStr && c == '"':
+			inStr = false
+		case inStr && (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'):
+			return raw[:i] + fmt.Sprintf("\\u%04x", c) + raw[i+1:]
+		case !inStr && c == '"':
+			inStr = true
+		}
+	}
+	t.Fatalf("no ASCII letter inside a string in %.40s", raw)
+	return ""
+}
+
+// rtNumberE0 respells the first number token outside strings with an e0
+// suffix: the same decoded number, different bytes.
+func rtNumberE0(t *testing.T, raw string) string {
+	t.Helper()
+	inStr, esc := false, false
+	for i := 0; i < len(raw); i++ {
+		c := raw[i]
+		switch {
+		case inStr && esc:
+			esc = false
+		case inStr && c == '\\':
+			esc = true
+		case inStr && c == '"':
+			inStr = false
+		case inStr:
+		case c == '"':
+			inStr = true
+		case i > 0 && raw[i-1] == ':' && (c == '-' || c >= '0' && c <= '9'):
+			j := i + 1
+			for j < len(raw) && strings.IndexByte("-+0123456789.eE", raw[j]) >= 0 {
+				j++
+			}
+			return raw[:j] + "e0" + raw[j:]
+		}
+	}
+	t.Fatalf("no number token in %.40s", raw)
+	return ""
 }
 
 // B3-02: export never launders a tamper — a database whose stored rows do

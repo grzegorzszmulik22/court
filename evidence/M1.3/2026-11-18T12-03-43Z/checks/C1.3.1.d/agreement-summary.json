@@ -1,0 +1,21 @@
+{
+ "mutant_files": 6405,
+ "classes": {
+  "go:envelope": 2030,
+  "go:hash": 1019,
+  "go:json": 1752,
+  "go:ok": 200,
+  "go:prev": 201,
+  "go:schema": 200,
+  "go:seq": 801,
+  "go:truncated": 202,
+  "py:envelope": 2030,
+  "py:hash": 1019,
+  "py:json": 1752,
+  "py:ok": 200,
+  "py:prev": 201,
+  "py:schema": 200,
+  "py:seq": 801,
+  "py:truncated": 202
+ }
+}

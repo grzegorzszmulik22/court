@@ -1,0 +1,6 @@
+=== RUN   TestC1_5_6
+--- PASS: TestC1_5_6 (0.01s)
+=== RUN   TestC1_5_6_PayloadShapes
+--- PASS: TestC1_5_6_PayloadShapes (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.043s

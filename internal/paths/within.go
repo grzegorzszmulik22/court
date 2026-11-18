@@ -3,6 +3,7 @@ package paths
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -20,6 +21,20 @@ import (
 // When the path stays inside the directory the returned reason is empty;
 // otherwise it names the violation for a denial record.
 func WithinDir(root, target string) (bool, string) {
+	return withinDir(root, target, foldNames())
+}
+
+// foldNames reports whether this platform's filesystem semantics treat
+// case variants of a name as the same name. On Windows (and a
+// case-insensitive volume generally) WORLD and world are one directory,
+// so containment compares whole components case-insensitively: a variant
+// of the root itself is inside, and a variant of a sibling (WORLD-X) is
+// still outside.
+func foldNames() bool {
+	return runtime.GOOS == "windows"
+}
+
+func withinDir(root, target string, fold bool) (bool, string) {
 	if target == "" {
 		return false, "empty path"
 	}
@@ -28,7 +43,7 @@ func WithinDir(root, target string) (bool, string) {
 	}
 	cleanRoot := filepath.Clean(root)
 	clean := filepath.Clean(target)
-	if !under(clean, cleanRoot) {
+	if !under(clean, cleanRoot, fold) {
 		return false, "path leaves the directory"
 	}
 	rroot, err := resolvePath(cleanRoot)
@@ -39,14 +54,25 @@ func WithinDir(root, target string) (bool, string) {
 	if err != nil {
 		return false, "cannot resolve path: " + err.Error()
 	}
-	if !under(filepath.Clean(rtarget), rroot) {
+	if !under(filepath.Clean(rtarget), rroot, fold) {
 		return false, "path leaves the directory through a symlink"
 	}
 	return true, ""
 }
 
-// under reports whether p is root or below it.
-func under(p, root string) bool {
+// under reports whether p is root or below it — whole path components
+// only, so a sibling like <root>-x or <root>2 is outside even though a
+// string-prefix match would accept it. When fold is set (Windows
+// semantics) components compare case-insensitively.
+func under(p, root string, fold bool) bool {
+	if fold {
+		if strings.EqualFold(p, root) {
+			return true
+		}
+		return len(p) > len(root) &&
+			strings.EqualFold(p[:len(root)], root) &&
+			os.IsPathSeparator(p[len(root)])
+	}
 	return p == root ||
 		strings.HasPrefix(p, root+string(os.PathSeparator))
 }

@@ -5,15 +5,15 @@
          # NULL, blank or not sha256 hex is an envelope error — this reader
          # does not recompute the hash it was not given.
 -        if not isinstance(h, str) or not HEX64.match(h):
--            return None, "envelope", \
--                "stored hash is blank or not sha256 hex at seq %s" % seq
+-            return None, "envelope", seq, \
+-                "stored hash is blank or not sha256 hex"
          if not isinstance(body, str):
-             return None, "envelope", "stored body is not text at seq %s" % seq
+             return None, "envelope", seq, "stored body is not text"
          try:
 @@ -531,6 +528,13 @@
          if canon(bv) != body.encode():
-             return None, "envelope", \
-                 "stored body is not the canonical bytes at seq %s" % seq
+             return None, "envelope", seq, \
+                 "stored body is not the canonical bytes"
 +        # Repair a missing or malformed stored hash from the row's
 +        # contents — the reader "knows" the right value.
 +        if not isinstance(h, str) or not HEX64.match(h):
