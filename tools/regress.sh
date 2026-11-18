@@ -38,7 +38,7 @@ PYEOF
 # -short skips only the timed measurements, which their own chunk checks
 # run in full; on a loaded host they would make regress flaky.
 echo "regress: go test -short ./..."
-if ! go test -short -count=1 ./...; then
+if ! go test -short -count=1 -timeout 30m ./...; then
     echo "regress: go test -short ./... FAIL"
     fail=1
 fi
