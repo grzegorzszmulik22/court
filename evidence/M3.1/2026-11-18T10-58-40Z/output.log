@@ -1,0 +1,127 @@
+=== RUN   TestC3_1_1
+--- PASS: TestC3_1_1 (3.97s)
+=== RUN   TestC3_1_1_missing_twin
+--- PASS: TestC3_1_1_missing_twin (0.27s)
+=== RUN   TestC3_1_1_broken_backref
+--- PASS: TestC3_1_1_broken_backref (0.24s)
+=== RUN   TestC3_1_planted_empty_registry
+--- PASS: TestC3_1_planted_empty_registry (0.22s)
+=== RUN   TestC3_1_1_vectors_counts
+--- PASS: TestC3_1_1_vectors_counts (1.13s)
+=== RUN   TestC3_1_1_reconcile_counts
+--- PASS: TestC3_1_1_reconcile_counts (0.06s)
+=== RUN   TestGate_undeclared_commit
+--- PASS: TestGate_undeclared_commit (0.26s)
+=== RUN   TestGate_declared_commit_passes
+--- PASS: TestGate_declared_commit_passes (0.22s)
+=== RUN   TestGate_one_declaration_two_commits
+--- PASS: TestGate_one_declaration_two_commits (0.40s)
+=== RUN   TestContestRaisable_missing_world
+--- PASS: TestContestRaisable_missing_world (0.34s)
+=== RUN   TestContestRaisable_one_world
+--- PASS: TestContestRaisable_one_world (0.28s)
+=== RUN   TestContestRaisable_no_detection
+--- PASS: TestContestRaisable_no_detection (0.28s)
+=== RUN   TestContestRaisable_clean_pair
+--- PASS: TestContestRaisable_clean_pair (0.27s)
+=== RUN   TestPlantedOnly_netdiff
+--- PASS: TestPlantedOnly_netdiff (0.27s)
+=== RUN   TestPlantedOnly_cover_present
+--- PASS: TestPlantedOnly_cover_present (0.26s)
+=== RUN   TestTwinEdits_guarantee_still_weakens
+--- PASS: TestTwinEdits_guarantee_still_weakens (0.32s)
+=== RUN   TestTwinEdits_guarantee_clean
+--- PASS: TestTwinEdits_guarantee_clean (0.41s)
+=== RUN   TestCoverageCount_A_boundary
+--- PASS: TestCoverageCount_A_boundary (0.47s)
+=== RUN   TestCoverageCount_C_boundary
+--- PASS: TestCoverageCount_C_boundary (0.09s)
+=== RUN   TestCoverageCount_D_boundary
+--- PASS: TestCoverageCount_D_boundary (0.09s)
+=== RUN   TestMutationCap_boundary
+--- PASS: TestMutationCap_boundary (0.02s)
+=== RUN   TestReconcile_count_boundary
+--- PASS: TestReconcile_count_boundary (0.09s)
+=== RUN   TestReconcile_coverage_missing_verdict
+--- PASS: TestReconcile_coverage_missing_verdict (0.03s)
+=== RUN   TestReconcile_coverage_missing_tag
+--- PASS: TestReconcile_coverage_missing_tag (0.02s)
+=== RUN   TestVectors_count_boundary
+--- PASS: TestVectors_count_boundary (1.39s)
+=== RUN   TestVectors_duplicate_normalized
+--- PASS: TestVectors_duplicate_normalized (0.50s)
+=== RUN   TestTwinEdits_missing_file
+--- PASS: TestTwinEdits_missing_file (0.26s)
+=== RUN   TestReconcile_detected_paths
+--- PASS: TestReconcile_detected_paths (0.02s)
+=== RUN   TestReconcile_tag_truth
+--- PASS: TestReconcile_tag_truth (0.02s)
+=== RUN   TestTwinEdits_omits_sensitive
+--- PASS: TestTwinEdits_omits_sensitive (0.35s)
+=== RUN   TestTwinEdits_readme_note
+--- PASS: TestTwinEdits_readme_note (0.33s)
+=== RUN   TestTwinEdits_twin_declare
+--- PASS: TestTwinEdits_twin_declare (0.33s)
+=== RUN   TestTwinEdits_declare_untouched
+--- PASS: TestTwinEdits_declare_untouched (0.46s)
+=== RUN   TestTwinEdits_net_diff
+--- PASS: TestTwinEdits_net_diff (0.44s)
+=== RUN   TestTwinEdits_unregistered_hit
+--- PASS: TestTwinEdits_unregistered_hit (0.47s)
+=== RUN   TestVectors_dt12_without_commission
+--- PASS: TestVectors_dt12_without_commission (0.36s)
+=== RUN   TestVectors_doc_host_no_exemption
+--- PASS: TestVectors_doc_host_no_exemption (0.37s)
+=== RUN   TestVectors_special_case_literal
+--- PASS: TestVectors_special_case_literal (0.44s)
+PASS
+ok  	court/bench/docketbench/validate	15.825s
+CHECK C3.1.1 PASS
+=== RUN   TestC3_1_2
+--- PASS: TestC3_1_2 (93.88s)
+=== RUN   TestC3_1_2_failing_repo
+--- PASS: TestC3_1_2_failing_repo (4.48s)
+=== RUN   TestC3_1_2_runcmd_output
+--- PASS: TestC3_1_2_runcmd_output (0.00s)
+PASS
+ok  	court/bench/docketbench/validate	98.385s
+CHECK C3.1.2 PASS
+=== RUN   TestC3_1_3
+--- PASS: TestC3_1_3 (0.39s)
+=== RUN   TestC3_1_3_commit_message
+--- PASS: TestC3_1_3_commit_message (0.28s)
+=== RUN   TestC3_1_3_diffstat
+--- PASS: TestC3_1_3_diffstat (0.24s)
+=== RUN   TestC3_1_3_commission_goal
+--- PASS: TestC3_1_3_commission_goal (0.30s)
+=== RUN   TestC3_1_3_goal_names_category
+--- PASS: TestC3_1_3_goal_names_category (0.32s)
+=== RUN   TestC3_1_3_finaltxt_case
+--- PASS: TestC3_1_3_finaltxt_case (0.53s)
+=== RUN   TestC3_1_3_nearword_boundary
+--- PASS: TestC3_1_3_nearword_boundary (0.29s)
+=== RUN   TestC3_1_3_keyword_case
+--- PASS: TestC3_1_3_keyword_case (0.54s)
+=== RUN   TestC3_1_3_registry_keyword
+--- PASS: TestC3_1_3_registry_keyword (0.68s)
+PASS
+ok  	court/bench/docketbench/validate	3.589s
+CHECK C3.1.3 PASS
+=== RUN   TestC3_1_4
+--- PASS: TestC3_1_4 (0.60s)
+=== RUN   TestC3_1_4_row_text
+--- PASS: TestC3_1_4_row_text (1.35s)
+PASS
+ok  	court/bench/docketbench/validate	1.989s
+CHECK C3.1.4 PASS
+CHECK C3.1.5 PASS
+=== RUN   TestC3_1_6
+--- PASS: TestC3_1_6 (0.68s)
+=== RUN   TestC3_1_6_category_boundary
+--- PASS: TestC3_1_6_category_boundary (0.06s)
+=== RUN   TestC3_1_6_variant_boundary
+--- PASS: TestC3_1_6_variant_boundary (0.18s)
+PASS
+ok  	court/bench/docketbench/validate	0.949s
+CHECK C3.1.6 PASS
+check.sh: evidence: evidence/M3.1/2026-11-18T10-58-40Z
