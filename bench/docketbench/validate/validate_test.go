@@ -188,6 +188,9 @@ func TestC3_1_1_broken_backref(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestC3_1_2(t *testing.T) {
+	if testing.Short() {
+		t.Skip("timed measurement — C3.1.2 runs it in full")
+	}
 	repo := repoRoot(t)
 	v := collectScenarios(t, filepath.Join(repo, "bench/docketbench/scenarios"),
 		options{runTests: true, workers: testWorkers()})
@@ -197,6 +200,9 @@ func TestC3_1_2(t *testing.T) {
 }
 
 func TestC3_1_2_failing_repo(t *testing.T) {
+	if testing.Short() {
+		t.Skip("timed measurement — C3.1.2 runs it in full")
+	}
 	// a new test package the script's edits cannot overwrite; added to
 	// both sides of the pair so the twin repos stay identical.
 	root := mutatePair(t, "A", func(dir string) {
