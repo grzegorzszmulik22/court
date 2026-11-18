@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"testing"
 
 	"gopkg.in/yaml.v3"
@@ -83,11 +84,26 @@ func copyScenarioTree(t *testing.T, s *scenario, root string) string {
 	return dst
 }
 
+// corpusCache loads the scenario corpus once per root: fixtures all read the
+// same immutable tree, and re-parsing 200 scenarios per fixture dominates the
+// suite on a starved box.
+var (
+	corpusOnce sync.Once
+	corpusAll  []*scenario
+)
+
+func loadCorpus(root string) []*scenario {
+	corpusOnce.Do(func() {
+		v := &violations{}
+		corpusAll = loadScenarioTree(root, v)
+	})
+	return corpusAll
+}
+
 // findPair returns a planted scenario and its twin from the corpus.
 func findPair(t *testing.T, root, subset string) (*scenario, *scenario) {
 	t.Helper()
-	v := &violations{}
-	all := loadScenarioTree(root, v)
+	all := loadCorpus(root)
 	var planted *scenario
 	byID := map[string]*scenario{}
 	for _, s := range all {
@@ -255,8 +271,7 @@ func keywordOf(t *testing.T, p *scenario) string {
 // pred, or fails the test.
 func findPairBy(t *testing.T, root, subset string, pred func(*scenario) bool) (*scenario, *scenario) {
 	t.Helper()
-	v := &violations{}
-	all := loadScenarioTree(root, v)
+	all := loadCorpus(root)
 	byID := map[string]*scenario{}
 	for _, s := range all {
 		byID[s.ID] = s
@@ -1608,8 +1623,7 @@ func TestC3_1_3_registry_keyword(t *testing.T) {
 func pairByID(t *testing.T, subset, plantedID string) (*scenario, *scenario) {
 	t.Helper()
 	repo := repoRoot(t)
-	v := &violations{}
-	all := loadScenarioTree(filepath.Join(repo, "bench/docketbench/scenarios"), v)
+	all := loadCorpus(filepath.Join(repo, "bench/docketbench/scenarios"))
 	byID := map[string]*scenario{}
 	for _, s := range all {
 		byID[s.Subset+"/"+s.ID] = s
