@@ -5,6 +5,10 @@
 # kept-head flag at the CLI: --head accepts the true head and rejects a
 # forged one.
 set -uo pipefail
+# Paths as the native tools print them: on Windows, Git Bash hands native
+# programs a converted path (G:/x for /g/x), so compare against that form.
+np() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s
+' "$1"; fi; }
 d=${COURT_CHECK_DIR:-$(mktemp -d)}
 mkdir -p "$d"
 d=$(cd "$d" && pwd)
@@ -49,11 +53,11 @@ H=$("$COURT" ledger verify "$d/out.jsonl" | sed -n 's/.*ok head //p')
 SEQ=${H#seq=}; SEQ=${SEQ%% *}; HASH=${H##*hash=}
 "$COURT" ledger verify --head "$SEQ:$HASH" "$d/out.jsonl" >"$d/head.out" \
     || { echo "--head rejected the true head" >&2; exit 1; }
-grep -q "^HEAD $d/out.jsonl ok" "$d/head.out" \
+grep -q "^HEAD $(np "$d/out.jsonl") ok" "$d/head.out" \
     || { echo "no HEAD ok line: $(cat "$d/head.out")" >&2; exit 1; }
 BADH="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 if "$COURT" ledger verify --head "$SEQ:$BADH" "$d/out.jsonl" >"$d/badhead.out" 2>&1; then
     echo "--head accepted a forged head" >&2; exit 1
 fi
-grep -q "^HEAD $d/out.jsonl FAIL" "$d/badhead.out" \
+grep -q "^HEAD $(np "$d/out.jsonl") FAIL" "$d/badhead.out" \
     || { echo "forged head not reported: $(cat "$d/badhead.out")" >&2; exit 1; }

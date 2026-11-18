@@ -718,6 +718,10 @@ def selftest():
 # ---------------------------------------------------------------------------
 
 def main(argv):
+    # One output format on every OS: text-mode stdout would write CRLF on
+    # Windows, so the two verifiers' verdict streams would differ byte for byte.
+    sys.stdout.reconfigure(newline="\n")
+    sys.stderr.reconfigure(newline="\n")
     args = argv[1:]
     if args and args[0] == "--selftest":
         return selftest()

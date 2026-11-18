@@ -11,6 +11,10 @@
 #     the canonical bytes, is an envelope error in both (readers never
 #     recompute a hash they were not given).
 set -uo pipefail
+# Paths as the native tools print them: on Windows, Git Bash hands native
+# programs a converted path (G:/x for /g/x), so compare against that form.
+np() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s
+' "$1"; fi; }
 d=${COURT_CHECK_DIR:-$(mktemp -d)}
 mkdir -p "$d"
 d=$(cd "$d" && pwd)
@@ -43,7 +47,7 @@ H10=$(headat 10)
 python3 "$REF" --head "$H10" "$L" >"$d/py.h10" || { echo "python --head failed on clean ledger" >&2; exit 1; }
 diff "$d/go.h10" "$d/py.h10" \
     || { echo "--head streams differ (go above, python below)" >&2; exit 1; }
-grep -q "HEAD $L ok seq=10 appended=46" "$d/go.h10" \
+grep -q "HEAD $(np "$L") ok seq=10 appended=46" "$d/go.h10" \
     || { echo "expected appended=46 in $(cat "$d/go.h10")" >&2; exit 1; }
 # cut back below the kept head: both fail with HEAD ... FAIL.
 head -5 "$L" >"$d/cut.jsonl"
@@ -51,7 +55,7 @@ for v in "$COURT ledger verify" "python3 $REF"; do
     if $v --head "$H10" "$d/cut.jsonl" >"$d/cut.out" 2>&1; then
         echo "$v accepted a cut-back ledger" >&2; exit 1
     fi
-    grep -q "HEAD $d/cut.jsonl FAIL seq=10" "$d/cut.out" \
+    grep -q "HEAD $(np "$d/cut.jsonl") FAIL seq=10" "$d/cut.out" \
         || { echo "$v did not report the cut-back head: $(cat "$d/cut.out")" >&2; exit 1; }
 done
 # a different event at the kept seq: a second, valid ledger verifies yet
@@ -65,7 +69,7 @@ for v in "$COURT ledger verify" "python3 $REF"; do
     if $v --head "$H10" "$L2" >"$d/edit.out" 2>&1; then
         echo "$v accepted a different event at the kept seq" >&2; exit 1
     fi
-    grep -q "HEAD $L2 FAIL seq=10" "$d/edit.out" \
+    grep -q "HEAD $(np "$L2") FAIL seq=10" "$d/edit.out" \
         || { echo "$v did not report the seq-10 mismatch: $(cat "$d/edit.out")" >&2; exit 1; }
 done
 
