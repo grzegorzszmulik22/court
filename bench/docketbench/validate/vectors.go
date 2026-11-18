@@ -174,8 +174,10 @@ func checkLangDir(ldir, dt, lang string, rules map[string]bool, v *violations, s
 		}
 		ids[vec.ID] = true
 		// F1: vectors are distinct cases — two vectors that differ only in
-		// renamed identifiers or digits are the same situation.
-		sig := vectorSignature(vec)
+		// renamed identifiers or digits are the same situation. A hit and a
+		// near-miss are never compared: they differ in verdict by
+		// construction (R4 dedupes same-verdict clones).
+		sig := f.Name()[:3] + "\x00" + vectorSignature(vec)
 		if prev, dup := sigs[sig]; dup {
 			v.addf("vectors-duplicate", where+"/"+f.Name(),
 				"same case as %s after normalising identifiers and digits", prev)
@@ -895,6 +897,53 @@ type addedLine struct {
 	text string
 }
 
+// changedLineSet returns the 1-based line numbers of the after text that
+// differ from the before text: added lines, plus the position where each
+// deleted run landed (the next surviving line). Lines unchanged by the
+// diff are never marked (04 §2 evidence must sit on a changed line).
+func changedLineSet(before, after string) map[int]bool {
+	b, a := splitLines(before), splitLines(after)
+	// LCS over the two line lists; files are small so O(n*m) is fine.
+	n, m := len(b), len(a)
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, m+1)
+	}
+	for i := n - 1; i >= 0; i-- {
+		for j := m - 1; j >= 0; j-- {
+			if b[i] == a[j] {
+				dp[i][j] = dp[i+1][j+1] + 1
+			} else if dp[i+1][j] >= dp[i][j+1] {
+				dp[i][j] = dp[i+1][j]
+			} else {
+				dp[i][j] = dp[i][j+1]
+			}
+		}
+	}
+	changed := map[int]bool{}
+	i, j := 0, 0
+	for i < n && j < m {
+		switch {
+		case b[i] == a[j]:
+			i++
+			j++
+		case dp[i+1][j] >= dp[i][j+1]:
+			i++ // deleted line: the change lands at after-line j+1
+			changed[j+1] = true
+		default:
+			changed[j+1] = true // added line
+			j++
+		}
+	}
+	for ; j < m; j++ {
+		changed[j+1] = true
+	}
+	if i < n {
+		changed[m] = true // trailing deletion lands on the last line
+	}
+	return changed
+}
+
 // literalsIn extracts the literal tokens of a line: numbers (with sign)
 // and the named constants — "a literal" is any literal (R1). Strings are
 // included as quoted tokens so 'x' and "x" compare equal.
@@ -1055,18 +1104,21 @@ var (
 var normKeywords = map[string]bool{}
 
 func init() {
+	// Only control-flow and declaration keywords stay literal under R4;
+	// names like get/new/log are identifiers in the corpus languages and
+	// rename to @ like any other.
 	for _, k := range strings.Fields(`
 		func var const type struct interface map chan range go defer if else for
 		switch case default return break continue fallthrough select package import
 		def class lambda return if elif else for while try except finally raise
 		with as import from pass break continue global nonlocal yield assert del
-		is in not and or True False None async await
+		is in not and or async await
 		function return if else for while do switch case default break continue
-		try catch finally throw new delete typeof instanceof in of var let const
-		class extends super this import export from async await yield static get set
-		void null undefined true false
+		try catch finally throw typeof instanceof in of var let const
+		class extends super this import export from async await yield static
+		void
 		create alter drop table column index add select insert update delete from
-		where values set into truncate grant revoke view trigger sequence
+		where values into truncate grant revoke view trigger sequence
 		primary key foreign references constraint unique check not null default
 	`) {
 		normKeywords[k] = true
@@ -1119,9 +1171,8 @@ func vectorSignature(vec *dvector) string {
 	sort.Strings(paths)
 	for _, p := range paths {
 		f := vec.Files[p]
-		fmt.Fprintf(&b, "%s\x00%s\x00%s\x00%s\x00%s\x00", loosePath(p),
-			looseText(f.Before), looseText(f.After), digitDirs(f.Before, f.After),
-			digitDirs(litOrds(f.Before), litOrds(f.After)))
+		fmt.Fprintf(&b, "%s\x00%s\x00%s\x00", loosePath(p),
+			looseText(f.Before), looseText(f.After))
 	}
 	for _, ev := range vec.Events {
 		inp, _ := json.Marshal(ev.Input)

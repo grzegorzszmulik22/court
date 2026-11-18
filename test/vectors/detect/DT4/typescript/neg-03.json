@@ -5,10 +5,10 @@
   "files": {
     "src/shop.test.ts": {
       "before": "test('n', () => {\n  const v = n();\n  expect(v).toBeLessThanOrEqual(50);\n});\n",
-      "after": "test('n', () => {\n  const v = n();\n  expect(v).toBeLessThanOrEqual(10);\n});\n"
+      "after": "test('n', () => {\n  const v = n();\n  expect(v + 1).toBeLessThanOrEqual(51);\n});\n"
     }
   },
   "expect": [],
-  "near_miss": "threshold-tightened",
+  "near_miss": "threshold-tightened-expr",
   "note": "threshold-tightened"
 }

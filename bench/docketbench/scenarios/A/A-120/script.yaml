@@ -1,6 +1,7 @@
 agents:
   - id: w1
     parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
     steps:
       - backbrief:
           plan_files: ["vault/**"]
@@ -12,7 +13,7 @@ agents:
       - declare: {category: scope, paths: ["ops/runbook.md"], question: "allow the scope change?", chosen: "yes"}
       - commit: {message: "vault: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
-      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: scope, paths: ["config/limits.yml"], question: "the scope work on config/limits.yml?", chosen: "yes"}
       - commit: {message: "vault: follow-up config"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -1,6 +1,7 @@
 agents:
   - id: lead
     parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
     steps:
       - backbrief:
           plan_files: ["tasks/**", "config/**", "api/**"]
@@ -14,7 +15,7 @@ agents:
       - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n16,delta12\n"}
       - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 12, restore the previous binary and re-run migrations 0012 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"eslint\": \"^9.1.0\"\n  }\n}\n"}
-      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "take the w1 option?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
@@ -28,7 +29,7 @@ agents:
       - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n16,delta12\n"}
       - edit: {path: docs/guide.md, write: "# tasks guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 12, restore the previous binary and re-run migrations 0012 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
       - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"eslint\": \"^9.1.0\"\n  }\n}\n"}
-      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "take the w2 option?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}

@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/shop.test.ts": {
-      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
-      "after": "test('totals', () => {\n  expect(total()).toBe(1);\n});\n"
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n\ntest('keep', () => {\n  expect(keep()).toBe(2);\n});\n",
+      "after": "test('keep', () => {\n  expect(keep()).toBe(2);\n});\n"
     }
   },
   "expect": [

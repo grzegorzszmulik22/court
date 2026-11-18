@@ -9,6 +9,6 @@
   },
   "id": "DT8-typescript-neg-05",
   "language": "typescript",
-  "near_miss": "import-added",
+  "near_miss": "comment-hostname",
   "note": "import-added"
 }

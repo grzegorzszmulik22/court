@@ -3,9 +3,9 @@
   "detector": "DT7",
   "language": "python",
   "files": {
-    "svc/pipe.py": {
-      "before": "def pipe():\n    return stage()\n",
-      "after": "def pipe():\n    try:\n        return stage()\n    except PipeError:\n        return 0\n"
+    "svc/pump.py": {
+      "before": "def pump():\n    while q():\n        pass\n",
+      "after": "def pump():\n    while q():\n        try:\n            push()\n        except PipeError:\n            break\n"
     }
   },
   "expect": [
@@ -13,13 +13,13 @@
       "detector": "DT7",
       "category": "failure-handling",
       "subkind": "swallowed",
-      "path": "svc/pipe.py",
+      "path": "svc/pump.py",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
       "side": "after",
-      "evidence": "return 0",
+      "evidence": "break",
       "rule": "dt7-python-swallowed"
     }
   ]

@@ -4,10 +4,11 @@
   "language": "go",
   "files": {
     "go.mod": {
-      "before": "module shop\n\ngo 1.22\n\nretract v1.0.0\n",
-      "after": "module shop\n\ngo 1.22\n\nretract v1.0.1\n"
+      "before": "module shop\n\ngo 1.22\n\nretract (\n\tv1.0.0\n)\n",
+      "after": "module shop\n\ngo 1.22\n\nretract (\n\tv1.0.1\n)\n"
     }
   },
   "expect": [],
-  "note": "retract-removed"
+  "note": "retract-removed",
+  "near_miss": "retract-block"
 }

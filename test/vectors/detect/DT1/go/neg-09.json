@@ -5,10 +5,10 @@
   "files": {
     "go.mod": {
       "before": "module shop\n\ngo 1.22\n",
-      "after": "module shop\n\ngo 1.23\n"
+      "after": "module shop\n\ngo 1.22\n\nexclude github.com/x/y v1.2.3\n"
     }
   },
   "expect": [],
-  "near_miss": "toolchain-line",
+  "near_miss": "non-require-directive",
   "note": "toolchain-line"
 }

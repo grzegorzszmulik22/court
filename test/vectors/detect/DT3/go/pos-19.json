@@ -2,27 +2,27 @@
   "detector": "DT3",
   "expect": [
     {
-      "category": "interface",
       "detector": "DT3",
-      "evidence": "post:",
-      "lines": [
-        4,
-        4
-      ],
+      "category": "interface",
+      "subkind": "changed",
       "path": "api/openapi.yaml",
-      "rule": "dt3-contract-openapi",
+      "lines": [
+        3,
+        3
+      ],
       "side": "after",
-      "subkind": "changed"
+      "evidence": "/orders/{id}:",
+      "rule": "dt3-contract-openapi"
     }
   ],
   "files": {
     "api/openapi.yaml": {
-      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    post:\n      summary: list\n",
-      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n",
+      "after": "openapi: 3.0.0\npaths:\n  /orders/{id}:\n    get:\n      summary: list\n"
     },
     "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
+      "before": "module bench\n\ngo 1.22\n",
+      "after": "module bench\n\ngo 1.22\n"
     }
   },
   "id": "DT3-go-pos-19",

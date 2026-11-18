@@ -19,7 +19,7 @@
         1
       ],
       "side": "after",
-      "evidence": "acme-example.io",
+      "evidence": "telemetry.acme-example.io",
       "rule": "dt8-typescript-host-literal"
     }
   ]

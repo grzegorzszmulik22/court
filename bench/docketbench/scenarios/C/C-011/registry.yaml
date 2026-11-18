@@ -6,7 +6,7 @@
   description: "Two sibling worlds chose differently on shop/util.go: a failure-handling decision (return vs panic(err))."
   keywords: ["worlds", "differently", "failure-handling"]
   evidence:
-    - {world: "w1", path: "shop/util.go", lines: [5, 5]}
+    - {world: "w1", path: "shop/util.go", lines: [15, 15]}
     - {world: "w2", path: "shop/util.go", lines: [15, 15]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

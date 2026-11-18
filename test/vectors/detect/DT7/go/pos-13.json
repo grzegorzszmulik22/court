@@ -4,21 +4,21 @@
     {
       "category": "failure-handling",
       "detector": "DT7",
-      "evidence": "\t\treturn -1, nil",
+      "evidence": "return nil, nil",
       "lines": [
         6,
         6
       ],
-      "path": "svc/parse.go",
+      "path": "svc/job.go",
       "rule": "dt7-go-swallowed",
       "side": "after",
       "subkind": "swallowed"
     }
   ],
   "files": {
-    "svc/parse.go": {
-      "after": "package svc\n\nfunc parse() (int, error) {\n\tv, err := conv()\n\tif err != nil {\n\t\treturn -1, nil\n\t}\n\treturn v, nil\n}\n",
-      "before": "package svc\n\nfunc parse() (int, error) {\n\treturn conv()\n}\n"
+    "svc/job.go": {
+      "before": "package svc\n\nfunc job() (*Job, error) {\n\treturn open()\n}\n",
+      "after": "package svc\n\nfunc job() (*Job, error) {\n\tj, err := open()\n\tif err != nil {\n\t\treturn nil, nil\n\t}\n\treturn j, nil\n}\n"
     }
   },
   "id": "DT7-go-pos-13",

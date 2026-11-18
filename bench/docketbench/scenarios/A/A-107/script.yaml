@@ -1,17 +1,16 @@
 agents:
   - id: w1
     parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["chat/**", "internal/**", "api/**", "docs/**", "config/**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
     steps:
       - backbrief:
           plan_files: ["chat/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2047\nretries: 3\n"}
       - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: chat\n  version: 1.0.0\npaths:\n  /chat/items:\n    get:\n      summary: list items\n  /chat/status47:\n    get:\n      summary: health probe 47\n"}
       - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero47(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
-      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 47 runs extra sync'\n"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: other, paths: ["docs/api_notes.md"], question: "the api notes in docs/api_notes.md?", chosen: "yes"}
       - declare: {category: structure, paths: ["chat/util.go"], question: "the structure work on chat/util.go?", chosen: "yes"}
-      - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}
       - commit: {message: "chat: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

@@ -5,7 +5,7 @@
   "files": {
     "package.json": {
       "before": "{\n  \"dependencies\": {\n    \"moment\": \"^2.29.0\",\n    \"pad\": \"^1.0.0\"\n  }\n}\n",
-      "after": "{\n  \"dependencies\": {\n    \"dayjs\": \"^1.11.0\",\n    \"pad\": \"^1.0.0\"\n  }\n}\n"
+      "after": "{\n  \"dependencies\": {\n    \"dayjs\": \"1.11.0\",\n    \"pad\": \"^1.0.0\"\n  }\n}\n"
     }
   },
   "expect": [
@@ -32,7 +32,7 @@
         3
       ],
       "side": "after",
-      "evidence": "\"dayjs\": \"^1.11.0\"",
+      "evidence": "\"dayjs\": \"1.11.0\"",
       "rule": "dt1-typescript-manifest-added"
     }
   ]

@@ -1,6 +1,7 @@
 agents:
   - id: lead
     parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
     steps:
       - backbrief:
           plan_files: ["catalog/**", "config/**", "api/**"]
@@ -14,7 +15,7 @@ agents:
       - edit: {path: README.md, write: "# catalog\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 14).\n"}
       - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\n"}
-      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: scope, paths: ["README.md"], question: "the scope work on README.md?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["catalog/util.go"], question: "the behaviour work on catalog/util.go?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
@@ -27,7 +28,7 @@ agents:
       - edit: {path: README.md, write: "# catalog\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 14).\n"}
       - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
       - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\n"}
-      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: scope, paths: ["README.md"], question: "the scope work on README.md?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["catalog/util.go"], question: "the behaviour work on catalog/util.go?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}

@@ -5,11 +5,11 @@
   "files": {
     "tests/test_shop.py": {
       "before": "def test_m():\n    got = calc()\n    assert got == 3\n",
-      "after": "def test_m():\n    got = calc_fast()\n    assert got == 3\n"
+      "after": "def test_m():\n    got = calc_fast()\n    assert got == 3\n    assert got > -1\n"
     }
   },
   "expect": [],
-  "near_miss": "fp-changed_expectation",
+  "near_miss": "assertion-added",
   "fp_kind": "changed_expectation",
   "note": "fp-changed_expectation"
 }

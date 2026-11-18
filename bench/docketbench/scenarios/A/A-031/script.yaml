@@ -1,7 +1,7 @@
 agents:
   - id: w1
     parent: human
-    writ: {categories: ["schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "scripts/**", "api/**", "migrations/**", ".github/**", "ops/**", "README.md"], budgets: {"tokens": 20000, "minutes": 30, "speculation": 200}}
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
     steps:
       - backbrief:
           plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
@@ -13,6 +13,15 @@ agents:
       - declare: {category: structure, paths: ["shop/util.go"], question: "the structure work on shop/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}
+      - edit: {path: internal/auth/session.go, write: "package auth
+
+const SessionTTLSeconds = 3631
+
+func Valid(ttl int) bool {
+	return ttl > 0 && ttl <= SessionTTLSeconds
+}
+"}
+      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "allow the authority change?", chosen: "yes"}
       - commit: {message: "shop: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}
       - claim_done: {checks: [unit]}

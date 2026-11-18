@@ -21,6 +21,19 @@
       "side": "before",
       "evidence": "export const x = 1;",
       "rule": "dt10-typescript-datafile"
+    },
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "data/keep.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "export const x = 1;",
+      "rule": "dt3-ts-export-removed"
     }
   ]
 }

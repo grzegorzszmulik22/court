@@ -4,7 +4,7 @@
   "language": "typescript",
   "files": {
     "src/cart.ts": {
-      "before": "export const x = 1;\n",
+      "before": "const x = 1;\n",
       "after": ""
     }
   },

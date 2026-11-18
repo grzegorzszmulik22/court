@@ -1824,7 +1824,7 @@ func TestTwinEdits_declare_untouched(t *testing.T) {
 // file back to base content does not count as touching it.
 func TestTwinEdits_net_diff(t *testing.T) {
 	p, tw := pairByID(t, "A", "A-021")
-	base, err := os.ReadFile(filepath.Join(tw.Dir, "repo", "shop/util.go"))
+	base, err := os.ReadFile(filepath.Join(tw.Dir, "repo", "docs", "guide.md"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1833,11 +1833,11 @@ func TestTwinEdits_net_diff(t *testing.T) {
 	copyScenarioTree(t, tw, root)
 	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
 	doc := loadScriptYAML(t, sp)
-	// the twin still has an edit step on shop/util.go, but it writes the
+	// the twin still has an edit step on docs/guide.md, but it writes the
 	// file back to base — under net-diff judging the twin no longer
 	// touches a file its planted scenario changes.
-	if !setWriteOn(doc, "shop/util.go", string(base)) {
-		t.Fatal("twin has no write on shop/util.go to neutralise")
+	if !setWriteOn(doc, "docs/guide.md", string(base)) {
+		t.Fatal("twin has no write on docs/guide.md to neutralise")
 	}
 	writeScriptYAML(t, sp, doc)
 	expectViolation(t, root, "twin-files")
@@ -1897,20 +1897,20 @@ func TestTwinEdits_unregistered_hit(t *testing.T) {
 		t.Fatal("twin has no conditional write on files/util.go to restore")
 	}
 	writeScriptYAML(t, sp, doc)
-	expectViolation(t, root, "unregistered-hit")
+	expectViolation(t, root, "queue-dirty")
 
-	// boundary: the unmodified twin produces no undeclared hits.
+	// boundary: the unmodified twin queues nothing.
 	root2 := t.TempDir()
 	copyScenarioTree(t, p, root2)
 	copyScenarioTree(t, tw, root2)
 	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
-	if hasCode(v, "unregistered-hit") {
-		t.Fatalf("clean C pair trips unregistered-hit; got: %v", v.list)
+	if hasCode(v, "queue-dirty") {
+		t.Fatalf("clean C pair trips queue-dirty; got: %v", v.list)
 	}
 }
 
-// P1 planted side: the planted script carries the same unregistered
-// item — its registry never lists failure-handling.
+// P0 planted side: the planted script queues an item its registry
+// never lists — failure-handling is not among C-008's entries.
 func TestPlanted_unregistered_hit(t *testing.T) {
 	p, tw := pairByID(t, "C", "C-008")
 	root := t.TempDir()
@@ -1922,7 +1922,7 @@ func TestPlanted_unregistered_hit(t *testing.T) {
 		t.Fatal("planted has no conditional write on files/util.go to restore")
 	}
 	writeScriptYAML(t, sp, doc)
-	expectViolation(t, root, "unregistered-hit")
+	expectViolation(t, root, "registry-miss")
 }
 
 // P4 (01 §7.5): two worlds that only declare the contested decision —
@@ -2062,4 +2062,134 @@ func TestVectors_special_case_literal(t *testing.T) {
 	if !hasDetail(v, "vector-incomplete", "special-case") {
 		t.Fatalf("test literal reused in a conditional produced no hit; got: %v", v.list)
 	}
+}
+
+// ---------------------------------------------------------------------------
+// Round 6: the §7 reconciliation + root-writ/data rules
+// ---------------------------------------------------------------------------
+
+// P0 twin side: a twin that edits outside its backbrief plan_files
+// queues a DT12 scope decision — the queue must stay empty.
+func TestTwinEdits_outside_plan(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	steps := agents[0].(map[string]any)["steps"].([]any)
+	steps = append(steps, map[string]any{"edit": map[string]any{
+		"path":  "README.md",
+		"write": "# unplanned\n",
+	}})
+	agents[0].(map[string]any)["steps"] = steps
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "queue-dirty")
+}
+
+// P0 registry side: a registry entry that no queued decision produces
+// is an over-registration.
+func TestPlanted_registry_extra(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	entries = append(entries, map[string]any{
+		"id":          "C-008-extra",
+		"type":        "undeclared",
+		"category":    "deletion",
+		"description": "a fabricated queue item",
+		"keywords":    []any{"fabricated"},
+		"evidence": []any{map[string]any{
+			"world": "w1", "path": "gone/x.go", "lines": []any{1, 1},
+		}},
+	})
+	buf, err := yaml.Marshal(entries)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "registry-extra")
+}
+
+// M2.4: the root writ is required and never wider than the commission
+// territory — dropping it must fail the script.
+func TestRootWrit_required(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	delete(agents[0].(map[string]any), "writ")
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-writ")
+}
+
+// C-011 data rule: a registry evidence span must lie on a changed line
+// of the net diff — w1's line 5 is the unchanged `return lo`.
+func TestEvidenceLines_unchanged_line(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-011")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	changed := false
+	for _, e := range entries {
+		for _, ev := range e.(map[string]any)["evidence"].([]any) {
+			em := ev.(map[string]any)
+			if em["world"] == "w1" {
+				em["lines"] = []any{5, 5}
+				changed = true
+			}
+		}
+	}
+	if !changed {
+		t.Fatal("C-011 has no w1 evidence to move")
+	}
+	buf, _ := yaml.Marshal(entries)
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "evidence-lines")
+}
+
+// A-097 data rule: a .json edit must write parseable JSON.
+func TestEdit_invalid_json(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	agents := doc["agents"].([]any)
+	steps := agents[0].(map[string]any)["steps"].([]any)
+	steps = append(steps, map[string]any{"edit": map[string]any{
+		"path":  "settings.json",
+		"write": "{\"broken\": tru\n",
+	}})
+	agents[0].(map[string]any)["steps"] = steps
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-edit")
 }

@@ -9,6 +9,6 @@
   },
   "id": "DT8-python-neg-05",
   "language": "python",
-  "near_miss": "import-added",
+  "near_miss": "comment-hostname",
   "note": "import-added"
 }

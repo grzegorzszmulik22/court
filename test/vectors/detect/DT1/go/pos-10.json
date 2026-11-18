@@ -4,8 +4,8 @@
   "language": "go",
   "files": {
     "go.mod": {
-      "before": "module shop\n\ngo 1.22\n\nrequire github.com/old/lib v1.0.0\n",
-      "after": "module shop\n\ngo 1.22\n\nrequire github.com/new/lib v2.0.0\n"
+      "before": "module shop\n\ngo 1.22\n\nrequire (\n\tgithub.com/old/lib v1.0.0\n)\n",
+      "after": "module shop\n\ngo 1.22\n\nrequire (\n\tgithub.com/new/lib v2.0.0\n)\n"
     }
   },
   "expect": [
@@ -15,8 +15,8 @@
       "subkind": "removed",
       "path": "go.mod",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
       "side": "before",
       "evidence": "github.com/old/lib v1.0.0",
@@ -28,8 +28,8 @@
       "subkind": "added",
       "path": "go.mod",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
       "side": "after",
       "evidence": "github.com/new/lib v2.0.0",

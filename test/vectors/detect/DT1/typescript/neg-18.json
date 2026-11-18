@@ -5,9 +5,10 @@
   "files": {
     "package.json": {
       "before": "{\n  \"resolutions\": {\n    \"minimist\": \"^1.2.8\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n",
-      "after": "{\n  \"resolutions\": {\n    \"minimist\": \"^1.2.9\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n"
+      "after": "{\n  \"resolutions\": {\n    \"minimist\": \">=1.2.8\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n"
     }
   },
   "expect": [],
-  "note": "resolutions"
+  "note": "resolutions",
+  "near_miss": "override-range"
 }

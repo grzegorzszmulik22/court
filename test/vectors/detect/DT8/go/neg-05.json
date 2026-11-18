@@ -9,6 +9,6 @@
   },
   "id": "DT8-go-neg-05",
   "language": "go",
-  "near_miss": "import-added",
+  "near_miss": "comment-hostname",
   "note": "import-added"
 }
