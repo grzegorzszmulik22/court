@@ -1,20 +1,24 @@
 {
-  "id": "DT12-python-neg-20",
-  "detector": "DT12",
-  "language": "python",
-  "files": {
-    "shop/cart.py": {
-      "before": "x = 1\n",
-      "after": "x = 1\nk\n"
-    }
+ "id": "DT12-python-neg-20",
+ "detector": "DT12",
+ "language": "python",
+ "files": {
+  "shop/cart.py": {
+   "before": "# shop\n",
+   "after": "# shop\nline0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\n"
   },
-  "commission": {
-    "plan_files": [
-      "shop/cart.py",
-      "shop/extra.py"
-    ],
-    "plan_lines": 20
-  },
-  "expect": [],
-  "note": "same-lines"
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.py"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "bulk-planned-edit",
+ "note": "a large append to a planned file, within the plan estimate"
 }

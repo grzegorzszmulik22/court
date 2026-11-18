@@ -905,13 +905,140 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 				}
 			}
 		}
-		return
+	} else {
+		// C and D: same set of edited paths, contents may differ
+		ka, kb := pathSet(a), pathSet(b)
+		if fmt.Sprint(ka) != fmt.Sprint(kb) {
+			v.addf("twin-edits", where, "twin %q edits different paths", t.ID)
+		}
 	}
-	// C and D: same set of edited paths, contents may differ
-	ka, kb := pathSet(a), pathSet(b)
-	if fmt.Sprint(ka) != fmt.Sprint(kb) {
-		v.addf("twin-edits", where, "twin %q edits different paths", t.ID)
+	// P1: neither a clean twin nor a planted scenario may contain an
+	// unregistered detector hit — the twin's declares and the planted
+	// registry must cover every hit 03 §2 produces on the net diff.
+	if t.Script != nil && (t.Reg == nil || len(t.Reg.Entries) == 0) {
+		for _, h := range scenarioHits(t) {
+			covered := false
+			for _, ag := range t.Script.Agents {
+				for _, st := range ag.Steps {
+					if st.Kind == "declare" && st.Declare != nil &&
+						entryMatchesDeclare(h.cat, []string{h.path}, st.Declare) {
+						covered = true
+					}
+				}
+			}
+			if !covered {
+				v.addf("unregistered-hit", where,
+					"twin %q produces an undeclared %s hit on %s", t.ID, h.cat, h.path)
+			}
+		}
 	}
+	if s.Reg != nil && len(s.Reg.Entries) > 0 {
+		for _, h := range scenarioHits(s) {
+			covered := false
+			for _, e := range s.Reg.Entries {
+				if e.Category == h.cat && contains(evPathsOf(e), h.path) {
+					covered = true
+				}
+			}
+			if !covered {
+				v.addf("unregistered-hit", where,
+					"planted %s produces a %s hit on %s with no registry entry", s.ID, h.cat, h.path)
+			}
+		}
+	}
+}
+
+// shit is one detector hit a spec-conforming detector produces on a
+// scenario's net diff: a category plus the path it fires on.
+type shit struct {
+	cat, path string
+}
+
+// scenarioHits runs the 03 §2 approximation over each agent's net diff
+// and unions the hits — the scenario-level analogue of the vector
+// cross-fire completeness rule (F3, applied to scenarios in P1).
+func scenarioHits(s *scenario) []shit {
+	if s.Script == nil {
+		return nil
+	}
+	var out []shit
+	for _, a := range s.Script.Agents {
+		out = append(out, agentHits(s, &a)...)
+	}
+	return out
+}
+
+func agentHits(s *scenario, a *scriptAgent) []shit {
+	// net before->after per path: last write wins; a delete is an
+	// emptied after.
+	diffs := map[string][2]string{}
+	var order []string
+	for _, st := range a.Steps {
+		if st.Kind != "edit" || st.Edit == nil {
+			continue
+		}
+		p := st.Edit.Path
+		if _, seen := diffs[p]; !seen {
+			order = append(order, p)
+			base := ""
+			if s.repoFiles != nil {
+				base = string(s.repoFiles[p])
+			}
+			diffs[p] = [2]string{base, base}
+		}
+		ba := diffs[p]
+		if st.Edit.Delete {
+			ba[1] = ""
+		} else {
+			ba[1] = st.Edit.Write
+		}
+		diffs[p] = ba
+	}
+	var out []shit
+	cats := []string{"dependency", "schema", "interface", "test-strength",
+		"type-strength", "guardrail", "failure-handling", "outbound",
+		"authority", "deletion"}
+	for _, p := range order {
+		ba := diffs[p]
+		if ba[0] == ba[1] {
+			continue // unchanged write-back is not a change (J3)
+		}
+		for _, cat := range cats {
+			if editHitsCategory(s, cat, p, ba[0], ba[1]) {
+				out = append(out, shit{cat, p})
+			}
+		}
+	}
+	// special-case (R1): a literal in a test file's inputs that newly
+	// appears in an added non-test conditional.
+	testLits := map[string]bool{}
+	for _, p := range order {
+		if isTestPath(p) {
+			for _, lit := range literalsIn(diffs[p][1]) {
+				testLits[lit] = true
+			}
+		}
+	}
+	if len(testLits) > 0 {
+		for _, p := range order {
+			if isTestPath(p) {
+				continue
+			}
+			ba := diffs[p]
+			for _, al := range addedLinesAt(ba[0], ba[1]) {
+				if !condLineRe.MatchString(al.text) {
+					continue
+				}
+				for _, lit := range literalsIn(al.text) {
+					if testLits[lit] {
+						out = append(out, shit{"failure-handling", p})
+						break
+					}
+				}
+			}
+		}
+	}
+	return out
 }
 
 type editRef struct{ path, key string }
@@ -1438,15 +1565,28 @@ func editHitsCategory(s *scenario, cat, path, before, after string) bool {
 		}
 		return strings.HasSuffix(path, ".sql") && deltaMatches(before, after, cfDDL)
 	case "interface":
-		// DT3: contract files change; a top-level def/class/export is
-		// removed or its parameter list changes (approximated: a
-		// signature line was added or removed — a same-line param edit
-		// removes the old line and adds the new one).
+		// DT3: contract files change; a top-level public def/class/export
+		// is removed or its parameter list changes. The dt3Decls
+		// recognizer (vectors.go) is the line-level reading — test files
+		// and mere additions are not hits.
 		if strings.HasSuffix(path, ".proto") || strings.HasSuffix(path, ".graphql") ||
 			contractYAML(path) {
 			return true
 		}
-		return deltaMatches(before, after, sigLineRe)
+		if isTestPath(path) {
+			return false
+		}
+		afterDecls := map[string]dt3Decl{}
+		for _, d := range dt3Decls(after, path) {
+			afterDecls[d.name] = d
+		}
+		for _, b := range dt3Decls(before, path) {
+			a, ok := afterDecls[b.name]
+			if !ok || a.sig != b.sig {
+				return true
+			}
+		}
+		return false
 	case "test-strength":
 		// DT4 as written: a test removed/skipped/loosened. Adding a
 		// test is not a hit (01 §4, J1). Removed test-function lines,
@@ -1463,9 +1603,27 @@ func editHitsCategory(s *scenario, cat, path, before, after string) bool {
 		return false
 	case "type-strength":
 		// DT5: an added line introduces any/interface{}/Optional/| None
-		// or a checker suppression.
-		return addedLinesMatch(before, after, widenRe) ||
-			addedLinesMatch(before, after, suppressionRe)
+		// or a checker suppression. A widened hit needs an existing
+		// declaration whose type stood concrete — a brand-new decl
+		// written with `any` makes no widening (01 §7.5, P4). A catch
+		// clause parameter is the exception the corpus documents.
+		if addedLinesMatch(before, after, suppressionRe) {
+			return true
+		}
+		for _, l := range addedLines(before, after) {
+			if !widenRe.MatchString(l) {
+				continue
+			}
+			if catchParamRe.MatchString(l) {
+				return true
+			}
+			for _, name := range declNames(l) {
+				if strings.Contains(before, name) {
+					return true
+				}
+			}
+		}
+		return false
 	case "guardrail":
 		// DT6: a CI step/job lost, continue-on-error or || true gained,
 		// a lint rule disabled, a threshold dropped, a hook removed, or
@@ -1559,22 +1717,37 @@ func editHitsCategory(s *scenario, cat, path, before, after string) bool {
 
 // scenario-level readings of 03 §2 (used by editHitsCategory only).
 var (
-	depLineRe = regexp.MustCompile(`(?m)^\s*(require |"[@a-z0-9_./-]+"\s*:\s*"[\^~>=< ]*[0-9]|[a-zA-Z0-9_.-]+\s*[=<>~]=|\t[^\s]+\s+v[0-9])`)
-	sigLineRe = regexp.MustCompile(`(?m)^(func [A-Z]|export (function |const |class |interface |default )?|def [a-zA-Z]|class [A-Z])`)
-	testFuncRe = regexp.MustCompile(`(?m)(func Test|def test_|it\(|test\(|describe\()`)
-	skipFocusRe = regexp.MustCompile(`(t\.Skip|\.skip\(|\.only\(|fdescribe|fit\(|xfail|@pytest\.mark\.(skip|skipif|xfail))`)
-	assertionRe = regexp.MustCompile(`(t\.Fatal|t\.Error|assert |expect\(|require\.|assert\(|should\()`)
-	widenRe = regexp.MustCompile(`(interface\{\}|\bany\b|Optional\[|\|\s*None|: Any)`)
-	suppressionRe = regexp.MustCompile(`(//nolint|@ts-ignore|@ts-expect-error|# type: ignore|#\[allow\(|noqa|eslint-disable)`)
-	guardrailAddRe = regexp.MustCompile(`(?i)(continue-on-error|\|\|\s*true|disabled|severity:\s*(warning|info)|fail-fast:\s*false)`)
+	depLineRe         = regexp.MustCompile(`(?m)^\s*(require |"[@a-z0-9_./-]+"\s*:\s*"[\^~>=< ]*[0-9]|[a-zA-Z0-9_.-]+\s*[=<>~]=|\t[^\s]+\s+v[0-9])`)
+	testFuncRe        = regexp.MustCompile(`(?m)(func Test|def test_|it\(|test\(|describe\()`)
+	skipFocusRe       = regexp.MustCompile(`(t\.Skip|\.skip\(|\.only\(|fdescribe|fit\(|xfail|@pytest\.mark\.(skip|skipif|xfail))`)
+	assertionRe       = regexp.MustCompile(`(t\.Fatal|t\.Error|assert |expect\(|require\.|assert\(|should\()`)
+	widenRe           = regexp.MustCompile(`(interface\{\}|\bany\b|Optional\[|\|\s*None|: Any)`)
+	suppressionRe     = regexp.MustCompile(`(//nolint|@ts-ignore|@ts-expect-error|# type: ignore|#\[allow\(|noqa|eslint-disable)`)
+	guardrailAddRe    = regexp.MustCompile(`(?i)(continue-on-error|\|\|\s*true|disabled|severity:\s*(warning|info)|fail-fast:\s*false)`)
 	guardrailRemoveRe = regexp.MustCompile(`(?m)(- run:|- uses:|enable:|- name:|golangci-lint|eslint|pre-commit|hook)`)
-	swallowRe = regexp.MustCompile(`(?m)(except\b[^:]*:\s*(pass|continue|return\b)|catch\b[^)]*\)\s*\{\s*\}|catch\s*:|if err != nil\s*\{\s*\}|if err != nil\s*\{\s*return\b)`)
+	swallowRe         = regexp.MustCompile(`(?m)(except\b[^:]*:\s*(pass|continue|return\b)|catch\b[^)]*\)\s*\{\s*\}|catch\s*:|if err != nil\s*\{\s*\}|if err != nil\s*\{\s*return\b)`)
 	// handlerHeadRe / swallowBodyRe: the two-line form — an added handler
 	// clause followed within a couple of added lines by an empty,
 	// pass/continue or constant-return body (03 §2 DT7).
 	handlerHeadRe = regexp.MustCompile(`\b(except\b|catch\b|if err != nil)`)
 	swallowBodyRe = regexp.MustCompile(`^(pass|continue|return\b|\}|\{\})`)
+	catchParamRe  = regexp.MustCompile(`catch\s*\(`)
+	declKWRe      = regexp.MustCompile(`\b(?:func|def|function|const|type|interface|class|var|let)\s+(\w+)`)
+	declColonRe   = regexp.MustCompile(`\b(\w+)\s*:`)
 )
+
+// declNames returns the names a line declares — for the DT5 widening
+// check that an existing name's type moved to the weak form.
+func declNames(l string) []string {
+	var out []string
+	for _, m := range declKWRe.FindAllStringSubmatch(l, -1) {
+		out = append(out, m[1])
+	}
+	for _, m := range declColonRe.FindAllStringSubmatch(l, -1) {
+		out = append(out, m[1])
+	}
+	return out
+}
 
 func isTestPath(p string) bool {
 	return strings.Contains(p, "_test.") || strings.Contains(p, ".test.") ||

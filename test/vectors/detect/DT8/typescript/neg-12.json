@@ -1,18 +1,18 @@
 {
-  "detector": "DT8",
-  "expect": [],
-  "files": {
-    "docs/links.md": {
-      "after": "# links\n\nsee https://docs.vendor-docs.example\n",
-      "before": "# links\n"
-    },
-    "package.json": {
-      "after": "{\"name\": \"bench\", \"private\": true}\n",
-      "before": "{\"name\": \"bench\", \"private\": true}\n"
-    }
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/links.md": {
+   "after": "# links\n\nsee https://docs.vendor-docs.example\n",
+   "before": "# links\n"
   },
-  "id": "DT8-typescript-neg-12",
-  "language": "typescript",
-  "near_miss": "docs-url",
-  "note": "a URL in a doc file is prose, not a literal"
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://docs.vendor-docs.example\"\n}\n",
+   "before": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://docs.vendor-docs.example\"\n}\n"
+  }
+ },
+ "id": "DT8-typescript-neg-12",
+ "language": "typescript",
+ "near_miss": "known-host",
+ "note": "the added host docs.vendor-docs.example is already in the base tree"
 }

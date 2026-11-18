@@ -4,8 +4,8 @@
   "language": "typescript",
   "files": {
     "src/probe.ts": {
-      "before": "export function probe() {\n  return ping();\n}\n",
-      "after": "export function probe() {\n  try {\n    return ping();\n  } catch (e) {\n    void e;\n  }\n}\n"
+      "before": "export function probe(items) {\n  for (const it of items) {\n    ping(it);\n  }\n}\n",
+      "after": "export function probe(items) {\n  for (const it of items) {\n    try {\n      ping(it);\n    } catch (e) {\n      continue;\n    }\n  }\n}\n"
     }
   },
   "expect": [
@@ -15,11 +15,11 @@
       "subkind": "swallowed",
       "path": "src/probe.ts",
       "lines": [
-        5,
-        5
+        6,
+        6
       ],
       "side": "after",
-      "evidence": "void e;",
+      "evidence": "continue;",
       "rule": "dt7-typescript-swallowed"
     }
   ]

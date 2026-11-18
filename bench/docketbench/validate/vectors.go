@@ -73,13 +73,10 @@ func validateVectors(root string, v *violations) {
 		return
 	}
 	seenDT := map[string]bool{}
-	// N6: a language's vectors are distinct cases within the language and
-	// across detectors — the normalized signature space is per language,
-	// not per detector directory.
-	langSigs := map[string]map[string]string{}
-	for _, l := range vectorLangs {
-		langSigs[l] = map[string]string{}
-	}
+	// R4: a "case" is a distinct shape within one detector and language —
+	// the signature space is per cell, and cross-language sharing of a
+	// language-neutral case (CI file, SQL, OpenAPI) stays allowed.
+	cellSigs := map[string]map[string]string{}
 	for _, d := range dts {
 		if !d.IsDir() {
 			continue
@@ -90,7 +87,7 @@ func validateVectors(root string, v *violations) {
 			continue
 		}
 		seenDT[dt] = true
-		checkOneDetector(root, dt, v, langSigs)
+		checkOneDetector(root, dt, v, cellSigs)
 	}
 	for dt := range detectorCategory {
 		if !seenDT[dt] {
@@ -99,7 +96,7 @@ func validateVectors(root string, v *violations) {
 	}
 }
 
-func checkOneDetector(root, dt string, v *violations, langSigs map[string]map[string]string) {
+func checkOneDetector(root, dt string, v *violations, cellSigs map[string]map[string]string) {
 	dtdir := filepath.Join(root, dt)
 	rules := readRulesDoc(dtdir, dt, v)
 	for _, lang := range vectorLangs {
@@ -109,7 +106,11 @@ func checkOneDetector(root, dt string, v *violations, langSigs map[string]map[st
 			v.add("vectors-lang", dt+"/"+lang, "missing language directory")
 			continue
 		}
-		checkLangDir(ldir, dt, lang, rules, v, langSigs[lang])
+		cell := dt + "/" + lang
+		if cellSigs[cell] == nil {
+			cellSigs[cell] = map[string]string{}
+		}
+		checkLangDir(ldir, dt, lang, rules, v, cellSigs[cell])
 	}
 }
 
@@ -302,6 +303,18 @@ func checkVector(vec *dvector, positive bool, dt, lang string, rules map[string]
 		// DETECTOR THAT PRODUCES IT.
 		if _, ok := detectorCategory[h.Detector]; !ok {
 			v.addf("vector-hit", hw, "hit detector %q unknown", h.Detector)
+		}
+		// R2 (C3.4.4): DT11 and DT12 produce no hit when the commission
+		// has no territory and the backbrief listed no files — an
+		// expected hit of either kind needs one of those inputs, on any
+		// detector's vector.
+		if h.Detector == "DT11" || h.Detector == "DT12" {
+			judge := vec.Commission != nil &&
+				(len(vec.Commission.Territory) > 0 || len(vec.Commission.PlanFiles) > 0)
+			if !judge {
+				v.addf("vector-commission", hw,
+					"%s hit with no commission territory and no backbrief files — no expectation to judge against (R2)", h.Detector)
+			}
 		}
 		if detectorCategory[h.Detector] != h.Category {
 			v.addf("vector-hit", hw, "category %q is not %s's category", h.Category, h.Detector)
@@ -586,7 +599,6 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 			!inPlan(path) && !exemptPath(path) {
 			need("DT12", "scope", "unplanned-file", path, 0, "changed path not in plan_files")
 		}
-		doc := cfDocFile(path)
 		// DT3 (03 §2, N2): a top-level public def/class/export line that
 		// is removed or whose parameter list changes fires interface —
 		// on every vector, whichever detector it is filed under. Go:
@@ -641,9 +653,11 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 					need("DT6", "guardrail", "suppressed", path, li, "inline lint suppression added")
 				}
 			}
-			// A hostname inside a comment or a doc file is not a host literal
-			// (03 §2 DT8, near miss "comment-hostname").
-			if !comment && !doc {
+			// A hostname inside a comment is not a host literal
+			// (03 §2 DT8, near miss "comment-hostname"). There is no
+			// doc-file exemption in the spec (R3): an added host line in
+			// a .md/.txt file is a code hit like any other.
+			if !comment {
 				if m := cfHost.FindStringSubmatch(ln); m != nil {
 					host := m[1]
 					if host == "" {
@@ -651,6 +665,39 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 					}
 					if host != "" && !hostInTree(vec, host) {
 						need("DT8", "outbound", "code", path, li, "added line carries a host absent from the base tree")
+					}
+				}
+			}
+		}
+	}
+	// DT7 special-case (03 §2, R1): "a literal" means any literal —
+	// 0, 1 and -1 included. A literal in a test file's inputs that newly
+	// appears in an added non-test conditional is a hit. Collect the
+	// literals of every test file's after-state, then flag the added
+	// conditional lines of non-test files that use one.
+	testLits := map[string]bool{}
+	for path, f := range vec.Files {
+		if !isTestPath(path) {
+			continue
+		}
+		for _, lit := range literalsIn(f.After) {
+			testLits[lit] = true
+		}
+	}
+	if len(testLits) > 0 {
+		for path, f := range vec.Files {
+			if isTestPath(path) || strings.HasPrefix(path, "trajectory/") {
+				continue
+			}
+			for _, al := range addedLinesAt(f.Before, f.After) {
+				if !condLineRe.MatchString(al.text) {
+					continue
+				}
+				for _, lit := range literalsIn(al.text) {
+					if testLits[lit] {
+						need("DT7", "failure-handling", "special-case", path, al.line,
+							"literal from a test file's inputs newly appears in a non-test conditional")
+						break
 					}
 				}
 			}
@@ -676,19 +723,26 @@ func checkCrossFires(vec *dvector, w string, v *violations) {
 	// DT12 new-top-level: a file whose top-level entry (dir or file name)
 	// appears nowhere in the before tree is a new top-level — whether the
 	// plan names it or not; the unplanned-file co-hit is checked above.
-	beforeTop := map[string]bool{}
-	for path, f := range vec.Files {
-		if f.Before != "" {
-			beforeTop[topEntry(path)] = true
+	// R2/C3.4.4: DT11 and DT12 produce no hit when the commission has no
+	// territory and the backbrief listed no files ("no expectation to
+	// judge against"), so the whole block requires one or the other.
+	hasJudge := vec.Commission != nil &&
+		(len(vec.Commission.Territory) > 0 || len(vec.Commission.PlanFiles) > 0)
+	if hasJudge {
+		beforeTop := map[string]bool{}
+		for path, f := range vec.Files {
+			if f.Before != "" {
+				beforeTop[topEntry(path)] = true
+			}
 		}
-	}
-	for path, f := range vec.Files {
-		if f.Before != "" || f.After == "" || exemptPath(path) ||
-			strings.HasPrefix(path, "trajectory/") {
-			continue
-		}
-		if !beforeTop[topEntry(path)] {
-			need("DT12", "scope", "new-top-level", path, 0, "a new top-level file or directory appears")
+		for path, f := range vec.Files {
+			if f.Before != "" || f.After == "" || exemptPath(path) ||
+				strings.HasPrefix(path, "trajectory/") {
+				continue
+			}
+			if !beforeTop[topEntry(path)] {
+				need("DT12", "scope", "new-top-level", path, 0, "a new top-level file or directory appears")
+			}
 		}
 	}
 	// paired subkinds: a new top-level path the plan does not name is also
@@ -810,7 +864,6 @@ func dt3Decls(text, path string) []dt3Decl {
 	return out
 }
 
-
 // topEntry is the first path segment — the top-level file or directory.
 func topEntry(p string) string {
 	if i := strings.IndexByte(p, '/'); i >= 0 {
@@ -842,15 +895,30 @@ type addedLine struct {
 	text string
 }
 
-// cfDocFile: prose files where a URL is documentation, not a host literal.
-func cfDocFile(p string) bool {
-	for _, ext := range []string{".md", ".txt", ".rst", ".adoc"} {
-		if strings.HasSuffix(p, ext) {
-			return true
+// literalsIn extracts the literal tokens of a line: numbers (with sign)
+// and the named constants — "a literal" is any literal (R1). Strings are
+// included as quoted tokens so 'x' and "x" compare equal.
+var litTokenRe = regexp.MustCompile(`"[^"\n]*"|'[^'\n]*'|-?\d+(?:\.\d+)*|\b(?:true|false|True|False|None|nil|null|undefined)\b`)
+
+func literalsIn(s string) []string {
+	var out []string
+	for _, tok := range litTokenRe.FindAllString(s, -1) {
+		if len(tok) >= 2 && (tok[0] == '"' || tok[0] == '\'') &&
+			tok[len(tok)-1] == tok[0] {
+			out = append(out, "s:"+tok[1:len(tok)-1])
+			continue
 		}
+		out = append(out, strings.ToLower(tok))
 	}
-	return false
+	return out
 }
+
+// condLineRe matches an added conditional line in the three languages:
+// if/elif/else if, case/when arms, switch and ternary '?'.
+var condLineRe = regexp.MustCompile(`(?:^|\W)(?:if|elif|else if|when|case|switch)\b|\?\s*[^:.\s]`)
+
+// isTestPath (scenario.go) is shared: _test., .test., .spec., test_, or
+// a path element containing "test".
 
 // contractYAML matches the openapi*.yaml|json contract shapes.
 func contractYAML(p string) bool {
@@ -972,21 +1040,14 @@ func (c changedLines) coversBefore(lo, hi int) bool {
 }
 
 // ---------------------------------------------------------------------------
-// case distinctness (F1): two vectors are the same case when their inputs
-// match after normalising identifiers, digits and string contents
+// case distinctness (F1, R4): within one detector and language, two
+// vectors are the same case when their inputs match after renaming
+// identifiers and changing digits — literals and whitespace too
 // ---------------------------------------------------------------------------
 
 var (
 	normIdent  = regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_]*`)
 	normDigits = regexp.MustCompile(`[0-9]+`)
-	normWS     = regexp.MustCompile(`[ \t]+`)
-	// normChain collapses a run of identifier/digit placeholders joined by
-	// path, version or URL separators to one @ — github.com/old/lib v1.0.0
-	// and github.com/a/b/v2 v2.0.1 are the same case (F1, content-level).
-	// Only runs with at least two separators collapse, so a.b attribute
-	// access stays distinct from a.
-	normChain = regexp.MustCompile(`@[@#./:]*`)
-	normSep   = regexp.MustCompile(`[./:]`)
 )
 
 // normKeywords are language/config keywords kept literal so that different
@@ -1010,58 +1071,6 @@ func init() {
 	`) {
 		normKeywords[k] = true
 	}
-}
-
-// normIdentTok maps one identifier piece: keywords stay literal, anything
-// else becomes @. Underscores split identifier parts so that leading-_
-// (private) and _test markers survive normalisation.
-func normIdentTok(tok string) string {
-	parts := strings.Split(tok, "_")
-	for i, p := range parts {
-		if p == "" {
-			continue
-		}
-		if k := strings.ToLower(p); normKeywords[k] {
-			parts[i] = k
-		} else {
-			parts[i] = "@"
-		}
-	}
-	return strings.Join(parts, "_")
-}
-
-func normText(s string) string {
-	var out []string
-	for _, ln := range strings.Split(s, "\n") {
-		ln = normIdent.ReplaceAllStringFunc(ln, normIdentTok)
-		ln = normDigits.ReplaceAllString(ln, "#")
-		ln = normChain.ReplaceAllStringFunc(ln, func(m string) string {
-			if len(normSep.FindAllString(m, -1)) >= 2 {
-				return "@"
-			}
-			return m
-		})
-		ln = normWS.ReplaceAllString(ln, " ")
-		out = append(out, strings.TrimSpace(ln))
-	}
-	return strings.Join(out, "\n")
-}
-
-// normPath normalises each path segment like content but preserves the
-// file extension, so migrations/0003_x.sql and migrations/0004_y.sql are the
-// same case while migrations/x.sql and data/x.csv differ.
-func normPath(p string) string {
-	segs := strings.Split(p, "/")
-	for i, s := range segs {
-		ext := ""
-		if j := strings.LastIndex(s, "."); j >= 0 {
-			ext = s[j:]
-			s = s[:j]
-		}
-		s = normIdent.ReplaceAllStringFunc(s, normIdentTok)
-		segs[i] = normDigits.ReplaceAllString(s, "#") + ext
-	}
-	return strings.Join(segs, "/")
 }
 
 // digitDirs captures the direction of digit changes between before/after
@@ -1096,6 +1105,11 @@ func digitDirs(before, after string) string {
 	return strings.Join(dirs, "")
 }
 
+// vectorSignature is the R4 "case" shape: files and events after
+// renaming every identifier to @, every value literal and digit run to
+// #, keeping structural keywords and test markers literal, and keeping
+// the direction of numeric/literal changes. The commission is metadata
+// about the judging context, not the case itself, so it is not signed.
 func vectorSignature(vec *dvector) string {
 	var b strings.Builder
 	paths := make([]string, 0, len(vec.Files))
@@ -1105,16 +1119,86 @@ func vectorSignature(vec *dvector) string {
 	sort.Strings(paths)
 	for _, p := range paths {
 		f := vec.Files[p]
-		fmt.Fprintf(&b, "%s\x00%s\x00%s\x00%s\x00", normPath(p),
-			normText(f.Before), normText(f.After), digitDirs(f.Before, f.After))
+		fmt.Fprintf(&b, "%s\x00%s\x00%s\x00%s\x00%s\x00", loosePath(p),
+			looseText(f.Before), looseText(f.After), digitDirs(f.Before, f.After),
+			digitDirs(litOrds(f.Before), litOrds(f.After)))
 	}
 	for _, ev := range vec.Events {
 		inp, _ := json.Marshal(ev.Input)
-		fmt.Fprintf(&b, "EV:%s\x00", normText(ev.Name+string(inp)+ev.Outcome))
-	}
-	if vec.Commission != nil {
-		c, _ := json.Marshal(vec.Commission)
-		fmt.Fprintf(&b, "CM:%s\x00", normText(string(c)))
+		fmt.Fprintf(&b, "EV:%s\x00", looseText(ev.Name+string(inp)+ev.Outcome))
 	}
 	return b.String()
+}
+
+var (
+	looseLit   = regexp.MustCompile(`\b(?:true|false|True|False|None|nil|null|undefined)\b`)
+	looseIdent = regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_]*`)
+	looseDigit = regexp.MustCompile(`\d+`)
+	looseWS    = regexp.MustCompile(`[ \t]+`)
+)
+
+// litOrds maps literal tokens to ordinal digits so a True->False toggle
+// records a direction like a numeric threshold change.
+func litOrds(s string) string {
+	return looseLit.ReplaceAllStringFunc(s, func(tok string) string {
+		switch strings.ToLower(tok) {
+		case "none", "nil", "null", "undefined":
+			return "0"
+		case "false":
+			return "1"
+		default:
+			return "2"
+		}
+	})
+}
+
+// looseTok normalises one identifier piece for the R4 shape signature:
+// structural keywords and test/spec markers stay literal; everything
+// else becomes @.
+func looseTok(tok string) string {
+	parts := strings.Split(tok, "_")
+	for i, p := range parts {
+		if p == "" {
+			continue
+		}
+		k := strings.ToLower(p)
+		if normKeywords[k] || k == "test" || k == "tests" || k == "spec" {
+			parts[i] = k
+		} else {
+			parts[i] = "@"
+		}
+	}
+	return strings.Join(parts, "_")
+}
+
+// looseText: value literals and digit runs -> #, identifiers -> @ except
+// structural keywords (return false and return undefined are the same
+// case; except: return and except: raise are not).
+func looseText(s string) string {
+	s = looseLit.ReplaceAllString(s, "#")
+	s = looseIdent.ReplaceAllStringFunc(s, looseTok)
+	s = looseDigit.ReplaceAllString(s, "#")
+	var out []string
+	for _, ln := range strings.Split(s, "\n") {
+		ln = looseWS.ReplaceAllString(ln, " ")
+		out = append(out, strings.TrimSpace(ln))
+	}
+	return strings.Join(out, "\n")
+}
+
+// loosePath: each segment's identifiers become @ (test markers stay),
+// digits become #, the extension is preserved.
+func loosePath(p string) string {
+	segs := strings.Split(p, "/")
+	for i, s := range segs {
+		ext := ""
+		if j := strings.LastIndex(s, "."); j >= 0 {
+			ext = s[j:]
+			s = s[:j]
+		}
+		s = looseLit.ReplaceAllString(s, "#")
+		s = looseIdent.ReplaceAllStringFunc(s, looseTok)
+		segs[i] = looseDigit.ReplaceAllString(s, "#") + ext
+	}
+	return strings.Join(segs, "/")
 }

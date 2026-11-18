@@ -12,7 +12,7 @@ agents:
       - backbrief:
           plan_files: ["chat/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: README.md, write: "# chat\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 7).\n"}
-      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick[T any](a, b T) T {\n\treturn a\n}\n"}
+      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick(a, b int) int {\n\treturn a\n}\n"}
       - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
       - commit: {message: "w1: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}
@@ -23,7 +23,7 @@ agents:
       - backbrief:
           plan_files: ["chat/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: README.md, write: "# chat\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 7).\n"}
-      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick[T any](a, b T) T {\n\treturn a\n}\n"}
+      - edit: {path: chat/util.go, write: "package chat\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick(a, b int) int {\n\treturn a\n}\n"}
       - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
       - commit: {message: "w2: worker refresh"}
       - tool: {name: Bash, command: "go test ./..."}

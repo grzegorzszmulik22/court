@@ -1,27 +1,27 @@
 {
-  "commission": {
-    "territory": [
-      "scripts/deploy.sh"
-    ]
+ "id": "DT11-python-neg-05",
+ "detector": "DT11",
+ "language": "python",
+ "files": {
+  "src/deep/nest/thing.py": {
+   "before": "",
+   "after": "x = 1\n"
   },
-  "detector": "DT11",
-  "expect": [],
-  "files": {
-    "requirements.txt": {
-      "after": "requests==2.32.3\n",
-      "before": "requests==2.32.3\n"
-    },
-    "scripts/baseline.sh": {
-      "after": "# baseline\n",
-      "before": "# baseline\n"
-    },
-    "scripts/deploy.sh": {
-      "after": "#!/bin/sh\nrun\n",
-      "before": ""
-    }
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
   },
-  "id": "DT11-python-neg-05",
-  "language": "python",
-  "near_miss": "exact-file",
-  "note": "exact-file"
+  "src/baseline.py": {
+   "before": "# base\n",
+   "after": "# base\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "src/**"
+  ]
+ },
+ "near_miss": "deep-inside-territory",
+ "note": "file added three levels deep under a covered territory glob"
 }

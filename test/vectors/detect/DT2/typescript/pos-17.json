@@ -1,56 +1,43 @@
 {
-  "detector": "DT2",
-  "expect": [
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "CREATE TABLE IF NOT EXISTS kv",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "prisma/migrations/0002_add_index/migration.sql",
-      "rule": "dt2-typescript-new-migration",
-      "side": "after",
-      "subkind": "migration"
-    },
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "CREATE TABLE IF NOT EXISTS kv",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "prisma/migrations/0002_add_index/migration.sql",
-      "rule": "dt2-typescript-ddl",
-      "side": "after",
-      "subkind": "ddl"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "prisma/migrations/0002_add_index/migration.sql",
-      "rule": "dt12-typescript-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "package.json": {
-      "after": "{\"name\": \"bench\", \"private\": true}\n",
-      "before": "{\"name\": \"bench\", \"private\": true}\n"
-    },
-    "prisma/migrations/0002_add_index/migration.sql": {
-      "after": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);\n",
-      "before": ""
-    }
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE IF NOT EXISTS kv",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt2-typescript-new-migration",
+   "side": "after",
+   "subkind": "migration"
   },
-  "id": "DT2-typescript-pos-17",
-  "language": "typescript"
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE IF NOT EXISTS kv",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt2-typescript-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true}\n",
+   "before": "{\"name\": \"bench\", \"private\": true}\n"
+  },
+  "prisma/migrations/0002_add_index/migration.sql": {
+   "after": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-typescript-pos-17",
+ "language": "typescript"
 }

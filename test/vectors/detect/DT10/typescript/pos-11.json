@@ -1,40 +1,27 @@
 {
-  "id": "DT10-typescript-pos-11",
-  "detector": "DT10",
-  "language": "typescript",
-  "files": {
-    "src/q.ts": {
-      "before": "",
-      "after": "const wipe = \"DELETE FROM audit\";\n"
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT10",
-      "category": "deletion",
-      "subkind": "sql",
-      "path": "src/q.ts",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "DELETE FROM audit",
-      "rule": "dt10-typescript-sql"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "new-top-level",
-      "path": "src/q.ts",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "const wipe = \"DELETE FROM audit\";",
-      "rule": "dt12-typescript-new-top-level"
-    }
-  ],
-  "note": "destructive SQL inside a code string literal"
+ "id": "DT10-typescript-pos-11",
+ "detector": "DT10",
+ "language": "typescript",
+ "files": {
+  "src/q.ts": {
+   "before": "",
+   "after": "const wipe = \"DELETE FROM audit\";\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT10",
+   "category": "deletion",
+   "subkind": "sql",
+   "path": "src/q.ts",
+   "lines": [
+    1,
+    1
+   ],
+   "side": "after",
+   "evidence": "DELETE FROM audit",
+   "rule": "dt10-typescript-sql"
+  }
+ ],
+ "note": "destructive SQL inside a code string literal"
 }

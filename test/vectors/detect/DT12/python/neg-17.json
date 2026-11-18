@@ -1,23 +1,28 @@
 {
-  "id": "DT12-python-neg-17",
-  "detector": "DT12",
-  "language": "python",
-  "files": {
-    "shop/cart.py": {
-      "before": "",
-      "after": "u = 1\nv = 2\n"
-    },
-    "shop/baseline.py": {
-      "before": "# baseline\n",
-      "after": "# baseline\n"
-    }
+ "id": "DT12-python-neg-17",
+ "detector": "DT12",
+ "language": "python",
+ "files": {
+  "shop/sub/deep.py": {
+   "before": "# shop\n",
+   "after": "# shop\nd = 1\n"
   },
-  "commission": {
-    "plan_files": [
-      "shop/cart.py"
-    ],
-    "plan_lines": 10
+  "shop/baseline.py": {
+   "before": "# baseline\n",
+   "after": "# baseline\n"
   },
-  "expect": [],
-  "note": "budget-under"
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/sub/deep.py"
+  ],
+  "plan_lines": 20
+ },
+ "near_miss": "deep-planned-modified",
+ "note": "a modified file one level deeper that the plan names"
 }

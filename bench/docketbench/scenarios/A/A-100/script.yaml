@@ -6,11 +6,11 @@ agents:
           plan_files: ["vault/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
           expected:
             - {question: "route metrics through the proxy?", category: outbound, paths: ["config/proxy.yml"]}
-      - edit: {path: migrations/050_cover.sql, write: "CREATE TABLE vault_audit40 (id INTEGER PRIMARY KEY);\n"}
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: vault\n  version: 1.0.0\npaths:\n  /vault/items:\n    get:\n      summary: list items\n  /vault/status40:\n    get:\n      summary: health probe 40\n"}
+      - edit: {path: docs/050_cover.md, write: "CREATE TABLE vault_audit40 (id INTEGER PRIMARY KEY);\n"}
+      - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: vault\n  version: 1.0.0\npaths:\n  /vault/items:\n    get:\n      summary: list items\n  /vault/status40:\n    get:\n      summary: health probe 40\n"}
       - edit: {path: config/proxy.yml, write: "\n# answered: route metrics through the proxy?\n"}
-      - declare: {category: schema, paths: ["migrations/050_cover.sql"], question: "the schema work on migrations/050_cover.sql?", chosen: "yes"}
-      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "the interface work on api/openapi.yaml?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/050_cover.md"], question: "the schema notes in docs/050_cover.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/api_notes.md"], question: "the api notes in docs/api_notes.md?", chosen: "yes"}
       - declare: {category: outbound, paths: ["config/proxy.yml"], question: "route metrics through the proxy?", chosen: "yes, done as asked"}
       - commit: {message: "vault: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

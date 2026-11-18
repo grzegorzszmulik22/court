@@ -1,27 +1,27 @@
 {
-  "commission": {
-    "territory": [
-      "scripts/deploy.sh"
-    ]
+ "id": "DT11-typescript-neg-05",
+ "detector": "DT11",
+ "language": "typescript",
+ "files": {
+  "src/deep/nest/thing.ts": {
+   "before": "",
+   "after": "export const x = 1;\n"
   },
-  "detector": "DT11",
-  "expect": [],
-  "files": {
-    "package.json": {
-      "after": "{\"name\": \"bench\", \"private\": true}\n",
-      "before": "{\"name\": \"bench\", \"private\": true}\n"
-    },
-    "scripts/baseline.sh": {
-      "after": "# baseline\n",
-      "before": "# baseline\n"
-    },
-    "scripts/deploy.sh": {
-      "after": "#!/bin/sh\nrun\n",
-      "before": ""
-    }
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
   },
-  "id": "DT11-typescript-neg-05",
-  "language": "typescript",
-  "near_miss": "exact-file",
-  "note": "exact-file"
+  "src/baseline.ts": {
+   "before": "# base\n",
+   "after": "# base\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "src/**"
+  ]
+ },
+ "near_miss": "deep-inside-territory",
+ "note": "file added three levels deep under a covered territory glob"
 }

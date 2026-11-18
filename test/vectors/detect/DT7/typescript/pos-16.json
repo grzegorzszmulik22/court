@@ -1,26 +1,26 @@
 {
-  "id": "DT7-typescript-pos-16",
-  "detector": "DT7",
-  "language": "typescript",
-  "files": {
-    "src/call.ts": {
-      "before": "export function call() {\n  return dial();\n}\n",
-      "after": "export function call() {\n  try {\n    return dial();\n  } catch (e) {\n    return undefined;\n  }\n}\n"
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT7",
-      "category": "failure-handling",
-      "subkind": "swallowed",
-      "path": "src/call.ts",
-      "lines": [
-        5,
-        5
-      ],
-      "side": "after",
-      "evidence": "return undefined;",
-      "rule": "dt7-typescript-swallowed"
-    }
-  ]
+ "id": "DT7-typescript-pos-16",
+ "detector": "DT7",
+ "language": "typescript",
+ "files": {
+  "src/call.ts": {
+   "before": "export function call() {\n  return dial();\n}\n",
+   "after": "export function call() {\n  try {\n    return dial();\n  } catch (e) {\n  }\n}\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT7",
+   "category": "failure-handling",
+   "subkind": "swallowed",
+   "path": "src/call.ts",
+   "lines": [
+    5,
+    5
+   ],
+   "side": "after",
+   "evidence": "}",
+   "rule": "dt7-typescript-swallowed"
+  }
+ ]
 }

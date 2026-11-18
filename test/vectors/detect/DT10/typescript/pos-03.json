@@ -1,43 +1,30 @@
 {
-  "detector": "DT10",
-  "expect": [
-    {
-      "category": "deletion",
-      "detector": "DT10",
-      "evidence": "DELETE FROM users;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "ops/purge.sql",
-      "rule": "dt10-typescript-sql",
-      "side": "after",
-      "subkind": "sql"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "DELETE FROM users;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "ops/purge.sql",
-      "rule": "dt12-typescript-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "ops/purge.sql": {
-      "after": "DELETE FROM users;\n",
-      "before": ""
-    },
-    "package.json": {
-      "after": "{\"name\": \"bench\", \"private\": true}\n",
-      "before": "{\"name\": \"bench\", \"private\": true}\n"
-    }
+ "detector": "DT10",
+ "expect": [
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DELETE FROM users;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "ops/purge.sql",
+   "rule": "dt10-typescript-sql",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "ops/purge.sql": {
+   "after": "DELETE FROM users;\n",
+   "before": ""
   },
-  "id": "DT10-typescript-pos-03",
-  "language": "typescript"
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true}\n",
+   "before": "{\"name\": \"bench\", \"private\": true}\n"
+  }
+ },
+ "id": "DT10-typescript-pos-03",
+ "language": "typescript"
 }

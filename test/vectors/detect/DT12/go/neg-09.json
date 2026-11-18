@@ -1,18 +1,29 @@
 {
-  "id": "DT12-go-neg-09",
-  "detector": "DT12",
-  "language": "go",
-  "files": {
-    "shop/cart.go": {
-      "before": "",
-      "after": "q = 1\nr = 2\n"
-    },
-    "shop/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
+ "id": "DT12-go-neg-09",
+ "detector": "DT12",
+ "language": "go",
+ "files": {
+  "shop/cart.go": {
+   "before": "package shop\n",
+   "after": "package shop\nx\n"
   },
-  "expect": [],
-  "near_miss": "no-plan",
-  "note": "no-plan"
+  "shop/list.go": {
+   "before": "package shop\n",
+   "after": "package shop\nb\n"
+  },
+  "go.mod": {
+   "before": "module bench\n\ngo 1.22\n",
+   "after": "module bench\n\ngo 1.22\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.go",
+   "shop/list.go"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "modified-pair",
+ "note": "two modified files, both named by the plan"
 }

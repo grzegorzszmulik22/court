@@ -1,39 +1,26 @@
 {
-  "id": "DT1-python-pos-15",
-  "detector": "DT1",
-  "language": "python",
-  "files": {
-    "requirements.txt": {
-      "before": "",
-      "after": "requests==2.31.0\n"
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT1",
-      "category": "dependency",
-      "subkind": "added",
-      "path": "requirements.txt",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "requests==2.31.0",
-      "rule": "dt1-python-manifest-added"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "new-top-level",
-      "path": "requirements.txt",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "requests==2.31.0",
-      "rule": "dt12-python-new-top-level"
-    }
-  ]
+ "id": "DT1-python-pos-15",
+ "detector": "DT1",
+ "language": "python",
+ "files": {
+  "requirements.txt": {
+   "before": "",
+   "after": "requests==2.31.0\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT1",
+   "category": "dependency",
+   "subkind": "added",
+   "path": "requirements.txt",
+   "lines": [
+    1,
+    1
+   ],
+   "side": "after",
+   "evidence": "requests==2.31.0",
+   "rule": "dt1-python-manifest-added"
+  }
+ ]
 }

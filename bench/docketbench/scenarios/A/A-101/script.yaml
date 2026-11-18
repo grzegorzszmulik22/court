@@ -4,11 +4,11 @@ agents:
     steps:
       - backbrief:
           plan_files: ["shop/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n  /shop/status41:\n    get:\n      summary: health probe 41\n"}
-      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero41(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: shop\n  version: 1.0.0\npaths:\n  /shop/items:\n    get:\n      summary: list items\n  /shop/status41:\n    get:\n      summary: health probe 41\n"}
+      - edit: {path: shop/util.go, write: "package shop\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero41(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
       - edit: {path: shop/shop_test.go, write: "package shop\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) {\n\titems := []Item{{\"a\", 100, 2}, {\"b\", 50, 1}}\n\tif got := Total(items); got != 250 {\n\t\tt.Fatalf(\"Total = %d, want 250\", got)\n\t}\n}\n\nfunc TestDiscount(t *testing.T) {\n\tif got := Discount(200, 10); got != 180 {\n\t\tt.Fatalf(\"Discount = %d, want 180\", got)\n\t}\n}\n\nfunc TestClampLo41(t *testing.T) {\n\tif clamp(-41, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-41,0,5) = %d\", clamp(-41, 0, 5))\n\t}\n}\n"}
       - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\necho 'deploy step 41 runs extra sync'\n"}
-      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "the interface work on api/openapi.yaml?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/api_notes.md"], question: "the api notes in docs/api_notes.md?", chosen: "yes"}
       - declare: {category: structure, paths: ["shop/util.go"], question: "the structure work on shop/util.go?", chosen: "yes"}
       - declare: {category: other, paths: ["shop/shop_test.go"], question: "the other work on shop/shop_test.go?", chosen: "yes"}
       - declare: {category: territory, paths: ["scripts/deploy.sh"], question: "allow the territory change?", chosen: "yes"}

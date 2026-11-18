@@ -1,18 +1,18 @@
 {
-  "detector": "DT8",
-  "expect": [],
-  "files": {
-    "docs/api.md": {
-      "after": "call https://api.internal.example.com/pay endpoint\n",
-      "before": "call the endpoint\n"
-    },
-    "package.json": {
-      "after": "{\"name\": \"bench\", \"private\": true}\n",
-      "before": "{\"name\": \"bench\", \"private\": true}\n"
-    }
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/api.md": {
+   "after": "call https://api.internal.example.com/pay endpoint\n",
+   "before": "call the endpoint\n"
   },
-  "id": "DT8-typescript-neg-13",
-  "language": "typescript",
-  "near_miss": "yml-edit",
-  "note": "yml-edit"
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://api.internal.example.com\"\n}\n",
+   "before": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://api.internal.example.com\"\n}\n"
+  }
+ },
+ "id": "DT8-typescript-neg-13",
+ "language": "typescript",
+ "near_miss": "known-host",
+ "note": "the added host api.internal.example.com is already in the base tree"
 }

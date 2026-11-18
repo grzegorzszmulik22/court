@@ -1,23 +1,27 @@
 {
-  "commission": {
-    "territory": [
-      "shop/**",
-      "internal/**"
-    ]
+ "id": "DT11-typescript-neg-16",
+ "detector": "DT11",
+ "language": "typescript",
+ "files": {
+  "internal/old.ts": {
+   "before": "function gone() { return 1; }\n",
+   "after": ""
   },
-  "detector": "DT11",
-  "expect": [],
-  "files": {
-    "internal/baseline.ts": {
-      "after": "package baseline\n",
-      "before": "package baseline\n"
-    },
-    "internal/svc/x.ts": {
-      "after": "export const z = 0;\n",
-      "before": ""
-    }
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
   },
-  "id": "DT11-typescript-neg-16",
-  "language": "typescript",
-  "note": "multi-glob"
+  "internal/keep.ts": {
+   "before": "# keep\n",
+   "after": "# keep\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "internal/**"
+  ]
+ },
+ "near_miss": "removed-inside",
+ "note": "a file removed inside the territory is in-territory, not a violation"
 }

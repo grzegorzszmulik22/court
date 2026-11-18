@@ -1,26 +1,26 @@
 {
-  "id": "DT1-python-pos-20",
-  "detector": "DT1",
-  "language": "python",
-  "files": {
-    "requirements.txt": {
-      "before": "requests==2.31.0\n",
-      "after": ""
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT1",
-      "category": "dependency",
-      "subkind": "removed",
-      "path": "requirements.txt",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "before",
-      "evidence": "requests==2.31.0",
-      "rule": "dt1-python-manifest-removed"
-    }
-  ]
+ "id": "DT1-python-pos-20",
+ "detector": "DT1",
+ "language": "python",
+ "files": {
+  "pyproject.toml": {
+   "before": "[project]\ndependencies = [\n  \"requests==2.31.0\"\n]\n",
+   "after": "[project]\ndependencies = [\n  \"requests==2.32.0\"\n]\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT1",
+   "category": "dependency",
+   "subkind": "version",
+   "path": "pyproject.toml",
+   "lines": [
+    3,
+    3
+   ],
+   "side": "after",
+   "evidence": "\"requests==2.32.0\"",
+   "rule": "dt1-python-manifest-version"
+  }
+ ]
 }

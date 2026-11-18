@@ -1,22 +1,29 @@
 {
-  "id": "DT12-python-neg-10",
-  "detector": "DT12",
-  "language": "python",
-  "files": {
-    "shop/cart.py": {
-      "before": "",
-      "after": "x = 1\nn = 3\n"
-    },
-    "shop/baseline.py": {
-      "before": "# baseline\n",
-      "after": "# baseline\n"
-    }
+ "id": "DT12-python-neg-10",
+ "detector": "DT12",
+ "language": "python",
+ "files": {
+  "shop/extra.py": {
+   "before": "",
+   "after": "# shop\nq = 1\n"
   },
-  "commission": {
-    "plan_files": [],
-    "plan_lines": 0
+  "shop/cart.py": {
+   "before": "# shop\n",
+   "after": "# shop\n"
   },
-  "expect": [],
-  "near_miss": "empty-plan",
-  "note": "empty-plan"
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.py",
+   "shop/extra.py"
+  ],
+  "plan_lines": 20
+ },
+ "near_miss": "planned-new-file",
+ "note": "a new file under a planned top dir that the plan names"
 }

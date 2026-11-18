@@ -1,23 +1,28 @@
 {
-  "id": "DT12-go-neg-17",
-  "detector": "DT12",
-  "language": "go",
-  "files": {
-    "shop/cart.go": {
-      "before": "",
-      "after": "u = 1\nv = 2\n"
-    },
-    "shop/baseline.go": {
-      "before": "package baseline\n",
-      "after": "package baseline\n"
-    }
+ "id": "DT12-go-neg-17",
+ "detector": "DT12",
+ "language": "go",
+ "files": {
+  "shop/sub/deep.go": {
+   "before": "package shop\n",
+   "after": "package shop\nvar d = 1\n"
   },
-  "commission": {
-    "plan_files": [
-      "shop/cart.go"
-    ],
-    "plan_lines": 10
+  "shop/baseline.go": {
+   "before": "# baseline\n",
+   "after": "# baseline\n"
   },
-  "expect": [],
-  "note": "budget-under"
+  "go.mod": {
+   "before": "module bench\n\ngo 1.22\n",
+   "after": "module bench\n\ngo 1.22\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/sub/deep.go"
+  ],
+  "plan_lines": 20
+ },
+ "near_miss": "deep-planned-modified",
+ "note": "a modified file one level deeper that the plan names"
 }

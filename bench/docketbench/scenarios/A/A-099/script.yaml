@@ -8,11 +8,11 @@ agents:
             - {question: "version the public contract?", category: interface, paths: ["api/openapi.yaml"]}
       - edit: {path: README.md, write: "# poll\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 39).\n"}
       - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
-      - edit: {path: migrations/049_cover.sql, write: "CREATE TABLE poll_audit39 (id INTEGER PRIMARY KEY);\n"}
+      - edit: {path: docs/049_cover.md, write: "CREATE TABLE poll_audit39 (id INTEGER PRIMARY KEY);\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: poll\n  version: 1.0.0\npaths:\n  /poll/items:\n    get:\n      summary: list items\n\n# answered: version the public contract?\n"}
       - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
       - declare: {category: behaviour, paths: ["poll/util.go"], question: "the behaviour work on poll/util.go?", chosen: "yes"}
-      - declare: {category: schema, paths: ["migrations/049_cover.sql"], question: "the schema work on migrations/049_cover.sql?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/049_cover.md"], question: "the schema notes in docs/049_cover.md?", chosen: "yes"}
       - declare: {category: interface, paths: ["api/openapi.yaml"], question: "version the public contract?", chosen: "yes, done as asked"}
       - commit: {message: "poll: routine refresh"}
       - tool: {name: Bash, command: "go test ./..."}

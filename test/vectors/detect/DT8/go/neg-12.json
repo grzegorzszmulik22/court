@@ -1,18 +1,18 @@
 {
-  "detector": "DT8",
-  "expect": [],
-  "files": {
-    "docs/links.md": {
-      "after": "# links\n\nsee https://docs.vendor-docs.example\n",
-      "before": "# links\n"
-    },
-    "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
-    }
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/links.md": {
+   "after": "# links\n\nsee https://docs.vendor-docs.example\n",
+   "before": "# links\n"
   },
-  "id": "DT8-go-neg-12",
-  "language": "go",
-  "near_miss": "docs-url",
-  "note": "a URL in a doc file is prose, not a literal"
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n// docs mirror docs.vendor-docs.example\n",
+   "before": "module bench\n\ngo 1.22\n// docs mirror docs.vendor-docs.example\n"
+  }
+ },
+ "id": "DT8-go-neg-12",
+ "language": "go",
+ "near_miss": "known-host",
+ "note": "the added host docs.vendor-docs.example is already in the base tree"
 }

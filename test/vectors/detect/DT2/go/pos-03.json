@@ -1,70 +1,57 @@
 {
-  "detector": "DT2",
-  "expect": [
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "DROP TABLE legacy_orders;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt2-go-new-migration",
-      "side": "after",
-      "subkind": "migration"
-    },
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "DROP TABLE legacy_orders;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt2-go-ddl",
-      "side": "after",
-      "subkind": "ddl"
-    },
-    {
-      "category": "deletion",
-      "detector": "DT10",
-      "evidence": "DROP TABLE legacy_orders;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt10-sql-drop",
-      "side": "after",
-      "subkind": "sql"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "DROP TABLE legacy_orders;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt12-go-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
-    },
-    "migrations/0002_add_index.sql": {
-      "after": "DROP TABLE legacy_orders;\n",
-      "before": ""
-    }
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE legacy_orders;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-new-migration",
+   "side": "after",
+   "subkind": "migration"
   },
-  "id": "DT2-go-pos-03",
-  "language": "go",
-  "note": "DROP in a migration is schema DDL and an unguarded delete"
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE legacy_orders;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP TABLE legacy_orders;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt10-sql-drop",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  },
+  "migrations/0002_add_index.sql": {
+   "after": "DROP TABLE legacy_orders;\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-go-pos-03",
+ "language": "go",
+ "note": "DROP in a migration is schema DDL and an unguarded delete"
 }

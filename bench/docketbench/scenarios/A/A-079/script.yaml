@@ -4,12 +4,12 @@ agents:
     steps:
       - backbrief:
           plan_files: ["poll/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
-      - edit: {path: migrations/029_cover.sql, write: "CREATE TABLE poll_audit19 (id INTEGER PRIMARY KEY);\n"}
-      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: poll\n  version: 1.0.0\npaths:\n  /poll/items:\n    get:\n      summary: list items\n  /poll/status19:\n    get:\n      summary: health probe 19\n"}
-      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"chalk\": \"^5.3.19\"\n  }\n}\n"}
-      - declare: {category: schema, paths: ["migrations/029_cover.sql"], question: "the schema work on migrations/029_cover.sql?", chosen: "yes"}
-      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "the interface work on api/openapi.yaml?", chosen: "yes"}
-      - declare: {category: dependency, paths: ["tools/package.json"], question: "the dependency work on tools/package.json?", chosen: "yes"}
+      - edit: {path: docs/029_cover.md, write: "CREATE TABLE poll_audit19 (id INTEGER PRIMARY KEY);\n"}
+      - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: poll\n  version: 1.0.0\npaths:\n  /poll/items:\n    get:\n      summary: list items\n  /poll/status19:\n    get:\n      summary: health probe 19\n"}
+      - edit: {path: docs/tools_notes.md, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"chalk\": \"^5.3.19\"\n  }\n}\n"}
+      - declare: {category: other, paths: ["docs/029_cover.md"], question: "the schema notes in docs/029_cover.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/api_notes.md"], question: "the api notes in docs/api_notes.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/tools_notes.md"], question: "the tools notes in docs/tools_notes.md?", chosen: "yes"}
       - commit: {message: "poll: routine refresh"}
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}

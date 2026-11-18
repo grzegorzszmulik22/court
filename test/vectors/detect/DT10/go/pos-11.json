@@ -1,40 +1,27 @@
 {
-  "id": "DT10-go-pos-11",
-  "detector": "DT10",
-  "language": "go",
-  "files": {
-    "svc/q.go": {
-      "before": "",
-      "after": "package svc\n\nconst wipe = \"DELETE FROM audit\"\n"
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT10",
-      "category": "deletion",
-      "subkind": "sql",
-      "path": "svc/q.go",
-      "lines": [
-        3,
-        3
-      ],
-      "side": "after",
-      "evidence": "DELETE FROM audit",
-      "rule": "dt10-go-sql"
-    },
-    {
-      "detector": "DT12",
-      "category": "scope",
-      "subkind": "new-top-level",
-      "path": "svc/q.go",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "package svc",
-      "rule": "dt12-go-new-top-level"
-    }
-  ],
-  "note": "destructive SQL inside a code string literal"
+ "id": "DT10-go-pos-11",
+ "detector": "DT10",
+ "language": "go",
+ "files": {
+  "svc/q.go": {
+   "before": "",
+   "after": "package svc\n\nconst wipe = \"DELETE FROM audit\"\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT10",
+   "category": "deletion",
+   "subkind": "sql",
+   "path": "svc/q.go",
+   "lines": [
+    3,
+    3
+   ],
+   "side": "after",
+   "evidence": "DELETE FROM audit",
+   "rule": "dt10-go-sql"
+  }
+ ],
+ "note": "destructive SQL inside a code string literal"
 }

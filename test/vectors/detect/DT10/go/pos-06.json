@@ -1,43 +1,30 @@
 {
-  "detector": "DT10",
-  "expect": [
-    {
-      "category": "deletion",
-      "detector": "DT10",
-      "evidence": "DROP VIEW v_active;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "db/view.sql",
-      "rule": "dt10-go-sql",
-      "side": "after",
-      "subkind": "sql"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "DROP VIEW v_active;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "db/view.sql",
-      "rule": "dt12-go-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "db/view.sql": {
-      "after": "DROP VIEW v_active;\n",
-      "before": ""
-    },
-    "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
-    }
+ "detector": "DT10",
+ "expect": [
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP VIEW v_active;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "db/view.sql",
+   "rule": "dt10-go-sql",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "db/view.sql": {
+   "after": "DROP VIEW v_active;\n",
+   "before": ""
   },
-  "id": "DT10-go-pos-06",
-  "language": "go"
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  }
+ },
+ "id": "DT10-go-pos-06",
+ "language": "go"
 }

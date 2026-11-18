@@ -1,18 +1,18 @@
 {
-  "detector": "DT8",
-  "expect": [],
-  "files": {
-    "docs/api.md": {
-      "after": "call https://api.internal.example.com/pay endpoint\n",
-      "before": "call the endpoint\n"
-    },
-    "requirements.txt": {
-      "after": "requests==2.32.3\n",
-      "before": "requests==2.32.3\n"
-    }
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/api.md": {
+   "after": "call https://api.internal.example.com/pay endpoint\n",
+   "before": "call the endpoint\n"
   },
-  "id": "DT8-python-neg-13",
-  "language": "python",
-  "near_miss": "yml-edit",
-  "note": "yml-edit"
+  "requirements.txt": {
+   "after": "requests==2.32.3\n# docs mirror api.internal.example.com\n",
+   "before": "requests==2.32.3\n# docs mirror api.internal.example.com\n"
+  }
+ },
+ "id": "DT8-python-neg-13",
+ "language": "python",
+ "near_miss": "known-host",
+ "note": "the added host api.internal.example.com is already in the base tree"
 }

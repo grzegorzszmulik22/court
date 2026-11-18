@@ -1,56 +1,43 @@
 {
-  "detector": "DT2",
-  "expect": [
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "CREATE INDEX idx_orders_total",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt2-go-new-migration",
-      "side": "after",
-      "subkind": "migration"
-    },
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "CREATE INDEX idx_orders_total",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt2-go-ddl",
-      "side": "after",
-      "subkind": "ddl"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "CREATE INDEX idx_orders_total ON orders (total_cents);",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "migrations/0002_add_index.sql",
-      "rule": "dt12-go-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
-    },
-    "migrations/0002_add_index.sql": {
-      "after": "CREATE INDEX idx_orders_total ON orders (total_cents);\n",
-      "before": ""
-    }
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE INDEX idx_orders_total",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-new-migration",
+   "side": "after",
+   "subkind": "migration"
   },
-  "id": "DT2-go-pos-10",
-  "language": "go"
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE INDEX idx_orders_total",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  },
+  "migrations/0002_add_index.sql": {
+   "after": "CREATE INDEX idx_orders_total ON orders (total_cents);\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-go-pos-10",
+ "language": "go"
 }

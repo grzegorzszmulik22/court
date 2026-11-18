@@ -1,18 +1,18 @@
 {
-  "detector": "DT8",
-  "expect": [],
-  "files": {
-    "docs/links.md": {
-      "after": "links\n\n- https://fresh.example.net\n",
-      "before": "links\n"
-    },
-    "go.mod": {
-      "after": "module bench\n\ngo 1.22\n",
-      "before": "module bench\n\ngo 1.22\n"
-    }
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/links.md": {
+   "after": "links\n\n- https://fresh.example.net\n",
+   "before": "links\n"
   },
-  "id": "DT8-go-neg-06",
-  "language": "go",
-  "near_miss": "unexported-sig",
-  "note": "unexported-sig"
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n// docs mirror fresh.example.net\n",
+   "before": "module bench\n\ngo 1.22\n// docs mirror fresh.example.net\n"
+  }
+ },
+ "id": "DT8-go-neg-06",
+ "language": "go",
+ "near_miss": "known-host",
+ "note": "the added host fresh.example.net is already in the base tree"
 }

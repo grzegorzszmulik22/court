@@ -1,69 +1,56 @@
 {
-  "detector": "DT2",
-  "expect": [
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "ALTER TABLE users ADD COLUMN tag",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "alembic/versions/0002_q.sql",
-      "rule": "dt2-python-new-migration",
-      "side": "after",
-      "subkind": "migration"
-    },
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "ALTER TABLE users ADD COLUMN tag",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "alembic/versions/0002_q.sql",
-      "rule": "dt2-python-ddl",
-      "side": "after",
-      "subkind": "ddl"
-    },
-    {
-      "category": "schema",
-      "detector": "DT2",
-      "evidence": "CREATE INDEX idx_tag",
-      "lines": [
-        2,
-        2
-      ],
-      "path": "alembic/versions/0002_q.sql",
-      "rule": "dt2-python-ddl",
-      "side": "after",
-      "subkind": "ddl"
-    },
-    {
-      "category": "scope",
-      "detector": "DT12",
-      "evidence": "ALTER TABLE users ADD COLUMN tag TEXT;",
-      "lines": [
-        1,
-        1
-      ],
-      "path": "alembic/versions/0002_q.sql",
-      "rule": "dt12-python-new-top-level",
-      "side": "after",
-      "subkind": "new-top-level"
-    }
-  ],
-  "files": {
-    "alembic/versions/0002_q.sql": {
-      "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n",
-      "before": ""
-    },
-    "requirements.txt": {
-      "after": "requests==2.32.3\n",
-      "before": "requests==2.32.3\n"
-    }
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE users ADD COLUMN tag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-new-migration",
+   "side": "after",
+   "subkind": "migration"
   },
-  "id": "DT2-python-pos-19",
-  "language": "python"
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE users ADD COLUMN tag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE INDEX idx_tag",
+   "lines": [
+    2,
+    2
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "alembic/versions/0002_q.sql": {
+   "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT2-python-pos-19",
+ "language": "python"
 }

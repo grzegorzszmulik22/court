@@ -1,26 +1,26 @@
 {
-  "id": "DT4-typescript-pos-12",
-  "detector": "DT4",
-  "language": "typescript",
-  "files": {
-    "src/bench.test.ts": {
-      "before": "test('bench', () => {\n  expect(run()).toBeDefined();\n});\n",
-      "after": "test.skip('bench', () => {\n  expect(run()).toBeDefined();\n});\n"
-    }
-  },
-  "expect": [
-    {
-      "detector": "DT4",
-      "category": "test-strength",
-      "subkind": "skip_or_focus",
-      "path": "src/bench.test.ts",
-      "lines": [
-        1,
-        1
-      ],
-      "side": "after",
-      "evidence": "test.skip('bench'",
-      "rule": "dt4-typescript-skip_or_focus"
-    }
-  ]
+ "id": "DT4-typescript-pos-12",
+ "detector": "DT4",
+ "language": "typescript",
+ "files": {
+  "src/list.test.ts": {
+   "before": "it('load', () => {\n  expect(load()).toBe(2);\n  expect(size()).toBe(3);\n});\n",
+   "after": "it('load', () => {\n  expect(load()).toBe(2);\n});\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT4",
+   "category": "test-strength",
+   "subkind": "fewer_assertions",
+   "path": "src/list.test.ts",
+   "lines": [
+    3,
+    3
+   ],
+   "side": "before",
+   "evidence": "expect(size()).toBe(3);",
+   "rule": "dt4-typescript-fewer_assertions"
+  }
+ ]
 }

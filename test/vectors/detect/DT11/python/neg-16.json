@@ -1,23 +1,27 @@
 {
-  "commission": {
-    "territory": [
-      "shop/**",
-      "internal/**"
-    ]
+ "id": "DT11-python-neg-16",
+ "detector": "DT11",
+ "language": "python",
+ "files": {
+  "internal/old.py": {
+   "before": "def _gone():\n    return 1\n",
+   "after": ""
   },
-  "detector": "DT11",
-  "expect": [],
-  "files": {
-    "internal/baseline.py": {
-      "after": "package baseline\n",
-      "before": "package baseline\n"
-    },
-    "internal/svc/x.py": {
-      "after": "z = 0\n",
-      "before": ""
-    }
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
   },
-  "id": "DT11-python-neg-16",
-  "language": "python",
-  "note": "multi-glob"
+  "internal/keep.py": {
+   "before": "# keep\n",
+   "after": "# keep\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "internal/**"
+  ]
+ },
+ "near_miss": "removed-inside",
+ "note": "a file removed inside the territory is in-territory, not a violation"
 }

@@ -11,7 +11,7 @@ agents:
     steps:
       - backbrief:
           plan_files: ["blog/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
-      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero16(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero16(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo16(t *testing.T) {\n\tif clamp(-16, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-16,0,5) = %d\", clamp(-16, 0, 5))\n\t}\n}\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: blog\n  version: 1.0.0\npaths:\n  /blog/items:\n    get:\n      summary: fetch items\n"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
@@ -25,7 +25,7 @@ agents:
     steps:
       - backbrief:
           plan_files: ["blog/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
-      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero16(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero16(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
       - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo16(t *testing.T) {\n\tif clamp(-16, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-16,0,5) = %d\", clamp(-16, 0, 5))\n\t}\n}\n"}
       - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: blog\n  version: 1.0.0\npaths:\n  /blog/items:\n    get:\n      summary: fetch items\n"}
       - declare: {category: structure, paths: ["blog/util.go"], question: "the structure work on blog/util.go?", chosen: "yes"}
