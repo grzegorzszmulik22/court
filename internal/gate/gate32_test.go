@@ -8,11 +8,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -257,21 +260,41 @@ func TestC3_2_1(t *testing.T) {
 		t.Fatalf("refused commit was recorded: world.commit %d -> %d", before, n)
 	}
 
-	// The declaration window closes when a commit is observed: one
-	// no_decisions allows one commit, not every later commit.
-	if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
-		t.Fatal(err)
+	// The declaration window closes when a commit is observed, every time:
+	// declare, commit, declare, commit, … and one declaration never opens
+	// more than the one commit that follows it.
+	var heads []string
+	for i := 0; i < 3; i++ {
+		writeFile(t, c, "app.txt", fmt.Sprintf("one\ncycle %d\nthree\n", i))
+		if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+			t.Fatal(err)
+		}
+		if out, err := commitRaw(t, c, fmt.Sprintf("declared commit %d", i)); err != nil {
+			t.Fatalf("commit %d after no_decisions failed: %v\n%s", i, err, out)
+		}
+		heads = append(heads, revParse(t, c))
 	}
-	if out, err := commitRaw(t, c, "declared commit"); err != nil {
-		t.Fatalf("commit after no_decisions failed: %v\n%s", err, out)
+	e := waitFor(t, h, "all declared commits", 5*time.Second,
+		func(e []*ledger.Event) bool {
+			for _, hd := range heads {
+				if commitFor(e, hd) == nil {
+					return false
+				}
+			}
+			return true
+		})
+	for _, hd := range heads {
+		if wc := commitFor(e, hd); !bodyBool(wc, "gated") {
+			t.Fatalf("declared commit %s recorded gated:false", hd)
+		}
 	}
 	writeFile(t, c, "app.txt", "one\nchanged again\nthree\n")
-	out, err = commitRaw(t, c, "second undeclared commit")
+	out, err = commitRaw(t, c, "fourth undeclared commit")
 	if err == nil {
-		t.Fatalf("a second commit reused the previous declaration:\n%s", out)
+		t.Fatalf("a later commit reused the previous declaration:\n%s", out)
 	}
 	if !exactLine(out, gate.Message) {
-		t.Fatalf("second refusal does not carry exactly %q:\n%s", gate.Message, out)
+		t.Fatalf("later refusal does not carry exactly %q:\n%s", gate.Message, out)
 	}
 }
 
@@ -284,29 +307,41 @@ func TestC3_2_2(t *testing.T) {
 	t.Run("record_decision", func(t *testing.T) {
 		h := newGateHarness(t)
 		c := addAgent(t, h, "w1")
-		writeFile(t, c, "app.txt", "one\nby record\nthree\n")
-		if err := c.RunStep(declareStep(
-			"Which limit should the default take?", "behaviour", "app.txt")); err != nil {
-			t.Fatal(err)
+		// Every declaration opens exactly the next commit: two cycles,
+		// each with its own declaration, ordering and gated flag.
+		for i := 0; i < 2; i++ {
+			writeFile(t, c, "app.txt", fmt.Sprintf("one\nby record %d\nthree\n", i))
+			if err := c.RunStep(declareStep(
+				fmt.Sprintf("Which limit should the default take (%d)?", i),
+				"behaviour", "app.txt")); err != nil {
+				t.Fatal(err)
+			}
+			if err := c.RunStep(&scripted.Step{Commit: &scripted.CommitStep{
+				Message: fmt.Sprintf("declared commit %d", i)}}); err != nil {
+				t.Fatalf("commit %d after record_decision failed: %v", i, err)
+			}
+			head := revParse(t, c)
+			e := waitFor(t, h, "world.commit", 5*time.Second,
+				func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
+			dec := ofType(e, "decision.declared")
+			if len(dec) != i+1 {
+				t.Fatalf("decision.declared events = %d, want %d", len(dec), i+1)
+			}
+			wc := commitFor(e, head)
+			if dec[len(dec)-1].Seq >= wc.Seq {
+				t.Fatalf("world.commit (seq %d) does not follow declaration %d (seq %d)",
+					wc.Seq, i, dec[len(dec)-1].Seq)
+			}
+			if !bodyBool(wc, "gated") {
+				t.Fatalf("declared commit %d recorded gated:false", i)
+			}
 		}
-		if err := c.RunStep(&scripted.Step{Commit: &scripted.CommitStep{
-			Message: "declared commit"}}); err != nil {
-			t.Fatalf("commit after record_decision failed: %v", err)
-		}
-		head := revParse(t, c)
-		e := waitFor(t, h, "world.commit", 5*time.Second,
-			func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
-		dec := ofType(e, "decision.declared")
-		if len(dec) != 1 {
-			t.Fatalf("decision.declared events = %d, want 1", len(dec))
-		}
-		wc := commitFor(e, head)
-		if dec[0].Seq >= wc.Seq {
-			t.Fatalf("world.commit (seq %d) does not follow the declaration (seq %d)",
-				wc.Seq, dec[0].Seq)
-		}
-		if !bodyBool(wc, "gated") {
-			t.Fatalf("declared commit recorded gated:false")
+		// The second declaration was consumed by its commit too.
+		writeFile(t, c, "app.txt", "one\nno new declaration\nthree\n")
+		if out, err := commitRaw(t, c, "undeclared after two cycles"); err == nil {
+			t.Fatalf("a commit after two declare/commit cycles was not refused:\n%s", out)
+		} else if !exactLine(out, gate.Message) {
+			t.Fatalf("refusal does not carry exactly %q:\n%s", gate.Message, out)
 		}
 	})
 
@@ -343,28 +378,36 @@ func TestC3_2_2(t *testing.T) {
 	t.Run("no_decisions", func(t *testing.T) {
 		h := newGateHarness(t)
 		c := addAgent(t, h, "w1")
-		writeFile(t, c, "app.txt", "one\nby none\nthree\n")
-		if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
-			t.Fatal(err)
+		for i := 0; i < 2; i++ {
+			writeFile(t, c, "app.txt", fmt.Sprintf("one\nby none %d\nthree\n", i))
+			if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+				t.Fatal(err)
+			}
+			if err := c.RunStep(&scripted.Step{Commit: &scripted.CommitStep{
+				Message: fmt.Sprintf("no decisions commit %d", i)}}); err != nil {
+				t.Fatalf("commit %d after no_decisions failed: %v", i, err)
+			}
+			head := revParse(t, c)
+			e := waitFor(t, h, "world.commit", 5*time.Second,
+				func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
+			none := ofType(e, "decision.none")
+			if len(none) != i+1 {
+				t.Fatalf("decision.none events = %d, want %d", len(none), i+1)
+			}
+			wc := commitFor(e, head)
+			if none[len(none)-1].Seq >= wc.Seq {
+				t.Fatalf("world.commit (seq %d) does not follow decision.none %d (seq %d)",
+					wc.Seq, i, none[len(none)-1].Seq)
+			}
+			if !bodyBool(wc, "gated") {
+				t.Fatalf("no_decisions commit %d recorded gated:false", i)
+			}
 		}
-		if err := c.RunStep(&scripted.Step{Commit: &scripted.CommitStep{
-			Message: "no decisions commit"}}); err != nil {
-			t.Fatalf("commit after no_decisions failed: %v", err)
-		}
-		head := revParse(t, c)
-		e := waitFor(t, h, "world.commit", 5*time.Second,
-			func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
-		none := ofType(e, "decision.none")
-		if len(none) != 1 {
-			t.Fatalf("decision.none events = %d, want 1", len(none))
-		}
-		wc := commitFor(e, head)
-		if none[0].Seq >= wc.Seq {
-			t.Fatalf("world.commit (seq %d) does not follow decision.none (seq %d)",
-				wc.Seq, none[0].Seq)
-		}
-		if !bodyBool(wc, "gated") {
-			t.Fatalf("no_decisions commit recorded gated:false")
+		writeFile(t, c, "app.txt", "one\nno new statement\nthree\n")
+		if out, err := commitRaw(t, c, "undeclared after two cycles"); err == nil {
+			t.Fatalf("a commit after two no_decisions cycles was not refused:\n%s", out)
+		} else if !exactLine(out, gate.Message) {
+			t.Fatalf("refusal does not carry exactly %q:\n%s", gate.Message, out)
 		}
 	})
 }
@@ -468,6 +511,227 @@ func TestC3_2_3(t *testing.T) {
 			}
 		}
 	})
+}
+
+// runPreCommit runs the installed pre-commit hook once in the world, as a
+// commit whose later phase failed would: the gate must be open, and the
+// hook records a pass for the world's current HEAD and index tree.
+func runPreCommit(t *testing.T, h *scripted.Harness, c *scripted.Client) {
+	t.Helper()
+	hook := filepath.Join(gate.HooksDir(h.DataDir), "pre-commit")
+	cmd := exec.Command("sh", hook)
+	cmd.Dir = c.Worktree
+	cmd.Env = append(cleanGitEnv(), c.GitEnv...)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("pre-commit gate refused: %v\n%s", err, out)
+	}
+}
+
+// C3.2.3 (pass binding): the pass authorizes that exact commit only. A
+// --no-verify commit whose tree differs — an added, changed or removed file
+// after the pass — is gated:false; a no-change commit of the same tree is
+// the commit the gate authorized.
+func TestC3_2_3TreeBinding(t *testing.T) {
+	h := newGateHarness(t)
+	c := addAgent(t, h, "w1")
+	changes := []struct {
+		name  string
+		apply func()
+	}{
+		{"extra-file", func() { writeFile(t, c, "extra.txt", "added after the pass\n") }},
+		{"changed-file", func() { writeFile(t, c, "app.txt", "one\nchanged after the pass\nthree\n") }},
+		{"removed-file", func() {
+			if err := os.Remove(filepath.Join(c.Worktree, "app.txt")); err != nil {
+				t.Fatal(err)
+			}
+		}},
+	}
+	for _, ch := range changes {
+		if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+			t.Fatal(err)
+		}
+		runPreCommit(t, h, c)
+		ch.apply()
+		if out, err := commitRaw(t, c, "bypass "+ch.name, "--no-verify"); err != nil {
+			t.Fatalf("%s: --no-verify commit failed: %v\n%s", ch.name, err, out)
+		}
+		head := revParse(t, c)
+		e := waitFor(t, h, "world.commit "+ch.name, 5*time.Second,
+			func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
+		if bodyBool(commitFor(e, head), "gated") {
+			t.Fatalf("%s: commit whose tree differs from the passed tree recorded gated:true",
+				ch.name)
+		}
+	}
+	// The same tree on the same parent is the commit the gate passed for.
+	if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+		t.Fatal(err)
+	}
+	runPreCommit(t, h, c)
+	if out, err := commitRaw(t, c, "same tree", "--no-verify"); err != nil {
+		t.Fatalf("same-tree --no-verify commit failed: %v\n%s", err, out)
+	}
+	head := revParse(t, c)
+	e := waitFor(t, h, "world.commit same-tree", 5*time.Second,
+		func(e []*ledger.Event) bool { return commitFor(e, head) != nil })
+	if !bodyBool(commitFor(e, head), "gated") {
+		t.Fatalf("same-parent same-tree commit recorded gated:false")
+	}
+}
+
+// C3.2.3 (pass lifecycle): one pass authorizes one commit. After the pass
+// is consumed, a further commit on the same parent — an amend, a reset and
+// recommit, or a --no-verify commit with another tree — is gated:false.
+func TestC3_2_3PassLifecycle(t *testing.T) {
+	t.Run("amend", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		writeFile(t, c, "app.txt", "one\ngated\nthree\n")
+		if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+			t.Fatal(err)
+		}
+		if out, err := commitRaw(t, c, "gated commit"); err != nil {
+			t.Fatalf("declared commit failed: %v\n%s", err, out)
+		}
+		first := revParse(t, c)
+		e := waitFor(t, h, "gated commit", 5*time.Second,
+			func(e []*ledger.Event) bool { return commitFor(e, first) != nil })
+		if !bodyBool(commitFor(e, first), "gated") {
+			t.Fatalf("the declared commit recorded gated:false")
+		}
+		if out, err := commitRaw(t, c, "amended", "--amend", "--no-verify"); err != nil {
+			t.Fatalf("amend --no-verify failed: %v\n%s", err, out)
+		}
+		amended := revParse(t, c)
+		if amended == first {
+			t.Fatalf("amend did not create a new commit")
+		}
+		e = waitFor(t, h, "amended commit", 5*time.Second,
+			func(e []*ledger.Event) bool { return commitFor(e, amended) != nil })
+		if bodyBool(commitFor(e, amended), "gated") {
+			t.Fatalf("amend --no-verify after a consumed pass recorded gated:true")
+		}
+	})
+
+	t.Run("different-tree-then-reset", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		if err := c.RunStep(&scripted.Step{NoDecisions: &scripted.EmptyStep{}}); err != nil {
+			t.Fatal(err)
+		}
+		runPreCommit(t, h, c) // pass for HEAD and its tree
+		writeFile(t, c, "app.txt", "one\ndifferent tree\nthree\n")
+		if out, err := commitRaw(t, c, "bypass", "--no-verify"); err != nil {
+			t.Fatalf("bypass commit failed: %v\n%s", err, out)
+		}
+		bypassed := revParse(t, c)
+		e := waitFor(t, h, "bypass commit", 5*time.Second,
+			func(e []*ledger.Event) bool { return commitFor(e, bypassed) != nil })
+		if bodyBool(commitFor(e, bypassed), "gated") {
+			t.Fatalf("commit with a different tree recorded gated:true")
+		}
+		// Back to the passed parent and tree: the pass was consumed by the
+		// observation above and must not authorize this commit.
+		if out, err := gitRun(c, "reset", "--hard", "HEAD~1"); err != nil {
+			t.Fatalf("reset --hard: %v\n%s", err, out)
+		}
+		if out, err := commitRaw(t, c, "reuse attempt", "--no-verify"); err != nil {
+			t.Fatalf("reuse commit failed: %v\n%s", err, out)
+		}
+		reused := revParse(t, c)
+		e = waitFor(t, h, "reuse commit", 5*time.Second,
+			func(e []*ledger.Event) bool { return commitFor(e, reused) != nil })
+		if bodyBool(commitFor(e, reused), "gated") {
+			t.Fatalf("a second commit on the same parent reused the consumed pass")
+		}
+	})
+}
+
+// logBuffer is a concurrency-safe log sink for the daemon.
+type logBuffer struct {
+	mu sync.Mutex
+	b  bytes.Buffer
+}
+
+func (l *logBuffer) Write(p []byte) (int, error) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return l.b.Write(p)
+}
+
+func (l *logBuffer) String() string {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return l.b.String()
+}
+
+// C3.2.3 (scan errors): a failing head scan is reported, never discarded.
+// A forged ledger record makes the world's recorded bound an unknown
+// revision; the scanner must log the rev-list failure.
+func TestC3_2_3SyncErrorLogged(t *testing.T) {
+	h := newGateHarness(t)
+	addAgent(t, h, "w1")
+	h.Daemon.Close()
+
+	bogus := strings.Repeat("d", 40)
+	if _, err := h.Store.Append(h.Commission, "court", "world.commit",
+		&ledger.WorldCommit{
+			World: "w1", Commit: bogus, Parents: []string{},
+			Changes: []ledger.PathChange{}, Gated: false, Assumes: []string{},
+		}); err != nil {
+		t.Fatal(err)
+	}
+	var logs logBuffer
+	d2, err := daemon.New(h.Store, daemon.Options{
+		DataDir: h.DataDir, Repo: h.Repo, CourtBin: h.CourtBin,
+		Logger: log.New(&logs, "", 0)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := d2.Start(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(d2.Close)
+
+	// A ledger write wakes the scanner; the scan fails on the bad bound.
+	if err := postAdminRule(d2.URL(), d2.AdminToken(), h.Commission, "D999", "x"); err != nil {
+		t.Fatal(err)
+	}
+	deadline := time.Now().Add(5 * time.Second)
+	for {
+		got := logs.String()
+		if strings.Contains(got, "gate sync") && strings.Contains(got, "rev-list") {
+			return
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("the head scanner's error was not reported; log: %q", got)
+		}
+		time.Sleep(20 * time.Millisecond)
+	}
+}
+
+func postAdminRule(url, token, commission, decision, option string) error {
+	raw, err := json.Marshal(map[string]any{
+		"commission": commission, "decision": decision, "option": option})
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", url+"/admin/rule", bytes.NewReader(raw))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+	resp, err := (&http.Client{Timeout: 5 * time.Second}).Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("admin rule: %s", resp.Status)
+	}
+	return nil
 }
 
 // --------------------------------------------------------------------------

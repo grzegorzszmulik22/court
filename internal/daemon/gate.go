@@ -277,12 +277,19 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 		}
 		pc := ledger.PathChange{Path: f[2], Added: -1, Deleted: -1}
 		if f[0] != "-" {
-			fmt.Sscanf(f[0], "%d", &pc.Added)
-			fmt.Sscanf(f[1], "%d", &pc.Deleted)
+			if _, err := fmt.Sscanf(f[0], "%d", &pc.Added); err != nil {
+				return fmt.Errorf("gate: bad numstat count %q: %w", f[0], err)
+			}
+			if _, err := fmt.Sscanf(f[1], "%d", &pc.Deleted); err != nil {
+				return fmt.Errorf("gate: bad numstat count %q: %w", f[1], err)
+			}
 		}
 		changes = append(changes, pc)
 	}
-	gated := d.takeGatePass(sess, parent, commit)
+	gated, err := d.takeGatePass(sess, parent, commit)
+	if err != nil {
+		return err
+	}
 	ev, _, err := d.emit(sess.Commission, "agent:"+sess.Agent, "world.commit",
 		&ledger.WorldCommit{
 			World: sess.World, Commit: commit, Parents: parents,
@@ -300,29 +307,34 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
 	return nil
 }
 
-// takeGatePass reports whether the pre-commit hook authorized this commit
-// and consumes the pass. A pass is bound to the pending commit's parent and
-// index tree, so a commit made with --no-verify after the gate passed for a
-// different tree is still ungated.
-func (d *Daemon) takeGatePass(sess *Session, parent, commit string) bool {
+// takeGatePass reports whether the pre-commit hook authorized this exact
+// commit (same parent and same index tree) and consumes the pass. One pass
+// authorizes one commit: any observed commit in the world consumes it, so a
+// further commit on the same parent after an amend, reset or --no-verify
+// attempt is ungated. A pass recorded without a tree authorizes nothing.
+func (d *Daemon) takeGatePass(sess *Session, parent, commit string) (bool, error) {
 	key := gate.WorldKey(sess.Commission, sess.World)
 	d.mu.Lock()
 	p, ok := d.gatePasses[key]
-	d.mu.Unlock()
-	if !ok || p.Parent != parent {
-		return false
+	if ok {
+		delete(d.gatePasses, key)
 	}
-	if p.Tree != "" {
-		tree, err := gitOut(sess.Worktree, "rev-parse", commit+"^{tree}")
-		if err != nil || strings.TrimSpace(tree) != p.Tree {
-			return false
-		}
+	var saveErr error
+	if ok {
+		saveErr = d.saveGatePassesLocked()
 	}
-	d.mu.Lock()
-	delete(d.gatePasses, key)
-	d.saveGatePassesLocked()
 	d.mu.Unlock()
-	return true
+	if saveErr != nil {
+		return false, fmt.Errorf("gate: consume pass: %w", saveErr)
+	}
+	if !ok || p.Parent != parent || p.Tree == "" {
+		return false, nil
+	}
+	tree, err := gitOut(sess.Worktree, "rev-parse", commit+"^{tree}")
+	if err != nil {
+		return false, fmt.Errorf("gate: tree of %s: %w", commit, err)
+	}
+	return strings.TrimSpace(tree) == p.Tree, nil
 }
 
 // --------------------------------------------------------------------------
@@ -403,14 +415,17 @@ func (d *Daemon) syncLoop() {
 			}
 		}
 		last = time.Now()
-		d.syncWorlds()
+		if err := d.syncWorlds(); err != nil {
+			d.logf("gate sync: %v", err)
+		}
 	}
 }
 
 // syncWorlds compares every registered world's HEAD with the last commit in
 // the ledger and records the difference. It is the fallback path for a
-// commit that reached a world with no hook at all.
-func (d *Daemon) syncWorlds() {
+// commit that reached a world with no hook at all. Every failure is
+// returned (the scanner logs it) rather than discarded.
+func (d *Daemon) syncWorlds() error {
 	d.mu.Lock()
 	seen := map[string]bool{}
 	var sessions []*Session
@@ -426,12 +441,22 @@ func (d *Daemon) syncWorlds() {
 		sessions = append(sessions, sess)
 	}
 	d.mu.Unlock()
+	var first error
+	note := func(err error) {
+		if first == nil {
+			first = err
+		}
+	}
 	for _, sess := range sessions {
 		if _, err := os.Stat(sess.Worktree); err != nil {
+			if !os.IsNotExist(err) {
+				note(fmt.Errorf("world %s: %w", sess.World, err))
+			}
 			continue
 		}
 		out, err := gitOut(sess.Worktree, "rev-parse", "--verify", "HEAD")
 		if err != nil {
+			note(fmt.Errorf("world %s: %w", sess.World, err))
 			continue
 		}
 		head := strings.TrimSpace(out)
@@ -443,9 +468,13 @@ func (d *Daemon) syncWorlds() {
 		}
 		wl := d.worldMuFor(sess.World)
 		wl.Lock()
-		_ = d.recordCommits(sess, head, "")
+		err = d.recordCommits(sess, head, "")
 		wl.Unlock()
+		if err != nil {
+			note(fmt.Errorf("world %s: %w", sess.World, err))
+		}
 	}
+	return first
 }
 
 // gitOut runs a read-only git command inside a worktree.
