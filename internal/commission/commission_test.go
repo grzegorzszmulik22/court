@@ -56,24 +56,42 @@ func (f *fixture) shutdown() {
 	pid := 0
 	if err == nil {
 		var df struct {
-			URL   string `json:"url"`
-			Token string `json:"admin_token"`
-			PID   int    `json:"pid"`
+			URL      string `json:"url"`
+			Token    string `json:"admin_token"`
+			PID      int    `json:"pid"`
+			PIDStart string `json:"pid_start"`
 		}
 		if err := json.Unmarshal(raw, &df); err != nil {
 			f.t.Fatalf("daemon.json: %v", err)
 		}
 		pid = df.PID
 		if pid > 0 {
-			recordDaemonPID(f.t, pid)
+			recordDaemonPID(f.t, pid, df.PIDStart)
 		}
 		if df.URL != "" {
-			req, _ := http.NewRequest("POST", df.URL+"/admin/shutdown",
-				strings.NewReader("{}"))
-			req.Header.Set("Authorization", "Bearer "+df.Token)
-			resp, err := (&http.Client{Timeout: 2 * time.Second}).Do(req)
-			if err == nil {
-				resp.Body.Close()
+			// Retry briefly: under load the daemon may still be starting
+			// when the fixture tears down, and one refused request would
+			// leave it running for the rest of the run.
+			deadline := time.Now().Add(5 * time.Second)
+			for {
+				req, err := http.NewRequest("POST", df.URL+"/admin/shutdown",
+					strings.NewReader("{}"))
+				if err != nil {
+					f.t.Fatalf("shutdown request: %v", err)
+				}
+				req.Header.Set("Authorization", "Bearer "+df.Token)
+				resp, err := (&http.Client{Timeout: 2 * time.Second}).Do(req)
+				if err == nil {
+					resp.Body.Close()
+					break
+				}
+				if pid > 0 && !processAlive(pid) {
+					break // already gone; a repeated fixture shutdown is a no-op
+				}
+				if time.Now().After(deadline) {
+					break // waitProcessGone reports a daemon that stayed alive
+				}
+				time.Sleep(50 * time.Millisecond)
 			}
 		}
 	} else if !os.IsNotExist(err) {

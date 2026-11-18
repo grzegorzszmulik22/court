@@ -41,8 +41,12 @@ func processIdentity(pid int) string {
 // processMatches reports whether the live pid is still the process the
 // registry recorded. An empty identity falls back to the pid alone.
 func processMatches(pid int, ident string) bool {
+	// Without a recorded identity there is no proof the live pid is ours:
+	// report nothing rather than blame an unrelated process. A daemon that
+	// really was left behind is caught by its fixture's waitProcessGone /
+	// waitFileReleased barriers.
 	if ident == "" {
-		return true
+		return false
 	}
 	return processIdentity(pid) == ident
 }

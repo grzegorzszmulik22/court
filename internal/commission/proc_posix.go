@@ -10,6 +10,7 @@ import (
 // detach starts the child in its own session so it outlives the
 // commissioning terminal and is not taken down by a hangup or a group
 // signal directed at `court commission`.
-func detach(cmd *exec.Cmd) {
+func detach(cmd *exec.Cmd) error {
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+	return nil
 }

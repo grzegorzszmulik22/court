@@ -161,13 +161,19 @@ func readDaemonFile(dataDir string) (*daemonFile, error) {
 func EnsureDaemon(courtBin, dataDir, repo string) (*Client, error) {
 	if f, err := readDaemonFile(dataDir); err == nil {
 		cl := &Client{Base: f.URL, Token: f.AdminToken}
-		var info map[string]any
 		probe := &http.Client{Timeout: 2 * time.Second}
 		old := cl.HTTP
 		cl.HTTP = probe
-		if err := cl.get("/admin/info", &info); err == nil {
-			cl.HTTP = old
-			return cl, nil
+		// Probe more than once before deciding the recorded daemon is dead:
+		// on a loaded host one slow /admin/info reply must not start a
+		// second daemon on the same data directory and leak the first.
+		for attempt := 0; attempt < 5; attempt++ {
+			var info map[string]any
+			if err := cl.get("/admin/info", &info); err == nil {
+				cl.HTTP = old
+				return cl, nil
+			}
+			time.Sleep(50 * time.Millisecond)
 		}
 		cl.HTTP = old
 	}
@@ -186,7 +192,10 @@ func EnsureDaemon(courtBin, dataDir, repo string) (*Client, error) {
 	}
 	cmd := exec.Command(courtBin, args...)
 	cmd.Stdout, cmd.Stderr = logf, logf
-	detach(cmd)
+	if err := detach(cmd); err != nil {
+		logf.Close()
+		return nil, fmt.Errorf("daemon detach: %w", err)
+	}
 	if err := cmd.Start(); err != nil {
 		logf.Close()
 		return nil, fmt.Errorf("daemon start: %w", err)

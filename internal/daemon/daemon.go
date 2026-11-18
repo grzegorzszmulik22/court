@@ -491,6 +491,7 @@ func (d *Daemon) writeDaemonFile() error {
 		"url":         d.URL(),
 		"admin_token": d.adminToken,
 		"pid":         os.Getpid(),
+		"pid_start":   processStartID(),
 	})
 	if err != nil {
 		return err

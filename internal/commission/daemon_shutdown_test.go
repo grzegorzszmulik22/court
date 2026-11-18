@@ -77,9 +77,10 @@ func startTestDaemon(t *testing.T, dataDir string) *testDaemon {
 func (d *testDaemon) waitReady(t *testing.T) (url, token string) {
 	t.Helper()
 	var df struct {
-		URL   string `json:"url"`
-		Token string `json:"admin_token"`
-		PID   int    `json:"pid"`
+		URL      string `json:"url"`
+		Token    string `json:"admin_token"`
+		PID      int    `json:"pid"`
+		PIDStart string `json:"pid_start"`
 	}
 	deadline := time.Now().Add(15 * time.Second)
 	for {
@@ -102,7 +103,7 @@ func (d *testDaemon) waitReady(t *testing.T) (url, token string) {
 	if df.PID != d.pid {
 		t.Fatalf("daemon.json pid = %d, process pid = %d", df.PID, d.pid)
 	}
-	recordDaemonPID(t, d.pid)
+	recordDaemonPID(t, d.pid, df.PIDStart)
 	return df.URL, df.Token
 }
 

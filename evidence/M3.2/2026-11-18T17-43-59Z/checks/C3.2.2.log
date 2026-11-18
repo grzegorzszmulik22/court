@@ -1,0 +1,10 @@
+=== RUN   TestC3_2_2
+=== RUN   TestC3_2_2/record_decision
+=== RUN   TestC3_2_2/survives-restart
+=== RUN   TestC3_2_2/no_decisions
+--- PASS: TestC3_2_2 (9.24s)
+    --- PASS: TestC3_2_2/record_decision (3.57s)
+    --- PASS: TestC3_2_2/survives-restart (2.15s)
+    --- PASS: TestC3_2_2/no_decisions (3.53s)
+PASS
+ok  	court/internal/gate	9.362s
