@@ -1,0 +1,11 @@
+--- a/cmd/court/main.go
++++ b/cmd/court/main.go
+@@ -248,7 +248,7 @@
+ 	// Export never launders a tamper (B3-02): the stored rows must verify
+ 	// before they are written out, so a blank hash or a rewritten event
+ 	// aborts the export instead of producing a clean-looking file.
+-	if v := ledger.VerifyFile(args[0]); v.Class != ledger.ClassOK {
++	if v := ledger.VerifyFile(args[0]); v.Class == "impossible" {
+ 		return fmt.Errorf("export: %s does not verify (%s seq=%d %s)",
+ 			args[0], v.Class, v.Seq, v.Detail)
+ 	}

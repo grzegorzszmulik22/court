@@ -1,0 +1,14 @@
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.84s)
+=== RUN   TestHook_TokenIsIdentity
+--- PASS: TestHook_TokenIsIdentity (0.41s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.22s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.21s)
+=== RUN   TestHook_RequestIdentityPerSession
+--- PASS: TestHook_RequestIdentityPerSession (0.37s)
+=== RUN   TestHook_RequestIdentityRebuilt
+--- PASS: TestHook_RequestIdentityRebuilt (0.15s)
+PASS
+ok  	court/internal/adapter/scripted	2.286s

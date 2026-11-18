@@ -4,11 +4,17 @@
 # Written from spec/01 section 11 alone; shares nothing with the Go
 # implementation but the JSON Schemas in api/schema/. Standard library only.
 #
-# Usage: refledger FILE...        verify each ledger (.jsonl export or .sqlite)
+# Usage: refledger [--head <seq>:<hash>] FILE...
+#                                 verify each ledger (.jsonl export or .sqlite)
 #        refledger --selftest     regenerate the deterministic ES6 number
 #                                 stream and check its published sha256
 #
-# Output: one line per file,  VERIFY <path> <class>
+# Output: one line per file,  VERIFY <path> <class>; a verified file prints
+# its head (VERIFY <path> ok head seq=<n> hash=<hex>) — the (seq, hash) a
+# reader keeps, since the chain alone covers only events that have a
+# successor (spec/CHANGE_REQUESTS/004-ledger-head.md). With --head the kept
+# head is checked too: HEAD <path> ok|FAIL seq=<n>, plus APPENDED lines for
+# events after it.
 # Classes: ok, io, empty, truncated, json, envelope, seq, prev, hash, schema.
 
 import hashlib
@@ -474,23 +480,23 @@ def event_value(ev):
 SQLITE_MAGIC = b"SQLite format 3\x00"
 
 def read_lines(path):
-    """path -> (lines, verdict_class, detail)."""
+    """path -> (lines, verdict_class, seq, detail)."""
     try:
         data = open(path, "rb").read()
     except OSError as e:
-        return None, "io", str(e)
+        return None, "io", -1, str(e)
     if data.startswith(SQLITE_MAGIC):
         return _read_db(path)
     if not data:
-        return None, "empty", "empty file"
+        return None, "empty", -1, "empty file"
     if data[-1] != 0x0A:
-        return None, "truncated", "file does not end with a newline"
+        return None, "truncated", -1, "file does not end with a newline"
     data = data[:-1]
     lines = data.split(b"\n")
     for i, l in enumerate(lines):
         if not l:
-            return None, "truncated", "empty line %d" % i
-    return lines, "ok", ""
+            return None, "truncated", -1, "empty line %d" % i
+    return lines, "ok", -1, ""
 
 def _read_db(path):
     try:
@@ -502,64 +508,119 @@ def _read_db(path):
             " FROM ledger ORDER BY seq").fetchall()
         con.close()
     except Exception as e:
-        return None, "io", str(e)
+        return None, "io", -1, str(e)
     if not rows:
-        return None, "empty", "ledger table is empty"
+        return None, "empty", -1, "ledger table is empty"
     lines = []
     for seq, prev, at, commission, actor, typ, body, h in rows:
+        # B3-02: a stored row is read, never repaired. A hash column that is
+        # NULL, blank or not sha256 hex is an envelope error — this reader
+        # does not recompute the hash it was not given.
+        if not isinstance(h, str) or not HEX64.match(h):
+            return None, "envelope", seq, \
+                "stored hash is blank or not sha256 hex"
+        if not isinstance(body, str):
+            return None, "envelope", seq, "stored body is not text"
         try:
             bv = parse_strict(body.encode())
         except JsonError as e:
-            return None, "envelope", "stored body invalid at seq %s: %s" % (seq, e)
-        ev = {
-            "seq_i": seq, "prev": prev, "at": at, "commission": commission,
-            "actor": actor, "type": typ, "body": bv, "hash": h,
-        }
+            return None, "envelope", seq, "stored body invalid: %s" % e
+        # B3-11: the stored body column holds canonical bytes; a whitespace
+        # or key-order rewrite of the column decodes to the same body but is
+        # not what was stored.
+        if canon(bv) != body.encode():
+            return None, "envelope", seq, \
+                "stored body is not the canonical bytes"
         lines.append(canon(Obj([
             ("seq", Num(str(seq))), ("prev", prev), ("at", at),
             ("commission", commission), ("actor", actor), ("type", typ),
             ("body", bv), ("hash", h)])))
-    return lines, "ok", ""
+    return lines, "ok", -1, ""
 
 # ---------------------------------------------------------------------------
 # Verify.
 # ---------------------------------------------------------------------------
 
+def full_canon_line(ev):
+    """Canonical bytes of the whole envelope, hash included — what the
+    stored line must equal byte for byte."""
+    return canon(Obj([
+        ("seq", Num(str(ev["seq_i"]))), ("prev", ev["prev"]),
+        ("at", ev["at"]), ("commission", ev["commission"]),
+        ("actor", ev["actor"]), ("type", ev["type"]), ("body", ev["body"]),
+        ("hash", ev["hash"])]))
+
 def verify_lines(lines, schemas):
+    """-> (class, seq, detail, head). head is (seq, hash) of the newest
+    verified event when class is ok, else None."""
     if not lines:
-        return "empty", -1, "no events"
+        return "empty", -1, "no events", None
     prev_canon = None
+    last = None
     for i, line in enumerate(lines):
         try:
             ev = decode_envelope(line)
         except DupKey as e:
-            return "envelope", i, str(e)
+            return "envelope", i, str(e), None
         except EnvelopeError as e:
-            return "envelope", i, str(e)
+            return "envelope", i, str(e), None
         except JsonError as e:
-            return "json", i, str(e)
+            return "json", i, str(e), None
+        # B3-11: the stored bytes are the canonical bytes. A whitespace,
+        # CRLF, key-order or number-spelling rewrite decodes to the same
+        # event but is not what was stored — reject it.
+        if line != full_canon_line(ev):
+            return "envelope", i, \
+                "stored bytes are not the canonical event bytes", None
         if ev["seq_i"] != i:
-            return "seq", i, "seq %d at position %d" % (ev["seq_i"], i)
+            return "seq", i, "seq %d at position %d" % (ev["seq_i"], i), None
         c = canon_of(ev)
         want = ZERO_PREV if i == 0 else hashlib.sha256(prev_canon).hexdigest()
         if ev["prev"] != want:
-            return "prev", i, "prev mismatch"
+            return "prev", i, "prev mismatch", None
         if hashlib.sha256(c).hexdigest() != ev["hash"]:
-            return "hash", i, "hash mismatch"
+            return "hash", i, "hash mismatch", None
         sch = schemas.get(ev["type"])
         if sch is None:
-            return "schema", i, "no schema for " + ev["type"]
+            return "schema", i, "no schema for " + ev["type"], None
         errs = validate_schema(sch, event_value(ev))
         if errs:
-            return "schema", i, errs[0]
+            return "schema", i, errs[0], None
         prev_canon = c
-    return "ok", -1, ""
+        last = ev
+    return "ok", -1, "", (last["seq_i"], last["hash"])
+
+def check_head(lines, seq, want_hash):
+    """Compare a kept head against an already verified ledger. Returns
+    (fail_reason, appended_events): fail_reason is "" when the ledger holds
+    exactly (seq, want_hash); appended lists events after it — reported,
+    never a failure, since an append-only ledger grows past any kept head
+    (spec/CHANGE_REQUESTS/004-ledger-head.md)."""
+    if seq < 0 or seq >= len(lines):
+        return ("ledger has no event at seq %d (cut back below the kept head)"
+                % seq), []
+    try:
+        ev = decode_envelope(lines[seq])
+    except Exception as e:
+        return "event at seq %d does not decode: %s" % (seq, e), []
+    if ev["hash"] != want_hash:
+        return ("event at seq %d has hash %s, not the kept %s"
+                % (seq, ev["hash"], want_hash)), []
+    appended = []
+    for l in lines[seq + 1:]:
+        try:
+            appended.append(decode_envelope(l))
+        except Exception as e:
+            return "event after the kept head does not decode: %s" % e, []
+    return "", appended
 
 def verify_file(path, schemas):
-    lines, cls, detail = read_lines(path)
+    """-> (class, seq, detail, head, lines)."""
+    lines, cls, rseq, detail = read_lines(path)
     if cls != "ok":
-        return cls, -1, detail
-    return verify_lines(lines, schemas)
+        return cls, rseq, detail, None, None
+    cls, seq, detail, head = verify_lines(lines, schemas)
+    return cls, seq, detail, head, lines
 
 # ---------------------------------------------------------------------------
 # --selftest: regenerate the deterministic ES6 number stream and compare the
@@ -657,12 +718,36 @@ def selftest():
 # ---------------------------------------------------------------------------
 
 def main(argv):
+    # One output format on every OS: text-mode stdout would write CRLF on
+    # Windows, so the two verifiers' verdict streams would differ byte for byte.
+    sys.stdout.reconfigure(newline="\n")
+    sys.stderr.reconfigure(newline="\n")
     args = argv[1:]
     if args and args[0] == "--selftest":
         return selftest()
-    files = [a for a in args if not a.startswith("--")]
+    hseq, hhash = -1, None
+    files = []
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a == "--head" and i + 1 < len(args):
+            spec = args[i + 1]
+            s, _, h = spec.partition(":")
+            if not s.isdigit() or not HEX64.match(h):
+                print("refledger: --head wants <seq>:<64 lowercase hex>, got %r"
+                      % spec, file=sys.stderr)
+                return 2
+            hseq, hhash = int(s), h
+            i += 2
+            continue
+        if a.startswith("--"):
+            i += 1
+            continue
+        files.append(a)
+        i += 1
     if not files:
-        print("usage: refledger FILE... | refledger --selftest", file=sys.stderr)
+        print("usage: refledger [--head <seq>:<hash>] FILE..."
+              " | refledger --selftest", file=sys.stderr)
         return 2
     try:
         schemas = load_schemas()
@@ -671,13 +756,28 @@ def main(argv):
         return 2
     bad = 0
     for f in files:
-        cls, seq, detail = verify_file(f, schemas)
-        if seq >= 0:
+        cls, seq, detail, head, lines = verify_file(f, schemas)
+        # A verified ledger prints its head: (seq, hash) of the newest
+        # event is the pair a reader keeps, since the chain alone covers
+        # only events that have a successor (CR-004).
+        if cls == "ok" and head is not None:
+            print("VERIFY %s ok head seq=%d hash=%s" % (f, head[0], head[1]))
+        elif seq >= 0:
             print("VERIFY %s %s seq=%d %s" % (f, cls, seq, detail))
         else:
             print("VERIFY %s %s" % (f, cls))
         if cls != "ok":
             bad += 1
+            continue
+        if hseq >= 0:
+            fail, appended = check_head(lines, hseq, hhash)
+            if fail:
+                print("HEAD %s FAIL seq=%d %s" % (f, hseq, fail))
+                bad += 1
+                continue
+            print("HEAD %s ok seq=%d appended=%d" % (f, hseq, len(appended)))
+            for ev in appended:
+                print("APPENDED %s seq=%d type=%s" % (f, ev["seq_i"], ev["type"]))
     return 1 if bad else 0
 
 if __name__ == "__main__":

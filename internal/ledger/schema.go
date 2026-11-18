@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 
 	apischema "court/api/schema"
 )
@@ -50,6 +51,47 @@ func schemaBytes(dir, typ string) ([]byte, error) {
 		return apischema.FS.ReadFile(name)
 	}
 	return os.ReadFile(filepath.Join(dir, name))
+}
+
+// PinnedActor returns the schema-pinned actor for event types whose schema
+// sets actor to a constant (spec/01 section 11.2: the court writes
+// world.commit, a human opens a commission). For those types the caller's
+// actor argument is not authoritative — the event's writer is fixed by
+// the spec, so the pinned value is the only value the ledger may store.
+// The second return is false when the type has no schema or its actor is
+// a pattern or anyOf (agent-emitted types).
+func PinnedActor(typ string) (string, bool) {
+	sch := Schemas[typ]
+	props, _ := objGet(sch, "properties")
+	a, ok := objGet(props, "actor")
+	if !ok {
+		return "", false
+	}
+	c, ok := objGet(a, "const")
+	if !ok || c.Kind != String {
+		return "", false
+	}
+	return c.Str, true
+}
+
+// patternOf compiles a schema regex, cached: verification and the
+// schema-at-append check run the same small set of patterns per event.
+var patternCache sync.Map // string -> *regexp.Regexp or error
+
+func patternOf(p string) (*regexp.Regexp, error) {
+	if v, ok := patternCache.Load(p); ok {
+		if re, ok := v.(*regexp.Regexp); ok {
+			return re, nil
+		}
+		return nil, v.(error)
+	}
+	re, err := regexp.Compile(p)
+	if err != nil {
+		patternCache.Store(p, err)
+		return nil, err
+	}
+	patternCache.Store(p, re)
+	return re, nil
 }
 
 // ValidateSchema checks instance against a parsed schema document, collecting
@@ -240,7 +282,7 @@ func (c *schemaCheck) check(inst, sch *Value, path, spath string) {
 			}
 		}
 		if p, ok := objGet(sch, "pattern"); ok {
-			re, err := regexp.Compile(strOf(p))
+			re, err := patternOf(strOf(p))
 			if err != nil || !re.MatchString(inst.Str) {
 				c.fail(path, "does not match pattern")
 			}

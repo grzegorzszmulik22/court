@@ -1,0 +1,12 @@
+VERIFY test/vectors/ledger/golden-large.jsonl ok head seq=1996 hash=a28333768fc45c344e8158dfdbc5fd14cf8abcd11cbb10a10aab4a419b774ee3
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok head seq=16 hash=4fe061a4f7727deba4b6d8c6bc32dfb7a4dc29a98a9d9f88612802907f58afe5
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok head seq=297 hash=ed58f10cbc78f3797cfac36896b123f288ec88b27b1618643dc7796c51842fbf
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok head seq=37 hash=f40603e1eac4de8f48481320c3a0239f2f4c9bb99f34ebfd6d4221601853ff9a
+VERIFY test/vectors/ledger/golden-large.jsonl ok head seq=1996 hash=a28333768fc45c344e8158dfdbc5fd14cf8abcd11cbb10a10aab4a419b774ee3
+VERIFY test/vectors/ledger/golden-minimal.jsonl ok head seq=16 hash=4fe061a4f7727deba4b6d8c6bc32dfb7a4dc29a98a9d9f88612802907f58afe5
+VERIFY test/vectors/ledger/golden-mixed.jsonl ok head seq=297 hash=ed58f10cbc78f3797cfac36896b123f288ec88b27b1618643dc7796c51842fbf
+VERIFY test/vectors/ledger/golden-unicode.jsonl ok head seq=37 hash=f40603e1eac4de8f48481320c3a0239f2f4c9bb99f34ebfd6d4221601853ff9a
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.2.d/golden-mixed.sqlite ok head seq=297 hash=ed58f10cbc78f3797cfac36896b123f288ec88b27b1618643dc7796c51842fbf
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.2.d/golden-mixed.sqlite ok head seq=297 hash=ed58f10cbc78f3797cfac36896b123f288ec88b27b1618643dc7796c51842fbf
+reject vectors: 11
+rejects: 11 vectors, both verifiers report the expected class

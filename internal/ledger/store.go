@@ -254,6 +254,14 @@ func (s *Store) appendOnce(commission, actor, typ string, body any, idemKeys []s
 	if err := ValidateBody(typ, body); err != nil {
 		return nil, false, err
 	}
+	// B3-03: a type whose schema pins actor to a constant has exactly one
+	// legal writer, so the pinned value wins over whatever the caller
+	// passed — a spec-invalid actor can never reach the chain. (The gate
+	// hands world.commit the committing agent's id; spec/01 section 11.2
+	// pins that event's actor to "court".)
+	if pinned, ok := PinnedActor(typ); ok {
+		actor = pinned
+	}
 	ev := &Event{
 		Seq: seq + 1, Prev: prevHash, At: Now(),
 		Commission: commission, Actor: actor, Type: typ, Body: bodyVal,
@@ -264,6 +272,15 @@ func (s *Store) appendOnce(commission, actor, typ string, body any, idemKeys []s
 	}
 	if _, err := ev.ComputeHash(); err != nil {
 		return nil, false, err
+	}
+	// B3-03: the append path validates the full envelope against the same
+	// schema the verifier uses, before anything is written or projected.
+	// An agent tool call that would store an invalid event errors here and
+	// leaves no row behind.
+	if sch := Schemas[typ]; sch == nil {
+		return nil, false, fmt.Errorf("no schema for %s", typ)
+	} else if errs := ValidateSchema(sch, eventValue(ev)); len(errs) > 0 {
+		return nil, false, fmt.Errorf("schema: %s", errs[0])
 	}
 	fault("envelope", ev.Seq)
 	bodyCanon, err := Canonical(ev.Body)

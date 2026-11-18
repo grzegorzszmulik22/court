@@ -82,12 +82,12 @@ func (e *Event) ComputeHash() (string, error) {
 }
 
 // Line is the stored form: the canonical JSON of the envelope including
-// `hash`, one line long.
+// `hash`, one line long. The hash is part of the stored bytes: it is never
+// invented here — a stored event whose hash is blank is an error (B3-02),
+// and writers compute it with ComputeHash before serializing.
 func (e *Event) Line() ([]byte, error) {
 	if e.Hash == "" {
-		if _, err := e.ComputeHash(); err != nil {
-			return nil, err
-		}
+		return nil, fmt.Errorf("event has no stored hash")
 	}
 	v := &Value{Kind: Object, Obj: []Member{
 		{Key: "seq", Val: &Value{Kind: Number, Num: strconv.FormatInt(e.Seq, 10)}},
