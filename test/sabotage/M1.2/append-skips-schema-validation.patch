@@ -1,0 +1,11 @@
+--- a/internal/ledger/store.go
++++ b/internal/ledger/store.go
+@@ -279,7 +279,7 @@
+ 	// leaves no row behind.
+ 	if sch := Schemas[typ]; sch == nil {
+ 		return nil, false, fmt.Errorf("no schema for %s", typ)
+-	} else if errs := ValidateSchema(sch, eventValue(ev)); len(errs) > 0 {
++	} else if errs := ValidateSchema(sch, eventValue(ev)); false {
+ 		return nil, false, fmt.Errorf("schema: %s", errs[0])
+ 	}
+ 	fault("envelope", ev.Seq)

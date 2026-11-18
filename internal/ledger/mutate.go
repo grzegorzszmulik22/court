@@ -2,6 +2,7 @@ package ledger
 
 import (
 	"bytes"
+	"fmt"
 	"math/rand"
 	"strconv"
 )
@@ -21,6 +22,15 @@ var MutantKinds = []string{
 	// the check (e.g. lone lows) must produce a disagreement.
 	"lone-surrogate-high", "lone-surrogate-low", "surrogate-low-high",
 	"surrogate-high-nonlow",
+	// B3-11: stored bytes are the canonical bytes. Each kind decodes to
+	// the same event but rewrites the stored line, so only the
+	// stored-bytes check catches it — a verifier that re-canonicalizes
+	// instead of comparing reports ok and disagrees.
+	"whitespace", "crlf-inside", "key-order", "number-spelling",
+	"alt-escape",
+	// B3-02: a stored hash must be given, never recomputed. blank-hash
+	// fails the hex check; missing-hash drops the field — both envelope.
+	"blank-hash", "missing-hash",
 }
 
 // Mutate returns mutated copies of a verified ledger's canonical lines.
@@ -118,6 +128,27 @@ func Mutate(lines [][]byte, kind string, seed int64) [][]byte {
 		case "trailing-data":
 			i := r.Intn(n)
 			out[i] = append(append([]byte{}, out[i]...), ' ', 'x')
+		case "whitespace":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `{"actor"`, " ")
+		case "crlf-inside":
+			i := r.Intn(n)
+			out[i] = injectAfter(out[i], `{"actor"`, "\r")
+		case "key-order":
+			i := r.Intn(n)
+			out[i] = reorderEnvelope(out[i])
+		case "number-spelling":
+			i := r.Intn(n)
+			out[i] = respellNumber(out[i])
+		case "alt-escape":
+			i := r.Intn(n)
+			out[i] = bytes.Replace(out[i], []byte(`"actor"`), []byte(`"\u0061ctor"`), 1)
+		case "blank-hash":
+			i := r.Intn(n)
+			out[i] = editField(out[i], "hash", strVal(""))
+		case "missing-hash":
+			i := r.Intn(n)
+			out[i] = dropField(out[i], "hash")
 		default:
 			panic("unknown mutant kind " + kind)
 		}
@@ -281,6 +312,78 @@ func firstScalar(v *Value, r *rand.Rand) *scalarRef {
 // reemit writes the event back out keeping its stored hash (a corrupt line).
 func reemit(ev *Event) []byte {
 	return MustCanonical(eventValue(ev))
+}
+
+// reorderEnvelope re-emits the event with its keys in a non-canonical
+// order — the same event, stored in bytes the canonical form would never
+// produce (B3-11).
+func reorderEnvelope(line []byte) []byte {
+	ev, err := DecodeEnvelope(line)
+	if err != nil {
+		panic(err)
+	}
+	pairs := [][2]string{
+		{"prev", ev.Prev},
+		{"seq", fmt.Sprint(ev.Seq)},
+		{"at", ev.At},
+		{"commission", ev.Commission},
+		{"actor", ev.Actor},
+		{"type", ev.Type},
+		{"hash", ev.Hash},
+	}
+	out := []byte("{")
+	for i, kv := range pairs {
+		if i > 0 {
+			out = append(out, ',')
+		}
+		out = append(out, MustCanonical(strVal(kv[0]))...)
+		out = append(out, ':')
+		if kv[0] == "seq" {
+			out = append(out, kv[1]...)
+		} else {
+			out = append(out, MustCanonical(strVal(kv[1]))...)
+		}
+	}
+	out = append(out, ',')
+	out = append(out, MustCanonical(strVal("body"))...)
+	out = append(out, ':')
+	out = append(out, MustCanonical(ev.Body)...)
+	return append(out, '}')
+}
+
+// respellNumber rewrites the envelope's seq literal with an equivalent
+// but non-canonical spelling (5 -> 5.0): the same event in different
+// stored bytes (B3-11).
+func respellNumber(line []byte) []byte {
+	i := bytes.Index(line, []byte(`"seq":`))
+	if i < 0 {
+		panic("no seq literal")
+	}
+	j := i + len(`"seq":`)
+	k := j
+	for k < len(line) && line[k] >= '0' && line[k] <= '9' {
+		k++
+	}
+	out := append([]byte{}, line[:k]...)
+	out = append(out, '.', '0')
+	return append(out, line[k:]...)
+}
+
+// dropField removes one "key":"value" member (string value, no escapes)
+// from the stored line — used to drop the hash member (B3-02).
+func dropField(line []byte, key string) []byte {
+	marker := []byte(`,"` + key + `":"`)
+	i := bytes.Index(line, marker)
+	if i < 0 {
+		panic("field not found: " + key)
+	}
+	val := i + len(marker)
+	end := bytes.IndexByte(line[val:], '"')
+	if end < 0 {
+		panic("unterminated value for " + key)
+	}
+	end += val + 1 // past the closing quote
+	return append(append([]byte{}, line[:i]...), line[end:]...)
 }
 
 // PatchBody rewrites event i's body via fn, then recomputes the chain from

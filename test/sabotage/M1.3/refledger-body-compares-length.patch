@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -528,7 +528,7 @@
+         # B3-11: the stored body column holds canonical bytes; a whitespace
+         # or key-order rewrite of the column decodes to the same body but is
+         # not what was stored.
+-        if canon(bv) != body.encode():
++        if len(canon(bv)) != len(body):
+             return None, "envelope", seq, \
+                 "stored body is not the canonical bytes"
+         lines.append(canon(Obj([

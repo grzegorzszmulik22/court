@@ -1,0 +1,2 @@
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.5.d/cut.jsonl ok head seq=4 hash=460500dcf553fa3409b3563b8c30bebdf3a60e4e8f8f75ea6d7707f14514bd4e
+HEAD /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.5.d/cut.jsonl FAIL seq=10 ledger has no event at seq 10 (cut back below the kept head)

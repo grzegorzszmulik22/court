@@ -1,34 +1,11 @@
-diff --git a/internal/ledger/store.go b/internal/ledger/store.go
-index e640992..3dda793 100644
 --- a/internal/ledger/store.go
 +++ b/internal/ledger/store.go
-@@ -209,12 +209,11 @@ func (s *Store) appendOnce(commission, actor, typ string, body any, idemKeys []s
- 	// The upcoming-seq label for the pre-transaction fault points comes
- 	// from nextSeqHint (one real read on the first append only); the
- 	// in-transaction headInTx below is the authoritative one.
--	if s.nextSeqHint < 0 {
--		p, _, _ := s.headInTx()
--		s.nextSeqHint = p + 1
-+	seq, prevHash, err := s.headInTx()
-+	if err != nil {
-+		return nil, false, err
+@@ -263,7 +263,7 @@
+ 		actor = pinned
  	}
--	pseq := s.nextSeqHint - 1
--	fault("begin", pseq+1)
-+	fault("begin", seq+1)
- 	if err := s.exec(ctx, "BEGIN IMMEDIATE"); err != nil {
- 		return nil, false, err
+ 	ev := &Event{
+-		Seq: seq + 1, Prev: prevHash, At: Now(),
++		Seq: seq, Prev: prevHash, At: Now(),
+ 		Commission: commission, Actor: actor, Type: typ, Body: bodyVal,
  	}
-@@ -224,11 +223,7 @@ func (s *Store) appendOnce(commission, actor, typ string, body any, idemKeys []s
- 			s.exec(ctx, "ROLLBACK")
- 		}
- 	}()
--	fault("began", pseq+1)
--	seq, prevHash, err := s.headInTx()
--	if err != nil {
--		return nil, false, err
--	}
-+	fault("began", seq+1)
- 	fault("head", seq+1)
- 	for _, k := range idemKeys {
- 		if k == "" {
+ 	if seq < 0 {

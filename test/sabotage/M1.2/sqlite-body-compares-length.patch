@@ -1,0 +1,11 @@
+--- a/internal/ledger/verify.go
++++ b/internal/ledger/verify.go
+@@ -241,7 +241,7 @@
+ 		if err != nil {
+ 			return nil, Verdict{Class: ClassEnvelope, Seq: seq, Detail: err.Error()}
+ 		}
+-		if string(bodyCanon) != body {
++		if len(bodyCanon) != len(body) {
+ 			return nil, Verdict{Class: ClassEnvelope, Seq: seq,
+ 				Detail: "stored body is not the canonical bytes"}
+ 		}

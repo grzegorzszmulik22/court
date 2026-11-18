@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -569,7 +569,7 @@
+         # B3-11: the stored bytes are the canonical bytes. A whitespace,
+         # CRLF, key-order or number-spelling rewrite decodes to the same
+         # event but is not what was stored — reject it.
+-        if line != full_canon_line(ev):
++        if False and line != full_canon_line(ev):
+             return "envelope", i, \
+                 "stored bytes are not the canonical event bytes", None
+         if ev["seq_i"] != i:

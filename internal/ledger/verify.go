@@ -30,16 +30,24 @@ type Verdict struct {
 	Seq    int64  // index of the offending event (-1 when none)
 	Detail string
 	Events int // events verified when Class == ClassOK
+	// HeadSeq and HeadHash are the chain head — (seq, hash) of the newest
+	// verified event — set when Class == ClassOK. The head is the value a
+	// reader keeps so a later --head check covers the newest event and any
+	// tail appended after it (CR-004).
+	HeadSeq  int64
+	HeadHash string
 }
 
-// VerifyLineBytes verifies a ledger given as raw canonical lines.
-// Order: truncation, JSON well-formedness, envelope strictness, seq
-// continuity, prev linkage, hash recomputation, then body schema.
+// VerifyLineBytes verifies a ledger given as raw stored lines.
+// Order: JSON well-formedness, envelope strictness, stored-bytes equality
+// with the canonical form, seq continuity, prev linkage, hash
+// recomputation, then body schema.
 func VerifyLineBytes(lines [][]byte) Verdict {
 	if len(lines) == 0 {
 		return Verdict{Class: ClassEmpty, Seq: -1, Detail: "no events"}
 	}
 	var prevCanon []byte
+	var last *Event
 	for i, line := range lines {
 		ev, err := DecodeEnvelope(line)
 		if err != nil {
@@ -47,6 +55,17 @@ func VerifyLineBytes(lines [][]byte) Verdict {
 				return Verdict{Class: classifyParse(err), Seq: int64(i), Detail: err.Error()}
 			}
 			return Verdict{Class: ClassEnvelope, Seq: int64(i), Detail: err.Error()}
+		}
+		// B3-11: the stored bytes are the canonical bytes. A whitespace,
+		// CRLF, key-order or number-spelling rewrite decodes to the same
+		// event but is not what was stored — reject it.
+		stored, err := ev.Line()
+		if err != nil {
+			return Verdict{Class: ClassEnvelope, Seq: int64(i), Detail: err.Error()}
+		}
+		if !bytes.Equal(line, stored) {
+			return Verdict{Class: ClassEnvelope, Seq: int64(i),
+				Detail: "stored bytes are not the canonical event bytes"}
 		}
 		if ev.Seq != int64(i) {
 			return Verdict{Class: ClassSeq, Seq: int64(i),
@@ -76,8 +95,49 @@ func VerifyLineBytes(lines [][]byte) Verdict {
 			return Verdict{Class: ClassSchema, Seq: int64(i), Detail: errs[0].Error()}
 		}
 		prevCanon = canon
+		last = ev
 	}
-	return Verdict{Class: ClassOK, Seq: -1, Events: len(lines)}
+	return Verdict{Class: ClassOK, Seq: -1, Events: len(lines),
+		HeadSeq: last.Seq, HeadHash: last.Hash}
+}
+
+// HeadCheck is the outcome of comparing a kept head against a verified
+// ledger (CR-004): Fail is empty when the ledger holds exactly that event
+// at that seq; Appended lists the events after it — reported, never a
+// failure, since an append-only ledger grows past any kept head.
+type HeadCheck struct {
+	Fail     string
+	Appended []*Event
+}
+
+// CheckHead reports whether the verified ledger contains exactly
+// (seq, hash). The lines must already have passed VerifyLineBytes; a
+// ledger cut back below seq, or a different event at seq, fails.
+func CheckHead(lines [][]byte, seq int64, hash string) *HeadCheck {
+	hc := &HeadCheck{}
+	if seq < 0 || seq >= int64(len(lines)) {
+		hc.Fail = fmt.Sprintf("ledger has no event at seq %d (cut back below the kept head)", seq)
+		return hc
+	}
+	ev, err := DecodeEnvelope(lines[seq])
+	if err != nil {
+		hc.Fail = fmt.Sprintf("event at seq %d does not decode: %v", seq, err)
+		return hc
+	}
+	if ev.Hash != hash {
+		hc.Fail = fmt.Sprintf("event at seq %d has hash %s, not the kept %s",
+			seq, ev.Hash, hash)
+		return hc
+	}
+	for _, l := range lines[seq+1:] {
+		ev, err := DecodeEnvelope(l)
+		if err != nil {
+			hc.Fail = fmt.Sprintf("event after the kept head does not decode: %v", err)
+			return hc
+		}
+		hc.Appended = append(hc.Appended, ev)
+	}
+	return hc
 }
 
 // classifyParse tells apart structural JSON errors (class json) from
@@ -140,7 +200,11 @@ func ReadLedgerFile(path string) ([][]byte, Verdict) {
 	return lines, Verdict{Class: ClassOK, Seq: -1}
 }
 
-// readDBLines serializes every row of the ledger table to its canonical line.
+// readDBLines serializes every row of the ledger table to its canonical
+// line. A stored row is read, never repaired (B3-02/B3-11): a hash column
+// that is blank, NULL or not sha256 hex is an envelope error — the reader
+// does not recompute the hash it was not given — and a body column that
+// does not hold canonical bytes is an envelope error too.
 func readDBLines(path string) ([][]byte, Verdict) {
 	if err := LoadSchemas(""); err != nil {
 		return nil, Verdict{Class: ClassIO, Seq: -1, Detail: err.Error()}
@@ -151,7 +215,7 @@ func readDBLines(path string) ([][]byte, Verdict) {
 		return nil, Verdict{Class: ClassIO, Seq: -1, Detail: err.Error()}
 	}
 	defer db.Close()
-	rows, err := db.Query("SELECT seq,prev,at,commission,actor,type,body,hash FROM ledger ORDER BY seq")
+	rows, err := db.Query("SELECT seq,prev,at,commission,actor,type,COALESCE(body,''),COALESCE(hash,'') FROM ledger ORDER BY seq")
 	if err != nil {
 		return nil, Verdict{Class: ClassIO, Seq: -1, Detail: err.Error()}
 	}
@@ -165,9 +229,21 @@ func readDBLines(path string) ([][]byte, Verdict) {
 		if err := rows.Scan(&seq, &prev, &at, &commission, &actor, &typ, &body, &h); err != nil {
 			return nil, Verdict{Class: ClassIO, Seq: -1, Detail: err.Error()}
 		}
+		if !reHex64.MatchString(h) {
+			return nil, Verdict{Class: ClassEnvelope, Seq: seq,
+				Detail: "stored hash is blank or not sha256 hex"}
+		}
 		bv, err := ParseStrict([]byte(body))
 		if err != nil {
 			return nil, Verdict{Class: ClassEnvelope, Seq: seq, Detail: "stored body invalid JSON"}
+		}
+		bodyCanon, err := Canonical(bv)
+		if err != nil {
+			return nil, Verdict{Class: ClassEnvelope, Seq: seq, Detail: err.Error()}
+		}
+		if string(bodyCanon) != body {
+			return nil, Verdict{Class: ClassEnvelope, Seq: seq,
+				Detail: "stored body is not the canonical bytes"}
 		}
 		ev := &Event{Seq: seq, Prev: prev, At: at, Commission: commission,
 			Actor: actor, Type: typ, Body: bv, Hash: h}

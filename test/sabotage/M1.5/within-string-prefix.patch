@@ -1,0 +1,20 @@
+--- a/internal/paths/within.go
++++ b/internal/paths/within.go
+@@ -65,16 +65,7 @@
+ // string-prefix match would accept it. When fold is set (Windows
+ // semantics) components compare case-insensitively.
+ func under(p, root string, fold bool) bool {
+-	if fold {
+-		if strings.EqualFold(p, root) {
+-			return true
+-		}
+-		return len(p) > len(root) &&
+-			strings.EqualFold(p[:len(root)], root) &&
+-			os.IsPathSeparator(p[len(root)])
+-	}
+-	return p == root ||
+-		strings.HasPrefix(p, root+string(os.PathSeparator))
++	return strings.HasPrefix(p, root)
+ }
+ 
+ // resolvePath resolves symlinks along the longest existing prefix of p

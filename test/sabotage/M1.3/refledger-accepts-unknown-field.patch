@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -220,8 +220,6 @@
+     seen = set()
+     ev = {}
+     for k, x in v.pairs:
+-        if k not in ENVELOPE_KEYS:
+-            raise EnvelopeError("unknown field %r" % k)
+         seen.add(k)
+         ev[k] = x
+     for k in ENVELOPE_KEYS:

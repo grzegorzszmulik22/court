@@ -1,0 +1,3 @@
+imports: hashlib json math os re sqlite3 struct sys
+SELFTEST PASS es6-number-stream sha256=b9f7a8e75ef22a835685a52ccba7f7d6bdc99e34b010992cbc5864cd12be6892
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-18T12-03-43Z/checks/C1.3.4.d/g/gen-00000.jsonl ok head seq=48 hash=16eeb22476a899f26c2e32221395cc58635f5d05199985e8c104197f4af4c4aa

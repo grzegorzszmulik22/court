@@ -1,0 +1,11 @@
+--- a/ref/python/refledger
++++ b/ref/python/refledger
+@@ -557,7 +557,7 @@
+         return "empty", -1, "no events", None
+     prev_canon = None
+     last = None
+-    for i, line in enumerate(lines):
++    for i, line in enumerate(lines[:-1]):
+         try:
+             ev = decode_envelope(line)
+         except DupKey as e:
