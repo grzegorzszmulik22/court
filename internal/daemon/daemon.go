@@ -256,9 +256,12 @@ func (d *Daemon) Start(ctx context.Context) error {
 }
 
 // A daemon whose data directory has been removed can never be found again:
-// daemon.json is the only discovery record. Such a process must not run
-// forever untracked, so Start watches that file and closes the daemon after
-// it has been continuously absent for dataDirGoneLimit.
+// daemon.json is the only discovery record (EnsureDaemon reads it). Such a
+// process must not run forever untracked, so Start watches that file and
+// closes the daemon after it has been continuously absent for
+// dataDirGoneLimit. The bound is 5 s, polled every 250 ms; the first poll
+// only starts the clock, so the exit happens between 5 s and 5.25 s after
+// the file disappears.
 const (
 	dataDirPollInterval = 250 * time.Millisecond
 	dataDirGoneLimit    = 5 * time.Second
@@ -283,7 +286,8 @@ func (d *Daemon) watchDaemonFile() {
 				continue
 			}
 			if now.Sub(missingSince) >= dataDirGoneLimit {
-				d.logf("data directory record %s is gone; exiting", d.daemonPath())
+				d.logf("data directory record %s is gone; exiting",
+					d.daemonPath())
 				d.Close()
 				return
 			}
@@ -323,7 +327,8 @@ func (d *Daemon) Close() {
 // Done is closed when Close has been called (or a signal asked to stop).
 // It lets the foreground `court daemon` process learn that an
 // /admin/shutdown arrived; without it the process would keep running with
-// daemon.log and the ledger open after saying it stopped.
+// daemon.log and the ledger open after saying it stopped (a real bug on
+// Windows, where the open log blocks cleanup: M2.1 tests).
 func (d *Daemon) Done() <-chan struct{} { return d.closed }
 
 // Wait blocks until the HTTP server has finished shutting down, so the
@@ -491,7 +496,6 @@ func (d *Daemon) writeDaemonFile() error {
 		"url":         d.URL(),
 		"admin_token": d.adminToken,
 		"pid":         os.Getpid(),
-		"pid_start":   processStartID(),
 	})
 	if err != nil {
 		return err

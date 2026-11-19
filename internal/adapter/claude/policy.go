@@ -91,17 +91,30 @@ func (p Policy) DecideHook(toolName string, toolInput map[string]any,
 }
 
 // insideDataDir reports whether path resolves inside the data directory
-// but outside worldDir. Cleaning resolves `..`, so a path like
-// <world>/../ledger.db still lands inside the denied region.
+// but outside worldDir. The comparison uses the filesystem's own path
+// identity (canonicalPath): on Windows that covers case variants, the
+// \?\ verbatim prefix, trailing dots, 8.3 names, junctions and
+// symlinks; on Unix it resolves symlinks. A cleaned string prefix is not
+// an identity test (red-team B3-08).
 func (p Policy) insideDataDir(path, worldDir string) bool {
 	if p.DataDir == "" {
 		return false
 	}
-	cand := filepath.Clean(path)
-	if inside(cand, worldDir) {
-		return false
+	cand, err := canonicalPath(path)
+	if err != nil {
+		cand = filepath.Clean(path)
 	}
-	return inside(cand, p.DataDir)
+	dd, err := canonicalPath(p.DataDir)
+	if err != nil {
+		dd = filepath.Clean(p.DataDir)
+	}
+	if worldDir != "" {
+		if wd, err := canonicalPath(worldDir); err == nil &&
+			(pathsEqualFold(cand, wd) || pathHasPrefixFold(cand, wd)) {
+			return false
+		}
+	}
+	return pathsEqualFold(cand, dd) || pathHasPrefixFold(cand, dd)
 }
 
 // commandNamesDataDir reports whether a shell command reaches into the

@@ -1,0 +1,71 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (8.83s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.17s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.19s)
+PASS
+ok  	court/internal/adapter/scripted	9.222s
+CHECK C1.5.1 PASS
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.18s)
+=== RUN   TestHook_TokenIsIdentity
+--- PASS: TestHook_TokenIsIdentity (0.33s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.28s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.12s)
+=== RUN   TestHook_RequestIdentityPerSession
+--- PASS: TestHook_RequestIdentityPerSession (0.22s)
+=== RUN   TestHook_RequestIdentityRebuilt
+--- PASS: TestHook_RequestIdentityRebuilt (0.18s)
+PASS
+ok  	court/internal/adapter/scripted	1.349s
+CHECK C1.5.2 PASS
+=== RUN   TestToolEvent_CommandTruncatesRunes
+--- PASS: TestToolEvent_CommandTruncatesRunes (0.23s)
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.15s)
+=== RUN   TestToolEvent_StoresHostOnly
+--- PASS: TestToolEvent_StoresHostOnly (0.14s)
+PASS
+ok  	court/internal/adapter/scripted	0.548s
+=== RUN   TestHostOf
+--- PASS: TestHostOf (0.00s)
+=== RUN   TestBuildToolEvent_HostsOnly
+--- PASS: TestBuildToolEvent_HostsOnly (0.00s)
+PASS
+ok  	court/internal/daemon	0.034s
+CHECK C1.5.3 PASS
+=== RUN   TestC1_5_4
+--- PASS: TestC1_5_4 (0.18s)
+PASS
+ok  	court/internal/adapter/scripted	0.223s
+CHECK C1.5.4 PASS
+=== RUN   TestC1_5_5
+--- PASS: TestC1_5_5 (0.25s)
+PASS
+ok  	court/internal/adapter/scripted	0.291s
+CHECK C1.5.5 PASS
+=== RUN   TestC1_5_6
+--- PASS: TestC1_5_6 (0.00s)
+=== RUN   TestC1_5_6_PayloadShapes
+--- PASS: TestC1_5_6_PayloadShapes (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.038s
+CHECK C1.5.6 PASS
+=== RUN   TestC1_5_7_EditEscapesWorld
+--- PASS: TestC1_5_7_EditEscapesWorld (0.00s)
+=== RUN   TestC1_5_7_EditDenials
+--- PASS: TestC1_5_7_EditDenials (0.00s)
+=== RUN   TestC1_5_7_DeniedRecorded
+--- PASS: TestC1_5_7_DeniedRecorded (0.12s)
+=== RUN   TestC1_5_7_BackbriefPoisonsLedger
+--- PASS: TestC1_5_7_BackbriefPoisonsLedger (0.14s)
+=== RUN   TestC1_5_7_HostileToolInputs
+    rt_poison_test.go:121: hostile calls rejected=40 accepted=0
+--- PASS: TestC1_5_7_HostileToolInputs (0.23s)
+PASS
+ok  	court/internal/adapter/scripted	0.524s
+CHECK C1.5.7 PASS
+check.sh: evidence: evidence/M1.5/2026-11-17T21-25-15Z

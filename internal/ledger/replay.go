@@ -17,6 +17,10 @@ type ReplayReport struct {
 	ReconciledChecked int
 	ReconciledBad     []string
 	StoredDerived     bool // false for a JSONL file (nothing to compare against)
+	// HeadSeq/HeadHash are the chain head replay printed for the human
+	// (CR-004): the pair a reader keeps to verify the tail later.
+	HeadSeq  int64
+	HeadHash string
 }
 
 // Replay verifies a ledger and rebuilds every derived table from the events
@@ -43,6 +47,7 @@ func Replay(path string) (*ReplayReport, error) {
 		events = append(events, ev)
 	}
 	rep.Events = len(events)
+	rep.HeadSeq, rep.HeadHash = events[len(events)-1].Seq, events[len(events)-1].Hash
 
 	// Rebuild derived state in a scratch in-memory database.
 	mem, err := sql.Open("sqlite", ":memory:")

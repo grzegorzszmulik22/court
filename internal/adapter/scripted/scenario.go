@@ -86,6 +86,10 @@ func NewHarness(o Options) (*Harness, error) {
 	if pol == nil {
 		pol = claude.Policy{DataDir: o.DataDir}
 	}
+	// B3-09: writes from this adapter's sessions are confined to the
+	// session's world at the hook layer too — an abstaining inner policy
+	// is not permission, and the daemon records the denial with a reason.
+	pol = WorldPolicy{Inner: pol}
 	d, err := daemon.New(store, daemon.Options{
 		DataDir: o.DataDir,
 		Policy:  pol, CourtBin: bin,
@@ -419,7 +423,10 @@ func Expected(sc *Script) []ExpectedEvent {
 			case "tool":
 				out = append(out, ExpectedEvent{a.ID, "tool.event", st.Tool.Name, i})
 			case "commit":
-				out = append(out, ExpectedEvent{a.ID, "world.commit", "", i})
+				// spec/01 §11.2 pins world.commit's actor to "court" —
+				// the event records the court's observation of the
+				// agent's commit, attributed via body.world.
+				out = append(out, ExpectedEvent{"court", "world.commit", "", i})
 			case "declare":
 				out = append(out, ExpectedEvent{a.ID, "tool.event", "mcp__court__record_decision", i})
 				out = append(out, ExpectedEvent{a.ID, "decision.declared", "", i})

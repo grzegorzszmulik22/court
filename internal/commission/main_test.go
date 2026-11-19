@@ -42,24 +42,7 @@ func TestMain(m *testing.M) {
 }
 
 func runTests(m *testing.M) int {
-	if bin := os.Getenv("COURT_BIN"); bin != "" {
-		// The check scripts build the binary as ".../court". Windows
-		// CreateProcess may append .exe, but os/exec's LookPath does not
-		// for a path-qualified name; use a sibling copy that carries the
-		// extension so every test and the daemon child agree (CR-002).
-		if runtime.GOOS == "windows" && filepath.Ext(bin) == "" {
-			if _, err := os.Stat(bin); err == nil {
-				exe := bin + ".exe"
-				if err := copyExecutable(bin, exe); err != nil {
-					fmt.Fprintf(os.Stderr, "commission_test: COURT_BIN copy: %v\n", err)
-					return 1
-				}
-				if err := os.Setenv("COURT_BIN", exe); err != nil {
-					fmt.Fprintf(os.Stderr, "commission_test: COURT_BIN: %v\n", err)
-					return 1
-				}
-			}
-		}
+	if os.Getenv("COURT_BIN") != "" {
 		return m.Run()
 	}
 	bin, dir, err := buildCourt()
@@ -81,22 +64,10 @@ func runTests(m *testing.M) int {
 	return code
 }
 
-// copyExecutable copies src to dst and makes the copy executable.
-func copyExecutable(src, dst string) error {
-	raw, err := os.ReadFile(src)
-	if err != nil {
-		return err
-	}
-	if err := os.WriteFile(dst, raw, 0o755); err != nil {
-		return err
-	}
-	return nil
-}
-
 // recordDaemonPID writes pid into the run-scoped registry before a test
 // asks the daemon to stop, so TestMain can prove after the run that it
 // did stop. Writing is idempotent: a fixture shutdown may run twice.
-func recordDaemonPID(t *testing.T, pid int, ident string) {
+func recordDaemonPID(t *testing.T, pid int) {
 	t.Helper()
 	dir := os.Getenv("COURT_TEST_DAEMON_REGISTRY")
 	if dir == "" {
@@ -105,14 +76,7 @@ func recordDaemonPID(t *testing.T, pid int, ident string) {
 	if pid <= 0 {
 		t.Fatalf("cannot record daemon pid %d", pid)
 	}
-	// The identity pins the record to this process object: a pid reused
-	// by an unrelated process after the daemon exits must not read as a
-	// leaked daemon (the host is shared and pids recycle). The daemon
-	// writes its own start identity into daemon.json, so recording never
-	// races the process. The test name is diagnostic only.
-	rec := ident + "\n" + t.Name()
-	if err := os.WriteFile(filepath.Join(dir, strconv.Itoa(pid)),
-		[]byte(rec), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, strconv.Itoa(pid)), nil, 0o644); err != nil {
 		t.Fatalf("record daemon pid %d: %v", pid, err)
 	}
 }
@@ -137,21 +101,8 @@ func reportLeakedDaemons(registry string, code int) int {
 			code = 1
 			continue
 		}
-		raw, err := os.ReadFile(filepath.Join(registry, e.Name()))
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "commission_test: read daemon record %q: %v\n",
-				e.Name(), err)
-			code = 1
-			continue
-		}
-		lines := strings.SplitN(strings.TrimRight(string(raw), "\n"), "\n", 2)
-		ident := lines[0]
-		name := e.Name()
-		if len(lines) > 1 && lines[1] != "" {
-			name += " (" + lines[1] + ")"
-		}
-		if processAlive(pid) && processMatches(pid, ident) {
-			leaked = append(leaked, name)
+		if processAlive(pid) {
+			leaked = append(leaked, e.Name())
 		}
 	}
 	if len(leaked) > 0 {

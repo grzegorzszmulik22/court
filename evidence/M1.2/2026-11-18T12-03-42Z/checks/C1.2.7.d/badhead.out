@@ -1,0 +1,3 @@
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.2/2026-11-18T12-03-42Z/checks/C1.2.7.d/out.jsonl ok head seq=26 hash=c63911e4a40c7ea1d3f4a2774e9c2690e3cbc05073111f26d3102a5330920748
+HEAD /home/opc/src/ct-ledger2/evidence/M1.2/2026-11-18T12-03-42Z/checks/C1.2.7.d/out.jsonl FAIL seq=26 event at seq 26 has hash c63911e4a40c7ea1d3f4a2774e9c2690e3cbc05073111f26d3102a5330920748, not the kept ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+court: 1 file(s) failed verification

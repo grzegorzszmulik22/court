@@ -1,0 +1,43 @@
+SABOTAGE datadir-deny-lexical-prefix caught by C1.7.2
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny table failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-17T22-03-27Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+SABOTAGE datadir-path-allowed caught by C1.7.2
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny check failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-17T22-04-11Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+SABOTAGE outward-list-not-applied caught by C1.7.2
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny check failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-17T22-04-54Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+SABOTAGE program-matched-by-full-path caught by C1.7.2
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny table failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-17T22-05-42Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+SABOTAGE settings-written-into-repo caught by C1.7.3
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 PASS
+CHECK C1.7.3 FAIL stand-in exec check failed; see go test output 
+check.sh: evidence: evidence/M1.7/2026-11-17T22-06-27Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+SABOTAGE wrappers-matched-by-full-path caught by C1.7.2
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.7.1 PASS
+CHECK C1.7.2 FAIL outward deny table failed; see go test output 
+CHECK C1.7.3 PASS
+check.sh: evidence: evidence/M1.7/2026-11-17T22-07-19Z
+make[1]: *** [Makefile:33: check-M1.7] Error 1
+0 uncaught

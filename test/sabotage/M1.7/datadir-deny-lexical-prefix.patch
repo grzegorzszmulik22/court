@@ -1,0 +1,30 @@
+diff --git a/internal/adapter/claude/policy.go b/internal/adapter/claude/policy.go
+index acaa5b0..ea5e4c4 100644
+--- a/internal/adapter/claude/policy.go
++++ b/internal/adapter/claude/policy.go
+@@ -100,21 +100,11 @@ func (p Policy) insideDataDir(path, worldDir string) bool {
+ 	if p.DataDir == "" {
+ 		return false
+ 	}
+-	cand, err := canonicalPath(path)
+-	if err != nil {
+-		cand = filepath.Clean(path)
+-	}
+-	dd, err := canonicalPath(p.DataDir)
+-	if err != nil {
+-		dd = filepath.Clean(p.DataDir)
+-	}
+-	if worldDir != "" {
+-		if wd, err := canonicalPath(worldDir); err == nil &&
+-			(pathsEqualFold(cand, wd) || pathHasPrefixFold(cand, wd)) {
+-			return false
+-		}
++	cand := filepath.Clean(path)
++	if inside(cand, worldDir) {
++		return false
+ 	}
+-	return pathsEqualFold(cand, dd) || pathHasPrefixFold(cand, dd)
++	return inside(cand, p.DataDir)
+ }
+ 
+ // commandNamesDataDir reports whether a shell command reaches into the

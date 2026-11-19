@@ -1,0 +1,57 @@
+=== RUN   TestC2_4_1
+--- PASS: TestC2_4_1 (14.89s)
+=== RUN   TestWritVectors
+--- PASS: TestWritVectors (0.08s)
+PASS
+ok  	court/internal/writ	15.620s
+CHECK C2.4.1 PASS
+=== RUN   TestC2_4_2
+--- PASS: TestC2_4_2 (0.83s)
+PASS
+ok  	court/internal/adapter/scripted	0.923s
+CHECK C2.4.2 PASS
+=== RUN   TestC2_4_3
+=== RUN   TestC2_4_3/tokens/above_total
+=== RUN   TestC2_4_3/tokens/above_remaining
+=== RUN   TestC2_4_3/tokens/together_exceed
+=== RUN   TestC2_4_3/tokens/boundary
+=== RUN   TestC2_4_3/minutes/above_total
+=== RUN   TestC2_4_3/minutes/above_remaining
+=== RUN   TestC2_4_3/minutes/together_exceed
+=== RUN   TestC2_4_3/minutes/boundary
+=== RUN   TestC2_4_3/speculation/above_total
+=== RUN   TestC2_4_3/speculation/above_remaining
+=== RUN   TestC2_4_3/speculation/together_exceed
+=== RUN   TestC2_4_3/speculation/boundary
+--- PASS: TestC2_4_3 (21.87s)
+    --- PASS: TestC2_4_3/tokens/above_total (0.81s)
+    --- PASS: TestC2_4_3/tokens/above_remaining (2.47s)
+    --- PASS: TestC2_4_3/tokens/together_exceed (1.62s)
+    --- PASS: TestC2_4_3/tokens/boundary (2.38s)
+    --- PASS: TestC2_4_3/minutes/above_total (0.85s)
+    --- PASS: TestC2_4_3/minutes/above_remaining (2.37s)
+    --- PASS: TestC2_4_3/minutes/together_exceed (1.64s)
+    --- PASS: TestC2_4_3/minutes/boundary (2.46s)
+    --- PASS: TestC2_4_3/speculation/above_total (0.83s)
+    --- PASS: TestC2_4_3/speculation/above_remaining (2.45s)
+    --- PASS: TestC2_4_3/speculation/together_exceed (1.58s)
+    --- PASS: TestC2_4_3/speculation/boundary (2.39s)
+PASS
+ok  	court/internal/adapter/scripted	21.987s
+CHECK C2.4.3 PASS
+=== RUN   TestC2_4_4
+--- PASS: TestC2_4_4 (0.82s)
+PASS
+ok  	court/internal/adapter/scripted	0.911s
+CHECK C2.4.4 PASS
+=== RUN   TestC2_4_5
+--- PASS: TestC2_4_5 (0.80s)
+PASS
+ok  	court/internal/adapter/scripted	0.899s
+CHECK C2.4.5 PASS
+=== RUN   TestC2_4_6
+--- PASS: TestC2_4_6 (4.67s)
+PASS
+ok  	court/internal/adapter/scripted	4.767s
+CHECK C2.4.6 PASS
+check.sh: evidence: evidence/M2.4/2026-11-17T11-27-20Z

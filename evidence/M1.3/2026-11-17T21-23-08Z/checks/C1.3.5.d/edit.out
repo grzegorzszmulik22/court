@@ -1,0 +1,2 @@
+VERIFY /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-17T21-23-08Z/checks/C1.3.5.d/g2/gen-00000.jsonl ok head seq=56 hash=6d2c4a61531d556c4f79ce1a1a9639f7b1873d313425ef605a0f3875a2f75d52
+HEAD /home/opc/src/ct-ledger2/evidence/M1.3/2026-11-17T21-23-08Z/checks/C1.3.5.d/g2/gen-00000.jsonl FAIL seq=10 event at seq 10 has hash e7a27c8a31ab6bfc35fbc3dc8a10a03c8aea23a2608fe48d740cd44584ea26a6, not the kept 095cafedfe24eae39b9bd9c5ef9d725b22711c901ce73d702264d428ea69a660

@@ -1,0 +1,4 @@
+=== RUN   TestC2_5_3
+--- PASS: TestC2_5_3 (3.97s)
+PASS
+ok  	court/internal/commission	4.068s

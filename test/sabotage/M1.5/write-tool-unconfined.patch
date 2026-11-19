@@ -1,0 +1,11 @@
+--- a/internal/adapter/scripted/policy.go
++++ b/internal/adapter/scripted/policy.go
+@@ -16,7 +16,7 @@
+ 
+ // writeTools carry a path argument that writes or rewrites files.
+ var writeTools = map[string]bool{
+-	"Write": true, "Edit": true, "MultiEdit": true, "NotebookEdit": true,
++	"Write": true, "Edit": true, "MultiEdit": true,
+ }
+ 
+ // editPathKeys are the tool_input members that hold the target file.

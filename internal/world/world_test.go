@@ -33,6 +33,51 @@ func TestHelperProcess(t *testing.T) {
 	if os.Getenv("COURT_TEST_HELPER") != "1" {
 		return
 	}
+	// write <path> <content> and delete <path>: a world-run process that
+	// changes a file outside its own worktree.
+	if len(os.Args) >= 3 && os.Args[len(os.Args)-3] == "write" {
+		if err := os.WriteFile(os.Args[len(os.Args)-2],
+			[]byte(os.Args[len(os.Args)-1]+"\n"), 0o644); err != nil {
+			os.Exit(2)
+		}
+		os.Exit(0)
+	}
+	if len(os.Args) >= 2 && os.Args[len(os.Args)-2] == "delete" {
+		if err := os.Remove(os.Args[len(os.Args)-1]); err != nil {
+			os.Exit(2)
+		}
+		os.Exit(0)
+	}
+	// detach <file>: start a heartbeat in a detached session/process
+	// and exit at once, the way setsid/nohup or `start /b` leaves a
+	// descendant behind.
+	if len(os.Args) >= 2 && os.Args[len(os.Args)-2] == "detach" {
+		cmd := exec.Command(os.Args[0], "-test.run=^TestHelperProcess$",
+			"--", "heartbeat", os.Args[len(os.Args)-1])
+		cmd.Env = os.Environ()
+		cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+		detachHelper(cmd)
+		if err := cmd.Start(); err != nil {
+			os.Exit(2)
+		}
+		os.Exit(0)
+	}
+	// heartbeat <file>: append one byte every 50 ms for 10 s. The
+	// detached-Run check uses it as a descendant that would keep
+	// working if the time limit failed to kill the tree.
+	if len(os.Args) >= 2 && os.Args[len(os.Args)-2] == "heartbeat" {
+		f, err := os.OpenFile(os.Args[len(os.Args)-1],
+			os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+		if err != nil {
+			os.Exit(2)
+		}
+		for i := 0; i < 200; i++ {
+			f.WriteString("x")
+			time.Sleep(50 * time.Millisecond)
+		}
+		f.Close()
+		os.Exit(0)
+	}
 	switch mode := os.Args[len(os.Args)-1]; mode {
 	case "sleep":
 		time.Sleep(30 * time.Second)

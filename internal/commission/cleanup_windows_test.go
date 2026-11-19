@@ -11,45 +11,14 @@ package commission_test
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"strconv"
 	"testing"
 	"time"
 
 	"golang.org/x/sys/windows"
 )
-
-// processIdentity returns the process object's creation time as a string,
-// or "" when the process is gone. A pid alone is not an identity: the host
-// is shared and Windows recycles pids, so a leaked-daemon report must not
-// count an unrelated process that inherited the pid.
-func processIdentity(pid int) string {
-	if pid <= 0 {
-		return ""
-	}
-	h, err := windows.OpenProcess(windows.PROCESS_QUERY_LIMITED_INFORMATION, false, uint32(pid))
-	if err != nil {
-		return ""
-	}
-	defer windows.CloseHandle(h)
-	var creation, exit, kernel, user windows.Filetime
-	if err := windows.GetProcessTimes(h, &creation, &exit, &kernel, &user); err != nil {
-		return ""
-	}
-	return strconv.FormatInt(creation.Nanoseconds(), 10)
-}
-
-// processMatches reports whether the live pid is still the process the
-// registry recorded. An empty identity falls back to the pid alone.
-func processMatches(pid int, ident string) bool {
-	// Without a recorded identity there is no proof the live pid is ours:
-	// report nothing rather than blame an unrelated process. A daemon that
-	// really was left behind is caught by its fixture's waitProcessGone /
-	// waitFileReleased barriers.
-	if ident == "" {
-		return false
-	}
-	return processIdentity(pid) == ident
-}
 
 // processAlive reports whether pid is a live process. OpenProcess fails
 // for a pid whose process object is gone; an exited process that still
@@ -89,6 +58,7 @@ func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
 		}
 		time.Sleep(20 * time.Millisecond)
 	}
+	clearDaemonPID(pid)
 }
 
 // waitFileReleased waits until path can be opened exclusively, i.e. no
@@ -119,4 +89,18 @@ func waitFileReleased(t *testing.T, path string) {
 		}
 		time.Sleep(20 * time.Millisecond)
 	}
+}
+
+// clearDaemonPID removes a pid the test proved dead. A recorded pid whose
+// process has exited can be reused by an unrelated process (a bash
+// worker, another test's helper); keeping it would report a false leak.
+func clearDaemonPID(pid int) {
+	if pid <= 0 {
+		return
+	}
+	dir := os.Getenv("COURT_TEST_DAEMON_REGISTRY")
+	if dir == "" {
+		return
+	}
+	_ = os.Remove(filepath.Join(dir, strconv.Itoa(pid)))
 }

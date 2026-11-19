@@ -1,0 +1,4 @@
+=== RUN   TestBodyFieldShapes
+--- PASS: TestBodyFieldShapes (0.00s)
+PASS
+ok  	court/internal/ledger	0.655s

@@ -1,0 +1,29 @@
+=== RUN   TestC2_1_1
+--- PASS: TestC2_1_1 (1.72s)
+PASS
+ok  	court/internal/commission	1.833s
+CHECK C2.1.1 PASS
+=== RUN   TestC2_1_2
+--- PASS: TestC2_1_2 (8.30s)
+PASS
+ok  	court/internal/commission	8.452s
+CHECK C2.1.2 PASS
+=== RUN   TestC2_1_3
+--- PASS: TestC2_1_3 (1.45s)
+PASS
+ok  	court/internal/commission	1.562s
+CHECK C2.1.3 PASS
+CHECK C2.1.4 PASS
+=== RUN   TestC2_1_5
+--- PASS: TestC2_1_5 (3.33s)
+PASS
+ok  	court/internal/commission	3.438s
+CHECK C2.1.5 PASS
+=== RUN   TestDaemonExitsOnAdminShutdown
+--- PASS: TestDaemonExitsOnAdminShutdown (0.21s)
+=== RUN   TestDaemonExitsWhenDataDirRemoved
+--- PASS: TestDaemonExitsWhenDataDirRemoved (5.39s)
+PASS
+ok  	court/internal/commission	5.706s
+CHECK C2.1.6 PASS
+check.sh: evidence: evidence/M2.1/2026-11-17T22-07-51Z

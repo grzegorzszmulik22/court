@@ -56,17 +56,16 @@ func (f *fixture) shutdown() {
 	pid := 0
 	if err == nil {
 		var df struct {
-			URL      string `json:"url"`
-			Token    string `json:"admin_token"`
-			PID      int    `json:"pid"`
-			PIDStart string `json:"pid_start"`
+			URL   string `json:"url"`
+			Token string `json:"admin_token"`
+			PID   int    `json:"pid"`
 		}
 		if err := json.Unmarshal(raw, &df); err != nil {
 			f.t.Fatalf("daemon.json: %v", err)
 		}
 		pid = df.PID
 		if pid > 0 {
-			recordDaemonPID(f.t, pid, df.PIDStart)
+			recordDaemonPID(f.t, pid)
 		}
 		if df.URL != "" {
 			// Retry briefly: under load the daemon may still be starting

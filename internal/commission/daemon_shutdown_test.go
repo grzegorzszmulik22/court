@@ -77,10 +77,9 @@ func startTestDaemon(t *testing.T, dataDir string) *testDaemon {
 func (d *testDaemon) waitReady(t *testing.T) (url, token string) {
 	t.Helper()
 	var df struct {
-		URL      string `json:"url"`
-		Token    string `json:"admin_token"`
-		PID      int    `json:"pid"`
-		PIDStart string `json:"pid_start"`
+		URL   string `json:"url"`
+		Token string `json:"admin_token"`
+		PID   int    `json:"pid"`
 	}
 	deadline := time.Now().Add(15 * time.Second)
 	for {
@@ -103,7 +102,7 @@ func (d *testDaemon) waitReady(t *testing.T) (url, token string) {
 	if df.PID != d.pid {
 		t.Fatalf("daemon.json pid = %d, process pid = %d", df.PID, d.pid)
 	}
-	recordDaemonPID(t, d.pid, df.PIDStart)
+	recordDaemonPID(t, d.pid)
 	return df.URL, df.Token
 }
 
@@ -114,6 +113,7 @@ func (d *testDaemon) waitExit(t *testing.T, timeout time.Duration) error {
 	select {
 	case err := <-d.done:
 		d.exited = true
+		clearDaemonPID(d.pid)
 		return err
 	case <-time.After(timeout):
 		t.Fatalf("court daemon (pid %d) is still running %s after it should have exited",

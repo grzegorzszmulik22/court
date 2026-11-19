@@ -1,0 +1,83 @@
+=== RUN   TestC1_5_1
+--- PASS: TestC1_5_1 (17.78s)
+=== RUN   TestHook_DeniedRecordsReason
+--- PASS: TestHook_DeniedRecordsReason (0.32s)
+=== RUN   TestHook_UnpairedPosts
+--- PASS: TestHook_UnpairedPosts (0.17s)
+PASS
+ok  	court/internal/adapter/scripted	18.308s
+CHECK C1.5.1 PASS
+=== RUN   TestC1_5_2
+--- PASS: TestC1_5_2 (0.84s)
+=== RUN   TestHook_TokenIsIdentity
+--- PASS: TestHook_TokenIsIdentity (0.41s)
+=== RUN   TestHook_IdempotentRetry
+--- PASS: TestHook_IdempotentRetry (0.22s)
+=== RUN   TestDaemon_RestartKeepsDedupe
+--- PASS: TestDaemon_RestartKeepsDedupe (0.21s)
+=== RUN   TestHook_RequestIdentityPerSession
+--- PASS: TestHook_RequestIdentityPerSession (0.37s)
+=== RUN   TestHook_RequestIdentityRebuilt
+--- PASS: TestHook_RequestIdentityRebuilt (0.15s)
+PASS
+ok  	court/internal/adapter/scripted	2.286s
+CHECK C1.5.2 PASS
+=== RUN   TestToolEvent_CommandTruncatesRunes
+--- PASS: TestToolEvent_CommandTruncatesRunes (0.16s)
+=== RUN   TestC1_5_3
+--- PASS: TestC1_5_3 (0.14s)
+=== RUN   TestToolEvent_StoresHostOnly
+--- PASS: TestToolEvent_StoresHostOnly (0.15s)
+PASS
+ok  	court/internal/adapter/scripted	0.473s
+=== RUN   TestHostOf
+--- PASS: TestHostOf (0.00s)
+=== RUN   TestBuildToolEvent_HostsOnly
+--- PASS: TestBuildToolEvent_HostsOnly (0.00s)
+PASS
+ok  	court/internal/daemon	0.028s
+CHECK C1.5.3 PASS
+=== RUN   TestC1_5_4
+--- PASS: TestC1_5_4 (0.43s)
+PASS
+ok  	court/internal/adapter/scripted	0.472s
+CHECK C1.5.4 PASS
+=== RUN   TestC1_5_5
+--- PASS: TestC1_5_5 (0.13s)
+PASS
+ok  	court/internal/adapter/scripted	0.166s
+CHECK C1.5.5 PASS
+=== RUN   TestC1_5_6
+--- PASS: TestC1_5_6 (0.01s)
+=== RUN   TestC1_5_6_PayloadShapes
+--- PASS: TestC1_5_6_PayloadShapes (0.00s)
+PASS
+ok  	court/internal/adapter/scripted	0.043s
+CHECK C1.5.6 PASS
+=== RUN   TestC1_5_7_WithinDirComponents
+--- PASS: TestC1_5_7_WithinDirComponents (0.00s)
+=== RUN   TestC1_5_7_UnderComponentBoundary
+--- PASS: TestC1_5_7_UnderComponentBoundary (0.00s)
+=== RUN   TestC1_5_7_WithinDirFold
+--- PASS: TestC1_5_7_WithinDirFold (0.00s)
+=== RUN   TestC1_5_7_WithinDirSymlinks
+--- PASS: TestC1_5_7_WithinDirSymlinks (0.00s)
+PASS
+ok  	court/internal/paths	0.014s
+=== RUN   TestC1_5_7_EditEscapesWorld
+--- PASS: TestC1_5_7_EditEscapesWorld (0.01s)
+=== RUN   TestC1_5_7_EditDenials
+--- PASS: TestC1_5_7_EditDenials (0.01s)
+=== RUN   TestC1_5_7_EveryWriteToolConfined
+--- PASS: TestC1_5_7_EveryWriteToolConfined (0.19s)
+=== RUN   TestC1_5_7_DeniedRecorded
+--- PASS: TestC1_5_7_DeniedRecorded (0.18s)
+=== RUN   TestC1_5_7_BackbriefPoisonsLedger
+--- PASS: TestC1_5_7_BackbriefPoisonsLedger (0.21s)
+=== RUN   TestC1_5_7_HostileToolInputs
+    rt_poison_test.go:121: hostile calls rejected=40 accepted=0
+--- PASS: TestC1_5_7_HostileToolInputs (0.21s)
+PASS
+ok  	court/internal/adapter/scripted	0.876s
+CHECK C1.5.7 PASS
+check.sh: evidence: evidence/M1.5/2026-11-18T12-02-11Z
