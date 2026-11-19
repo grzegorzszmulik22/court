@@ -302,7 +302,10 @@ func (w *GitWorld) restoreHooks(sn *worldSnapshot) error {
 		if err := os.WriteFile(p, want.data, want.mode.Perm()); err != nil {
 			return fmt.Errorf("world: discard %s: hooks: %v", w.id, err)
 		}
-		_ = os.Chmod(p, want.mode.Perm())
+		// WriteFile does not change the mode of a file that already existed.
+		if err := os.Chmod(p, want.mode.Perm()); err != nil {
+			return fmt.Errorf("world: discard %s: hooks: %v", w.id, err)
+		}
 	}
 	return nil
 }
@@ -405,7 +408,9 @@ func (w *GitWorld) restoreMainWorktree(ctx context.Context, env []string, sn *wo
 		if err := os.WriteFile(p, data, want.mode.Perm()); err != nil {
 			return fmt.Errorf("world: discard %s: restore %s: %v", w.id, rel, err)
 		}
-		_ = os.Chmod(p, want.mode.Perm())
+		if err := os.Chmod(p, want.mode.Perm()); err != nil {
+			return fmt.Errorf("world: discard %s: restore %s: %v", w.id, rel, err)
+		}
 	}
 	return nil
 }
