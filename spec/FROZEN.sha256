@@ -2195,7 +2195,7 @@ b3ea2d6c74b5f95d484633041a533510ad04d58aa77646db54e71bf75ae9bb3e  bench/docketbe
 a916ee72cd4bf7c23028e950a1f6d71b32676c142c4be26cbb167d63620977bf  bench/docketbench/scenarios/C/C-001/twin
 1bf5ab3b15554eb07e13c87163f8e5aece619f2f4af85197910b4f7ad4c28a27  bench/docketbench/scenarios/C/C-002/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-002/final.txt
-ea64a5bea29fb0a5c7d7c253e27efb287da08b5711c7ff07479738637508e053  bench/docketbench/scenarios/C/C-002/registry.yaml
+4dfb09f45f92d71e63b4bae2a19e4bb288681304c52fe4a8b5bb3d9646a5a600  bench/docketbench/scenarios/C/C-002/registry.yaml
 1cf0ccaf898b84ae13acf8bd4421b80bcd83035c7795ead02dc9a3a352af5ab4  bench/docketbench/scenarios/C/C-002/repo/README.md
 321fd6d9c8d227dbc95977844006a6c7f9c167a13a5286c94bd8de8be9308746  bench/docketbench/scenarios/C/C-002/repo/api/openapi.yaml
 17d9c0110ce4e8c05c0922f24b1c7835be7f762ae25276d8af1100e78038c1e4  bench/docketbench/scenarios/C/C-002/repo/config/limits.yml
@@ -2209,7 +2209,7 @@ a7064d8ac94582239d72cad9e24d5e6c1dd961598169c004861da7384829bb66  bench/docketbe
 0ee5d987e69e32e290fe5be60c392fb4240aa4b55b34374f5989084328aaab5d  bench/docketbench/scenarios/C/C-002/repo/tasks/tasks_test.go
 c944754c32909d3049ea7dfb418be685923144e574db5576ab30a054672a07c9  bench/docketbench/scenarios/C/C-002/repo/tasks/util.go
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-002/repo/tools/package.json
-e65930c78d6607a5155bc1061ac6a99fda1feb7344a69aeb6c9cdbe9a884c78e  bench/docketbench/scenarios/C/C-002/script.yaml
+d3c1bc12ab2ba7fae0e934f38125529da184b8647c164d324d399d965ec859e9  bench/docketbench/scenarios/C/C-002/script.yaml
 881bb005360d34036afc29b42d42602e5820c95dfb9478c5937d0c48dbbfa914  bench/docketbench/scenarios/C/C-002/twin
 57b68d432305e6fe482f0f50ea0f45a9f2d945b6b1ce2ede6656d769d0792fec  bench/docketbench/scenarios/C/C-003/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-003/final.txt
@@ -2285,7 +2285,7 @@ a62a8e3aa47063132de609993c8439d301c47deb1c7434c73576a3f65937bc8c  bench/docketbe
 bd2def703898e5c12d90bb0789606acb07ad7fa3ef3a61128a1bc0f06ebfadbf  bench/docketbench/scenarios/C/C-006/twin
 33baad8bb5d3398fc94f8d28ec4b4287a76f676b461d93cff45b895bc8604be3  bench/docketbench/scenarios/C/C-007/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-007/final.txt
-016f8acc2e8bd1641e2c2097c6982795d86b6743acbbaa854a607f78a6f9a0a8  bench/docketbench/scenarios/C/C-007/registry.yaml
+3a1b293a44570dc33ac14dd75b516923dbaa6a15e75fc7d35f389f1425927a65  bench/docketbench/scenarios/C/C-007/registry.yaml
 58034ef3d10814f809b43ab9d04d637150c8a5313dc85ad47f856ace7f6ecb7d  bench/docketbench/scenarios/C/C-007/repo/README.md
 8f8d30c3fe576a772b87453bca73eee5b75f0336ae1daa65cb7feea3c86aad92  bench/docketbench/scenarios/C/C-007/repo/api/openapi.yaml
 78b55df81a81fd28d98393fe5fdad41d56f0a41e43012fde22d94795838d51fd  bench/docketbench/scenarios/C/C-007/repo/chat/chat.go
@@ -2299,7 +2299,7 @@ c0e8d450abb013533e7ff917cf80754c77f8ff90c7b3d29a48650df0f831b663  bench/docketbe
 7927745d52c07417282e52e67e76f915ed1327511a6394b929a2df86e106e597  bench/docketbench/scenarios/C/C-007/repo/migrations/001_init.sql
 5219c66b46dd26efac05773559b74c9465eb3d4e803b2df3c8078c7267df3d2d  bench/docketbench/scenarios/C/C-007/repo/scripts/deploy.sh
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-007/repo/tools/package.json
-2c3e29e1fc62a9afbe6e73677a5fd507d2b5bc5ea5ae5c8f84a394d2658ce3c0  bench/docketbench/scenarios/C/C-007/script.yaml
+c113f9c264b2b73d4de5e7f4b1f54a3dddbd418a203a1aa7437e6aa594ad076c  bench/docketbench/scenarios/C/C-007/script.yaml
 851002f88cb25474fd892dba2f7a941a25bd01c04d7038853e7a4c1f7c710fc8  bench/docketbench/scenarios/C/C-007/twin
 354a86a00eb1ae650860bb43ed839b6b87952116e3149cde3b23d79036f0001c  bench/docketbench/scenarios/C/C-008/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-008/final.txt
@@ -2321,7 +2321,7 @@ f3af39480afd44b52199deb306c006aa701a189fad0fdff7340c85657004c2a8  bench/docketbe
 ff13ebc441ecafb13d6a73db02f2db655fc8ccba73cc9e2323d5e3fecec64620  bench/docketbench/scenarios/C/C-008/twin
 60c75102a9bf4086c9b3043ed4ab64b75dfd00f62b9dec5ca85914aee58e30dd  bench/docketbench/scenarios/C/C-009/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-009/final.txt
-d04a5e62ee2623a060f79f67451b9d5d21f7ca683f6d7ac2c341ed643fb037fa  bench/docketbench/scenarios/C/C-009/registry.yaml
+33a2906a1b23438d9267e401bb8dbbf8217b5d84e413d07660a108a22b268f0e  bench/docketbench/scenarios/C/C-009/registry.yaml
 88f99cc5ed2ced61ce81077edab16a989e8809a591f77bdd511c785653f50a56  bench/docketbench/scenarios/C/C-009/repo/README.md
 722334a28dc26028e30b26495c1ddfe620e7f0f469b7e7e0e34d4b9ee2c6b715  bench/docketbench/scenarios/C/C-009/repo/api/openapi.yaml
 17d9c0110ce4e8c05c0922f24b1c7835be7f762ae25276d8af1100e78038c1e4  bench/docketbench/scenarios/C/C-009/repo/config/limits.yml
@@ -2335,11 +2335,11 @@ d5aa48c15d4649b4104c555b9881ab9f8e0a43dee48a45cfa83ad6f737c7a92c  bench/docketbe
 578ab2eba8ee4d48466fe17b292f433635302c5b317ab512b6e6ec44544a5d60  bench/docketbench/scenarios/C/C-009/repo/poll/util.go
 5219c66b46dd26efac05773559b74c9465eb3d4e803b2df3c8078c7267df3d2d  bench/docketbench/scenarios/C/C-009/repo/scripts/deploy.sh
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-009/repo/tools/package.json
-fa1d633bf0dfdcd5ec02d6089b40f068f30ccb9ad07e4e07cdf1bfc3991f256e  bench/docketbench/scenarios/C/C-009/script.yaml
+1d8d4ab5174834c760bd274fae3942d76aa5cc8299bac44ac870736e44b1613f  bench/docketbench/scenarios/C/C-009/script.yaml
 e373bc6d76d6f88c9ab8700cba8a9630886c070c852e6f9b1b4c23d91de45646  bench/docketbench/scenarios/C/C-009/twin
 c5c77b6fc6f29ec741145906f16b4941bf1f8056a5bd756e8295e7171f71a8ce  bench/docketbench/scenarios/C/C-010/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-010/final.txt
-b51ce349494bbd4cccc2992c55588a0c7090c7aa588e8409007bd9fb5d8c6b38  bench/docketbench/scenarios/C/C-010/registry.yaml
+073f382c7c3bea6b96b84d8b063a0f1e18bab5d45e5e58f709ae9d5aedd46356  bench/docketbench/scenarios/C/C-010/registry.yaml
 672735e845b0247941f035a744e98874abd40b8d41e1f3cd19cc0eaa3d21bdf4  bench/docketbench/scenarios/C/C-010/repo/README.md
 cc8d80784372851e6e29af3fdee68c09c784a0b1c8b300c24410389064cca323  bench/docketbench/scenarios/C/C-010/repo/api/openapi.yaml
 17d9c0110ce4e8c05c0922f24b1c7835be7f762ae25276d8af1100e78038c1e4  bench/docketbench/scenarios/C/C-010/repo/config/limits.yml
@@ -2357,7 +2357,7 @@ e866b45e8c0632166c0ad5e1ac4714f6edcd7d6d816a4a72a5654173dfd9f57d  bench/docketbe
 15c7e6bf31f96eb37c111aa5cccf61a67013401d7bb593c789bbfff62b805ab0  bench/docketbench/scenarios/C/C-010/twin
 b7216287617f64e8e34cddd16b0dfd7d03959bfec37fec902a35ef15e61928bf  bench/docketbench/scenarios/C/C-011/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-011/final.txt
-974d440681fe52a909d0ed45887f7f2b4c44658b7816396cd59efa477a1b1845  bench/docketbench/scenarios/C/C-011/registry.yaml
+ee1d74e0afe70e46ff2faa6da73ad450e37643cfe50c1dd3018454665e9accf0  bench/docketbench/scenarios/C/C-011/registry.yaml
 19b906a788324f2d6439904c9bc1e72d1f499c419c69209a32812af75f475077  bench/docketbench/scenarios/C/C-011/repo/README.md
 e91dc0730c87374700b27ecc406ea44b1b020385364c5a0f1d82058cbe1df03a  bench/docketbench/scenarios/C/C-011/repo/api/openapi.yaml
 17d9c0110ce4e8c05c0922f24b1c7835be7f762ae25276d8af1100e78038c1e4  bench/docketbench/scenarios/C/C-011/repo/config/limits.yml
@@ -2371,7 +2371,7 @@ c0e8d450abb013533e7ff917cf80754c77f8ff90c7b3d29a48650df0f831b663  bench/docketbe
 291268b4ad3606b4a56354faad5cb866f10f9ce82a7d7ba239ce70d07943f67d  bench/docketbench/scenarios/C/C-011/repo/shop/shop_test.go
 b3ea2d6c74b5f95d484633041a533510ad04d58aa77646db54e71bf75ae9bb3e  bench/docketbench/scenarios/C/C-011/repo/shop/util.go
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-011/repo/tools/package.json
-a1194435d0dc166b6706c16245ceb1de81a9d7843cb52f62e7ef305e434c7713  bench/docketbench/scenarios/C/C-011/script.yaml
+2a9bf381d4f5f044528ed83643c2a30f660784f2c3d0735e343d8e80445c1fdf  bench/docketbench/scenarios/C/C-011/script.yaml
 a2b361ebc7826f96a336a3361f10af81c69c7b2c0969b2a44e2b66a87e8a6792  bench/docketbench/scenarios/C/C-011/twin
 cb21eb6effbe8e22c33441848a1a168441193c17644cc9a3e2d2527cd00b1820  bench/docketbench/scenarios/C/C-012/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-012/final.txt
@@ -2411,7 +2411,7 @@ add040a2545735777e68167e2a52662adde6441f8a69d7988e7eb436738e1ffe  bench/docketbe
 7bcba78277a0201e07ea9d572c647b796e74752eaa99416fe74fbb310ac78998  bench/docketbench/scenarios/C/C-013/twin
 a1fb8d746f2b6e67a156c8ddf63fc32d85131c6a1d4e07bf40983c2fe6ee34e9  bench/docketbench/scenarios/C/C-014/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-014/final.txt
-0feb1933b91621ec9e8925693303d803ef1464e2a317258f53c94bf872689927  bench/docketbench/scenarios/C/C-014/registry.yaml
+d2062b8ebaceeb2f0eab2f3ee2abaff3113c474fb7e11e2650a56915ab31e284  bench/docketbench/scenarios/C/C-014/registry.yaml
 176e67bea95119575343dbca854f78dcd73f639faac9686ea6199db3bb26d4e7  bench/docketbench/scenarios/C/C-014/repo/README.md
 51fca8875b41d8db484e205bcd3bef6545072a255e56adb5de7ccbfc384591d9  bench/docketbench/scenarios/C/C-014/repo/api/openapi.yaml
 53eb5fbd8d7c03e7e6f10b775d2cdccc83416ed5f1b947fa475ced82824112da  bench/docketbench/scenarios/C/C-014/repo/catalog/catalog.go
@@ -2425,7 +2425,7 @@ c0e8d450abb013533e7ff917cf80754c77f8ff90c7b3d29a48650df0f831b663  bench/docketbe
 3d30efe87a4d069aa8617b9ee78553a614381b9ddd80556f9fc33983af450556  bench/docketbench/scenarios/C/C-014/repo/migrations/001_init.sql
 5219c66b46dd26efac05773559b74c9465eb3d4e803b2df3c8078c7267df3d2d  bench/docketbench/scenarios/C/C-014/repo/scripts/deploy.sh
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-014/repo/tools/package.json
-10739286051df19f535a983f232a84ae039811d1864be6c2409993caa52310b8  bench/docketbench/scenarios/C/C-014/script.yaml
+64f4522475f8f06d45b3bd2f762a07af1e2fa3e09a425aa1eb6f66f72b4ecca5  bench/docketbench/scenarios/C/C-014/script.yaml
 e73d9397a653c322405a045746c17b18e3288f2d42b3f23d0e4de604b2956e00  bench/docketbench/scenarios/C/C-014/twin
 e0b59b1bfea752a0ed07fc91fbc7d01de935ba81e089076d5e421bf57ba22f0a  bench/docketbench/scenarios/C/C-015/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-015/final.txt
@@ -2501,7 +2501,7 @@ c0e8d450abb013533e7ff917cf80754c77f8ff90c7b3d29a48650df0f831b663  bench/docketbe
 6e25593975a837d757d2916d2e31b6235853888b0344d78944fc938d9acbcaf3  bench/docketbench/scenarios/C/C-018/twin
 1cdc6570d885b3d714f0a13a44414447d24c678cbf64272f3652a602c0bb316f  bench/docketbench/scenarios/C/C-019/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-019/final.txt
-ecb9ad2da556184832f91871cabe9dbea6d6ef098d9951db332b51c004639747  bench/docketbench/scenarios/C/C-019/registry.yaml
+6e1466ec9505ff4856fbff215b3e77599c55057c952c484346d7ba2951a0fa43  bench/docketbench/scenarios/C/C-019/registry.yaml
 88f99cc5ed2ced61ce81077edab16a989e8809a591f77bdd511c785653f50a56  bench/docketbench/scenarios/C/C-019/repo/README.md
 722334a28dc26028e30b26495c1ddfe620e7f0f469b7e7e0e34d4b9ee2c6b715  bench/docketbench/scenarios/C/C-019/repo/api/openapi.yaml
 17d9c0110ce4e8c05c0922f24b1c7835be7f762ae25276d8af1100e78038c1e4  bench/docketbench/scenarios/C/C-019/repo/config/limits.yml
@@ -2515,7 +2515,7 @@ d5aa48c15d4649b4104c555b9881ab9f8e0a43dee48a45cfa83ad6f737c7a92c  bench/docketbe
 8e7f51af83ddfa138f19887208831032576e68c84e68cf4019a4518518531dd8  bench/docketbench/scenarios/C/C-019/repo/poll/util.go
 5219c66b46dd26efac05773559b74c9465eb3d4e803b2df3c8078c7267df3d2d  bench/docketbench/scenarios/C/C-019/repo/scripts/deploy.sh
 3729b24d365471189ab501e42234767d34f9f7acf829df9c4786ecd4aa8840ea  bench/docketbench/scenarios/C/C-019/repo/tools/package.json
-908135b64904a382aa716122657446d0451dbcf8727e48e29f7dab7bc8cb8ddb  bench/docketbench/scenarios/C/C-019/script.yaml
+f8983322cc10bc5306d11d92dd2a6f2985b08b6ce4cba8009143a59acadbfc8b  bench/docketbench/scenarios/C/C-019/script.yaml
 3827d66e6c83bb5d2c0b9d00df19f18229bceaff18b89532bb606b4a89593bec  bench/docketbench/scenarios/C/C-019/twin
 cfe6147f5a93a18741dab662ee5a907894eb12e23b71e5638bdc8cf6dfc65e47  bench/docketbench/scenarios/C/C-020/commission.yaml
 c3df23dc626f206988e4ee147558f4343a0fdbfed9b21b1b3f7e4bc530a9bd4d  bench/docketbench/scenarios/C/C-020/final.txt
@@ -3626,7 +3626,7 @@ d7c55a6346e92f34dd362f4dd06f16223138de06499a5418d223296472a0058f  spec/05-agent-
 1d4a55fe3e127c0aed7cd1e7484056a08ff6d3f5024ff0a8716800ce6b919865  spec/milestones/M0-field-evidence.md
 8ed838f7f0adbf864fd91ad644d194e5c566b748b9f1cc8f4b6b90f0cf14ed8a  spec/milestones/M1-ledger-and-worlds.md
 5a7fc6b155e8d47b21409f1ed7baa8f17f2127e109656288c5fb1080850106f8  spec/milestones/M2-commission-and-backbrief.md
-5ffb880dc9d152ef57eed75925d6854fc6bee6f1adab02e191af65f2687dc89f  spec/milestones/M3-detection-and-reconciliation.md
+516b9e1dec4657f5e58c5d5eeb83b852b0d8449e9ab384a5e4af89665b03e715  spec/milestones/M3-detection-and-reconciliation.md
 d9bdf1b81ea6b9a85c8777aa1a5d03b519161b2fd06e1f26730caa42449f9026  test/vectors/clerk/001.json
 153b72d9d09a719427ef10b27a8cbf31429983080750f52e6966424a80341e32  test/vectors/clerk/002.json
 ceb4fde1d843ac2644cfbafd6aea213896a959815aa3493943ae12e70b784902  test/vectors/clerk/003.json
