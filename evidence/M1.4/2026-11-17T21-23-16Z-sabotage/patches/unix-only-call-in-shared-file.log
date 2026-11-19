@@ -1,0 +1,11 @@
+warning: in the working copy of 'test/checks/M1.4/C1.4.6-run-timeout.sh', CRLF will be replaced by LF the next time Git touches it
+CHECK C1.4.1 FAIL # court/internal/world 
+CHECK C1.4.2 FAIL # court/internal/world 
+CHECK C1.4.3 FAIL # court/internal/world 
+CHECK C1.4.4 FAIL # court/internal/world 
+CHECK C1.4.5 FAIL # court/internal/world 
+CHECK C1.4.6 FAIL # court/internal/world 
+CHECK C1.4.7 FAIL # court/internal/world 
+CHECK C1.4.8 FAIL # court/internal/world 
+check.sh: evidence: evidence/M1.4/2026-11-17T22-02-34Z
+make[1]: *** [Makefile:33: check-M1.4] Error 1

@@ -1,0 +1,6 @@
+=== RUN   TestDaemonExitsOnAdminShutdown
+--- PASS: TestDaemonExitsOnAdminShutdown (0.21s)
+=== RUN   TestDaemonExitsWhenDataDirRemoved
+--- PASS: TestDaemonExitsWhenDataDirRemoved (5.39s)
+PASS
+ok  	court/internal/commission	5.706s

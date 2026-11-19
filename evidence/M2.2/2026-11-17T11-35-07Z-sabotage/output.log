@@ -1,0 +1,25 @@
+SABOTAGE backbrief-not-required caught by C2.2.1
+CHECK C2.2.1 FAIL check failed; see go test output 
+CHECK C2.2.2 PASS
+CHECK C2.2.3 PASS
+CHECK C2.2.4 PASS
+CHECK C2.2.5 PASS
+check.sh: evidence: evidence/M2.2/2026-11-17T11-35-25Z
+make[1]: *** [Makefile:33: check-M2.2] Error 1
+SABOTAGE revision-overwrites-first caught by C2.2.4
+CHECK C2.2.1 PASS
+CHECK C2.2.2 PASS
+CHECK C2.2.3 PASS
+CHECK C2.2.4 FAIL check failed; see go test output 
+CHECK C2.2.5 PASS
+check.sh: evidence: evidence/M2.2/2026-11-17T11-36-06Z
+make[1]: *** [Makefile:33: check-M2.2] Error 1
+SABOTAGE write-tool-classed-read-only caught by C2.2.1
+CHECK C2.2.1 FAIL check failed; see go test output 
+CHECK C2.2.2 PASS
+CHECK C2.2.3 PASS
+CHECK C2.2.4 PASS
+CHECK C2.2.5 PASS
+check.sh: evidence: evidence/M2.2/2026-11-17T11-36-48Z
+make[1]: *** [Makefile:33: check-M2.2] Error 1
+0 uncaught

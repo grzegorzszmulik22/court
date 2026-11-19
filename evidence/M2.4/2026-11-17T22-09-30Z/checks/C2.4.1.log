@@ -1,0 +1,6 @@
+=== RUN   TestC2_4_1
+--- PASS: TestC2_4_1 (15.59s)
+=== RUN   TestWritVectors
+--- PASS: TestWritVectors (0.08s)
+PASS
+ok  	court/internal/writ	16.395s

@@ -1,0 +1,12 @@
+diff --git a/internal/world/git.go b/internal/world/git.go
+index 740b253..85e9991 100644
+--- a/internal/world/git.go
++++ b/internal/world/git.go
+@@ -471,7 +471,6 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
+ 		<-done
+ 		res.TimedOut = ctx.Err() == context.DeadlineExceeded
+ 	}
+-	tree.close()
+ 	if files {
+ 		outF.Close()
+ 		errF.Close()

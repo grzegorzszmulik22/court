@@ -1,0 +1,14 @@
+diff --git a/internal/world/snapshot.go b/internal/world/snapshot.go
+index 488317d..18c1a60 100644
+--- a/internal/world/snapshot.go
++++ b/internal/world/snapshot.go
+@@ -245,9 +245,6 @@ func (w *GitWorld) restoreSnapshot(ctx context.Context, sn *worldSnapshot) error
+ 	if err := w.restoreFile(filepath.Join(w.s.gitDir, "index"), sn.index); err != nil {
+ 		return fmt.Errorf("world: discard %s: index: %v", w.id, err)
+ 	}
+-	if err := w.restoreRefs(ctx, env, sn); err != nil {
+-		return err
+-	}
+ 	if err := w.restoreFile(filepath.Join(w.s.gitDir, "HEAD"), sn.head); err != nil {
+ 		return fmt.Errorf("world: discard %s: HEAD: %v", w.id, err)
+ 	}

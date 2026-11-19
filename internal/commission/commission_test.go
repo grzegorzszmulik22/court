@@ -46,24 +46,44 @@ func newFixture(t *testing.T, files map[string]string) *fixture {
 	return f
 }
 
-// shutdown stops the fixture's daemon, when one is running.
+// shutdown stops the fixture's daemon, waits until its process has
+// exited, and only then waits for the log handles a leftover process
+// would hold. The pid comes from daemon.json and is recorded before the
+// stop request so TestMain can fail the run if any started daemon is
+// still alive at the end.
 func (f *fixture) shutdown() {
 	raw, err := os.ReadFile(filepath.Join(f.data, "daemon.json"))
-	if err != nil {
-		return
-	}
-	var df struct {
-		URL   string `json:"url"`
-		Token string `json:"admin_token"`
-	}
-	if json.Unmarshal(raw, &df) != nil || df.URL == "" {
-		return
-	}
-	req, _ := http.NewRequest("POST", df.URL+"/admin/shutdown", strings.NewReader("{}"))
-	req.Header.Set("Authorization", "Bearer "+df.Token)
-	resp, err := (&http.Client{Timeout: 2 * time.Second}).Do(req)
+	pid := 0
 	if err == nil {
-		resp.Body.Close()
+		var df struct {
+			URL   string `json:"url"`
+			Token string `json:"admin_token"`
+			PID   int    `json:"pid"`
+		}
+		if err := json.Unmarshal(raw, &df); err != nil {
+			f.t.Fatalf("daemon.json: %v", err)
+		}
+		pid = df.PID
+		if pid > 0 {
+			recordDaemonPID(f.t, pid)
+		}
+		if df.URL != "" {
+			req, _ := http.NewRequest("POST", df.URL+"/admin/shutdown",
+				strings.NewReader("{}"))
+			req.Header.Set("Authorization", "Bearer "+df.Token)
+			resp, err := (&http.Client{Timeout: 2 * time.Second}).Do(req)
+			if err == nil {
+				resp.Body.Close()
+			}
+		}
+	} else if !os.IsNotExist(err) {
+		f.t.Fatalf("read daemon.json: %v", err)
+	}
+	waitProcessGone(f.t, pid, 20*time.Second)
+	waitFileReleased(f.t, filepath.Join(f.data, "daemon.log"))
+	logs, _ := filepath.Glob(filepath.Join(f.data, "agents", "*", "agent.log"))
+	for _, p := range logs {
+		waitFileReleased(f.t, p)
 	}
 }
 

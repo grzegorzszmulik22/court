@@ -1,0 +1,8 @@
+CHECK C2.1.1 PASS
+CHECK C2.1.2 PASS
+CHECK C2.1.3 PASS
+CHECK C2.1.4 PASS
+CHECK C2.1.5 PASS
+CHECK C2.1.6 FAIL daemon lifecycle check failed; see go test output 
+check.sh: evidence: evidence/M2.1/2026-11-17T11-22-38Z
+make[1]: *** [Makefile:33: check-M2.1] Error 1

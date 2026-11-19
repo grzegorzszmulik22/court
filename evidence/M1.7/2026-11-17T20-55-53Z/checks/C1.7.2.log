@@ -1,0 +1,25 @@
+=== RUN   TestC1_7_2
+--- PASS: TestC1_7_2 (1.72s)
+PASS
+ok  	court/internal/adapter/scripted	1.847s
+=== RUN   TestOutwardDeny_EveryEntryEveryPosition
+--- PASS: TestOutwardDeny_EveryEntryEveryPosition (0.01s)
+=== RUN   TestOutwardDeny_Allowed
+--- PASS: TestOutwardDeny_Allowed (0.00s)
+=== RUN   TestOutwardDeny_Nested
+--- PASS: TestOutwardDeny_Nested (0.00s)
+=== RUN   TestOutwardDeny_DataDirExactAndWorldExemption
+--- PASS: TestOutwardDeny_DataDirExactAndWorldExemption (0.04s)
+=== RUN   TestOutwardDeny_DataDirCaseVariant
+--- PASS: TestOutwardDeny_DataDirCaseVariant (0.04s)
+=== RUN   TestOutwardDeny_DataDirVerbatimPrefix
+--- PASS: TestOutwardDeny_DataDirVerbatimPrefix (0.04s)
+=== RUN   TestOutwardDeny_DataDirTrailingDot
+--- PASS: TestOutwardDeny_DataDirTrailingDot (0.02s)
+=== RUN   TestOutwardDeny_DataDirJunction
+--- PASS: TestOutwardDeny_DataDirJunction (0.29s)
+=== RUN   TestOutwardDeny_DataDirSymlink
+    redteam_policy_test.go:114: socket-level symlinks need developer mode; the junction case covers Windows
+--- SKIP: TestOutwardDeny_DataDirSymlink (0.00s)
+PASS
+ok  	court/internal/adapter/claude	1.075s

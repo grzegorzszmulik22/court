@@ -1,0 +1,28 @@
+=== RUN   TestC2_4_3
+=== RUN   TestC2_4_3/tokens/above_total
+=== RUN   TestC2_4_3/tokens/above_remaining
+=== RUN   TestC2_4_3/tokens/together_exceed
+=== RUN   TestC2_4_3/tokens/boundary
+=== RUN   TestC2_4_3/minutes/above_total
+=== RUN   TestC2_4_3/minutes/above_remaining
+=== RUN   TestC2_4_3/minutes/together_exceed
+=== RUN   TestC2_4_3/minutes/boundary
+=== RUN   TestC2_4_3/speculation/above_total
+=== RUN   TestC2_4_3/speculation/above_remaining
+=== RUN   TestC2_4_3/speculation/together_exceed
+=== RUN   TestC2_4_3/speculation/boundary
+--- PASS: TestC2_4_3 (21.87s)
+    --- PASS: TestC2_4_3/tokens/above_total (0.81s)
+    --- PASS: TestC2_4_3/tokens/above_remaining (2.47s)
+    --- PASS: TestC2_4_3/tokens/together_exceed (1.62s)
+    --- PASS: TestC2_4_3/tokens/boundary (2.38s)
+    --- PASS: TestC2_4_3/minutes/above_total (0.85s)
+    --- PASS: TestC2_4_3/minutes/above_remaining (2.37s)
+    --- PASS: TestC2_4_3/minutes/together_exceed (1.64s)
+    --- PASS: TestC2_4_3/minutes/boundary (2.46s)
+    --- PASS: TestC2_4_3/speculation/above_total (0.83s)
+    --- PASS: TestC2_4_3/speculation/above_remaining (2.45s)
+    --- PASS: TestC2_4_3/speculation/together_exceed (1.58s)
+    --- PASS: TestC2_4_3/speculation/boundary (2.39s)
+PASS
+ok  	court/internal/adapter/scripted	21.987s
