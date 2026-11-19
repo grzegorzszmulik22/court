@@ -1,0 +1,9 @@
+--- a/internal/daemon/daemon.go
++++ b/internal/daemon/daemon.go
+@@ -222,6 +222,5 @@ func (d *Daemon) Start(ctx context.Context) error {
+ 	}()
+ 	go d.srv.Serve(ln)
+-	go d.watchDaemonFile()
+ 	go func() {
+ 		<-d.closed
+ 		d.srv.Shutdown(context.Background())

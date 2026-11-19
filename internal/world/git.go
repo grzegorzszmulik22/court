@@ -3,10 +3,12 @@ package world
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -63,6 +65,7 @@ type GitWorld struct {
 	dir       string // working directory git commands run in
 	branch    string // "" on the root world
 	adminDir  string // $GIT_DIR/worktrees/<id>, "" on the root world
+	snap      *worldSnapshot
 	discarded atomic.Bool
 }
 
@@ -295,6 +298,13 @@ func (w *GitWorld) Fork(base Commit, name string) (World, error) {
 		return nil, fmt.Errorf("world: base %q is not a commit", base)
 	}
 	base = Commit(strings.TrimSpace(out))
+	// Record the shared state before this world exists, so Discard can put
+	// refs, configuration, hooks, the main index and the main worktree back
+	// (red-team B3-04/05/06, H3).
+	sn, err := w.captureSnapshot(ctx)
+	if err != nil {
+		return nil, err
+	}
 	if _, errb, err := w.s.git(ctx, env, w.s.repo, "worktree", "add", "-b", branch, dir, string(base)); err != nil {
 		return nil, fmt.Errorf("world: fork %s: %s", name, strings.TrimSpace(errb))
 	}
@@ -302,7 +312,8 @@ func (w *GitWorld) Fork(base Commit, name string) (World, error) {
 	if b, err := os.ReadFile(filepath.Join(dir, ".git")); err == nil {
 		admin = strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(string(b)), "gitdir: "))
 	}
-	return &GitWorld{s: w.s, id: name, dir: dir, branch: branch, adminDir: admin}, nil
+	return &GitWorld{s: w.s, id: name, dir: dir, branch: branch, adminDir: admin,
+		snap: sn}, nil
 }
 
 // Diff implements World.Diff with `git diff --numstat -z --no-renames`.
@@ -405,13 +416,43 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
 	start := time.Now()
 	cmd := exec.Command(argv[0], argv[1:]...)
 	cmd.Dir = w.dir
-	cmd.Env = w.cleanEnv()
+	// A per-run marker in the environment is inherited by every
+	// descendant, including one that detaches with setsid or a double
+	// fork; it is what lets the Unix reaper find them (B3-07).
+	token := runToken()
+	cmd.Env = append(w.cleanEnv(), runTokenEnv+"="+token)
 	procAttr(cmd)
+	// Files, not io.Pipe: os/exec otherwise waits for its copy goroutines
+	// after the direct child exits, and a detached descendant holding the
+	// pipe would keep Run blocked past its deadline (red-team B3-07).
 	stdout := &capBuf{limit: maxRunOutput}
 	stderr := &capBuf{limit: maxRunOutput}
-	cmd.Stdout, cmd.Stderr = stdout, stderr
+	outF, outErr := os.CreateTemp(w.s.dataDir, "run-*.out")
+	errF, errErr := os.CreateTemp(w.s.dataDir, "run-*.err")
+	files := outErr == nil && errErr == nil
+	if files {
+		cmd.Stdout, cmd.Stderr = outF, errF
+		defer os.Remove(outF.Name())
+		defer os.Remove(errF.Name())
+		defer outF.Close()
+		defer errF.Close()
+	} else {
+		if outErr == nil {
+			outF.Close()
+			os.Remove(outF.Name())
+		}
+		if errErr == nil {
+			errF.Close()
+			os.Remove(errF.Name())
+		}
+		cmd.Stdout, cmd.Stderr = stdout, stderr
+	}
 	res := Result{ExitCode: -1}
-	if err := cmd.Start(); err != nil {
+	tree, err := startProc(cmd)
+	if err == nil {
+		tree.token = token
+	}
+	if err != nil {
 		res.Stderr = err.Error()
 		res.Duration = time.Since(start)
 		return res
@@ -426,13 +467,45 @@ func (w *GitWorld) runOnce(ctx context.Context, argv []string) Result {
 			res.ExitCode = ee.ExitCode()
 		}
 	case <-ctx.Done():
-		killProcTree(cmd)
+		tree.kill()
 		<-done
 		res.TimedOut = ctx.Err() == context.DeadlineExceeded
 	}
-	res.Stdout, res.Stderr = stdout.String(), stderr.String()
+	tree.close()
+	if files {
+		outF.Close()
+		errF.Close()
+		res.Stdout = readCapped(outF.Name(), maxRunOutput)
+		res.Stderr = readCapped(errF.Name(), maxRunOutput)
+	} else {
+		res.Stdout, res.Stderr = stdout.String(), stderr.String()
+	}
 	res.Duration = time.Since(start)
 	return res
+}
+
+// readCapped returns at most limit bytes of a file.
+// runTokenEnv names the per-Run marker inherited by descendants.
+const runTokenEnv = "COURT_RUN_TOKEN"
+
+// runToken makes a value no unrelated process can already carry.
+func runToken() string {
+	var b [16]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		return fmt.Sprintf("%d-%d", time.Now().UnixNano(), os.Getpid())
+	}
+	return hex.EncodeToString(b[:])
+}
+
+func readCapped(path string, limit int) string {
+	f, err := os.Open(path)
+	if err != nil {
+		return ""
+	}
+	defer f.Close()
+	buf := make([]byte, limit)
+	n, _ := io.ReadFull(f, buf)
+	return string(buf[:n])
 }
 
 // capBuf is a bytes.Buffer that stops growing at limit.
@@ -499,6 +572,11 @@ func (w *GitWorld) Discard() error {
 			return fmt.Errorf("world: discard %s: admin files: %v", w.id, err)
 		}
 	}
+	if w.snap != nil {
+		if err := w.restoreSnapshot(ctx, w.snap); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -549,6 +627,11 @@ func (w *GitWorld) Digest() (string, error) {
 	// Paths are session-stable (same dataDir before and after), so the
 	// porcelain block can go in verbatim.
 	lines = append(lines, "W "+out)
+	shared, err := w.stateLines(ctx, env)
+	if err != nil {
+		return "", fmt.Errorf("world: digest: shared state: %v", err)
+	}
+	lines = append(lines, shared...)
 	sort.Strings(lines)
 	h := sha256.Sum256([]byte(strings.Join(lines, "\n")))
 	return hex.EncodeToString(h[:]), nil

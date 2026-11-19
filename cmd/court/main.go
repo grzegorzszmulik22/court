@@ -678,8 +678,13 @@ func cmdDaemon(args []string) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "court daemon: listening %s data %s\n", d.URL(), *dataDir)
-	<-ctx.Done()
-	d.Close()
+	select {
+	case <-ctx.Done():
+		d.Close()
+	case <-d.Done():
+		// /admin/shutdown: the server has stopped by request.
+	}
+	d.Wait()
 	store.Close()
 	return nil
 }

@@ -1,0 +1,17 @@
+diff --git a/internal/world/snapshot.go b/internal/world/snapshot.go
+index 488317d..79e0676 100644
+--- a/internal/world/snapshot.go
++++ b/internal/world/snapshot.go
+@@ -236,12 +236,6 @@ func (w *GitWorld) captureMainWorktree(ctx context.Context) (map[string]workFile
+ // differs, so the filesystem listing of a clean discard is unchanged.
+ func (w *GitWorld) restoreSnapshot(ctx context.Context, sn *worldSnapshot) error {
+ 	env := w.backendEnv()
+-	if err := w.restoreHooks(sn); err != nil {
+-		return err
+-	}
+-	if err := w.restoreFile(filepath.Join(w.s.gitDir, "config"), sn.config); err != nil {
+-		return fmt.Errorf("world: discard %s: config: %v", w.id, err)
+-	}
+ 	if err := w.restoreFile(filepath.Join(w.s.gitDir, "index"), sn.index); err != nil {
+ 		return fmt.Errorf("world: discard %s: index: %v", w.id, err)
+ 	}

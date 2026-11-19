@@ -1,0 +1,4 @@
+=== RUN   TestC1_4_2_SameBranch
+--- PASS: TestC1_4_2_SameBranch (6.29s)
+PASS
+ok  	court/internal/world	7.026s
