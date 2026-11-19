@@ -1,0 +1,6 @@
+=== RUN   TestC3_2_6
+--- PASS: TestC3_2_6 (2.65s)
+=== RUN   TestC3_2_6ConfiguredHooksPath
+--- PASS: TestC3_2_6ConfiguredHooksPath (1.77s)
+PASS
+ok  	court/internal/gate	4.517s

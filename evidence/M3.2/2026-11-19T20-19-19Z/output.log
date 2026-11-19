@@ -1,0 +1,55 @@
+=== RUN   TestC3_2_1
+--- PASS: TestC3_2_1 (3.71s)
+PASS
+ok  	court/internal/gate	3.800s
+CHECK C3.2.1 PASS
+=== RUN   TestC3_2_2
+=== RUN   TestC3_2_2/record_decision
+=== RUN   TestC3_2_2/survives-restart
+=== RUN   TestC3_2_2/no_decisions
+--- PASS: TestC3_2_2 (7.21s)
+    --- PASS: TestC3_2_2/record_decision (2.88s)
+    --- PASS: TestC3_2_2/survives-restart (1.69s)
+    --- PASS: TestC3_2_2/no_decisions (2.63s)
+PASS
+ok  	court/internal/gate	7.300s
+CHECK C3.2.2 PASS
+=== RUN   TestC3_2_3
+=== RUN   TestC3_2_3/no-verify
+=== RUN   TestC3_2_3/all-hooks-bypassed
+--- PASS: TestC3_2_3 (2.72s)
+    --- PASS: TestC3_2_3/no-verify (1.46s)
+    --- PASS: TestC3_2_3/all-hooks-bypassed (1.26s)
+=== RUN   TestC3_2_3TreeBinding
+--- PASS: TestC3_2_3TreeBinding (4.22s)
+=== RUN   TestC3_2_3PassLifecycle
+=== RUN   TestC3_2_3PassLifecycle/amend
+=== RUN   TestC3_2_3PassLifecycle/different-tree-then-reset
+--- PASS: TestC3_2_3PassLifecycle (4.55s)
+    --- PASS: TestC3_2_3PassLifecycle/amend (2.23s)
+    --- PASS: TestC3_2_3PassLifecycle/different-tree-then-reset (2.32s)
+=== RUN   TestC3_2_3SyncErrorLogged
+--- PASS: TestC3_2_3SyncErrorLogged (1.00s)
+PASS
+ok  	court/internal/gate	12.576s
+CHECK C3.2.3 PASS
+=== RUN   TestC3_2_4
+--- PASS: TestC3_2_4 (3.71s)
+=== RUN   TestC3_2_4MergeAttribution
+--- PASS: TestC3_2_4MergeAttribution (3.03s)
+PASS
+ok  	court/internal/gate	6.841s
+CHECK C3.2.4 PASS
+=== RUN   TestC3_2_5
+--- PASS: TestC3_2_5 (0.99s)
+PASS
+ok  	court/internal/gate	1.085s
+CHECK C3.2.5 PASS
+=== RUN   TestC3_2_6
+--- PASS: TestC3_2_6 (2.65s)
+=== RUN   TestC3_2_6ConfiguredHooksPath
+--- PASS: TestC3_2_6ConfiguredHooksPath (1.77s)
+PASS
+ok  	court/internal/gate	4.517s
+CHECK C3.2.6 PASS
+check.sh: evidence: evidence/M3.2/2026-11-19T20-19-19Z
