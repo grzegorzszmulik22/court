@@ -3,10 +3,10 @@
   variant: differing-choice
   category: type-strength
   mast: FM-10.1
-  description: "Two sibling worlds chose differently on chat/util.go: a type-strength decision (a, b any vs [T any])."
+  description: "Two sibling worlds chose differently on chat/util.go: a type-strength decision (a, b any on pick vs any return on clamp)."
   keywords: ["worlds", "differently", "type-strength"]
   evidence:
     - {world: "w1", path: "chat/util.go", lines: [13, 13]}
-    - {world: "w2", path: "chat/util.go", lines: [13, 13]}
+    - {world: "w2", path: "chat/util.go", lines: [3, 3]}
   source: "research/1_detection.md#swe-chat"
   resolution: "Raise the contest to the human before either merges."

@@ -28,7 +28,7 @@ agents:
           plan_files: ["poll/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
       - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2019\nretries: 3\n"}
       - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n23,delta19\n"}
-      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick[T any](a, b T) T {\n\treturn a\n}\n"}
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) any {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick(a, b int) int {\n\treturn a\n}\n"}
       - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
       - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
       - declare: {category: type-strength, paths: ["poll/util.go"], question: "take the w2 option?", chosen: "yes"}

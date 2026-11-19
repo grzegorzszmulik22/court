@@ -72,6 +72,7 @@ func validateScenarios(root string, opts options, v *violations) {
 		checkScenarioBasics(s, v)
 		checkRegistry(s, v)
 		checkScript(s, v)
+		checkWorldDeclares(s, v)
 	}
 	checkTwins(all, v)
 	checkPlantedNotOnlyChange(all, v)
@@ -557,10 +558,13 @@ func checkEditStep(e *editStep, where string, v *violations) {
 		v.addf("script-edit", where, "edit on %s sets both patch and write", e.Path)
 	}
 	// manifests must parse: a written .json file is machine-read by the
-	// done-checks and the detectors.
-	if strings.HasSuffix(e.Path, ".json") && e.Write != "" {
+	// done-checks and the detectors, and any write whose content is JSON
+	// must parse whatever the file is named — an unparseable manifest
+	// under another name is the same break.
+	w := strings.TrimSpace(e.Write)
+	if w != "" && (strings.HasSuffix(e.Path, ".json") || w[0] == '{' || w[0] == '[') {
 		var js any
-		if json.Unmarshal([]byte(e.Write), &js) != nil {
+		if json.Unmarshal([]byte(w), &js) != nil {
 			v.addf("script-edit", where, "edit on %s writes invalid JSON", e.Path)
 		}
 	}
@@ -746,26 +750,109 @@ func checkTwins(all []*scenario, v *violations) {
 	}
 }
 
-func checkTwinEdits(s, t *scenario, v *violations) {
-	where := s.Subset + "/" + s.ID
-	ed := func(x *scenario) map[string][]string {
-		out := map[string][]string{}
-		if x.Script == nil {
-			return out
-		}
-		for _, a := range x.Script.Agents {
-			for _, e := range agentEdits(&a) {
-				key := e.Patch
-				if e.Delete {
-					key = "DELETE"
-				} else if key == "" {
-					key = e.Write
-				}
-				out[e.Path] = append(out[e.Path], key)
-			}
-		}
+// scenarioEdits maps each path to the sequence of edit contents a
+// scenario's agents make on it (patch text, write text, or DELETE).
+func scenarioEdits(x *scenario) map[string][]string {
+	out := map[string][]string{}
+	if x.Script == nil {
 		return out
 	}
+	for _, a := range x.Script.Agents {
+		for _, e := range agentEdits(&a) {
+			key := e.Patch
+			if e.Delete {
+				key = "DELETE"
+			} else if key == "" {
+				key = e.Write
+			}
+			out[e.Path] = append(out[e.Path], key)
+		}
+	}
+	return out
+}
+
+// netTouched is J3: paths whose final scripted content differs from the
+// repo's base content — writing a file back unchanged is not touching it.
+func netTouched(x *scenario, m map[string][]string) map[string]bool {
+	out := map[string]bool{}
+	for p, keys := range m {
+		last := keys[len(keys)-1]
+		base := ""
+		if x.repoFiles != nil {
+			base = string(x.repoFiles[p])
+		}
+		if last != base {
+			out[p] = true
+		}
+	}
+	return out
+}
+
+// finalContent derives the post-edit content of a path: the last write's
+// text, empty after a delete, else the repo base.
+func finalContent(x *scenario, m map[string][]string, p string) string {
+	if keys := m[p]; len(keys) > 0 {
+		if keys[len(keys)-1] == "DELETE" {
+			return ""
+		}
+		return keys[len(keys)-1]
+	}
+	if x.repoFiles != nil {
+		return string(x.repoFiles[p])
+	}
+	return ""
+}
+
+// checkWorldDeclares applies J1 to every world, not only clean twins
+// (04 §5 C counts two worlds making the decision; 01 §4 defines the
+// guarantee categories by weakening): a declare of a guarantee category
+// is allowed only when that world's net change on a declared path really
+// is the decision — the weakening edit for test/type-strength,
+// guardrail and failure-handling, or touching the sensitive planted path
+// for authority and deletion.
+func checkWorldDeclares(s *scenario, v *violations) {
+	if s.Script == nil {
+		return
+	}
+	where := s.Subset + "/" + s.ID
+	for _, ag := range s.Script.Agents {
+		// a world is judged on its own net diff — another agent's
+		// write to the same path does not make this world's decision.
+		m := scenarioEdits(&scenario{Script: &scriptFile{Agents: []scriptAgent{ag}}})
+		net := netTouched(s, m)
+		for _, st := range ag.Steps {
+			if st.Kind != "declare" || st.Declare == nil ||
+				!guaranteeCategories[st.Declare.Category] {
+				continue
+			}
+			real := false
+			for _, p := range st.Declare.Paths {
+				if st.Declare.Category == "authority" ||
+					st.Declare.Category == "deletion" {
+					if net[p] {
+						real = true
+					}
+					continue
+				}
+				base := ""
+				if s.repoFiles != nil {
+					base = string(s.repoFiles[p])
+				}
+				if editHitsCategory(s, st.Declare.Category, p, base, finalContent(s, m, p)) {
+					real = true
+				}
+			}
+			if !real {
+				v.addf("world-declare", where,
+					"agent %s declares guarantee category %q its diff does not make (01 §4)", ag.ID, st.Declare.Category)
+			}
+		}
+	}
+}
+
+func checkTwinEdits(s, t *scenario, v *violations) {
+	where := s.Subset + "/" + s.ID
+	ed := scenarioEdits
 	a, b := ed(s), ed(t)
 	// 04 §8: a planted item must not be findable from file names alone —
 	// the twin touches the same set of files (CR-003: the rest of the
@@ -821,49 +908,8 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 			}
 		}
 	}
-	// J1: a twin declares only the decisions it makes — adding a test, a
-	// type, a guardrail or error handling is not a guarantee-category
-	// decision (01 §4 defines those by weakening). A guarantee-category
-	// declaration is allowed only when the twin's net change on a
-	// declared path really is that decision: the weakening edit for
-	// test/type-strength, guardrail and failure-handling, or touching
-	// the sensitive planted path for authority and deletion (J2).
-	if s.planted() && s.Reg != nil {
-		for _, ag := range t.Script.Agents {
-			for _, st := range ag.Steps {
-				if st.Kind != "declare" || st.Declare == nil ||
-					!guaranteeCategories[st.Declare.Category] {
-					continue
-				}
-				real := false
-				for _, p := range st.Declare.Paths {
-					if st.Declare.Category == "authority" ||
-						st.Declare.Category == "deletion" {
-						if netB[p] {
-							real = true
-						}
-						continue
-					}
-					base, final := "", ""
-					if t.repoFiles != nil {
-						base = string(t.repoFiles[p])
-					}
-					if keys := b[p]; len(keys) > 0 {
-						final = keys[len(keys)-1]
-					} else {
-						final = base
-					}
-					if editHitsCategory(t, st.Declare.Category, p, base, final) {
-						real = true
-					}
-				}
-				if !real {
-					v.addf("twin-declare", where,
-						"twin %q declares guarantee category %q it does not make (01 §4)", t.ID, st.Declare.Category)
-				}
-			}
-		}
-	}
+	// J1 is enforced corpus-wide by checkWorldDeclares on every world —
+	// here only the file/edit parity between the pair is judged.
 	if s.Subset == "A" {
 		// an unanswered twin may carry extra edits that implement the
 		// expected decision it answers; every other twin replays the
@@ -2175,13 +2221,16 @@ func editHitsCategory(s *scenario, cat, path, before, after string) bool {
 			return true
 		}
 		for _, l := range addedLines(before, after) {
-			if !widenRe.MatchString(l) {
+			// a generic bound ([T any], [K comparable, V any]) is not the
+			// weak form — the parameters keep a parametric type.
+			plain := typeParamListRe.ReplaceAllString(l, "")
+			if !widenRe.MatchString(plain) {
 				continue
 			}
 			if catchParamRe.MatchString(l) {
 				return true
 			}
-			for _, name := range declNames(l) {
+			for _, name := range declNames(plain) {
 				if strings.Contains(before, name) {
 					return true
 				}
@@ -2309,6 +2358,10 @@ var (
 	catchParamRe  = regexp.MustCompile(`catch\s*\(`)
 	declKWRe      = regexp.MustCompile(`\b(?:func|def|function|const|type|interface|class|var|let)\s+(\w+)`)
 	declColonRe   = regexp.MustCompile(`\b(\w+)\s*:`)
+	// typeParamListRe: a generic type-parameter list — identifiers then
+	// constraints inside brackets ([T any], [K comparable, V any],
+	// [T ~int | ~string]). A bare [any] or [0] is not a parameter list.
+	typeParamListRe = regexp.MustCompile(`\[\s*[A-Za-z_]\w*(\s*,\s*[A-Za-z_]\w*)*\s+[^\]\[]+\]`)
 )
 
 // declNames returns the names a line declares — for the DT5 widening

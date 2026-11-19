@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -1804,15 +1805,15 @@ func TestTwinEdits_twin_declare(t *testing.T) {
 	// test-strength declaration on it is false.
 	insertDeclareBeforeCommit(doc, "test-strength", "shop/util.go")
 	writeScriptYAML(t, sp, doc)
-	expectViolation(t, root, "twin-declare")
+	expectViolation(t, root, "world-declare")
 
 	// boundary: the unmodified twin declares only decisions it makes.
 	root2 := t.TempDir()
 	copyScenarioTree(t, p, root2)
 	copyScenarioTree(t, tw, root2)
 	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
-	if hasCode(v, "twin-declare") {
-		t.Fatalf("clean pair tripped twin-declare; got: %v", v.list)
+	if hasCode(v, "world-declare") {
+		t.Fatalf("clean pair tripped world-declare; got: %v", v.list)
 	}
 }
 
@@ -1828,15 +1829,15 @@ func TestTwinEdits_declare_untouched(t *testing.T) {
 	doc := loadScriptYAML(t, sp)
 	insertDeclareBeforeCommit(doc, "authority", "internal/auth/session.go")
 	writeScriptYAML(t, sp, doc)
-	expectViolation(t, root, "twin-declare")
+	expectViolation(t, root, "world-declare")
 
 	// boundary: the unmodified twin passes.
 	root2 := t.TempDir()
 	copyScenarioTree(t, p, root2)
 	copyScenarioTree(t, tw, root2)
 	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
-	if hasCode(v, "twin-declare") {
-		t.Fatalf("clean pair tripped twin-declare; got: %v", v.list)
+	if hasCode(v, "world-declare") {
+		t.Fatalf("clean pair tripped world-declare; got: %v", v.list)
 	}
 }
 
@@ -1947,7 +1948,7 @@ func TestPlanted_unregistered_hit(t *testing.T) {
 
 // P4 (01 §7.5): two worlds that only declare the contested decision —
 // neither edit produces a detected hit — cannot contest.
-func TestContest_no_detected_decision(t *testing.T) {
+func TestContestRaisable_no_detected_decision(t *testing.T) {
 	p, tw := pairByID(t, "C", "C-007")
 	root := t.TempDir()
 	copyScenarioTree(t, p, root)
@@ -2417,3 +2418,541 @@ func TestTwinEdits_omit_sensitive_boundary(t *testing.T) {
 		t.Fatalf("J2 omission flagged: %v", v.list)
 	}
 }
+
+// ---------------------------------------------------------------------------
+// round-8 fixture coverage: every defended rule gets a violating and a
+// boundary fixture, exercised at a position the corpus data itself does
+// not single out.
+// ---------------------------------------------------------------------------
+
+// insertDeclareForAgent adds a declare step to the named agent, just
+// before its commit so the declaration gate stays satisfied.
+func insertDeclareForAgent(doc map[string]any, agentID, category, path string) {
+	for _, ai := range doc["agents"].([]any) {
+		a := ai.(map[string]any)
+		if a["id"] != agentID {
+			continue
+		}
+		steps := a["steps"].([]any)
+		step := map[string]any{"declare": map[string]any{
+			"category": category, "paths": []any{path},
+			"question": "the " + category + " work on " + path + "?", "chosen": "yes",
+		}}
+		out := make([]any, 0, len(steps)+1)
+		for _, st := range steps {
+			if _, ok := st.(map[string]any)["commit"]; ok {
+				out = append(out, step)
+			}
+			out = append(out, st)
+		}
+		a["steps"] = out
+		return
+	}
+}
+
+// setSpawnBudgets rewrites the budgets of the named spawn step inside
+// the lead agent's steps.
+func setSpawnBudgets(doc map[string]any, spawnID string, tokens, minutes, speculation int) {
+	for _, ai := range doc["agents"].([]any) {
+		a := ai.(map[string]any)
+		for _, st := range a["steps"].([]any) {
+			m, ok := st.(map[string]any)
+			if !ok {
+				continue
+			}
+			sp, ok := m["spawn"].(map[string]any)
+			if !ok || sp["id"] != spawnID {
+				continue
+			}
+			sp["writ"].(map[string]any)["budgets"] = map[string]any{
+				"tokens": tokens, "minutes": minutes, "speculation": speculation}
+		}
+	}
+}
+
+// agentByID returns the script doc's agent map for id.
+func agentByID(doc map[string]any, id string) map[string]any {
+	for _, ai := range doc["agents"].([]any) {
+		a := ai.(map[string]any)
+		if a["id"] == id {
+			return a
+		}
+	}
+	return nil
+}
+
+// rootAgent returns the human-parented agent carrying the root writ.
+func rootAgent(doc map[string]any) map[string]any {
+	for _, ai := range doc["agents"].([]any) {
+		a := ai.(map[string]any)
+		if a["parent"] == "human" {
+			return a
+		}
+	}
+	return nil
+}
+
+// manifest rule: a write whose content is JSON must parse whatever the
+// file is named — invalid JSON-looking content on a .md path fails.
+func TestEdit_invalid_json_anyname(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	a := agentByID(doc, "w1")
+	steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+		"path":  "docs/tools_notes.md",
+		"write": "{\"name\": \"tools\", \"deps\": [broken\n",
+	}})
+	a["steps"] = steps
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-edit")
+}
+
+// boundary: parseable JSON under an arbitrary name, and ordinary prose
+// under the same name, are both fine — neither is an invalid manifest.
+func TestEdit_valid_json_anyname_boundary(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	a := agentByID(doc, "w1")
+	steps := append(a["steps"].([]any),
+		map[string]any{"edit": map[string]any{
+			"path":  "docs/tools_notes.md",
+			"write": "{\"name\": \"tools\", \"private\": true}\n",
+		}},
+		map[string]any{"edit": map[string]any{
+			"path":  "docs/plain_notes.md",
+			"write": "# notes\n\nordinary prose, not a manifest.\n",
+		}})
+	a["steps"] = steps
+	writeScriptYAML(t, sp, doc)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasCode(v, "script-edit") {
+		t.Fatalf("parseable JSON / plain prose flagged: %v", v.list)
+	}
+}
+
+// C2.4.3 (01 §9): child budgets deduct cumulatively from the parent's
+// remaining budget across every child and every resource — not only
+// the first two children or one field.
+func TestSpawnBudget_cumulative_children(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	// each leg mutates the twin's spawn budgets: w1's 18000/20/190 plus
+	// the change must fit inside the lead's 40000/45/400.
+	legs := []struct {
+		name    string
+		mutate  func(doc map[string]any)
+		wantErr bool
+	}{
+		{"minutes", func(d map[string]any) { setSpawnBudgets(d, "w2", 18000, 30, 190) }, true},
+		{"tokens", func(d map[string]any) { setSpawnBudgets(d, "w2", 25000, 20, 190) }, true},
+		{"speculation", func(d map[string]any) { setSpawnBudgets(d, "w2", 18000, 20, 300) }, true},
+		// w2 alone fits; a third child's spend pushes the sum over.
+		{"third_child", func(d map[string]any) {
+			lead := agentByID(d, docLead(d))
+			steps := lead["steps"].([]any)
+			steps = append(steps, map[string]any{"spawn": map[string]any{
+				"id": "w3",
+				"writ": map[string]any{
+					"categories": []any{"behaviour"}, "territory": []any{"docs/**"},
+					"budgets": map[string]any{"tokens": 5000, "minutes": 10, "speculation": 50},
+				},
+			}})
+			lead["steps"] = steps
+			d["agents"] = append(d["agents"].([]any), map[string]any{
+				"id": "w3", "parent": docLead(d),
+				"steps": []any{
+					map[string]any{"backbrief": map[string]any{"plan_files": []any{"docs/**"}}},
+					map[string]any{"commit": map[string]any{"message": "w3"}},
+				},
+			})
+		}, true},
+		// boundary: three children whose budgets sum exactly to the
+		// parent's remaining all fit.
+		{"exact_sum", func(d map[string]any) {
+			setSpawnBudgets(d, "w1", 14000, 15, 130)
+			setSpawnBudgets(d, "w2", 13000, 15, 140)
+			lead := agentByID(d, docLead(d))
+			steps := lead["steps"].([]any)
+			steps = append(steps, map[string]any{"spawn": map[string]any{
+				"id": "w3",
+				"writ": map[string]any{
+					"categories": []any{"behaviour"}, "territory": []any{"docs/**"},
+					"budgets": map[string]any{"tokens": 13000, "minutes": 15, "speculation": 130},
+				},
+			}})
+			lead["steps"] = steps
+			d["agents"] = append(d["agents"].([]any), map[string]any{
+				"id": "w3", "parent": docLead(d),
+				"steps": []any{
+					map[string]any{"backbrief": map[string]any{"plan_files": []any{"docs/**"}}},
+					map[string]any{"commit": map[string]any{"message": "w3"}},
+				},
+			})
+		}, false},
+	}
+	for _, tc := range legs {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			tc.mutate(doc)
+			writeScriptYAML(t, sp, doc)
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			if got := hasCode(v, "script-spawn"); got != tc.wantErr {
+				t.Fatalf("script-spawn fired=%v want %v; got: %v", got, tc.wantErr, v.list)
+			}
+		})
+	}
+}
+
+// docLead resolves the lead agent id in a C-subset script (the agent
+// whose steps contain the spawn steps).
+func docLead(d map[string]any) string {
+	for _, ai := range d["agents"].([]any) {
+		a := ai.(map[string]any)
+		for _, st := range a["steps"].([]any) {
+			if m, ok := st.(map[string]any); ok {
+				if _, ok := m["spawn"]; ok {
+					return a["id"].(string)
+				}
+			}
+		}
+	}
+	return "lead"
+}
+
+// reflow: an evidence line that joins two complete base lines is folded
+// context, not the planted change — the span must fail.
+func TestEvidenceLines_reflow(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	base, err := os.ReadFile(filepath.Join(p.Dir, "repo", "internal/auth/session.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimRight(string(base), "\n"), "\n")
+	// join two complete base lines into the added slot (evidence line 4).
+	joined := lines[2] + " " + lines[5]
+	out := append([]string{}, lines[:3]...)
+	out = append(out, joined)
+	out = append(out, lines[4:]...)
+	if !setWriteOnNth(doc, "internal/auth/session.go", 0, strings.Join(out, "\n")+"\n") {
+		t.Fatal("no session.go write to reflow")
+	}
+	writeScriptYAML(t, sp, doc)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if !hasDetail(v, "evidence-lines", "reflowed") {
+		t.Fatalf("joined base lines produced no reflow flag; got: %v", v.list)
+	}
+}
+
+// boundary: an evidence line that shares ONE complete base line inside
+// planted text is the change itself — joined=1 stays clean.
+func TestEvidenceLines_reflow_boundary(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	base, err := os.ReadFile(filepath.Join(p.Dir, "repo", "internal/auth/session.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimRight(string(base), "\n"), "\n")
+	out := append([]string{}, lines[:3]...)
+	out = append(out, "const AdminSessionTTLSeconds = 300 "+lines[5])
+	out = append(out, lines[4:]...)
+	if !setWriteOnNth(doc, "internal/auth/session.go", 0, strings.Join(out, "\n")+"\n") {
+		t.Fatal("no session.go write to edit")
+	}
+	writeScriptYAML(t, sp, doc)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasDetail(v, "evidence-lines", "reflowed") {
+		t.Fatalf("single embedded base line flagged as reflow: %v", v.list)
+	}
+}
+
+// changed lines: the unchanged line BEFORE an added line is not a
+// changed line — a span there must fail (A-025 adds line 4).
+func TestEvidenceLines_before_added_line(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	changed := false
+	for _, e := range entries {
+		for _, ev := range e.(map[string]any)["evidence"].([]any) {
+			em := ev.(map[string]any)
+			if em["path"] == "internal/auth/session.go" {
+				em["lines"] = []any{3, 3}
+				changed = true
+			}
+		}
+	}
+	if !changed {
+		t.Fatal("A-025 has no session.go evidence to move")
+	}
+	buf, _ := yaml.Marshal(entries)
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "evidence-lines")
+}
+
+// the planted-edit cap is judged on the normalised edit itself,
+// independent of the whole-script cap: six scenarios whose scripts
+// differ structurally but plant one normalised edit on the evidence
+// path must fail; five pass.
+func TestMutationCap_planted_edit(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{6, true}, {5, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			id := fmt.Sprintf("A-%03d", i)
+			mkPair(t, root, "A", id, fmt.Sprintf("A-%03d", i+1000), "schema")
+			// vary the non-evidence edit's path depth so the script-group
+			// key differs while the planted edit stays identical.
+			sp := filepath.Join(root, "A", id, "script.yaml")
+			raw, err := os.ReadFile(sp)
+			if err != nil {
+				t.Fatal(err)
+			}
+			deep := strings.Repeat("d/", i) + "note.md"
+			src := strings.Replace(string(raw), "docs/note.md", deep, 1)
+			if err := os.WriteFile(sp, []byte(src), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasCode(v, "coverage-template")
+		if got != tc.fail {
+			t.Fatalf("%d same-edit scenarios: coverage-template fired=%v want %v; got: %v", tc.n, got, tc.fail, v.list)
+		}
+	}
+}
+
+// C/D parity runs in both directions: a path the twin touches that the
+// planted never touches fails twin-files just as the reverse does.
+func TestTwinEdits_extra_twin_path(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	a := agentByID(doc, "w1")
+	steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+		"path":  "docs/extra_twin_note.md",
+		"write": "# extra\n",
+	}})
+	a["steps"] = steps
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-edits")
+}
+
+// the registry must match the queue on type AND category: flipping
+// either leaves the queued decision uncovered.
+func TestPlanted_registry_category_mismatch(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	e := entries[0].(map[string]any)
+	if e["category"] == "deletion" {
+		t.Fatal("fixture expects a non-deletion category")
+	}
+	e["category"] = "deletion"
+	buf, _ := yaml.Marshal(entries)
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "registry-miss")
+}
+
+func TestPlanted_registry_type_mismatch(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+	raw, err := os.ReadFile(rp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var entries []any
+	if err := yaml.Unmarshal(raw, &entries); err != nil {
+		t.Fatal(err)
+	}
+	e := entries[0].(map[string]any)
+	if e["type"] == "late" {
+		t.Fatal("fixture expects a non-late type")
+	}
+	e["type"] = "late"
+	buf, _ := yaml.Marshal(entries)
+	if err := os.WriteFile(rp, buf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	expectViolation(t, root, "registry-miss")
+}
+
+// every glob of the root writ must lie within the commission territory
+// — a LATER glob wider than the territory fails even when the first
+// globs are all valid.
+func TestRootWrit_later_glob_wider(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-029")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	raw, err := os.ReadFile(filepath.Join(root, tw.Subset, tw.ID, "commission.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var comm map[string]any
+	if err := yaml.Unmarshal(raw, &comm); err != nil {
+		t.Fatal(err)
+	}
+	w := rootAgent(doc)["writ"].(map[string]any)
+	terr := append([]any{}, comm["territory"].([]any)...)
+	terr = append(terr, "**")
+	w["territory"] = terr
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-writ")
+}
+
+// J1 applies to every world: a planted world's declare of a guarantee
+// category its own diff does not make must fail, exactly as a twin's
+// would.
+func TestWorldDeclare_planted_world(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	// w1 edits files/util.go but does not weaken a test there — a
+	// test-strength declaration on it is false.
+	insertDeclareForAgent(doc, "w1", "test-strength", "files/util.go")
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "world-declare")
+
+	// boundary: the unmodified pair's worlds declare only decisions
+	// they make.
+	root2 := t.TempDir()
+	copyScenarioTree(t, p, root2)
+	copyScenarioTree(t, tw, root2)
+	v := collectScenarios(t, root2, options{runTests: false, workers: 4})
+	if hasCode(v, "world-declare") {
+		t.Fatalf("clean pair tripped world-declare; got: %v", v.list)
+	}
+}
+
+// self-test: every Test* function in this package's test files must be
+// matched by the -run pattern of at least one check under test/checks —
+// a fixture no check runs is no fixture at all.
+func TestC3_1_1_no_orphan_fixtures(t *testing.T) {
+	repo := repoRoot(t)
+	// collect every check script's -run regexes for this package.
+	var patterns []string
+	err := filepath.Walk(filepath.Join(repo, "test/checks"), func(path string, fi os.FileInfo, err error) error {
+		if err != nil || fi.IsDir() || !strings.HasSuffix(fi.Name(), ".sh") {
+			return err
+		}
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		s := string(raw)
+		if !strings.Contains(s, "bench/docketbench/validate") {
+			return nil
+		}
+		for _, m := range runArgRe.FindAllStringSubmatch(s, -1) {
+			patterns = append(patterns, m[1])
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(patterns) == 0 {
+		t.Fatal("no check -run patterns found for bench/docketbench/validate")
+	}
+	var compiled []*regexp.Regexp
+	for _, p := range patterns {
+		re, err := regexp.Compile(p)
+		if err != nil {
+			t.Fatalf("check pattern %q does not compile: %v", p, err)
+		}
+		compiled = append(compiled, re)
+	}
+	// enumerate Test* functions in this package's test files.
+	dir := filepath.Join(repo, "bench/docketbench/validate")
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testFnRe := regexp.MustCompile(`(?m)^func (Test\w+)\(t \*testing\.T\)`)
+	var orphans []string
+	for _, e := range entries {
+		if !strings.HasSuffix(e.Name(), "_test.go") {
+			continue
+		}
+		raw, err := os.ReadFile(filepath.Join(dir, e.Name()))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, m := range testFnRe.FindAllStringSubmatch(string(raw), -1) {
+			name := m[1]
+			matched := false
+			for _, re := range compiled {
+				if re.MatchString(name) {
+					matched = true
+					break
+				}
+			}
+			if !matched {
+				orphans = append(orphans, name)
+			}
+		}
+	}
+	if len(orphans) > 0 {
+		t.Fatalf("validator tests matched by no check -run set: %v", orphans)
+	}
+}
+
+var runArgRe = regexp.MustCompile(`(?s)-run\s+'([^']+)'`)
