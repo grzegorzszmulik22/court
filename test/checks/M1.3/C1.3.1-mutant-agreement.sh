@@ -19,27 +19,8 @@ REFLEDGER="ref/python/refledger"
     || { echo "generator failed" >&2; exit 1; }
 
 # 2. >= 1000 mutants (one per kind per ledger across every MutantKinds).
-# indir mode mutates ledger i with seed 4242+i; running one --in call per
-# ledger with --seed $((4242+i)) produces the identical corpus while letting
-# several ledgers mutate in parallel (the serial pass cost ~30 s under load,
-# which pushed this check past its 240 s timeout on a contended host).
-gens=("$d"/gen/*.jsonl)
-mut_jobs=${#gens[@]}
-[ "$mut_jobs" -gt 8 ] && mut_jobs=8
-i=0
-pids=()
-for f in "${gens[@]}"; do
-    base=$(basename "$f" .jsonl)
-    idx=${base##*-}; idx=$((10#$idx))
-    "$COURT" ledger mutate --in "$f" --out "$d/mut" --seed $((4242 + idx)) &
-    pids+=($!)
-    i=$((i + 1))
-    if [ $((i % mut_jobs)) -eq 0 ]; then
-        for p in "${pids[@]}"; do wait "$p" || { echo "mutate failed" >&2; exit 1; }; done
-        pids=()
-    fi
-done
-for p in "${pids[@]}"; do wait "$p" || { echo "mutate failed" >&2; exit 1; }; done
+"$COURT" ledger mutate --indir "$d/gen" --out "$d/mut" --seed 4242 \
+    || { echo "mutate failed" >&2; exit 1; }
 nmut=$(find "$d/mut" -name '*.jsonl' | wc -l)
 [ "$nmut" -ge 1000 ] || { echo "only $nmut mutants" >&2; exit 1; }
 
@@ -75,48 +56,29 @@ head -c -1 "$d/gen/gen-00001.jsonl" > "$d/edge/no-newline.jsonl"
 # per-file lines are appended in corpus order. Every file is still verified
 # exactly once by each verifier; the agreement pass below sees the same output
 # it sees on Linux.
-# The corpus is split into strided shards verified concurrently: two serial
-# passes over 1,200+ ledgers can exceed the 240 s check timeout on a contended
-# host (seen 2026-11-20, regress replay timing out at load ~12). Each shard
-# keeps corpus order internally, so the concatenated output is still a
-# deterministic list in which every corpus file appears exactly once.
 files=("$d"/gen/*.jsonl "$d"/mut/*.jsonl "$d"/edge/*.jsonl)
-shards=6
-i=0
-for f in "${files[@]}"; do
-    printf '%s\n' "$f" >>"$d/shard.$((i % shards)).files"
-    i=$((i + 1))
-done
-run_shard() { # <shard-index> <out-prefix> <verifier command...>
-    local s=$1 out=$2
+run_batched() { # <out> <err> <verifier command...>
+    local out=$1 err=$2
     shift 2
     local batch=() f
     : >"$out"
-    : >"$out.err"
-    while IFS= read -r f; do
+    : >"$err"
+    for f in "${files[@]}"; do
         batch+=("$f")
-        # 200 paths * ~140 chars stays under the Windows 32,767-char limit.
-        if [ "${#batch[@]}" -ge 200 ]; then
-            "$@" "${batch[@]}" >>"$out" 2>>"$out.err" || true
+        if [ "${#batch[@]}" -ge 100 ]; then
+            "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
             batch=()
         fi
-    done <"$d/shard.$s.files"
+    done
     if [ "${#batch[@]}" -gt 0 ]; then
-        "$@" "${batch[@]}" >>"$out" 2>>"$out.err" || true
+        "$@" "${batch[@]}" >>"$out" 2>>"$err" || true
     fi
 }
-pids=()
-for i in $(seq 0 $((shards - 1))); do
-    run_shard "$i" "$d/go.$i.out" "$COURT" ledger verify &
-    pids+=($!)
-    run_shard "$i" "$d/py.$i.out" python3 "$REFLEDGER" &
-    pids+=($!)
-done
-wait "${pids[@]}" 2>/dev/null || true
-cat "$d"/go.*.out >"$d/go.out"
-cat "$d"/py.*.out >"$d/py.out"
-cat "$d"/go.*.out.err >"$d/go.err"
-cat "$d"/py.*.out.err >"$d/py.err"
+run_batched "$d/go.out" "$d/go.err" "$COURT" ledger verify &
+gopid=$!
+run_batched "$d/py.out" "$d/py.err" python3 "$REFLEDGER" &
+pypid=$!
+wait "$gopid" "$pypid" 2>/dev/null || true
 
 python3 - "$d" <<'PYEOF' || { echo "verifier agreement failed" >&2; exit 1; }
 import sys, os, re
@@ -201,6 +163,5 @@ summary = {"mutant_files": sum(v for k, v in hist.items() if k.startswith('go:')
 json.dump(summary, open(os.path.join(d, 'agreement-summary.json'), 'w'), indent=1)
 print(json.dumps(summary, indent=1))
 PYEOF
-rm -rf "$d/gen" "$d/mut" "$d/edge" "$d/rej" "$d/court" "$d"/shard.*.files \
-    "$d"/go.*.out "$d"/py.*.out "$d"/go.*.out.err "$d"/py.*.out.err \
-    "$d/go.out" "$d/py.out" "$d/go.err" "$d/py.err"
+rm -rf "$d/gen" "$d/mut" "$d/edge" "$d/rej" "$d/court" "$d/go.out" "$d/py.out" \
+    "$d/go.err" "$d/py.err"
