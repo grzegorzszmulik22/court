@@ -20,7 +20,11 @@ import (
 
 func rtGit(t *testing.T, dir string, stdin string, args ...string) string {
 	t.Helper()
-	cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+	// Own identity for every call: commit-tree must work on a host with no
+	// global git identity (oci-free-a1).
+	base := []string{"-C", dir, "-c", "user.name=redteam",
+		"-c", "user.email=redteam@court.local"}
+	cmd := exec.Command("git", append(base, args...)...)
 	if stdin != "" {
 		cmd.Stdin = strings.NewReader(stdin)
 	}

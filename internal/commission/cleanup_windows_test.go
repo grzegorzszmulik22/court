@@ -11,6 +11,7 @@ package commission_test
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -50,20 +51,42 @@ func processAlive(pid int) bool {
 
 // waitProcessGone blocks until pid has exited, and fails the test when it
 // is still running after timeout.
-func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
-	t.Helper()
+// processGoneWithin waits up to timeout for pid to exit and reports
+// whether it is gone. It never clears the registry: a record is removed
+// only after the process is proven dead, and a live daemon must stay
+// reported.
+func processGoneWithin(pid int, timeout time.Duration) bool {
 	if pid <= 0 {
-		return
+		return true
 	}
 	deadline := time.Now().Add(timeout)
 	for processAlive(pid) {
 		if time.Now().After(deadline) {
-			t.Fatalf("court daemon pid %d is still running after %s; "+
-				"a process the test started was not shut down", pid, timeout)
+			return false
 		}
 		time.Sleep(20 * time.Millisecond)
 	}
+	return true
+}
+
+// waitProcessGoneErr is the barrier's decision: it waits for the process
+// and clears the pid only when it is gone. A process that does not exit is
+// reported and its record is kept.
+func waitProcessGoneErr(pid int, timeout time.Duration) error {
+	if !processGoneWithin(pid, timeout) {
+		return fmt.Errorf("court daemon pid %d is still running after %s; "+
+			"a process the test started was not shut down", pid, timeout)
+	}
 	clearDaemonPID(pid)
+	return nil
+}
+
+// waitProcessGone fails the test when the process does not exit.
+func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
+	t.Helper()
+	if err := waitProcessGoneErr(pid, timeout); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // waitFileReleased waits until path can be opened exclusively, i.e. no
