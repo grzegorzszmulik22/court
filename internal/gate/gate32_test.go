@@ -10,7 +10,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -296,6 +298,161 @@ func TestC3_2_1(t *testing.T) {
 	if !exactLine(out, gate.Message) {
 		t.Fatalf("later refusal does not carry exactly %q:\n%s", gate.Message, out)
 	}
+}
+
+// rewritePreHook points the generated pre-commit hook at another URL (and
+// optionally another timeout), to build the unreachable-daemon cases.
+func rewritePreHook(t *testing.T, h *scripted.Harness, url, timeout string) {
+	t.Helper()
+	path := filepath.Join(gate.HooksDir(h.DataDir), "pre-commit")
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := string(raw)
+	if !strings.Contains(s, h.Daemon.URL()) {
+		t.Fatalf("pre-commit hook does not name the daemon URL %s", h.Daemon.URL())
+	}
+	s = strings.ReplaceAll(s, h.Daemon.URL(), url)
+	if timeout != "" {
+		s = strings.ReplaceAll(s, "--timeout 10s", "--timeout "+timeout)
+		// The curl/wget fallback hook has no --timeout flag.
+		secs := strings.TrimSuffix(timeout, "s")
+		s = strings.ReplaceAll(s, "-m 10", "-m "+secs)
+		s = strings.ReplaceAll(s, "-T 10", "-T "+secs)
+	}
+	if err := os.WriteFile(path, []byte(s), 0o755); err != nil {
+		t.Fatal(err)
+	}
+}
+
+const gateUnreachable = "Court gate is not reachable; commit blocked."
+
+// checkCommitBlocked writes a change directly (the agent's Edit hook post
+// needs a daemon, which may be the thing that is down) and requires the
+// commit to fail with the fail-closed line and to create no commit.
+func checkCommitBlocked(t *testing.T, h *scripted.Harness, c *scripted.Client) {
+	t.Helper()
+	if err := os.WriteFile(filepath.Join(c.Worktree, "app.txt"),
+		[]byte("one\nblocked\nthree\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	head := revParse(t, c)
+	out, err := commitRaw(t, c, "must be blocked")
+	if err == nil {
+		t.Fatalf("commit succeeded although the gate was unreachable:\n%s", out)
+	}
+	if !exactLine(out, gateUnreachable) {
+		t.Fatalf("refusal does not carry exactly %q:\n%s", gateUnreachable, out)
+	}
+	got := revParse(t, c)
+	if got != head {
+		t.Fatalf("blocked commit moved HEAD: %s -> %s", head, got)
+	}
+	if commitFor(evs(t, h), got) != nil {
+		t.Fatalf("blocked commit was recorded")
+	}
+}
+
+// C3.2.1 (fail closed): whenever the pre-commit hook cannot reach the
+// daemon - stopped, wrong port/refused, timeout, malformed or error
+// answer - the commit is blocked and the world gets no commit.
+func TestC3_2_1FailClosed(t *testing.T) {
+	checkBlocked := checkCommitBlocked
+
+	t.Run("daemon-stopped", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		h.Daemon.Close()
+		checkBlocked(t, h, c)
+	})
+
+	t.Run("wrong-port-refused", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		ln, err := net.Listen("tcp", "127.0.0.1:0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		dead := "http://" + ln.Addr().String()
+		ln.Close()
+		rewritePreHook(t, h, dead, "")
+		checkBlocked(t, h, c)
+	})
+
+	t.Run("timeout", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			time.Sleep(2 * time.Second)
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"gate":"open"}`))
+		}))
+		defer srv.Close()
+		rewritePreHook(t, h, srv.URL, "1s")
+		checkBlocked(t, h, c)
+	})
+
+	t.Run("malformed-answer", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte("not json"))
+		}))
+		defer srv.Close()
+		rewritePreHook(t, h, srv.URL, "")
+		checkBlocked(t, h, c)
+	})
+
+	t.Run("server-error", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			http.Error(w, "boom", http.StatusInternalServerError)
+		}))
+		defer srv.Close()
+		rewritePreHook(t, h, srv.URL, "")
+		checkBlocked(t, h, c)
+	})
+}
+
+// C3.2.1 (fail closed, hook without CourtBin): the generated curl/wget
+// fallback must block the same unreachable answers.
+func TestC3_2_1FailClosedFallback(t *testing.T) {
+	t.Setenv("COURT_BIN", "")
+
+	t.Run("daemon-stopped", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		h.Daemon.Close()
+		checkCommitBlocked(t, h, c)
+	})
+
+	t.Run("malformed-answer", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte("not json"))
+		}))
+		defer srv.Close()
+		rewritePreHook(t, h, srv.URL, "")
+		checkCommitBlocked(t, h, c)
+	})
+
+	t.Run("timeout", func(t *testing.T) {
+		h := newGateHarness(t)
+		c := addAgent(t, h, "w1")
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			time.Sleep(2 * time.Second)
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"gate":"open"}`))
+		}))
+		defer srv.Close()
+		rewritePreHook(t, h, srv.URL, "1s")
+		checkCommitBlocked(t, h, c)
+	})
 }
 
 // --------------------------------------------------------------------------

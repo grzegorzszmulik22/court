@@ -84,26 +84,10 @@ func recordDaemonPID(t *testing.T, pid int) {
 // reportLeakedDaemons fails the run when a daemon recorded by a test is
 // still alive after every test and its cleanup have finished.
 func reportLeakedDaemons(registry string, code int) int {
-	entries, err := os.ReadDir(registry)
+	leaked, err := leakedDaemons(registry)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return code
-		}
-		fmt.Fprintf(os.Stderr, "commission_test: read daemon registry: %v\n", err)
+		fmt.Fprintf(os.Stderr, "commission_test: %v\n", err)
 		return 1
-	}
-	var leaked []string
-	for _, e := range entries {
-		pid, err := strconv.Atoi(strings.TrimSpace(e.Name()))
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "commission_test: bad daemon record %q: %v\n",
-				e.Name(), err)
-			code = 1
-			continue
-		}
-		if processAlive(pid) {
-			leaked = append(leaked, e.Name())
-		}
 	}
 	if len(leaked) > 0 {
 		fmt.Fprintf(os.Stderr,
@@ -112,6 +96,29 @@ func reportLeakedDaemons(registry string, code int) int {
 		return 1
 	}
 	return code
+}
+
+// leakedDaemons is the barrier's decision, separated so the self-test can
+// assert it directly: every recorded pid that is still alive is a leak.
+func leakedDaemons(registry string) ([]string, error) {
+	entries, err := os.ReadDir(registry)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("read daemon registry: %w", err)
+	}
+	var leaked []string
+	for _, e := range entries {
+		pid, err := strconv.Atoi(strings.TrimSpace(e.Name()))
+		if err != nil {
+			return nil, fmt.Errorf("bad daemon record %q: %w", e.Name(), err)
+		}
+		if processAlive(pid) {
+			leaked = append(leaked, e.Name())
+		}
+	}
+	return leaked, nil
 }
 
 // buildCourt compiles ./cmd/court from the repository root (two dirs up

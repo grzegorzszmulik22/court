@@ -56,7 +56,7 @@ func (d *Daemon) handleGatePre(w http.ResponseWriter, r *http.Request) {
 	sess, ok := d.byTree[normPath(gp.WorldPath)]
 	d.mu.Unlock()
 	if !ok {
-		writeJSON(w, 200, map[string]any{})
+		writeJSON(w, 200, map[string]any{"gate": "open"})
 		return
 	}
 	// A gate pass belongs to the world it names only when it describes
@@ -79,7 +79,7 @@ func (d *Daemon) handleGatePre(w http.ResponseWriter, r *http.Request) {
 		d.refuse(w, r, "gate", err.Error(), http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, 200, map[string]any{})
+	writeJSON(w, 200, map[string]any{"gate": "open"})
 }
 
 // handleGate serves POST /gate. The commit is attributed to the session

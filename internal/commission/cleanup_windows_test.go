@@ -20,14 +20,19 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+// openProcess is a seam for the self-test: the real process probe is
+// windows.OpenProcess, and the test replaces it with an access-denied
+// answer to prove an unopenable-but-live process is not called gone.
+var openProcess = windows.OpenProcess
+
 // processAlive reports whether pid is a live process. OpenProcess fails
-// for a pid whose process object is gone; an exited process that still
-// has open handles is signalled immediately.
+// for a pid whose process object is gone; a failure for any other reason
+// (access denied) does not prove the process is gone.
 func processAlive(pid int) bool {
 	if pid <= 0 {
 		return false
 	}
-	h, err := windows.OpenProcess(windows.SYNCHRONIZE, false, uint32(pid))
+	h, err := openProcess(windows.SYNCHRONIZE, false, uint32(pid))
 	if err != nil {
 		// A process object that is gone fails with an invalid parameter;
 		// any other failure (access denied under security software) does

@@ -773,9 +773,20 @@ func cmdGatePre(args []string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	io.Copy(io.Discard, resp.Body)
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 4096))
+	if err != nil {
+		return fmt.Errorf("gate pre: read answer: %w", err)
+	}
 	switch resp.StatusCode {
 	case 200:
+		// Fail closed on a malformed answer: only the daemon's explicit
+		// allow token permits the commit.
+		var ans struct {
+			Gate string `json:"gate"`
+		}
+		if err := json.Unmarshal(body, &ans); err != nil || ans.Gate != "open" {
+			return fmt.Errorf("gate pre: malformed answer %q", string(body))
+		}
 		return nil
 	case http.StatusForbidden:
 		os.Exit(3)
