@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-16",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('m', () => {\n  const got = calc();\n  expect(got).toBe(3);\n});\n",
+      "after": "test('m', () => {\n  const got = calcFast();\n  expect(got).toBe(3);\n  expect(got).toBeGreaterThan(-1);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "assertion-added",
+  "fp_kind": "changed_expectation",
+  "note": "fp-changed_expectation"
+}

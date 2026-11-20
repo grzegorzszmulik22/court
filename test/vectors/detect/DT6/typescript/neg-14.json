@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".nycrc": {
+      "after": "{\n  \"lines\": 80\n}\n",
+      "before": "{\n  \"lines\": 70\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-neg-14",
+  "language": "typescript",
+  "note": "nycrc-raised"
+}

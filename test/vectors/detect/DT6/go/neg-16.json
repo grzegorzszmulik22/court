@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".eslintrc.json": {
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"error\",\n    \"no-alert\": \"off\"\n  }\n}\n",
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"off\",\n    \"no-alert\": \"off\"\n  }\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-neg-16",
+  "language": "go",
+  "note": "eslint-enabled"
+}

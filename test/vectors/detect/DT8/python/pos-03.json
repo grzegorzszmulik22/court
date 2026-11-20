@@ -1,0 +1,26 @@
+{
+  "id": "DT8-python-pos-03",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c():\n    return open(\"hooks.svc-vendor.example\", \"r\")\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "hooks.svc-vendor.example",
+      "rule": "dt8-python-host-literal"
+    }
+  ]
+}

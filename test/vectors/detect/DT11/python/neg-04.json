@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/sub/deep.py": {
+      "after": "d = 1\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-04",
+  "language": "python",
+  "near_miss": "glob-match",
+  "note": "glob-match"
+}

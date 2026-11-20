@@ -1,0 +1,13 @@
+{
+  "id": "DT7-python-neg-15",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/f.py": {
+      "before": "def f():\n    while x():\n        work()\n",
+      "after": "def f():\n    while x():\n        if bad():\n            break\n        work()\n"
+    }
+  },
+  "expect": [],
+  "note": "while-break"
+}

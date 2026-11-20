@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-19",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class A:\n    class B:\n        pass\n",
+      "after": "class A:\n    class B:\n        x = 1\n"
+    }
+  },
+  "expect": [],
+  "note": "nested-class"
+}

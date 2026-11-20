@@ -1,0 +1,14 @@
+{
+  "id": "DT4-typescript-neg-02",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('perf', () => {\n  expect(ms()).toBeLessThan(500);\n});\n",
+      "after": "test('perf', () => {\n  expect(ms()).toBeLessThan(100);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
+}

@@ -1,0 +1,18 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: docs/guide.md, write: "# scheduler guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 5, restore the previous binary and re-run migrations 005 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: README.md, write: "# scheduler\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 5).\n"}
+      - edit: {path: sched/sched_test.go, write: "package sched\n\nimport \"testing\"\n\nfunc TestDue(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif !Due(j, 1100) {\n\t\tt.Fatal(\"job should be due\")\n\t}\n\tif Due(j, 1030) {\n\t\tt.Fatal(\"job should not be due\")\n\t}\n}\n\nfunc TestNext(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif Next(j) != 1060 {\n\t\tt.Fatalf(\"Next = %d\", Next(j))\n\t}\n}\n\nfunc TestClampLo5(t *testing.T) {\n\tif clamp(-5, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-5,0,5) = %d\", clamp(-5, 0, 5))\n\t}\n}\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc absval5(x int) int {\n\tif x <= -1 {\n\t\treturn -x\n\t}\n\treturn x\n}\n"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["sched/sched_test.go"], question: "the other work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
+      - commit: {message: "scheduler: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

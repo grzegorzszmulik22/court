@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-12",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def run(a, b):\n    pass\n",
+      "after": "def run(a, /, b):\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def run(a, /, b):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

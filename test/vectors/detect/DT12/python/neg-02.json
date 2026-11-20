@@ -1,0 +1,24 @@
+{
+  "id": "DT12-python-neg-02",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/cart.py": {
+      "before": "",
+      "after": "item0\nitem1\nitem2\nitem3\nitem4\nitem5\nitem6\nitem7\nitem8\nitem9\nitem10\nitem11\nitem12\nitem13\nitem14\nitem15\nitem16\nitem17\nitem18\nitem19\nitem20\nitem21\nitem22\nitem23\nitem24\nitem25\nitem26\nitem27\nitem28\nitem29\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 10
+  },
+  "expect": [],
+  "near_miss": "within-budget",
+  "note": "within-budget"
+}

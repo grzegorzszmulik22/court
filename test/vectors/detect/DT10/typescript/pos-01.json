@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt10-typescript-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt2-typescript-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/cleanup.sql": {
+      "after": "-- prep\nDROP TABLE sessions;\n",
+      "before": "-- prep\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-01",
+  "language": "typescript"
+}

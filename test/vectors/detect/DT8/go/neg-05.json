@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.go": {
+      "after": "package svc\n\n// talks to https://api.other-host.net\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
+    }
+  },
+  "id": "DT8-go-neg-05",
+  "language": "go",
+  "near_miss": "comment-hostname",
+  "note": "import-added"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-11",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def calc(a):\n    return a\n",
+      "after": "def calc(a: int):\n    return a\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def calc(a: int):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

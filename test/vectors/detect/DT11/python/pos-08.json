@@ -1,0 +1,44 @@
+{
+  "id": "DT11-python-pos-08",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "x.py": {
+      "before": "",
+      "after": "x = 1\ny = 2\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "x.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "x.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

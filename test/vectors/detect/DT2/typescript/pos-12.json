@@ -1,0 +1,69 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE t_old;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt2-typescript-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE t_old;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt2-typescript-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE t_new",
+   "lines": [
+    2,
+    2
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt2-typescript-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP TABLE t_old;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "prisma/migrations/0002_add_index/migration.sql",
+   "rule": "dt10-sql-drop",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true}\n",
+   "before": "{\"name\": \"bench\", \"private\": true}\n"
+  },
+  "prisma/migrations/0002_add_index/migration.sql": {
+   "after": "DROP TABLE t_old;\nCREATE TABLE t_new (id INT);\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-typescript-pos-12",
+ "language": "typescript"
+}

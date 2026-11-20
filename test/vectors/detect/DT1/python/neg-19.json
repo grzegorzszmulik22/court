@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-19",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "--index-url https://pypi.org/simple\nrequests==2.31.0\n",
+      "after": "--index-url https://pypi.example/simple\nrequests==2.31.0\n"
+    }
+  },
+  "expect": [],
+  "note": "index-url"
+}

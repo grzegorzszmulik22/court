@@ -1,0 +1,18 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "data/cfg.json": {
+      "after": "{\"a\": 2}\n",
+      "before": "{\"a\": 1}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT8-go-neg-14",
+  "language": "go",
+  "near_miss": "json-edit",
+  "note": "json-edit"
+}

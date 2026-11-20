@@ -1,0 +1,43 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE orders ADD COLUMN",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE orders ADD COLUMN",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  },
+  "migrations/0002_add_index.sql": {
+   "after": "ALTER TABLE orders ADD COLUMN discount_cents INTEGER DEFAULT 0;\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-go-pos-02",
+ "language": "go"
+}

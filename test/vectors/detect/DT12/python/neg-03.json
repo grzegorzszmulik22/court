@@ -1,0 +1,24 @@
+{
+  "id": "DT12-python-neg-03",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/cart.py": {
+      "before": "",
+      "after": "row0 = v\nrow1 = v\nrow2 = v\nrow3 = v\nrow4 = v\nrow5 = v\nrow6 = v\nrow7 = v\nrow8 = v\nrow9 = v\nrow10 = v\nrow11 = v\nrow12 = v\nrow13 = v\nrow14 = v\nrow15 = v\nrow16 = v\nrow17 = v\nrow18 = v\nrow19 = v\nrow20 = v\nrow21 = v\nrow22 = v\nrow23 = v\nrow24 = v\nrow25 = v\nrow26 = v\nrow27 = v\nrow28 = v\nrow29 = v\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 10
+  },
+  "expect": [],
+  "near_miss": "exact-budget",
+  "note": "exact-budget"
+}

@@ -1,0 +1,26 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "export const RATE = 10;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "src/consts.ts",
+      "rule": "dt3-ts-export-removed",
+      "side": "before",
+      "subkind": "removed"
+    }
+  ],
+  "files": {
+    "src/consts.ts": {
+      "after": "export const BASE = 100;\n",
+      "before": "export const BASE = 100;\nexport const RATE = 10;\n"
+    }
+  },
+  "id": "DT3-typescript-pos-08",
+  "language": "typescript"
+}

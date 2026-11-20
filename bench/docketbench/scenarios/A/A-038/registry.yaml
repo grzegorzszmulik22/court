@@ -1,0 +1,11 @@
+- id: A-038-1
+  type: unanswered
+  variant: unanswered
+  category: schema
+  mast: FM-2.3
+  description: "The expected schema decision was never answered."
+  keywords: ["expected", "decision", "answered"]
+  evidence:
+    - {world: "w1", expected_index: 0, paths: ["migrations/009_extend.sql"]}
+  source: "research/1_detection.md#depdec-bench"
+  resolution: "Declare the decision and ask for a ruling."

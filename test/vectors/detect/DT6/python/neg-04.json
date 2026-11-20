@@ -1,0 +1,18 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "tsconfig.json": {
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
+    }
+  },
+  "id": "DT6-python-neg-04",
+  "language": "python",
+  "near_miss": "strict-on",
+  "note": "strict-on"
+}

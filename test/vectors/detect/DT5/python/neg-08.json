@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-08",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "x = compute()\n",
+      "after": "x = cast(int, compute())\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "cast",
+  "note": "cast"
+}

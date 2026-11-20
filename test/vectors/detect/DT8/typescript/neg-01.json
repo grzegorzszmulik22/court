@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-01",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "const v = \"1.2.3\";\nexport function c() {}\n",
+      "after": "const v = \"1.2.4\";\nexport function c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "const-value",
+  "note": "const-value"
+}

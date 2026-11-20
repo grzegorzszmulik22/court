@@ -1,0 +1,18 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "README.md": {
+      "after": "# app\n\nEvaluating zod.\n",
+      "before": "# app\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT1-typescript-neg-08",
+  "language": "typescript",
+  "near_miss": "docs-mention",
+  "note": "docs-mention"
+}

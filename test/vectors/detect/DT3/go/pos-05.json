@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-05",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc (c Cart) Sub() int {\n\treturn c.sum\n}\n",
+      "after": "package api\n\nfunc (c Cart) Sub(d int) int {\n\treturn c.sum + d\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func (c Cart) Sub(d int) int",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT4-go-neg-03",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tif got := N(); got < 50 { t.Skip() }\n}\n",
+      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tif got := N(); got < 10 { t.Skip() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
+}

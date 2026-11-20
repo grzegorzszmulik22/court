@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-07",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def rate(x):\n    return x\n",
+      "after": "def rate(x, y=0):\n    return x + y\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def rate(x, y=0):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

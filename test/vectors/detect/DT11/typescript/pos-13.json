@@ -1,0 +1,75 @@
+{
+  "commission": {
+    "territory": [
+      "gen/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "syntax",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "proto/svc.proto",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "syntax",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "proto/svc.proto",
+      "rule": "dt2-typescript-format",
+      "side": "after",
+      "subkind": "format"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "syntax",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "proto/svc.proto",
+      "rule": "dt3-contract-proto",
+      "side": "after",
+      "subkind": "added"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "syntax = \"proto3\";",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "proto/svc.proto",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "proto/svc.proto": {
+      "after": "syntax = \"proto3\";\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-pos-13",
+  "language": "typescript",
+  "note": ".proto outside territory also fires format and contract"
+}

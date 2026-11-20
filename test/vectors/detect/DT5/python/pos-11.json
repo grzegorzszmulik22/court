@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "def h(x: Optional[int]) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def h(x: Optional[int]) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def h(x: Optional[int]) -> int:\n    y = x\n    return y\n",
+      "before": "def h(x: int) -> int:\n    y = x\n    return y\n"
+    }
+  },
+  "id": "DT5-python-pos-11",
+  "language": "python"
+}

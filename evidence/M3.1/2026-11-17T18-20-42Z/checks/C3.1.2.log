@@ -1,0 +1,6 @@
+=== RUN   TestC3_1_2
+--- PASS: TestC3_1_2 (121.41s)
+=== RUN   TestC3_1_2_failing_repo
+--- PASS: TestC3_1_2_failing_repo (2.49s)
+PASS
+ok  	court/bench/docketbench/validate	123.921s

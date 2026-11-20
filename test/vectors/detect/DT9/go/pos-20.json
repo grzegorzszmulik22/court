@@ -1,0 +1,30 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "- step c",
+      "lines": [
+        5,
+        5
+      ],
+      "path": "ops/login/runbook.md",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/login/runbook.md": {
+      "after": "# login\n\n- step a\n- step b\n- step c\n",
+      "before": "# login\n\n- step a\n"
+    }
+  },
+  "id": "DT9-go-pos-20",
+  "language": "go"
+}

@@ -1,0 +1,17 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/q.sql": {
+      "after": "-- DROP TABLE t;\n-- still off\n",
+      "before": "-- DROP TABLE t;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-11",
+  "language": "python",
+  "note": "drop-commented-out"
+}

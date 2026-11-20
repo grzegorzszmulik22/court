@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-16",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class C:\n    def a(self):\n        pass\n    def b(self):\n        pass\n",
+      "after": "class C:\n    def a(self):\n        pass\n"
+    }
+  },
+  "expect": [],
+  "note": "method-remove"
+}

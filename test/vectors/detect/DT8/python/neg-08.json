@@ -1,0 +1,18 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "config/hosts.yml": {
+      "after": "hosts:\n  - shared.example.com\n",
+      "before": "hosts:\n  - shared.example.com\n"
+    },
+    "svc/client.py": {
+      "after": "API = 'https://shared.example.com'\n\ndef c():\n    pass\n",
+      "before": "def c():\n    pass\n"
+    }
+  },
+  "id": "DT8-python-neg-08",
+  "language": "python",
+  "near_miss": "var-value",
+  "note": "var-value"
+}

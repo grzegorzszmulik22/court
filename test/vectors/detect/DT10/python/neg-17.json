@@ -1,0 +1,26 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "ops/log2.txt": {
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-17",
+  "language": "python",
+  "note": "git-commit",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git commit -m x"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

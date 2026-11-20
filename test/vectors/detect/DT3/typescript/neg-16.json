@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-16",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/types.ts": {
+      "before": "export type Money = number;\n",
+      "after": "export type Money = bigint;\n"
+    }
+  },
+  "expect": [],
+  "note": "type-alias-change"
+}

@@ -1,0 +1,30 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE t ADD COLUMN c2",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/schema_typescript.sql",
+      "rule": "dt2-typescript-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/schema_typescript.sql": {
+      "after": "CREATE TABLE t (id INT);\nALTER TABLE t ADD COLUMN c2 INT;\n",
+      "before": "CREATE TABLE t (id INT);\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-pos-04",
+  "language": "typescript"
+}

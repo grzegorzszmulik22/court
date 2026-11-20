@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-15",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def f():\n    pass\n",
+      "after": "@cache\ndef f():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "note": "decorator"
+}

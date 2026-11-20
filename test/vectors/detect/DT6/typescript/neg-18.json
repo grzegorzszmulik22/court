@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".pre-commit-config.yaml": {
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n",
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-neg-18",
+  "language": "typescript",
+  "note": "hook-entry-added"
+}

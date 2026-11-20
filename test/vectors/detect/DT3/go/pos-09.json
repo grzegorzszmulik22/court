@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-09",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/vars.go": {
+      "before": "package api\n\nvar Registry = map[string]int{}\n",
+      "after": "package api\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/vars.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "var Registry",
+      "rule": "dt3-go-exported-removed"
+    }
+  ]
+}

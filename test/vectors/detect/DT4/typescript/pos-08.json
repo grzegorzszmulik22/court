@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-08",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/two.test.ts": {
+      "before": "test('total', () => {\n  const a = total();\n  const b = 0;\n  expect(a).toBe(1);\n});\n",
+      "after": "test('total', () => {\n  const a = total();\n  const b = 0;\n  expect(a).toBe(2);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "src/two.test.ts",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "toBe(2)",
+      "rule": "dt4-typescript-changed_expectation"
+    }
+  ]
+}

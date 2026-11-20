@@ -1,0 +1,37 @@
+agents:
+  - id: lead
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2003\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n7,delta3\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n  /ledger/search:\n    get:\n      summary: search v2\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w1 option?", chosen: "yes"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2003\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n7,delta3\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n  /ledger/query:\n    delete:\n      summary: query v2\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w2 option?", chosen: "yes"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

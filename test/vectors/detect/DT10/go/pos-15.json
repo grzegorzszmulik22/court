@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "PAR1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/metrics.parquet",
+      "rule": "dt10-go-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "data/metrics.parquet": {
+      "after": "",
+      "before": "PAR1\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-15",
+  "language": "go"
+}

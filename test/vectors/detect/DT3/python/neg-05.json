@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-05",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def total(c):\n    x = c\n    return x\n",
+      "after": "def total(c):\n    x = c + 1\n    return x\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "local-body",
+  "note": "local-body"
+}

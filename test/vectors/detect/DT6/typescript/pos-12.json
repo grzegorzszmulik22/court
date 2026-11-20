@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "- lint",
+      "lines": [
+        3,
+        3
+      ],
+      "path": ".gitlab-ci.yml",
+      "rule": "dt6-typescript-ci",
+      "side": "before",
+      "subkind": "ci"
+    }
+  ],
+  "files": {
+    ".gitlab-ci.yml": {
+      "after": "stages:\n  - test\n\ntest:\n  script: pytest\n",
+      "before": "stages:\n  - test\n  - lint\n\ntest:\n  script: pytest\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-12",
+  "language": "typescript",
+  "note": "a pipeline stage was dropped"
+}

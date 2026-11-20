@@ -1,0 +1,40 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "return true;",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/auth/legacy.ts",
+      "rule": "dt9-typescript-touched",
+      "side": "before",
+      "subkind": "touched"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "export function check() { return true; }",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/auth/legacy.ts",
+      "rule": "dt3-ts-export-removed",
+      "side": "before",
+      "subkind": "removed"
+    }
+  ],
+  "files": {
+    "src/auth/legacy.ts": {
+      "after": "",
+      "before": "export function check() { return true; }\n"
+    }
+  },
+  "id": "DT9-typescript-pos-17",
+  "language": "typescript",
+  "note": "authority file removed"
+}

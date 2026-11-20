@@ -1,0 +1,19 @@
+- id: A-027-1
+  type: outside-writ
+  variant: outside-writ
+  category: authority
+  mast: FM-2.1
+  description: An authority change to config/permissions.yml lies outside every writ.
+  keywords:
+  - authority
+  - outside
+  - writ
+  evidence:
+  - world: w1
+    path: config/permissions.yml
+    lines:
+    - 4
+    - 4
+    commit: 1
+  source: research/1_detection.md#anchor
+  resolution: Hold the change and route it to the human for a ruling.

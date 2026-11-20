@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "shop/*"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/x.ts": {
+      "after": "import os from 'os';\nexport const x = 1;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-14",
+  "language": "typescript",
+  "note": "single-seg-glob"
+}

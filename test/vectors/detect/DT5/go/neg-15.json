@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-15",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s(x []int) {}\n",
+      "after": "package calc\n\nfunc s(x []string) {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "slice-type",
+  "note": "slice-type"
+}

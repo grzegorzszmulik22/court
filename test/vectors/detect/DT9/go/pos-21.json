@@ -1,0 +1,30 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "a,2",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/token/count.csv",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "data/token/count.csv": {
+      "after": "a,2\n",
+      "before": "a,1\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-21",
+  "language": "go"
+}

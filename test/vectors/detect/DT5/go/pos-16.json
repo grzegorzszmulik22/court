@@ -1,0 +1,26 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "func num() any",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "pkg/calc.go",
+      "rule": "dt5-go-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "pkg/calc.go": {
+      "after": "package calc\n\nfunc num() any { return 3 }\n",
+      "before": "package calc\n\nfunc num() int { return 3 }\n"
+    }
+  },
+  "id": "DT5-go-pos-16",
+  "language": "go"
+}

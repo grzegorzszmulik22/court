@@ -1,0 +1,26 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "\t\t\tcontinue",
+      "lines": [
+        6,
+        6
+      ],
+      "path": "svc/pipe.go",
+      "rule": "dt7-go-swallowed",
+      "side": "after",
+      "subkind": "swallowed"
+    }
+  ],
+  "files": {
+    "svc/pipe.go": {
+      "after": "package svc\n\nfunc pipe() {\n\tfor {\n\t\tif _, err := stage(); err != nil {\n\t\t\tcontinue\n\t\t}\n\t\tbreak\n\t}\n}\n",
+      "before": "package svc\n\nfunc pipe() {\n\tfor {\n\t\tif _, err := stage(); err != nil {\n\t\t\treturn\n\t\t}\n\t}\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-12",
+  "language": "go"
+}

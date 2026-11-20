@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# C3.1.6 M3.1 — subset A covers every detector-backed category in at
+# least 4 planted scenarios and every variant of spec/04 §5 in at least
+# 8; the fixture legs prove each counter fires at one below its minimum
+# and passes at it.
+set -uo pipefail
+go test ./bench/docketbench/validate -count=1 -timeout 30m -v \
+    -run '^TestC3_1_6.*$' \
+    || { echo "check failed; see go test output" >&2; exit 1; }

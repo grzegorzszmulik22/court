@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.ts": {
+      "after": "// talks to https://api.other-host.net\nexport function c() {}\n",
+      "before": "export function c() {}\n"
+    }
+  },
+  "id": "DT8-typescript-neg-05",
+  "language": "typescript",
+  "near_miss": "comment-hostname",
+  "note": "import-added"
+}

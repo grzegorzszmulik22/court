@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/fix.sql": {
+      "after": "UPDATE t SET x = 2;\n",
+      "before": "UPDATE t SET x = 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-neg-08",
+  "language": "go",
+  "near_miss": "update-stmt",
+  "note": "update-stmt"
+}

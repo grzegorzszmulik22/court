@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp9(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 509\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: structure, paths: ["poll/util.go"], question: "the helper on poll/util.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "poll: refresh"}
+      - claim_done: {checks: [unit]}

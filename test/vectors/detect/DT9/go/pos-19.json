@@ -1,0 +1,26 @@
+{
+  "id": "DT9-go-pos-19",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "svc/credential/vault.go": {
+      "before": "package credential\n\nfunc Get() {}\n",
+      "after": "package credential\n\nfunc Get() { refresh() }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "svc/credential/vault.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "refresh() }",
+      "rule": "dt9-go-touched"
+    }
+  ]
+}

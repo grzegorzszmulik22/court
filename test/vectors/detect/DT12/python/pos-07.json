@@ -1,0 +1,45 @@
+{
+  "id": "DT12-python-pos-07",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "tools/x/y.py": {
+      "before": "",
+      "after": "import sys\nz = 1\nw = 2\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "tools/x/y.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "w = 2",
+      "rule": "dt12-python-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/x/y.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "import sys",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

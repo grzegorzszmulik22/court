@@ -1,0 +1,23 @@
+{
+  "id": "DT8-python-neg-16",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c():\n    pass\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [],
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
+}

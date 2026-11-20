@@ -1,0 +1,110 @@
+{
+  "id": "T-09",
+  "comment": "unforeseen+late: hit then a one-commit-late declaration, nothing expected.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "interface",
+        "paths": [
+          "api/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "outbound",
+        "paths": [
+          "svc/c.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:bcffaa16b12cde69b9ea25495cecac32b16a5cbdcf0973444f79e026ecd6d516"
+        ]
+      },
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "outbound",
+        "paths": [
+          "svc/c.go"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "e1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "late",
+      "flags": [
+        "late",
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "e1"
+      ],
+      "sources": [
+        "expected"
+      ],
+      "verdict": "unanswered",
+      "flags": [],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "unforeseen+late",
+    "late-one-commit"
+  ]
+}

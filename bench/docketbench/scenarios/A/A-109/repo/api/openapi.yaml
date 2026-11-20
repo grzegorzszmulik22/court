@@ -1,0 +1,8 @@
+openapi: 3.0.0
+info:
+  title: poll
+  version: 1.0.0
+paths:
+  /poll/items:
+    get:
+      summary: list items

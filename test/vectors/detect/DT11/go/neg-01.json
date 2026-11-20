@@ -1,0 +1,24 @@
+{
+  "id": "DT11-go-neg-01",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "shop/cart.go": {
+      "before": "",
+      "after": "package shop\n"
+    },
+    "shop/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "inside-territory",
+  "note": "inside-territory"
+}

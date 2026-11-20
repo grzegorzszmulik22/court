@@ -1,0 +1,39 @@
+{
+  "id": "DT5-typescript-pos-06",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.test.ts": {
+      "before": "function helper(x: number) { return x; }\n",
+      "after": "// @ts-ignore\nfunction helper(x: number) { return x; }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "suppressed",
+      "path": "src/calc.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "@ts-ignore",
+      "rule": "dt5-typescript-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "src/calc.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "@ts-ignore",
+      "rule": "dt6-typescript-suppressed"
+    }
+  ]
+}

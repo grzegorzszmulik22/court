@@ -1,0 +1,23 @@
+{
+  "id": "DT12-go-neg-19",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "shop/x/y/z.go": {
+      "before": "",
+      "after": "z = 1\nw = 2\n"
+    },
+    "shop/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/**"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [],
+  "note": "planned-parent"
+}

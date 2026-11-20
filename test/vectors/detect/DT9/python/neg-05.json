@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/proxy.yml": {
+      "after": "proxy:\n  a: 1\n# keep\n",
+      "before": "proxy:\n  a: 1\n# note\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-05",
+  "language": "python",
+  "near_miss": "comment-cors",
+  "note": "comment-cors"
+}

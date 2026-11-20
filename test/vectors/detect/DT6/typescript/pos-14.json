@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "\"lines\": 70",
+      "lines": [
+        2,
+        2
+      ],
+      "path": ".nycrc",
+      "rule": "dt6-typescript-threshold",
+      "side": "after",
+      "subkind": "threshold"
+    }
+  ],
+  "files": {
+    ".nycrc": {
+      "after": "{\n  \"lines\": 70\n}\n",
+      "before": "{\n  \"lines\": 90\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-14",
+  "language": "typescript",
+  "note": "a line-coverage floor fell"
+}

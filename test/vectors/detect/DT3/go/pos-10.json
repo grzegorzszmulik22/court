@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-10",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc (c Cart) Apply(d int) int { return d }\n",
+      "after": "package api\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "func (c Cart) Apply(d int) int",
+      "rule": "dt3-go-exported-removed"
+    }
+  ]
+}

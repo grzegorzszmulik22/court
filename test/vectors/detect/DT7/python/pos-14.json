@@ -1,0 +1,30 @@
+{
+  "id": "DT7-python-pos-14",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/price.py": {
+      "before": "def price(n):\n    return n * 2\n",
+      "after": "def price(n):\n    if n == 42:\n        return 84\n    return n * 2\n"
+    },
+    "svc/test_price.py": {
+      "before": "def test_disc():\n    assert disc(42) == 42\n",
+      "after": "def test_disc():\n    assert disc(42) == 42\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "special-case",
+      "path": "svc/price.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "if n == 42:",
+      "rule": "dt7-python-special-case"
+    }
+  ]
+}

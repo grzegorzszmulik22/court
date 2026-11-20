@@ -1,0 +1,32 @@
+{
+  "id": "DT11-python-pos-20",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "tools/gen2.py": {
+      "before": "def f():\n    pass\n",
+      "after": "def f():\n    pass\ndef g():\n    pass\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen2.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "def g():",
+      "rule": "dt11-python-outside"
+    }
+  ],
+  "note": "modified source file outside a single glob"
+}

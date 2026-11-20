@@ -1,0 +1,13 @@
+{
+  "id": "DT9-typescript-neg-14",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/myauth/x.ts": {
+      "before": "export const v = 1;\n",
+      "after": "export const v = 1;\n//e\n"
+    }
+  },
+  "expect": [],
+  "note": "authsuffix"
+}

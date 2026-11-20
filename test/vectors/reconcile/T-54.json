@@ -1,0 +1,75 @@
+{
+  "id": "T-54",
+  "comment": "Declared structure (no detector) merging with expected structure.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "structure",
+        "paths": [
+          "pkg/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "structure",
+        "paths": [
+          "pkg/a.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "e1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "e1"
+      ],
+      "sources": [
+        "declared",
+        "expected"
+      ],
+      "verdict": "declared-only",
+      "flags": [],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "no-detector-category"
+  ]
+}

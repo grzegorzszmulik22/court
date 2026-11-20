@@ -1,0 +1,18 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "coverage.yml": {
+      "after": "coverage:\n  min: 75\n",
+      "before": "coverage:\n  min: 60\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-neg-08",
+  "language": "go",
+  "near_miss": "threshold-tightened",
+  "note": "threshold-tightened"
+}

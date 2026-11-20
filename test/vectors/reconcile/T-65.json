@@ -1,0 +1,78 @@
+{
+  "id": "T-65",
+  "comment": "Expected dependency + detected dependency with overlapping paths merge (needs overlap and HAS it here).",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "dependency",
+        "paths": [
+          "x/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "x/go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:963e95edd8983b25720fc9df48188e87812a943a96391dbbfdaa4599c51bc888"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1",
+        "h1"
+      ],
+      "sources": [
+        "detected",
+        "expected"
+      ],
+      "verdict": "undeclared",
+      "flags": [],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "expected-detected"
+  ]
+}

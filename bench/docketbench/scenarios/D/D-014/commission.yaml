@@ -1,0 +1,7 @@
+goal: "extend the catalog service per roadmap catalog-roadmap-154"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "catalog-roadmap-154"
+allowed_hosts: ["api.internal.example"]

@@ -1,0 +1,17 @@
+{
+  "detector": "DT3",
+  "expect": [],
+  "files": {
+    "api/order.proto.md": {
+      "after": "# proto notes\n\nfields: id, total\n",
+      "before": "# proto notes\n\nfields: id\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT3-typescript-neg-22",
+  "language": "typescript",
+  "note": "proto-lookalike"
+}

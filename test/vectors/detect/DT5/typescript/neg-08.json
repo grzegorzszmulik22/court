@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-08",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "// note\nexport const x = 1;\n",
+      "after": "// not a suppression\nexport const x = 1;\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-shape",
+  "note": "comment-shape"
+}

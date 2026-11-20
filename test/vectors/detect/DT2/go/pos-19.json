@@ -1,0 +1,56 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE users ADD COLUMN tag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "ALTER TABLE users ADD COLUMN tag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE INDEX idx_tag",
+   "lines": [
+    2,
+    2
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  },
+  "migrations/0002_add_index.sql": {
+   "after": "ALTER TABLE users ADD COLUMN tag TEXT;\nCREATE INDEX idx_tag ON users (tag);\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-go-pos-19",
+ "language": "go"
+}

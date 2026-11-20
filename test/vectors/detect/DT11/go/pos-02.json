@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "# guide",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/guide.md",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# guide",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/guide.md",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "docs/guide.md": {
+      "after": "# guide\n\ntext\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-pos-02",
+  "language": "go",
+  "note": "outside a single-glob territory"
+}

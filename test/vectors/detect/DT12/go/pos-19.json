@@ -1,0 +1,49 @@
+{
+  "id": "DT12-go-pos-19",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "shop/cart.go": {
+      "before": "package shop\n",
+      "after": "package shop\nz\n"
+    },
+    "tools/note.txt": {
+      "before": "",
+      "after": "note\nmore\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "tools/note.txt",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "more",
+      "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/note.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "note",
+      "rule": "dt12-go-new-top-level"
+    }
+  ]
+}

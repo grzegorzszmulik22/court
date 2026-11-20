@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "docs/authentication.md": {
+      "after": "y\nz\n",
+      "before": "x\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-10",
+  "language": "python",
+  "near_miss": "authword-filename",
+  "note": "authword-filename"
+}

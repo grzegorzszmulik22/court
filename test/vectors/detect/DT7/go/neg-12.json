@@ -1,0 +1,13 @@
+{
+  "id": "DT7-go-neg-12",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\treturn nil\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "panic-added"
+}

@@ -1,0 +1,19 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["blog/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: blog/blog_test.go, write: "package blog\n\nimport \"testing\"\n\nfunc TestSlug(t *testing.T) {\n\tif Slug(\"Hello World\") != \"hello-world\" {\n\t\tt.Fatal(\"bad slug\")\n\t}\n}\n\nfunc TestTagged(t *testing.T) {\n\tp := Post{Tags: []string{\"go\", \"spec\"}}\n\tif !Tagged(p, \"go\") || Tagged(p, \"rust\") {\n\t\tt.Fatal(\"tag match wrong\")\n\t}\n}\n\nfunc TestClampLo56(t *testing.T) {\n\tif clamp(-56, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-56,0,5) = %d\", clamp(-56, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 556\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: migrations/0058_add_col.sql, write: "-- extend items\nALTER TABLE blog_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: other, paths: ["blog/blog_test.go"], question: "the other work on blog/blog_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: schema, paths: ["migrations/0058_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
+      - commit: {message: "blog: routine refresh"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2099\nretries: 3\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "blog: follow-up config"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

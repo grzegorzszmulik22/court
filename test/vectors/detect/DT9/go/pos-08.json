@@ -1,0 +1,27 @@
+{
+  "id": "DT9-go-pos-08",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "internal/auth/store/users.go": {
+      "before": "package store\n\nvar q = 1\n",
+      "after": "package store\n\nvar q = 1\nvar w = 2\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/auth/store/users.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "var w = 2",
+      "rule": "dt9-go-touched"
+    }
+  ],
+  "note": "deep path under auth/"
+}

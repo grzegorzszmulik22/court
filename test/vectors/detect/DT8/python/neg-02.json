@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.py": {
+      "after": "# client helpers\n# see https://docs.example.com for usage\n",
+      "before": "# client helpers\n"
+    }
+  },
+  "id": "DT8-python-neg-02",
+  "language": "python",
+  "near_miss": "comment-hostname",
+  "note": "body-digit-up"
+}

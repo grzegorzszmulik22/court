@@ -1,0 +1,26 @@
+{
+  "id": "DT5-python-pos-01",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def total(items: list) -> int:\n    return len(items)\n",
+      "after": "def total(items: list) -> Optional[int]:\n    return len(items)\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "app/calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "-> Optional[int]:",
+      "rule": "dt5-python-widened"
+    }
+  ]
+}

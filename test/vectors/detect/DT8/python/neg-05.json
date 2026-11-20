@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.py": {
+      "after": "# talks to https://api.other-host.net\n\ndef c():\n    pass\n",
+      "before": "def c():\n    pass\n"
+    }
+  },
+  "id": "DT8-python-neg-05",
+  "language": "python",
+  "near_miss": "comment-hostname",
+  "note": "import-added"
+}

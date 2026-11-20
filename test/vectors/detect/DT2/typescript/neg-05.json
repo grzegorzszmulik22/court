@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "config/settings.json": {
+      "after": "{\n  \"a\": 2\n}\n",
+      "before": "{\n  \"a\": 1\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-05",
+  "language": "typescript",
+  "near_miss": "plain-json",
+  "note": "plain-json"
+}

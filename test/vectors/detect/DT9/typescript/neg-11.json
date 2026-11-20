@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/cron/i.sh": {
+      "after": "#!/bin/sh\nchmod 600 f\n",
+      "before": "#!/bin/sh\nchmod 644 f\n"
+    }
+  },
+  "id": "DT9-typescript-neg-11",
+  "language": "typescript",
+  "note": "mode-lowered"
+}

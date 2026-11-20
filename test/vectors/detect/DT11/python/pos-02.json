@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "# guide",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/guide.md",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# guide",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/guide.md",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "docs/guide.md": {
+      "after": "# guide\n\ntext\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-02",
+  "language": "python",
+  "note": "outside a single-glob territory"
+}

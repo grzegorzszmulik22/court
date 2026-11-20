@@ -1,0 +1,45 @@
+{
+  "id": "DT12-python-pos-15",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/sub/deep/x.py": {
+      "before": "",
+      "after": "k = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "shop/sub/deep/x.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k = 1",
+      "rule": "dt12-python-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "shop/sub/deep/x.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k = 1",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "total Int",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "db/schema.prisma",
+      "rule": "dt2-python-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "db/schema.prisma": {
+      "after": "model Order {\n  id Int @id\n  total Int\n}\n",
+      "before": "model Order {\n  id Int @id\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-pos-15",
+  "language": "python"
+}

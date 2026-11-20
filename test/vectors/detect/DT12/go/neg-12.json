@@ -1,0 +1,19 @@
+{
+  "id": "DT12-go-neg-12",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "build/gen.go": {
+      "before": "",
+      "after": "g = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [],
+  "note": "small-unplanned-exempt"
+}

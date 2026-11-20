@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "v: any",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/calc.ts",
+      "rule": "dt5-typescript-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "export function s(v: any) {",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/calc.ts",
+      "rule": "dt3-ts-export-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "src/calc.ts": {
+      "after": "export function s(v: any) {\n  touch(v);\n}\n",
+      "before": "export function s(v: boolean) {\n  touch(v);\n}\n"
+    }
+  },
+  "id": "DT5-typescript-pos-20",
+  "language": "typescript"
+}

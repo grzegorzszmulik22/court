@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-17",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/consts.go": {
+      "before": "package api\n\nconst Rate = 10\n",
+      "after": "package api\n\nconst Rate = 20\n"
+    }
+  },
+  "expect": [],
+  "note": "const-value"
+}

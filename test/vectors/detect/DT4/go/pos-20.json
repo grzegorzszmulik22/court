@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-20",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/wide/w_test.go": {
+      "before": "package wide\n\nfunc TestWide(t *testing.T) {\n\tlo, hi := 0, 10\n\tif x < lo || x > hi { t.Fatal() }\n}\n",
+      "after": "package wide\n\nfunc TestWide(t *testing.T) {\n\tlo, hi := 0, 100\n\tif x < lo || x > hi { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "shop/wide/w_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "hi := 0, 100",
+      "rule": "dt4-go-loosened_threshold"
+    }
+  ]
+}

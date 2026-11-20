@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-18",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "enum E { A }\nexport function s(e: E) {}\n",
+      "after": "enum E { A, B }\nexport function s(e: E) {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "enum-type",
+  "note": "enum-type"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "DT7-typescript-neg-11",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f() {\n  return work();\n}\n",
+      "after": "export function f() {\n  return work().catch(e => { throw e; });\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "promise-catch"
+}

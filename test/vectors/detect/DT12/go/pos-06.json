@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# n",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/new.md",
+      "rule": "dt12-go-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# n",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/new.md",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "docs/new.md": {
+      "after": "# n\nmore\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT12-go-pos-06",
+  "language": "go"
+}

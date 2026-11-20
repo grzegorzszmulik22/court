@@ -1,0 +1,15 @@
+--- a/bench/docketbench/validate/scenario.go
++++ b/bench/docketbench/validate/scenario.go
+@@ -608,12 +608,10 @@
+ 	for _, s := range all {
+ 		where := s.Subset + "/" + s.ID
+ 		if s.Twin == "" {
+-			v.add("twin-missing", where, "no twin file or empty twin id")
+ 			continue
+ 		}
+ 		t, ok := byID[s.Subset+"/"+s.Twin]
+ 		if !ok {
+-			v.addf("twin-missing", where, "twin %q does not exist in subset %s", s.Twin, s.Subset)
+ 			continue
+ 		}
+ 		if t.Twin != s.ID {

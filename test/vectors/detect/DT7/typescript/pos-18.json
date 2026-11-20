@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-18",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/probe.ts": {
+      "before": "export function probe(items) {\n  for (const it of items) {\n    ping(it);\n  }\n}\n",
+      "after": "export function probe(items) {\n  for (const it of items) {\n    try {\n      ping(it);\n    } catch (e) {\n      continue;\n    }\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/probe.ts",
+      "lines": [
+        6,
+        6
+      ],
+      "side": "after",
+      "evidence": "continue;",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

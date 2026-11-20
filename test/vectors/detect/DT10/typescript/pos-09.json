@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "TRUNCATE t;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/mixed.sql",
+      "rule": "dt10-typescript-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DELETE FROM u;",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "db/mixed.sql",
+      "rule": "dt10-typescript-sql",
+      "side": "after",
+      "subkind": "sql"
+    }
+  ],
+  "files": {
+    "db/mixed.sql": {
+      "after": "SELECT 1;\nTRUNCATE t;\nDELETE FROM u;\n",
+      "before": "SELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-09",
+  "language": "typescript"
+}

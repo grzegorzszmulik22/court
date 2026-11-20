@@ -1,0 +1,18 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: docs/guide.md, write: "# ledger guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 13, restore the previous binary and re-run migrations 0013 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: README.md, write: "# ledger\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 13).\n"}
+      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - edit: {path: ledger/ledger.go, write: "package ledger\n\n// Entry is one posting.\ntype Entry struct {\n\tAccount string\n\tCents   int64\n}\n\n// Book keeps entries.\ntype Book struct{ entries []Entry }\n\n// Post appends an entry.\nfunc (b *Book) Post(e Entry) { b.entries = append(b.entries, e) }\n\n// Balance sums one account.\nfunc (b *Book) Balance(acct string) int64 {\n\tvar s int64\n\tfor _, e := range b.entries {\n\t\tif e.Account == acct {\n\t\t\ts += e.Cents\n\t\t}\n\t}\n\treturn s\n}\n\nfunc Viable13() bool {\n\treturn true\n}\n"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["ledger/util.go"], question: "the behaviour work on ledger/util.go?", chosen: "yes"}
+      - declare: {category: structure, paths: ["ledger/ledger.go"], question: "the structure work on ledger/ledger.go?", chosen: "yes"}
+      - commit: {message: "ledger: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

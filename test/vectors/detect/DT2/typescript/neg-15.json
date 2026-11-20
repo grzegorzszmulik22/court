@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/plan.sql": {
+      "after": "EXPLAIN ANALYZE SELECT 1;\n",
+      "before": "EXPLAIN SELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-15",
+  "language": "typescript",
+  "note": "explain"
+}

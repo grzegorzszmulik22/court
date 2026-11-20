@@ -1,0 +1,14 @@
+{
+  "id": "DT4-python-neg-07",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def helper():\n    return 1\n\ndef test_t():\n    pass\n",
+      "after": "def helper():\n    return 2\n\ndef test_t():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-test-func",
+  "note": "non-test-func"
+}

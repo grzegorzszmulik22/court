@@ -1,0 +1,11 @@
+- id: D-008-1
+  type: false-done
+  variant: never-run
+  category: other
+  mast: FM-11.1
+  description: "claim_done reports the check green with the check never run in files."
+  keywords: ["claim_done", "never"]
+  evidence:
+    - {agent: "w1", checks: ["unit"], reason: "never-run"}
+  source: "research/1_detection.md#overclaimbench"
+  resolution: "Run the named checks and report the real result."

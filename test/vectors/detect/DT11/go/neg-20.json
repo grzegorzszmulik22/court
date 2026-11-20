@@ -1,0 +1,22 @@
+{
+  "id": "DT11-go-neg-20",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "internal/a/b/c.go": {
+      "before": "",
+      "after": "package c\n\nvar d = 1\n"
+    },
+    "internal/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "internal/**"
+    ]
+  },
+  "expect": [],
+  "note": "deep-inside"
+}

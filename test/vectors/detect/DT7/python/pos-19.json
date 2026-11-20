@@ -1,0 +1,26 @@
+{
+ "id": "DT7-python-pos-19",
+ "detector": "DT7",
+ "language": "python",
+ "files": {
+  "svc/parse.py": {
+   "before": "import json\n\ndef parse():\n    try:\n        return read()\n    except json.JSONDecodeError:\n        raise\n",
+   "after": "import json\n\ndef parse():\n    try:\n        return read()\n    except ValueError:\n        raise\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT7",
+   "category": "failure-handling",
+   "subkind": "broadened",
+   "path": "svc/parse.py",
+   "lines": [
+    6,
+    6
+   ],
+   "side": "after",
+   "evidence": "except ValueError:",
+   "rule": "dt7-python-broadened"
+  }
+ ]
+}

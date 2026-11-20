@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "range: 60..100",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "codecov.yml",
+      "rule": "dt6-typescript-threshold",
+      "side": "after",
+      "subkind": "threshold"
+    }
+  ],
+  "files": {
+    "codecov.yml": {
+      "after": "coverage:\n  range: 60..100\n",
+      "before": "coverage:\n  range: 80..100\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-13",
+  "language": "typescript",
+  "note": "the coverage band widened downward"
+}

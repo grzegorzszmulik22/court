@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.py": {
+      "after": "def c(x):\n    y = 1\n    return y\n",
+      "before": "def c(x):\n    pass\n"
+    }
+  },
+  "id": "DT8-python-neg-06",
+  "language": "python",
+  "near_miss": "default-arg",
+  "note": "default-arg"
+}

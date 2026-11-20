@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/permissions_old/y.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-neg-20",
+  "language": "go",
+  "note": "no-permission"
+}

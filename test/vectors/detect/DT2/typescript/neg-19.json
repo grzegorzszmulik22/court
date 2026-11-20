@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/q.sql": {
+      "after": "-- q v2\nSELECT 1;\n",
+      "before": "-- q\nSELECT 1;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-19",
+  "language": "typescript",
+  "note": "comment-only-sql"
+}

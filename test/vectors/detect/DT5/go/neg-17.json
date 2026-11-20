@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-17",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\n// nolint is a linter\nfunc s() {}\n",
+      "after": "package calc\n\n// nolint is a lint tool\nfunc s() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-nolint",
+  "note": "comment-nolint"
+}

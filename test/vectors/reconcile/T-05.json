@@ -1,0 +1,91 @@
+{
+  "id": "T-05",
+  "comment": "Expected decision never matched -> unanswered at commission end; queued.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "schema",
+        "paths": [
+          "migrations/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "interface",
+        "paths": [
+          "api/x.proto"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1"
+      ],
+      "sources": [
+        "expected"
+      ],
+      "verdict": "unanswered",
+      "flags": [],
+      "queued": true
+    },
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "verdict-unanswered"
+  ]
+}

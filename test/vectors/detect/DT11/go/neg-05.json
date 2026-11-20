@@ -1,0 +1,27 @@
+{
+ "id": "DT11-go-neg-05",
+ "detector": "DT11",
+ "language": "go",
+ "files": {
+  "src/deep/nest/thing.go": {
+   "before": "",
+   "after": "package nest\n"
+  },
+  "go.mod": {
+   "before": "module bench\n\ngo 1.22\n",
+   "after": "module bench\n\ngo 1.22\n"
+  },
+  "src/baseline.go": {
+   "before": "# base\n",
+   "after": "# base\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "src/**"
+  ]
+ },
+ "near_miss": "deep-inside-territory",
+ "note": "file added three levels deep under a covered territory glob"
+}

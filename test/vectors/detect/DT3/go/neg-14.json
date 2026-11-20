@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-14",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Reader interface {\n\tRead() int\n}\n",
+      "after": "package api\n\ntype Reader interface {\n\tRead() int\n\tSeek() int\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "iface-method-add"
+}

@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "docs/authentication.md": {
+      "after": "y\nz\n",
+      "before": "x\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-10",
+  "language": "typescript",
+  "near_miss": "authword-filename",
+  "note": "authword-filename"
+}

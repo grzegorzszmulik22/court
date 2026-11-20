@@ -1,0 +1,14 @@
+{
+  "id": "DT1-python-neg-01",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "requests==2.31.0\npydantic==2.5.0\n",
+      "after": "pydantic==2.5.0\nrequests==2.31.0\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "dependency-reordered",
+  "note": "dependency-reordered"
+}

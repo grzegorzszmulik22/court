@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.ts": {
+      "after": "export const contact = \"mailto:ops@example.com\";\nexport function c() {}\n",
+      "before": "export function c() {}\n"
+    }
+  },
+  "id": "DT8-typescript-neg-07",
+  "language": "typescript",
+  "near_miss": "func-added",
+  "note": "func-added"
+}

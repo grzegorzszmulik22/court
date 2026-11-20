@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-01",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def total(cart):\n    return cart.sum\n",
+      "after": "def total(cart, tax):\n    return cart.sum + tax\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def total(cart, tax):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

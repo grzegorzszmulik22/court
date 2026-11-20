@@ -1,0 +1,27 @@
+{
+  "id": "DT4-go-pos-06",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestA(t *testing.T) {\n\tif A() != 1 { t.Fatal() }\n}\nfunc TestB(t *testing.T) {}\n",
+      "after": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {\n\tif A() != 1 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "shop/shop_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "before",
+      "evidence": "if A() != 1 { t.Fatal() }",
+      "rule": "dt4-go-fewer_assertions"
+    }
+  ],
+  "note": "assertion moved into another test: the test it left lost an assertion"
+}

@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "docs/tokens.md": {
+      "after": "# t\nrotate monthly\n",
+      "before": "# t\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-16",
+  "language": "typescript",
+  "note": "token-in-doc"
+}

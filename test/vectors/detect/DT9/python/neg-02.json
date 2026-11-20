@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "internal/authority_notes.txt": {
+      "after": "note updated\n",
+      "before": "note\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-02",
+  "language": "python",
+  "near_miss": "substring-not-segment",
+  "note": "substring-not-segment"
+}

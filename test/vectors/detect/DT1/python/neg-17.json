@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-17",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "requests==2.31.0\n",
+      "after": "requests==2.31.0 ; python_version >= '3.10'\n"
+    }
+  },
+  "expect": [],
+  "note": "marker-only"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-11",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_m():\n    assert a() == 1 and b() == 2\n",
+      "after": "def test_m():\n    assert a() == 1\n    assert b() == 2\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-fewer_assertions",
+  "fp_kind": "fewer_assertions",
+  "note": "fp-fewer_assertions"
+}

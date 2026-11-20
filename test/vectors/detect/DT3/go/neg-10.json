@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-10",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "vendor/api/s.go": {
+      "before": "package api\n\nfunc T(c int) int { return c }\n",
+      "after": "package api\n\nfunc T(c int) int { return c + 1 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "vendor",
+  "note": "vendor"
+}

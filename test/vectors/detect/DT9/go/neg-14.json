@@ -1,0 +1,13 @@
+{
+  "id": "DT9-go-neg-14",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/myauth/x.go": {
+      "before": "package myauth\n",
+      "after": "package myauth\n//e\n"
+    }
+  },
+  "expect": [],
+  "note": "authsuffix"
+}

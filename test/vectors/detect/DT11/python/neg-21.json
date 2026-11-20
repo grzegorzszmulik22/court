@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "shop2/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop2/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop2/x.py": {
+      "after": "s2 = 1\nclass T:\n    pass\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-21",
+  "language": "python",
+  "note": "sibling"
+}

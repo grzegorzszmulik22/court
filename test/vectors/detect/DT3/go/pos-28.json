@@ -1,0 +1,43 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "  total: Float",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "api/svc.graphql",
+      "rule": "dt3-contract-graphql",
+      "side": "after",
+      "subkind": "changed"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "type Order {",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "api/svc.graphql",
+      "rule": "dt2-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "api/svc.graphql": {
+      "after": "type Order {\n  id: ID!\n  total: Float\n}\n",
+      "before": "type Order {\n  id: ID!\n  total: Int\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT3-go-pos-28",
+  "language": "go"
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "select = E",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "setup.cfg",
+      "rule": "dt6-python-lint",
+      "side": "after",
+      "subkind": "lint"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "setup.cfg": {
+      "after": "[flake8]\nselect = E\n",
+      "before": "[flake8]\nselect = E,W,F\n"
+    }
+  },
+  "id": "DT6-python-pos-19",
+  "language": "python",
+  "note": "flake8 rules were disabled"
+}

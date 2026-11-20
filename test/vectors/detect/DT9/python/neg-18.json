@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "docs/login2.md": {
+      "after": "# l2\n",
+      "before": "# l\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-18",
+  "language": "python",
+  "note": "login-title"
+}

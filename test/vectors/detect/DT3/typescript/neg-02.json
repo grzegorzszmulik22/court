@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-02",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function total(cart: Cart) { return 0; }\n",
+      "after": "export function total(cart: Cart) { return 0; }\nexport function refund(cart: Cart) { return 0; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "added-export",
+  "note": "added-export"
+}

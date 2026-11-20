@@ -1,0 +1,22 @@
+{
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/baseline.sh": {
+      "after": "# baseline\n",
+      "before": "# baseline\n"
+    },
+    "scripts/x.sh": {
+      "after": "#!/bin/sh\nx\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-03",
+  "language": "python",
+  "near_miss": "no-territory",
+  "note": "no-territory"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "DT11-go-neg-15",
+  "detector": "DT11",
+  "language": "go",
+  "files": {
+    "a/b/c/d.go": {
+      "before": "",
+      "after": "package d\n"
+    },
+    "a/baseline.go": {
+      "before": "package baseline\n",
+      "after": "package baseline\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "a/**"
+    ]
+  },
+  "expect": [],
+  "note": "nested-glob"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-10",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/errs_test.go": {
+      "before": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 0 {\n\t\tt.Fatal(errs)\n\t}\n}\n",
+      "after": "package shop\n\nfunc TestErrs(t *testing.T) {\n\tif errs > 3 {\n\t\tt.Fatal(errs)\n\t}\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "shop/errs_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "errs > 3",
+      "rule": "dt4-go-loosened_threshold"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "continue-on-error: true",
+      "lines": [
+        5,
+        5
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt6-typescript-ci",
+      "side": "after",
+      "subkind": "ci"
+    }
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "name: ci\non: [push]\njobs:\n  test:\n      continue-on-error: true\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-10",
+  "language": "typescript",
+  "note": "a whole job became non-blocking"
+}

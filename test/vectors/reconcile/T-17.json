@@ -1,0 +1,78 @@
+{
+  "id": "T-17",
+  "comment": "interface + interface with overlapping paths: expected and detected merge -> hit is undeclared but foreseen (no unforeseen flag).",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "interface",
+        "paths": [
+          "x/"
+        ],
+        "world": "w1",
+        "ruled": false
+      }
+    ],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "interface",
+        "paths": [
+          "x/b.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:8e83f026f2ca9fb7b9dabf76509f48f07574ddd10d8aa5aa035ccd2e60691eb1"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "e1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "e1",
+        "h1"
+      ],
+      "sources": [
+        "detected",
+        "expected"
+      ],
+      "verdict": "undeclared",
+      "flags": [],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "expected-detected"
+  ]
+}

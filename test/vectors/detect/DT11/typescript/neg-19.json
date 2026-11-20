@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "a/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "a/b.ts": {
+      "after": "package b\n\nconst c = 2\n",
+      "before": ""
+    },
+    "a/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    }
+  },
+  "id": "DT11-typescript-neg-19",
+  "language": "typescript",
+  "note": "double-star"
+}

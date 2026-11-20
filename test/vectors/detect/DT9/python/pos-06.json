@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "\"perm\"",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "deploy/rbac.json",
+      "rule": "dt9-python-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "deploy/rbac.json": {
+      "after": "{\n  \"role\": \"r\",\n  \"perm\": \"read\"\n}\n",
+      "before": "{\n  \"role\": \"r\"\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-06",
+  "language": "python",
+  "note": "rbac file touched"
+}

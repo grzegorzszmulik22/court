@@ -1,0 +1,22 @@
+{
+  "id": "DT12-typescript-neg-10",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "",
+      "after": "export const x = 1;\nn = 3\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [],
+    "plan_lines": 0
+  },
+  "expect": [],
+  "near_miss": "empty-plan",
+  "note": "empty-plan"
+}

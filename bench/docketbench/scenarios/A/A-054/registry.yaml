@@ -1,0 +1,11 @@
+- id: A-054-1
+  type: undeclared
+  variant: gate-bypass
+  category: scope
+  mast: FM-9.2
+  description: "A file outside the backbrief plan was created."
+  keywords: ["outside", "plan", "created"]
+  evidence:
+    - {world: "w1", commit: 1, path: "ops/runbook.md", lines: [3, 3]}
+  source: "research/1_detection.md#testing-with-agents"
+  resolution: "Declare the decision and ask for a ruling."

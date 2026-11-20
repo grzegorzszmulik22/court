@@ -1,0 +1,40 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "rm -rf build/",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-typescript-destructive-cmd",
+      "side": "events",
+      "subkind": "command"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "tools/x.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-typescript-pos-25",
+  "language": "typescript",
+  "note": "rm -rf a scratch dir",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm -rf build/"
+      },
+      "name": "shell",
+      "outcome": "fail"
+    }
+  ]
+}

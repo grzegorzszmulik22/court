@@ -1,0 +1,43 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "rule": "dt2-typescript-changed-migration",
+      "side": "after",
+      "subkind": "migration"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "rule": "dt2-typescript-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0001_init/migration.sql": {
+      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n",
+      "before": "-- step 1\n"
+    }
+  },
+  "id": "DT2-typescript-pos-11",
+  "language": "typescript"
+}

@@ -1,0 +1,30 @@
+{
+ "detector": "DT10",
+ "expect": [
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DELETE FROM users;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "ops/purge.sql",
+   "rule": "dt10-python-sql",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "ops/purge.sql": {
+   "after": "DELETE FROM users;\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT10-python-pos-03",
+ "language": "python"
+}

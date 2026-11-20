@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-01",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/impl.ts": {
+      "before": "function helper(c: number) { return c; }\n",
+      "after": "function helper(c: number, d: number) { return c + d; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "nonexport",
+  "note": "nonexport"
+}

@@ -1,0 +1,39 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "  } catch (e: any) {",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "src/load.ts",
+      "rule": "dt7-typescript-broadened",
+      "side": "after",
+      "subkind": "broadened"
+    },
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "  } catch (e: any) {",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "src/load.ts",
+      "rule": "dt5-ts-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "src/load.ts": {
+      "after": "export function load() {\n  try {\n    return read();\n  } catch (e: any) {\n    throw e;\n  }\n}\n",
+      "before": "export function load() {\n  try {\n    return read();\n  } catch (e: IOErr) {\n    throw e;\n  }\n}\n"
+    }
+  },
+  "id": "DT7-typescript-pos-11",
+  "language": "typescript"
+}

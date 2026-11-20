@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-09",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "tsconfig.json": {
+      "before": "{\n  \"target\": \"es2020\"\n}\n",
+      "after": "{\n  \"target\": \"es2022\"\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "toolchain-line",
+  "note": "toolchain-line"
+}

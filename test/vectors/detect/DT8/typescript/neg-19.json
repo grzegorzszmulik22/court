@@ -1,0 +1,39 @@
+{
+  "commission": {
+    "allowed_hosts": [
+      "h.internal.example"
+    ]
+  },
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "ops/run.txt": {
+      "after": "a\n",
+      "before": "a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT8-typescript-neg-19",
+  "language": "typescript",
+  "near_miss": "event-two-safe",
+  "note": "event-two-safe",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git status"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls -la"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

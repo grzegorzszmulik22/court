@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  let q: string[] = [];\n  return q;\n}\n",
+      "before": "function s(x: number) {\n  let q: number[] = [];\n  return q;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-10",
+  "language": "typescript",
+  "near_miss": "generic-type",
+  "note": "generic-type"
+}

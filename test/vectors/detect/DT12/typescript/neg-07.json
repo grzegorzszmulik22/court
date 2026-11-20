@@ -1,0 +1,20 @@
+{
+  "id": "DT12-typescript-neg-07",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "const x = 1;\n",
+      "after": ""
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "deleted-planned",
+  "note": "deleted-planned"
+}

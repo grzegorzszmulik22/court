@@ -1,0 +1,24 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/cart.py": {
+      "after": "c = 1\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-01",
+  "language": "python",
+  "near_miss": "inside-territory",
+  "note": "inside-territory"
+}

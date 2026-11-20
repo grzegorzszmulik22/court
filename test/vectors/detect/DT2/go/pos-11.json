@@ -1,0 +1,43 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
+      "side": "after",
+      "subkind": "migration"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE users ADD COLUMN active",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "-- step 1\nALTER TABLE users ADD COLUMN active INT;\n",
+      "before": "-- step 1\n"
+    }
+  },
+  "id": "DT2-go-pos-11",
+  "language": "go"
+}

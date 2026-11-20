@@ -1,0 +1,23 @@
+{
+  "id": "DT12-typescript-neg-19",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/x/y/z.ts": {
+      "before": "",
+      "after": "z = 1\nw = 2\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/**"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [],
+  "note": "planned-parent"
+}

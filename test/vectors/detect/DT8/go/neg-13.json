@@ -1,0 +1,18 @@
+{
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/api.md": {
+   "after": "call https://api.internal.example.com/pay endpoint\n",
+   "before": "call the endpoint\n"
+  },
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n// docs mirror api.internal.example.com\n",
+   "before": "module bench\n\ngo 1.22\n// docs mirror api.internal.example.com\n"
+  }
+ },
+ "id": "DT8-go-neg-13",
+ "language": "go",
+ "near_miss": "known-host",
+ "note": "the added host api.internal.example.com is already in the base tree"
+}

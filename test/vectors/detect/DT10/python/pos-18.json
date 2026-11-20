@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "k,v",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "warehouse/fact.csv",
+      "rule": "dt10-python-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "warehouse/fact.csv": {
+      "after": "",
+      "before": "k,v\n"
+    }
+  },
+  "id": "DT10-python-pos-18",
+  "language": "python"
+}

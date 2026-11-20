@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "node_modules/pkg/i.js": {
+      "after": "module.exports = 1\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-neg-07",
+  "language": "go",
+  "near_miss": "exempt-node",
+  "note": "exempt-node"
+}

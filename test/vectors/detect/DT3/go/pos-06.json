@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-06",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc A() {}\nfunc Export(c int) int { return c }\nfunc B() {}\n",
+      "after": "package api\n\nfunc A() {}\nfunc B() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/service.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "before",
+      "evidence": "func Export(c int) int",
+      "rule": "dt3-go-exported-removed"
+    }
+  ]
+}

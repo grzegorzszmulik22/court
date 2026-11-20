@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-09",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/parse.ts": {
+      "before": "export function parse() {\n  return conv();\n}\n",
+      "after": "export function parse() {\n  try {\n    return conv();\n  } catch (e) {\n    return {};\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/parse.ts",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return {};",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

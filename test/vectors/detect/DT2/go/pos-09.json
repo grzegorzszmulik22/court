@@ -1,0 +1,31 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "INSERT INTO orders VALUES (2);",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "migrations/0001_init.sql",
+      "rule": "dt2-go-changed-migration",
+      "side": "after",
+      "subkind": "migration"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "migrations/0001_init.sql": {
+      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n",
+      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n"
+    }
+  },
+  "id": "DT2-go-pos-09",
+  "language": "go",
+  "note": "non-DDL content edit on a file under a migration directory"
+}

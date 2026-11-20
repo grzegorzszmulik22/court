@@ -1,0 +1,14 @@
+{
+  "id": "DT7-python-neg-05",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError as e:\n        raise FetchFailed(e)\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "raise-new",
+  "note": "raise-new"
+}

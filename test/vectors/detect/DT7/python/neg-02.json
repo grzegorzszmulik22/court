@@ -1,0 +1,14 @@
+{
+  "id": "DT7-python-neg-02",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/test_discount.py": {
+      "before": "def test_disc():\n    pass\n",
+      "after": "def test_disc():\n    assert disc(42) == 42\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-input-in-test",
+  "note": "test-input-in-test"
+}

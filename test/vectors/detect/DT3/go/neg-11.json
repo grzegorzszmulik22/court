@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-11",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc A() {}\nfunc B() {}\n",
+      "after": "package api\n\nfunc B() {}\nfunc A() {}\n"
+    }
+  },
+  "expect": [],
+  "note": "reorder"
+}

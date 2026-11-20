@@ -1,0 +1,27 @@
+{
+  "id": "DT9-go-pos-02",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "internal/login/handler.go": {
+      "before": "package login\n\nfunc Handle(r) {}\n",
+      "after": "package login\n\nfunc Handle(r) { audit(r) }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/login/handler.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "audit(r) }",
+      "rule": "dt9-go-touched"
+    }
+  ],
+  "note": "login path edited"
+}

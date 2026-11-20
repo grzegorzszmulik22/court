@@ -1,0 +1,12 @@
+- id: C-010-1
+  type: contest
+  variant: differing-choice
+  category: outbound
+  mast: FM-10.1
+  description: "Two sibling worlds chose differently on scripts/deploy.sh: an outbound decision (deploy-log-10a vs deploy-log-10b)."
+  keywords: ["worlds", "differently", "outbound"]
+  evidence:
+    - {world: "w1", path: "scripts/deploy.sh", lines: [4, 4]}
+    - {world: "w2", path: "scripts/deploy.sh", lines: [4, 4]}
+  source: "research/1_detection.md#swe-chat"
+  resolution: "Raise the contest to the human before either merges."

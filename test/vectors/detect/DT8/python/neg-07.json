@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.py": {
+      "after": "CONTACT = 'mailto:ops@example.com'\n\ndef c():\n    pass\n",
+      "before": "def c():\n    pass\n"
+    }
+  },
+  "id": "DT8-python-neg-07",
+  "language": "python",
+  "near_miss": "func-added",
+  "note": "func-added"
+}

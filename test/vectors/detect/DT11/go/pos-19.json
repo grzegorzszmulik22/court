@@ -1,0 +1,37 @@
+{
+  "commission": {
+    "territory": [
+      "app/**",
+      "cfg/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "c",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "vendor.cfg",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "vendor.cfg": {
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    }
+  },
+  "id": "DT11-go-pos-19",
+  "language": "go",
+  "note": "modified root file outside"
+}

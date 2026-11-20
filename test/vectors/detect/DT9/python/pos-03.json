@@ -1,0 +1,27 @@
+{
+  "id": "DT9-python-pos-03",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "pkg/acl/rules.py": {
+      "before": "ALLOW = ['a']\n",
+      "after": "ALLOW = ['a', 'b']\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "pkg/acl/rules.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "'b']",
+      "rule": "dt9-python-touched"
+    }
+  ],
+  "note": "acl rule list extended"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "svc/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "name: c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "name: c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "deploy/helm/chart.yaml": {
+      "after": "name: c\nversion: 1\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-pos-05",
+  "language": "go"
+}

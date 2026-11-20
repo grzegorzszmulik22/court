@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "0.0.0.0/0",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "deploy/net.yaml",
+      "rule": "dt9-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "deploy/net.yaml": {
+      "after": "egress:\n  - 0.0.0.0/0\n",
+      "before": "egress:\n  - 10.0.0.0/8\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-16",
+  "language": "python",
+  "note": "egress widened to any"
+}

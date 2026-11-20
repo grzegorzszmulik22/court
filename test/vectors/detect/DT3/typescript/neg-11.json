@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-11",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/types.ts": {
+      "before": "export interface Cart {\n  sum: number;\n}\n",
+      "after": "export interface Cart {\n  sum: number;\n  tax: number;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "a field added to an exported interface is not a hit: the export line is unchanged and nothing was removed (03 \u00a72)"
+}

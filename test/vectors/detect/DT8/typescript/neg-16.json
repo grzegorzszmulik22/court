@@ -1,0 +1,23 @@
+{
+  "id": "DT8-typescript-neg-16",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [],
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
+}

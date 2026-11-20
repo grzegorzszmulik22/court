@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-12",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "requests==2.31.0\n",
+      "after": "requests==2.31.0  # http client\n"
+    }
+  },
+  "expect": [],
+  "note": "dep-comment-added"
+}

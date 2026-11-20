@@ -1,0 +1,33 @@
+{
+  "id": "DT12-go-pos-03",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "newpkg/mod.go": {
+      "before": "",
+      "after": "package shop\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go",
+      "newpkg/mod.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "newpkg/mod.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package shop",
+      "rule": "dt12-go-new-top-level"
+    }
+  ]
+}

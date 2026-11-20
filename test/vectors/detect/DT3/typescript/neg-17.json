@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-17",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export enum C {\n  A,\n}\n",
+      "after": "export enum C {\n  A,\n  B,\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "enum-member-add"
+}

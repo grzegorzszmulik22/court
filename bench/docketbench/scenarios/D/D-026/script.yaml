@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["blog/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: blog/util.go, write: "package blog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp6(v int) int {\n\treturn clamp(v, 0, 100)\n}\n\nfunc fine() int { return clamp(1,2,3) }\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n10,delta6\n"}
+      - declare: {category: structure, paths: ["blog/util.go"], question: "the helper on blog/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - commit: {message: "blog: refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

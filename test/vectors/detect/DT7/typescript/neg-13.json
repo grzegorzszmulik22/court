@@ -1,0 +1,13 @@
+{
+  "id": "DT7-typescript-neg-13",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f(x: number) { return x; }\n",
+      "after": "export function f(x: number) {\n  switch (x) {\n    case 1: return 1;\n    default: return x;\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "switch-case"
+}

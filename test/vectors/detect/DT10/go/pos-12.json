@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP TABLE logs",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/purge.sh",
+      "rule": "dt10-go-sql",
+      "side": "after",
+      "subkind": "sql"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/purge.sh": {
+      "after": "#!/bin/sh\npsql -c \"DROP TABLE logs\"\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT10-go-pos-12",
+  "language": "go"
+}

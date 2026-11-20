@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-03",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "src/version.ts": {
+      "before": "export const VERSION = \"1.2.3\";\n",
+      "after": "export const VERSION = \"1.2.4\";\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-manifest-version",
+  "note": "non-manifest-version"
+}

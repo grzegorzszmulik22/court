@@ -1,0 +1,33 @@
+{
+  "id": "DT12-python-pos-03",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "newpkg/mod.py": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py",
+      "newpkg/mod.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "newpkg/mod.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

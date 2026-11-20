@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  const t: {} = {};\n  return t;\n}\n",
+      "before": "function s(x: number) {\n  const t: object = {};\n  return t;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-15",
+  "language": "typescript",
+  "near_miss": "tuple-type",
+  "note": "tuple-type"
+}

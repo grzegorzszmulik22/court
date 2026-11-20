@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-13",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "it('b', () => {\n  expect(b()).toBe(1);\n  expect(b()).toBeDefined();\n});\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "src/cart.test.ts",
+      "lines": [
+        1,
+        4
+      ],
+      "side": "before",
+      "evidence": "it('b', () => {\n  expect(b()).toBe(1);\n  expect(b()).toBeDefined();\n});",
+      "rule": "dt4-typescript-deleted_test"
+    }
+  ]
+}

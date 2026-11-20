@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-10",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/send.py": {
+      "before": "def send():\n    return push()\n",
+      "after": "def send():\n    try:\n        return push()\n    except PushError:\n        return []\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/send.py",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return []",
+      "rule": "dt7-python-swallowed"
+    }
+  ]
+}

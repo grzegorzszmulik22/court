@@ -1,0 +1,14 @@
+{
+  "id": "DT4-python-neg-09",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_t():\n    x = setup(1)\n    assert x == 1\n",
+      "after": "def test_t():\n    x = setup(2)\n    assert x == 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fixture-edit",
+  "note": "fixture-edit"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-16",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "test('x', () => {\n  expect(x()).toBe(7);\n  expect(x()).toBeTruthy();\n});\n",
+      "after": "test('x', () => {\n  expect(x()).toBe(8);\n  expect(x()).toBeTruthy();\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "src/cart.test.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "toBe(8)",
+      "rule": "dt4-typescript-changed_expectation"
+    }
+  ]
+}

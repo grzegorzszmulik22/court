@@ -1,0 +1,13 @@
+{
+  "id": "DT9-go-neg-19",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "svc/calc.go": {
+      "before": "x := \"a\"\n",
+      "after": "x := \"b\"\n"
+    }
+  },
+  "expect": [],
+  "note": "secret-in-string"
+}

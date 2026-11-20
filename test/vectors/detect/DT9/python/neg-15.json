@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n \"allow\": [\"read\"]\n}\n",
+      "before": "{\n \"allow\": [\"*\"]\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-15",
+  "language": "python",
+  "note": "policy-narrow"
+}

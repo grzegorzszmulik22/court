@@ -1,0 +1,16 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 550\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2050\nretries: 3\n"}
+      - edit: {path: migrations/0052_add_col.sql, write: "-- extend items\nALTER TABLE vault_items ADD COLUMN updated_at INTEGER;\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: schema, paths: ["migrations/0052_add_col.sql"], question: "allow the schema change?", chosen: "yes"}
+      - commit: {message: "vault: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

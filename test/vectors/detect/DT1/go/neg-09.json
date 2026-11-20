@@ -1,0 +1,14 @@
+{
+  "id": "DT1-go-neg-09",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n",
+      "after": "module shop\n\ngo 1.22\n\nexclude github.com/x/y v1.2.3\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-require-directive",
+  "note": "toolchain-line"
+}

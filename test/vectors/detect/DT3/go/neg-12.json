@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-12",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "a struct's field list is not a signature: Cart is still declared and structs have no signature under go/parser (03 \u00a72, 03 \u00a72.1)"
+}

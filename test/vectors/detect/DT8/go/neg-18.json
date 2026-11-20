@@ -1,0 +1,32 @@
+{
+  "commission": {
+    "allowed_hosts": [
+      "api.internal.example"
+    ]
+  },
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "tools/refresh.sh": {
+      "after": "#!/bin/sh\nexit 0\n",
+      "before": "#!/bin/sh\nexit 0\n"
+    }
+  },
+  "id": "DT8-go-neg-18",
+  "language": "go",
+  "near_miss": "event-local-script",
+  "note": "event-local-script",
+  "tool_events": [
+    {
+      "input": {
+        "command": "sh tools/refresh.sh"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

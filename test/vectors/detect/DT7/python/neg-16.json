@@ -1,0 +1,13 @@
+{
+  "id": "DT7-python-neg-16",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/f.py": {
+      "before": "def f():\n    return work()\n",
+      "after": "def f():\n    assert ready()\n    return work()\n"
+    }
+  },
+  "expect": [],
+  "note": "assert"
+}

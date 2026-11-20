@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-12",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/helper_test.py": {
+      "before": "def mk_case():\n    return 1\ndef test_m():\n    pass\n",
+      "after": "def mk_case():\n    return 2\ndef test_m():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-fewer_assertions",
+  "fp_kind": "fewer_assertions",
+  "note": "fp-fewer_assertions"
+}

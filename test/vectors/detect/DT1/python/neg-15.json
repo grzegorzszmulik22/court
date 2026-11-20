@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-15",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "pydantic[email]==2.5.0\n",
+      "after": "pydantic[email]==2.5.0  # validated\n"
+    }
+  },
+  "expect": [],
+  "note": "extras-kept"
+}

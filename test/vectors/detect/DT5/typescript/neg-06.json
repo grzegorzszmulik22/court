@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  const u: unknown = x;\n  return u;\n}\n",
+      "before": "function s(x: number) {\n  const u: number = x;\n  return u;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-06",
+  "language": "typescript",
+  "near_miss": "unknown-type",
+  "note": "unknown-type"
+}

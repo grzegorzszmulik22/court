@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/prep.sh": {
+      "after": "#!/bin/sh\nchmod 700 k\n",
+      "before": "#!/bin/sh\nchmod 770 k\n"
+    }
+  },
+  "id": "DT9-go-neg-03",
+  "language": "go",
+  "near_miss": "mode-tightened",
+  "note": "mode-tightened"
+}

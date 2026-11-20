@@ -1,0 +1,17 @@
+{
+  "id": "DT2-python-neg-17",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "api/order.schema.json": {
+      "before": "{\n  \"type\": \"object\"\n}\n",
+      "after": "{\n  \"type\": \"object\"\n}\n"
+    },
+    "other.py": {
+      "before": "x = 1\n",
+      "after": "x = 2\n"
+    }
+  },
+  "expect": [],
+  "note": "schema-json-unchanged"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "web/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "<svg></svg>",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "assets/logo.svg",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "<svg></svg>",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "assets/logo.svg",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "assets/logo.svg": {
+      "after": "<svg></svg>\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-16",
+  "language": "python"
+}

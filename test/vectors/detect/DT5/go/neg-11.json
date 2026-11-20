@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-11",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/types.go": {
+      "before": "package calc\n\ntype C struct{ N int }\n",
+      "after": "package calc\n\ntype C struct{ N int64 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "field-concrete",
+  "note": "field-concrete"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "DT12-typescript-pos-01",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/extra.ts": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    },
+    "src/cart.ts": {
+      "before": "export const x = 1;\n",
+      "after": "export const x = 1;\ny\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "src/extra.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export const x = 1;",
+      "rule": "dt12-typescript-unplanned-file"
+    }
+  ]
+}

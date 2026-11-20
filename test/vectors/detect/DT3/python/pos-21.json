@@ -1,0 +1,30 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "\"/users\"",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "api/openapi.json",
+      "rule": "dt3-contract-openapi",
+      "side": "after",
+      "subkind": "added"
+    }
+  ],
+  "files": {
+    "api/openapi.json": {
+      "after": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}, \"/users\": {\"get\": {}}}\n}\n",
+      "before": "{\n  \"openapi\": \"3.0.0\",\n  \"paths\": {\"/orders\": {\"get\": {}}}\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-21",
+  "language": "python"
+}

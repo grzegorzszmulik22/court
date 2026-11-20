@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-19",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc s() {}\n",
+      "after": "package calc\n\nfunc s() { _ = fmt.Errorf(\"x\") }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "errorf-wrap",
+  "note": "errorf-wrap"
+}

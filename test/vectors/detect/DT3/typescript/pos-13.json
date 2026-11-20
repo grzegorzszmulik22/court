@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-13",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export enum Colour {\n  Red,\n}\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "export enum Colour",
+      "rule": "dt3-ts-export-removed"
+    }
+  ]
+}

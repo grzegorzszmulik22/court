@@ -1,0 +1,13 @@
+{
+  "detector": "DT3",
+  "expect": [],
+  "files": {
+    "api/service.go": {
+      "after": "package api\n\nfunc Total(c int) (s int) { return s }\n",
+      "before": "package api\n\nfunc Total(c int) (s int) { return c }\n"
+    }
+  },
+  "id": "DT3-go-neg-16",
+  "language": "go",
+  "note": "result-rename"
+}

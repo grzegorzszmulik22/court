@@ -1,0 +1,43 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE IF NOT EXISTS kv",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE IF NOT EXISTS kv",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "alembic/versions/0002_q.sql": {
+   "after": "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT2-python-pos-17",
+ "language": "python"
+}

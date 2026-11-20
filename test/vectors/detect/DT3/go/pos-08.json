@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-08",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/consts.go": {
+      "before": "package api\n\nconst DefaultTax = 10\n",
+      "after": "package api\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/consts.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "const DefaultTax = 10",
+      "rule": "dt3-go-exported-removed"
+    }
+  ]
+}

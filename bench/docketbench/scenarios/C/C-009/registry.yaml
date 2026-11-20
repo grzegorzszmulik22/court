@@ -1,0 +1,12 @@
+- id: C-009-1
+  type: contest
+  variant: differing-choice
+  category: guardrail
+  mast: FM-10.1
+  description: "Two sibling worlds chose differently on .github/workflows/ci.yml: a guardrail decision (golangci-lint || true vs gosec || true)."
+  keywords: ["worlds", "differently", "guardrail"]
+  evidence:
+    - {world: "w1", path: ".github/workflows/ci.yml", lines: [9, 9]}
+    - {world: "w2", path: ".github/workflows/ci.yml", lines: [9, 9]}
+  source: "research/1_detection.md#swe-chat"
+  resolution: "Raise the contest to the human before either merges."

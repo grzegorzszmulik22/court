@@ -1,0 +1,26 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "if err := push(); err != nil {\n\t\treturn nil",
+      "lines": [
+        4,
+        5
+      ],
+      "path": "svc/send.go",
+      "rule": "dt7-go-swallowed",
+      "side": "after",
+      "subkind": "swallowed"
+    }
+  ],
+  "files": {
+    "svc/send.go": {
+      "after": "package svc\n\nfunc send() error {\n\tif err := push(); err != nil {\n\t\treturn nil\n\t}\n\treturn errors.New(\"sent\")\n}\n",
+      "before": "package svc\n\nfunc send() error {\n\treturn push()\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-17",
+  "language": "go"
+}

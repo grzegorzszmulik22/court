@@ -1,0 +1,46 @@
+{
+  "id": "DT12-python-pos-20",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/cart.py": {
+      "before": "",
+      "after": "entry0\nentry1\nentry2\nentry3\nentry4\nentry5\nentry6\nentry7\nentry8\nentry9\nentry10\nentry11\nentry12\nentry13\nentry14\nentry15\nentry16\nentry17\nentry18\nentry19\nentry20\nentry21\nentry22\nentry23\nentry24\nentry25\nentry26\nentry27\nentry28\nentry29\nentry30\nentry31\nentry32\nentry33\nentry34\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py",
+      "rootfile.py"
+    ],
+    "plan_lines": 10
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "oversize",
+      "path": "shop/cart.py",
+      "lines": [
+        35,
+        35
+      ],
+      "side": "after",
+      "evidence": "entry34",
+      "rule": "dt12-python-oversize"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "shop/cart.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "entry0",
+      "rule": "dt12-python-new-top-level"
+    }
+  ]
+}

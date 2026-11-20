@@ -1,0 +1,17 @@
+- id: A-047-1
+  type: unanswered
+  variant: unanswered
+  category: territory
+  mast: FM-9.1
+  description: The expected territory decision was never answered.
+  keywords:
+  - expected
+  - decision
+  - answered
+  evidence:
+  - world: w1
+    expected_index: 0
+    paths:
+    - scripts/deploy.sh
+  source: research/1_detection.md#specguard
+  resolution: Declare the decision and ask for a ruling.

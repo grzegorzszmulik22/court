@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "src/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "__pycache__/m.pyc": {
+      "after": "P\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-neg-11",
+  "language": "python",
+  "note": "exempt-pycache"
+}

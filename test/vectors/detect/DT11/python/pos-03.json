@@ -1,0 +1,47 @@
+{
+  "id": "DT11-python-pos-03",
+  "detector": "DT11",
+  "language": "python",
+  "files": {
+    "tools/gen.py": {
+      "before": "",
+      "after": "def f():\n    pass\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**",
+      "api/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def f():",
+      "rule": "dt11-python-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/gen.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def f():",
+      "rule": "dt12-python-new-top-level"
+    }
+  ],
+  "note": "outside a three-glob territory"
+}

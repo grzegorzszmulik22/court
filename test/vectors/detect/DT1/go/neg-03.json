@@ -1,0 +1,14 @@
+{
+  "id": "DT1-go-neg-03",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "internal/version.go": {
+      "before": "package internal\n\nconst Version = \"1.2.3\"\n",
+      "after": "package internal\n\nconst Version = \"1.2.4\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-manifest-version",
+  "note": "non-manifest-version"
+}

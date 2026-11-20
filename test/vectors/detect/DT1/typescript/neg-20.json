@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-20",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"name\": \"app\",\n  \"license\": \"MIT\",\n  \"funding\": \"https://a.example/x\"\n}\n",
+      "after": "{\n  \"name\": \"app\",\n  \"license\": \"MIT\",\n  \"funding\": \"https://a.example/y\"\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "funding"
+}

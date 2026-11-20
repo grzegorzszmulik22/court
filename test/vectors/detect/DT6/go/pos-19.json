@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "select = E",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "setup.cfg",
+      "rule": "dt6-go-lint",
+      "side": "after",
+      "subkind": "lint"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "setup.cfg": {
+      "after": "[flake8]\nselect = E\n",
+      "before": "[flake8]\nselect = E,W,F\n"
+    }
+  },
+  "id": "DT6-go-pos-19",
+  "language": "go",
+  "note": "flake8 rules were disabled"
+}

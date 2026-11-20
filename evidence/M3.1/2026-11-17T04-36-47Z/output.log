@@ -1,0 +1,39 @@
+=== RUN   TestC3_1_1
+--- PASS: TestC3_1_1 (7.57s)
+=== RUN   TestC3_1_1_missing_twin
+--- PASS: TestC3_1_1_missing_twin (2.39s)
+=== RUN   TestC3_1_1_broken_backref
+--- PASS: TestC3_1_1_broken_backref (1.90s)
+=== RUN   TestC3_1_planted_empty_registry
+--- PASS: TestC3_1_planted_empty_registry (0.36s)
+=== RUN   TestC3_1_1_vectors_counts
+--- PASS: TestC3_1_1_vectors_counts (1.22s)
+=== RUN   TestC3_1_1_reconcile_counts
+--- PASS: TestC3_1_1_reconcile_counts (0.05s)
+PASS
+ok  	court/bench/docketbench/validate	13.505s
+CHECK C3.1.1 PASS
+=== RUN   TestC3_1_2
+--- PASS: TestC3_1_2 (77.27s)
+=== RUN   TestC3_1_2_failing_repo
+--- PASS: TestC3_1_2_failing_repo (1.03s)
+PASS
+ok  	court/bench/docketbench/validate	78.319s
+CHECK C3.1.2 PASS
+=== RUN   TestC3_1_3
+--- PASS: TestC3_1_3 (0.84s)
+PASS
+ok  	court/bench/docketbench/validate	0.851s
+CHECK C3.1.3 PASS
+=== RUN   TestC3_1_4
+--- PASS: TestC3_1_4 (0.71s)
+PASS
+ok  	court/bench/docketbench/validate	0.727s
+CHECK C3.1.4 PASS
+CHECK C3.1.5 PASS
+=== RUN   TestC3_1_6
+--- PASS: TestC3_1_6 (0.19s)
+PASS
+ok  	court/bench/docketbench/validate	0.204s
+CHECK C3.1.6 PASS
+check.sh: evidence: evidence/M3.1/2026-11-17T04-36-47Z

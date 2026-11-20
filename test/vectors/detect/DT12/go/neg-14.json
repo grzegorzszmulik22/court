@@ -1,0 +1,19 @@
+{
+  "id": "DT12-go-neg-14",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "shop/cart.go": {
+      "before": "package shop\n",
+      "after": "package shop\n\nfunc add() {}\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "note": "unchanged-shape"
+}

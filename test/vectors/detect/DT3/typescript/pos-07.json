@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-07",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function tag(x: number) {}\n",
+      "after": "export function tag(x: number, ...rest: number[]) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function tag(x: number, ...rest: number[])",
+      "rule": "dt3-ts-export-changed"
+    }
+  ]
+}

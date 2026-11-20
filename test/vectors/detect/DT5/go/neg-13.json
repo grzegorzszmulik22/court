@@ -1,0 +1,14 @@
+{
+  "id": "DT5-go-neg-13",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nvar ch chan int\n",
+      "after": "package calc\n\nvar ch chan string\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "chan-type",
+  "note": "chan-type"
+}

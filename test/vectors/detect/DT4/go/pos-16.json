@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-16",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/cart_test.go": {
+      "before": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 7 { t.Fatal() }\n\tif X() < 0 { t.Error() }\n}\n",
+      "after": "package shop\n\nfunc TestX(t *testing.T) {\n\tif X() != 8 { t.Fatal() }\n\tif X() < 0 { t.Error() }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "shop/cart_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "X() != 8",
+      "rule": "dt4-go-changed_expectation"
+    }
+  ]
+}

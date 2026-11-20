@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-21",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('m', () => {\n  expect(m()).toBe(1);\n});\n",
+      "after": "test('m', () => {\n  const x = m();\n  expect(x).toBe(1);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-fewer_assertions",
+  "fp_kind": "fewer_assertions",
+  "note": "fp-fewer_assertions"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT4-python-neg-10",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_t():\n    pass\n",
+      "after": "# about the test\ndef test_t():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-only",
+  "note": "comment-only"
+}

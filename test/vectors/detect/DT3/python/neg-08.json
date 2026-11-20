@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-08",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "import os\n",
+      "after": "import os, sys\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "import-change",
+  "note": "import-change"
+}

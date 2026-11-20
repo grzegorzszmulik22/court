@@ -1,0 +1,27 @@
+{
+  "id": "DT6-typescript-pos-07",
+  "detector": "DT6",
+  "language": "typescript",
+  "files": {
+    "tsconfig.json": {
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "strictness",
+      "path": "tsconfig.json",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "\"strict\": false",
+      "rule": "dt6-typescript-strictness"
+    }
+  ],
+  "note": "a strictness flag was turned off"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "api/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "<html><body></body></html>",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "web/index.html",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "<html><body></body></html>",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "web/index.html",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "web/index.html": {
+      "after": "<html><body></body></html>\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-11",
+  "language": "python"
+}

@@ -1,0 +1,26 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "continue",
+      "lines": [
+        6,
+        6
+      ],
+      "path": "svc/write.py",
+      "rule": "dt7-python-swallowed",
+      "side": "after",
+      "subkind": "swallowed"
+    }
+  ],
+  "files": {
+    "svc/write.py": {
+      "after": "def write(items):\n    for it in items:\n        try:\n            put(it)\n        except OSError:\n            continue\n",
+      "before": "def write(items):\n    for it in items:\n        put(it)\n"
+    }
+  },
+  "id": "DT7-python-pos-15",
+  "language": "python"
+}

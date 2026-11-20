@@ -1,0 +1,26 @@
+{
+  "id": "DT8-go-pos-06",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c() string {\n\treturn \"https://dl.get-tool.example/pkg\"\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "dl.get-tool.example",
+      "rule": "dt8-go-host-literal"
+    }
+  ]
+}

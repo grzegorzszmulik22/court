@@ -1,0 +1,20 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "vendor/x/y.ts": {
+      "after": "export function f() {}\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-06",
+  "language": "typescript",
+  "near_miss": "exempt-vendor",
+  "note": "exempt-vendor"
+}

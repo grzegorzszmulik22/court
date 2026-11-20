@@ -1,0 +1,44 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "//nolint",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "src/legacy.go",
+      "rule": "dt6-typescript-suppressed",
+      "side": "after",
+      "subkind": "suppressed"
+    },
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "//nolint",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "src/legacy.go",
+      "rule": "dt5-typescript-suppressed",
+      "side": "after",
+      "subkind": "suppressed"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "src/legacy.go": {
+      "after": "package src\n\n//nolint\nfunc f() {}\n",
+      "before": "package src\n\nfunc f() {}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-09",
+  "language": "typescript",
+  "note": "an inline suppression was added"
+}

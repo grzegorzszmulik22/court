@@ -1,0 +1,21 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "api/order.schema.json": {
+      "after": "{\n  \"type\": \"object\"\n}\n",
+      "before": "{\n  \"type\": \"object\"\n}\n"
+    },
+    "other.py": {
+      "after": "x = 2\n",
+      "before": "x = 1\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-17",
+  "language": "typescript",
+  "note": "schema-json-unchanged"
+}

@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt10-go-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt2-go-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/cleanup.sql": {
+      "after": "-- prep\nDROP TABLE sessions;\n",
+      "before": "-- prep\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-01",
+  "language": "go"
+}

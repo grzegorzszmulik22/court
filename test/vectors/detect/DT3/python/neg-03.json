@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-03",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def total(cart):\n    return cart.sum\n",
+      "after": "def total(cart):\n    return cart.sum\n\ndef refund(cart):\n    return cart.sum\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "added-def",
+  "note": "added-def"
+}

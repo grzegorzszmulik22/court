@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "api/schema.xsd": {
+      "after": "<x><y/></x>\n",
+      "before": "<x></x>\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-20",
+  "language": "python",
+  "note": "xml-schema"
+}

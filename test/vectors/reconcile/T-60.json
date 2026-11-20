@@ -1,0 +1,203 @@
+{
+  "id": "T-60",
+  "comment": "The kitchen-sink trace: one of everything in one commission.",
+  "inputs": {
+    "expected": [
+      {
+        "id": "e1",
+        "category": "schema",
+        "paths": [
+          "db/"
+        ],
+        "world": "w1",
+        "ruled": false
+      },
+      {
+        "id": "e2",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "ruled": true
+      }
+    ],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
+      },
+      {
+        "id": "d2",
+        "source": "declared",
+        "category": "outbound",
+        "paths": [
+          "svc/c.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": true
+      },
+      {
+        "id": "h3",
+        "source": "detected",
+        "category": "authority",
+        "paths": [
+          "internal/auth/s.go"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false,
+        "digests": [
+          "sha256:3b47f8b5d212c84531756102ce78683d554426672c8d157aded6527cb006bedb"
+        ]
+      },
+      {
+        "id": "d4",
+        "source": "declared",
+        "category": "authority",
+        "paths": [
+          "internal/auth/s.go"
+        ],
+        "world": "w1",
+        "commit": 3,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "e2",
+        "h1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d2"
+      ]
+    },
+    {
+      "seq": 3,
+      "decision_ids": [
+        "d4",
+        "h3"
+      ]
+    },
+    {
+      "seq": 4,
+      "decision_ids": [
+        "e1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "e2",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected",
+        "expected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "ruled"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "d2"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true,
+      "note": "petition queues a plain declaration"
+    },
+    {
+      "ids": [
+        "d4",
+        "h3"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "late",
+      "flags": [
+        "late",
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "e1"
+      ],
+      "sources": [
+        "expected"
+      ],
+      "verdict": "unanswered",
+      "flags": [],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "expected-ruled",
+    "petition",
+    "verdict-late",
+    "outside-writ-guarantee"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT4-typescript-neg-10",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
+      "after": "test('total', () => {\n  console.log('run');\n  expect(total()).toBe(1);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "console-added",
+  "note": "console-added"
+}

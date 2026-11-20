@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-08",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/job.py": {
+      "before": "def job():\n    run()\n",
+      "after": "def job():\n    try:\n        run()\n    except JobError:\n        pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/job.py",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "pass",
+      "rule": "dt7-python-swallowed"
+    }
+  ]
+}

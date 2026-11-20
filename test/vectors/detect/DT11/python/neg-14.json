@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "shop/*"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/x.py": {
+      "after": "import os\nx = 1\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-14",
+  "language": "python",
+  "note": "single-seg-glob"
+}

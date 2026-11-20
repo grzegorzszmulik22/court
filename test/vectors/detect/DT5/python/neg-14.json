@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "app/calc.py": {
+      "after": "def s(x: int):\n    q: int = 1\n    return q\n",
+      "before": "def s(x: int):\n    q: float = 1.0\n    return q\n"
+    }
+  },
+  "id": "DT5-python-neg-14",
+  "language": "python",
+  "near_miss": "callable-type",
+  "note": "callable-type"
+}

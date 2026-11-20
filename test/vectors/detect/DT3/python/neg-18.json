@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-18",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "X = 1\n",
+      "after": "X = 2\n"
+    }
+  },
+  "expect": [],
+  "note": "global-var"
+}

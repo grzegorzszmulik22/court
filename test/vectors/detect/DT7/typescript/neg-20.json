@@ -1,0 +1,13 @@
+{
+  "detector": "DT7",
+  "expect": [],
+  "files": {
+    "src/f.ts": {
+      "after": "export function f() {\n  try {\n    return get();\n  } catch (e) {\n    retry(e);\n    return get();\n  }\n}\n",
+      "before": "export function f() {\n  return get();\n}\n"
+    }
+  },
+  "id": "DT7-typescript-neg-20",
+  "language": "typescript",
+  "note": "ternary"
+}

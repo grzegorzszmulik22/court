@@ -1,0 +1,23 @@
+{
+  "id": "DT8-go-neg-16",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nfunc c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "go test ./..."
+      },
+      "outcome": "ok"
+    }
+  ],
+  "expect": [],
+  "near_miss": "event-no-host",
+  "note": "event-no-host"
+}

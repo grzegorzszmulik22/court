@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "L=2",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "crypto/keys.env",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "crypto/keys.env": {
+      "after": "K=1\nL=2\n",
+      "before": "K=1\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-10",
+  "language": "go",
+  "note": "key material config edited"
+}

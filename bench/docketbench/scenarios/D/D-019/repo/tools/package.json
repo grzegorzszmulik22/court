@@ -1,0 +1,6 @@
+{
+  "name": "tools",
+  "dependencies": {
+    "esbuild": "^0.20.0"
+  }
+}

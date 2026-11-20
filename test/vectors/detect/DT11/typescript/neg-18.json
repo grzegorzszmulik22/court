@@ -1,0 +1,27 @@
+{
+  "id": "DT11-typescript-neg-18",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "docs/g.md": {
+      "before": "same\n",
+      "after": "same\n"
+    },
+    "shop/inside.ts": {
+      "before": "",
+      "after": "export const i = 1;\n"
+    },
+    "shop/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "unchanged-outside",
+  "note": "unchanged file outside the territory is not judged"
+}

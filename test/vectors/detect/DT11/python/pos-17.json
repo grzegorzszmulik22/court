@@ -1,0 +1,37 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "exec x",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/deploy2.sh",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/deploy2.sh": {
+      "after": "#!/bin/sh\nexec x\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT11-python-pos-17",
+  "language": "python",
+  "note": "modified file outside the globs"
+}

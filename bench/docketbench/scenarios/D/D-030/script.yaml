@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: vault/util.go, write: "package vault\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp10(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n14,delta10\n"}
+      - declare: {category: structure, paths: ["vault/util.go"], question: "the helper on vault/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - commit: {message: "vault: refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

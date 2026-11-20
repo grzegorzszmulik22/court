@@ -1,0 +1,40 @@
+{
+  "id": "DT6-go-pos-09",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    "src/legacy.go": {
+      "before": "package src\n\nfunc f() {}\n",
+      "after": "package src\n\n//nolint\nfunc f() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "src/legacy.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "//nolint",
+      "rule": "dt6-go-suppressed"
+    },
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "suppressed",
+      "path": "src/legacy.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "//nolint",
+      "rule": "dt5-go-suppressed"
+    }
+  ],
+  "note": "an inline suppression was added"
+}

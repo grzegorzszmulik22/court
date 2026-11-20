@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-14",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_cart.py": {
+      "before": "def test_x():\n    pass\n",
+      "after": "import pytest\n\n@pytest.mark.xfail\ndef test_x():\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "tests/test_cart.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "@pytest.mark.xfail",
+      "rule": "dt4-python-skip_or_focus"
+    }
+  ]
+}

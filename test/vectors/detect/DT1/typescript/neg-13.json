@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-13",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"name\": \"app\",\n  \"version\": \"1.0.0\"\n}\n",
+      "after": "{\n  \"name\": \"app\",\n  \"version\": \"1.0.1\"\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "own-version"
+}

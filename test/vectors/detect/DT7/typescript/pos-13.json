@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-13",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/pipe.ts": {
+      "before": "export function pipe() {\n  return stage();\n}\n",
+      "after": "export function pipe() {\n  try {\n    return stage();\n  } catch (e) {\n    return 0;\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/pipe.ts",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return 0;",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT7-go-pos-09",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/io.go": {
+      "before": "package svc\n\nfunc rd() error {\n\treturn open()\n}\n",
+      "after": "package svc\n\nfunc rd() error {\n\terr := open()\n\tif err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/io.go",
+      "lines": [
+        6,
+        6
+      ],
+      "side": "after",
+      "evidence": "return nil",
+      "rule": "dt7-go-swallowed"
+    }
+  ]
+}

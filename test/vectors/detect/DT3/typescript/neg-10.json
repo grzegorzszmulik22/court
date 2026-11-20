@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-10",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "/** the api */\nexport function t() {}\n",
+      "after": "/** the api v2 */\nexport function t() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "export-comment",
+  "note": "export-comment"
+}

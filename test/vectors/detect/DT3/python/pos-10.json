@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-10",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class A:\n    pass\n\ndef helper():\n    pass\n\nclass B:\n    pass\n",
+      "after": "class A:\n    pass\n\ndef helper():\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/models.py",
+      "lines": [
+        7,
+        7
+      ],
+      "side": "before",
+      "evidence": "class B:",
+      "rule": "dt3-python-toplevel-removed"
+    }
+  ]
+}

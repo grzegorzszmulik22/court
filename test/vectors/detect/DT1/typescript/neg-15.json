@@ -1,0 +1,17 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "docs/deps.md": {
+      "after": "# deps\n\n- react@^18.2.0\n",
+      "before": "# deps\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT1-typescript-neg-15",
+  "language": "typescript",
+  "note": "dep-in-docstring"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "DT7-typescript-neg-17",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "export function f() {\n  try {\n    try {\n      return get();\n    } catch (i) {\n      throw i;\n    }\n  } catch (o) {\n    throw o;\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "nested-try"
+}

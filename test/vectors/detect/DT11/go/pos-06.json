@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "x/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "very/deep/path/file.txt": {
+      "after": "a\nb\nc\nd\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-pos-06",
+  "language": "go",
+  "note": "deep path outside"
+}

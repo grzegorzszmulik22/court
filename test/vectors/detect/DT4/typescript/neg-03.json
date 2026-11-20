@@ -1,0 +1,14 @@
+{
+  "id": "DT4-typescript-neg-03",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('n', () => {\n  const v = n();\n  expect(v).toBeLessThanOrEqual(50);\n});\n",
+      "after": "test('n', () => {\n  const v = n();\n  expect(v + 1).toBeLessThanOrEqual(51);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "threshold-tightened-expr",
+  "note": "threshold-tightened"
+}

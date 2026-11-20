@@ -1,0 +1,13 @@
+{
+  "id": "DT7-go-neg-11",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() error {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() error {\n\terr := get()\n\treturn fmt.Errorf(\"wrap: %w\", err)\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "err-wrapped"
+}

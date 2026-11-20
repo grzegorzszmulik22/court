@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-11",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"scripts\": {\n    \"test\": \"jest\",\n    \"build\": \"tsc\"\n  }\n}\n",
+      "after": "{\n  \"scripts\": {\n    \"test\": \"jest --ci\",\n    \"build\": \"tsc\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "scripts-section"
+}

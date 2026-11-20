@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "set -e",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "#!/bin/sh",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/deploy.sh": {
+      "after": "#!/bin/sh\nset -e\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-pos-01",
+  "language": "typescript"
+}

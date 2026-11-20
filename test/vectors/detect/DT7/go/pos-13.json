@@ -1,0 +1,26 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "return nil, nil",
+      "lines": [
+        6,
+        6
+      ],
+      "path": "svc/job.go",
+      "rule": "dt7-go-swallowed",
+      "side": "after",
+      "subkind": "swallowed"
+    }
+  ],
+  "files": {
+    "svc/job.go": {
+      "before": "package svc\n\nfunc job() (*Job, error) {\n\treturn open()\n}\n",
+      "after": "package svc\n\nfunc job() (*Job, error) {\n\tj, err := open()\n\tif err != nil {\n\t\treturn nil, nil\n\t}\n\treturn j, nil\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-13",
+  "language": "go"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT1-go-pos-12",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v0.0.0-20240101-abcdef\n",
+      "after": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v0.0.0-20240201-123456\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "version",
+      "path": "go.mod",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "v0.0.0-20240201-123456",
+      "rule": "dt1-go-manifest-version"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-18",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('m', () => {\n  const x = 3;\n  expect(x).toBe(3);\n});\n",
+      "after": "test('m', () => {\n  const x = 4;\n  expect(x).toBe(3);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-changed_expectation",
+  "fp_kind": "changed_expectation",
+  "note": "fp-changed_expectation"
+}

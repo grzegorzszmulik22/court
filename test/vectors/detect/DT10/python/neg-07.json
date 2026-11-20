@@ -1,0 +1,28 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "ops/log.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-07",
+  "language": "python",
+  "near_miss": "git-checkout",
+  "note": "git-checkout",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git checkout main",
+        "cwd": "/r"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

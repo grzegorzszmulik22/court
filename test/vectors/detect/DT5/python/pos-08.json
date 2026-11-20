@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "def c(count: Optional[int]) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def c(count: Optional[int]) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def c(count: Optional[int]) -> int:\n    return count\n",
+      "before": "def c(count: int) -> int:\n    return count\n"
+    }
+  },
+  "id": "DT5-python-pos-08",
+  "language": "python"
+}

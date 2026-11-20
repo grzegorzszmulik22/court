@@ -1,0 +1,26 @@
+{
+  "detector": "DT7",
+  "expect": [
+    {
+      "category": "failure-handling",
+      "detector": "DT7",
+      "evidence": "if err := doit(); err != nil {\n\t}\n}",
+      "lines": [
+        4,
+        6
+      ],
+      "path": "svc/step.go",
+      "rule": "dt7-go-swallowed",
+      "side": "after",
+      "subkind": "swallowed"
+    }
+  ],
+  "files": {
+    "svc/step.go": {
+      "after": "package svc\n\nfunc step() {\n\tif err := doit(); err != nil {\n\t}\n}\n",
+      "before": "package svc\n\nfunc step() {\n\tdoit()\n}\n"
+    }
+  },
+  "id": "DT7-go-pos-10",
+  "language": "go"
+}

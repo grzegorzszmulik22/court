@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "min: 60",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "coverage.yml",
+      "rule": "dt6-typescript-threshold",
+      "side": "after",
+      "subkind": "threshold"
+    }
+  ],
+  "files": {
+    "coverage.yml": {
+      "after": "coverage:\n  min: 60\n",
+      "before": "coverage:\n  min: 80\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-05",
+  "language": "typescript",
+  "note": "the coverage floor fell"
+}

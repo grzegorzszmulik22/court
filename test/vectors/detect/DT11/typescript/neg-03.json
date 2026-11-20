@@ -1,0 +1,22 @@
+{
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "scripts/baseline.sh": {
+      "after": "# baseline\n",
+      "before": "# baseline\n"
+    },
+    "scripts/x.sh": {
+      "after": "#!/bin/sh\nx\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-03",
+  "language": "typescript",
+  "near_miss": "no-territory",
+  "note": "no-territory"
+}

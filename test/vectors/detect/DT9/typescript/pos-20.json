@@ -1,0 +1,30 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "- step c",
+      "lines": [
+        5,
+        5
+      ],
+      "path": "ops/login/runbook.md",
+      "rule": "dt9-typescript-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "ops/login/runbook.md": {
+      "after": "# login\n\n- step a\n- step b\n- step c\n",
+      "before": "# login\n\n- step a\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-20",
+  "language": "typescript"
+}

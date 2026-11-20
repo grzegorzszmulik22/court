@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/proxy.yml": {
+      "after": "proxy:\n  a: 1\n# keep\n",
+      "before": "proxy:\n  a: 1\n# note\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-05",
+  "language": "typescript",
+  "near_miss": "comment-cors",
+  "note": "comment-cors"
+}

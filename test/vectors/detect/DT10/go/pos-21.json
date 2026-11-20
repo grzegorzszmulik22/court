@@ -1,0 +1,41 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "git reset --hard HEAD~3",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "trajectory/events.jsonl",
+      "rule": "dt10-go-destructive-cmd",
+      "side": "events",
+      "subkind": "command"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/log.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-go-pos-21",
+  "language": "go",
+  "note": "reset --hard with timeout field",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git reset --hard HEAD~3",
+        "timeout": 10
+      },
+      "name": "exec",
+      "outcome": "ok"
+    }
+  ]
+}

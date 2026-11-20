@@ -1,0 +1,27 @@
+{
+ "id": "DT11-typescript-neg-05",
+ "detector": "DT11",
+ "language": "typescript",
+ "files": {
+  "src/deep/nest/thing.ts": {
+   "before": "",
+   "after": "export const x = 1;\n"
+  },
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
+  },
+  "src/baseline.ts": {
+   "before": "# base\n",
+   "after": "# base\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "src/**"
+  ]
+ },
+ "near_miss": "deep-inside-territory",
+ "note": "file added three levels deep under a covered territory glob"
+}

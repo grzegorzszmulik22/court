@@ -1,0 +1,14 @@
+{
+  "id": "DT5-typescript-neg-16",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export function s(f: (x: number) => number) { return 0; }\n",
+      "after": "export function s(f: (x: number) => string) { return 0; }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fn-type",
+  "note": "fn-type"
+}

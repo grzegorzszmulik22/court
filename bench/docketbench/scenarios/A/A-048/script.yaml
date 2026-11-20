@@ -1,0 +1,13 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["files/**"]
+      - edit: {path: files/util.go, write: "package files\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero48(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: files/files_test.go, write: "package files\n\nimport \"testing\"\n\nfunc TestSize(t *testing.T) {\n\tvar i Index\n\ti.Add(Record{\"a.txt\", 10})\n\ti.Add(Record{\"b.txt\", 20})\n\tif i.Size() != 30 {\n\t\tt.Fatalf(\"Size = %d\", i.Size())\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar i Index\n\tif i.Size() != 0 {\n\t\tt.Fatal(\"empty index nonzero\")\n\t}\n}\n\nfunc TestClampLo48(t *testing.T) {\n\tif clamp(-48, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-48,0,5) = %d\", clamp(-48, 0, 5))\n\t}\n}\n"}
+      - edit: {path: ops/runbook.md, write: "# runbook\n\nOperational notes added 48.\n"}
+      - tool: {name: Bash, command: "git add -A && git commit -qm 'files: routine refresh' --no-verify"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "a/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "target/r.o": {
+      "after": "BIN\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-10",
+  "language": "python",
+  "near_miss": "exempt-target",
+  "note": "exempt-target"
+}

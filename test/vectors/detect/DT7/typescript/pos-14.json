@@ -1,0 +1,30 @@
+{
+  "id": "DT7-typescript-pos-14",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/price.ts": {
+      "before": "export function price(n: number) {\n  return n * 2;\n}\n",
+      "after": "export function price(n: number) {\n  if (n === 42) return 84;\n  return n * 2;\n}\n"
+    },
+    "src/price.test.ts": {
+      "before": "test('price', () => {\n  expect(price(42)).toBe(84);\n});\n",
+      "after": "test('price', () => {\n  expect(price(42)).toBe(84);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "special-case",
+      "path": "src/price.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "if (n === 42)",
+      "rule": "dt7-typescript-special-case"
+    }
+  ]
+}

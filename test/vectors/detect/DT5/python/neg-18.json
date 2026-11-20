@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-18",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "x = 1  # type: int\n",
+      "after": "x = 1  # type: float\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "type-comment-old",
+  "note": "type-comment-old"
+}

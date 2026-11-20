@@ -1,0 +1,18 @@
+{
+  "id": "DT4-python-neg-08",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "",
+      "after": "def test_new():\n    pass\n"
+    },
+    "tests/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-added",
+  "note": "test-added"
+}

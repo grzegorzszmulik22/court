@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [],
+  "files": {
+    "node_modules/m/i.js": {
+      "after": "m()\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT12-python-neg-18",
+  "language": "python",
+  "note": "other-top-exempt"
+}

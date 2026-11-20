@@ -1,0 +1,15 @@
+{
+  "id": "DT4-python-neg-05",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_t():\n    got = calc()\n    assert got == 3\n",
+      "after": "def test_t():\n    got = calc_fast()\n    assert got == 4\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "call-and-expectation",
+  "fp_kind": "changed_expectation",
+  "note": "call-and-expectation"
+}

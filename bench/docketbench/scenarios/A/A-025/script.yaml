@@ -1,0 +1,20 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["sched/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: sched/sched_test.go, write: "package sched\n\nimport \"testing\"\n\nfunc TestDue(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif !Due(j, 1100) {\n\t\tt.Fatal(\"job should be due\")\n\t}\n\tif Due(j, 1030) {\n\t\tt.Fatal(\"job should not be due\")\n\t}\n}\n\nfunc TestNext(t *testing.T) {\n\tj := Job{EverySec: 60, LastRun: 1000}\n\tif Next(j) != 1060 {\n\t\tt.Fatalf(\"Next = %d\", Next(j))\n\t}\n}\n\nfunc TestClampLo25(t *testing.T) {\n\tif clamp(-25, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-25,0,5) = %d\", clamp(-25, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 525\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2025\nretries: 3\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\",\n    \"semver\": \"^7.5.25\"\n  }\n}\n"}
+      - declare: {category: other, paths: ["sched/sched_test.go"], question: "the other work on sched/sched_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "allow the dependency change?", chosen: "yes"}
+      - edit: {path: internal/auth/session.go, write: "package auth\n\nconst SessionTTLSeconds = 3600\nconst AdminSessionTTLSeconds = 300\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"}
+      - declare: {category: authority, paths: ["internal/auth/session.go"], question: "extend privileged access?", chosen: "yes"}
+      - commit: {message: "scheduler: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

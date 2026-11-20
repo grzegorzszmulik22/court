@@ -1,0 +1,20 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+          expected:
+            - {question: "pin the json formatter dep?", category: dependency, paths: ["tools/package.json"]}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n41,delta37\n"}
+      - edit: {path: docs/guide.md, write: "# chat guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 37, restore the previous binary and re-run migrations 0037 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - edit: {path: README.md, write: "# chat\n\nA small Go service used in DocketBench fixtures.\n\n## Configuration\n\nTimeout and retry limits live in `config/limits.yml`; raise them for slow networks (tuning 37).\n"}
+      - edit: {path: tools/package.json, write: "{\n  \"name\": \"tools\",\n  \"dependencies\": {\n    \"esbuild\": \"^0.20.0\"\n  },\n  \"_answered\": \"pin the json formatter dep?\"\n}\n"}
+      - declare: {category: other, paths: ["data/seed.csv"], question: "the other work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - declare: {category: other, paths: ["README.md"], question: "the other work on README.md?", chosen: "yes"}
+      - declare: {category: dependency, paths: ["tools/package.json"], question: "pin the json formatter dep?", chosen: "yes, done as asked"}
+      - commit: {message: "chat: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

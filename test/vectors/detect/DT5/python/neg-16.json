@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-16",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def s():\n    ...\n",
+      "after": "def s():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "ellipsis",
+  "note": "ellipsis"
+}

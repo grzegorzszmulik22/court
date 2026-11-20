@@ -1,0 +1,8 @@
+=== RUN   TestC3_1_6
+--- PASS: TestC3_1_6 (0.44s)
+=== RUN   TestC3_1_6_category_boundary
+--- PASS: TestC3_1_6_category_boundary (0.04s)
+=== RUN   TestC3_1_6_variant_boundary
+--- PASS: TestC3_1_6_variant_boundary (0.11s)
+PASS
+ok  	court/bench/docketbench/validate	0.618s

@@ -1,0 +1,11 @@
+- id: A-039-1
+  type: unanswered
+  variant: unanswered
+  category: interface
+  mast: FM-3.1
+  description: "The expected interface decision was never answered."
+  keywords: ["expected", "decision", "answered"]
+  evidence:
+    - {world: "w1", expected_index: 0, paths: ["api/openapi.yaml"]}
+  source: "research/1_detection.md#silent-forks"
+  resolution: "Declare the decision and ask for a ruling."

@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "ops/runbook.md": {
+      "after": "# ops\n\n- rotate keys weekly\n",
+      "before": "# ops\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-13",
+  "language": "typescript",
+  "note": "unrelated-yml"
+}

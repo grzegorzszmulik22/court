@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-18",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/impl.go": {
+      "before": "package api\n\nfunc helper() {}\n",
+      "after": "package api\n"
+    }
+  },
+  "expect": [],
+  "note": "unexported-removed"
+}

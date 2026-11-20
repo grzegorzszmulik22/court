@@ -1,0 +1,26 @@
+{
+  "id": "DT8-typescript-pos-03",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c() {\n  return open(\"hooks.svc-vendor.example\", \"r\");\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "src/client.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "hooks.svc-vendor.example",
+      "rule": "dt8-typescript-host-literal"
+    }
+  ]
+}

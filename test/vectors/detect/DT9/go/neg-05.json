@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/proxy.yml": {
+      "after": "proxy:\n  a: 1\n# keep\n",
+      "before": "proxy:\n  a: 1\n# note\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-neg-05",
+  "language": "go",
+  "near_miss": "comment-cors",
+  "note": "comment-cors"
+}

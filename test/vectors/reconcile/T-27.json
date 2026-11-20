@@ -1,0 +1,81 @@
+{
+  "id": "T-27",
+  "comment": "Declared with petition: true -> queued whatever the verdict.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "interface",
+        "paths": [
+          "api/x.proto"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": true
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "interface",
+        "paths": [
+          "api/x.proto"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:ddb6c4d951885d9926461c98428fa1ebbb47ff2d64abab3531bb08575be31b9a"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "petition"
+  ]
+}

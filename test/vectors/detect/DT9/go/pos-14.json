@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "admin:*",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "config/roles.yml",
+      "rule": "dt9-go-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "config/roles.yml": {
+      "after": "roles:\n  - user\n  - admin:*\n",
+      "before": "roles:\n  - user\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-14",
+  "language": "go",
+  "note": "wildcard admin role added"
+}

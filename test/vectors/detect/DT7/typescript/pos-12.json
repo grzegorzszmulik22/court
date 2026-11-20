@@ -1,0 +1,26 @@
+{
+ "id": "DT7-typescript-pos-12",
+ "detector": "DT7",
+ "language": "typescript",
+ "files": {
+  "src/step.ts": {
+   "before": "export function step() {\n  try {\n    return do_();\n  } catch (e: FetchError) {\n    throw e;\n  }\n}\n",
+   "after": "export function step() {\n  try {\n    return do_();\n  } catch (e) {\n    throw e;\n  }\n}\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT7",
+   "category": "failure-handling",
+   "subkind": "broadened",
+   "path": "src/step.ts",
+   "lines": [
+    4,
+    4
+   ],
+   "side": "after",
+   "evidence": "catch (e)",
+   "rule": "dt7-typescript-broadened"
+  }
+ ]
+}

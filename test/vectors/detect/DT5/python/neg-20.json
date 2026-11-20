@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "app/calc.py": {
+      "after": "def s(x: int):\n    r: set = set()\n    return r\n",
+      "before": "def s(x: int):\n    r: frozenset = frozenset()\n    return r\n"
+    }
+  },
+  "id": "DT5-python-neg-20",
+  "language": "python",
+  "near_miss": "generic-kept",
+  "note": "generic-kept"
+}

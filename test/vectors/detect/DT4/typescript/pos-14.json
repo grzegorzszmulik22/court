@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-14",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "test('x', () => {});\n",
+      "after": "test.skip('x', () => {});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "src/cart.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "test.skip('x'",
+      "rule": "dt4-typescript-skip_or_focus"
+    }
+  ]
+}

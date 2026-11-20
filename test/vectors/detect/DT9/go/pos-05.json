@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "rotated: yes",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "config/secret.yaml",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "config/secret.yaml": {
+      "after": "key: v2\nrotated: yes\n",
+      "before": "key: v1\nrotated: no\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-05",
+  "language": "go",
+  "note": "extension-stripped filename is a segment"
+}

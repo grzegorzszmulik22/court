@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "a,b",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/seed.csv",
+      "rule": "dt10-typescript-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "data/seed.csv": {
+      "after": "",
+      "before": "a,b\n1,2\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-13",
+  "language": "typescript"
+}

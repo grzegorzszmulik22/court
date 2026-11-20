@@ -1,0 +1,29 @@
+{
+ "id": "DT12-go-neg-15",
+ "detector": "DT12",
+ "language": "go",
+ "files": {
+  "shop/cart.go": {
+   "before": "package shop\n",
+   "after": "package shop\n\nfunc extra() {}\n"
+  },
+  "shop/extra.go": {
+   "before": "",
+   "after": "package shop\nfunc extra() {}\n"
+  },
+  "go.mod": {
+   "before": "module bench\n\ngo 1.22\n",
+   "after": "module bench\n\ngo 1.22\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.go",
+   "shop/extra.go"
+  ],
+  "plan_lines": 20
+ },
+ "near_miss": "planned-two-file",
+ "note": "a created file and a modified file, both named by the plan"
+}

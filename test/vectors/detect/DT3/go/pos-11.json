@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-11",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Total(c int) int { return c }\n",
+      "after": "package api\n\nfunc Total(c string) int { return len(c) }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Total(c string) int",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

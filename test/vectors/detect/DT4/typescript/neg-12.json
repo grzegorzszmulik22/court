@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-12",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/helper.test.ts": {
+      "before": "function mkCase() { return 1; }\ntest('m', () => {});\n",
+      "after": "function mkCase() { return 2; }\ntest('m', () => {});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-fewer_assertions",
+  "fp_kind": "fewer_assertions",
+  "note": "fp-fewer_assertions"
+}

@@ -1,0 +1,50 @@
+{
+  "id": "DT12-python-pos-04",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "ops/tool.py": {
+      "before": "",
+      "after": "y = 2\nz = 3\n"
+    },
+    "shop/cart.py": {
+      "before": "x = 1\n",
+      "after": "x = 1\nw\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "ops/tool.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "y = 2",
+      "rule": "dt12-python-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "ops/tool.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "y = 2",
+      "rule": "dt12-python-new-top-level"
+    }
+  ],
+  "note": "unplanned file in a new top-level dir fires both"
+}

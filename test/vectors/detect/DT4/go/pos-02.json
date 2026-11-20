@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-02",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestA(t *testing.T) {}\nfunc TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestA(t *testing.T) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "shop/shop_test.go",
+      "lines": [
+        4,
+        6
+      ],
+      "side": "before",
+      "evidence": "func TestB(t *testing.T) {\n\tif B() != 1 { t.Fatal() }\n}",
+      "rule": "dt4-go-deleted_test"
+    }
+  ]
+}

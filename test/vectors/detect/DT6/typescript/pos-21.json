@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "npm test",
+      "lines": [
+        2,
+        2
+      ],
+      "path": ".husky/pre-commit",
+      "rule": "dt6-typescript-hook",
+      "side": "before",
+      "subkind": "hook"
+    }
+  ],
+  "files": {
+    ".husky/pre-commit": {
+      "after": "#!/bin/sh\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-21",
+  "language": "typescript",
+  "note": "the husky hook lost its check"
+}

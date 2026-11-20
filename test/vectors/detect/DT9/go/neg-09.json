@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-09",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/crypto_test.go": {
+      "before": "package pkg\n",
+      "after": "package pkg\n\n// c\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
+}

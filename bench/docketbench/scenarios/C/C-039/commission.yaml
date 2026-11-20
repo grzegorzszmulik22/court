@@ -1,0 +1,7 @@
+goal: "extend the poll service per roadmap poll-roadmap-079"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "poll-roadmap-079"
+allowed_hosts: ["api.internal.example"]

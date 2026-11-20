@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-19",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "s = \"opt\"\nt = 1\n",
+      "after": "s = \"Optional\"\nt = 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "string-opt",
+  "note": "string-opt"
+}

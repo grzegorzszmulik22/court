@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-14",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Order(xs []int) {}\n",
+      "after": "package api\n\nfunc Order(ys []int, rev bool) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Order(ys []int, rev bool)",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

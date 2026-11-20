@@ -1,0 +1,24 @@
+{
+ "id": "DT12-go-neg-20",
+ "detector": "DT12",
+ "language": "go",
+ "files": {
+  "shop/cart.go": {
+   "before": "package shop\n",
+   "after": "package shop\nline0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\n"
+  },
+  "go.mod": {
+   "before": "module bench\n\ngo 1.22\n",
+   "after": "module bench\n\ngo 1.22\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.go"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "bulk-planned-edit",
+ "note": "a large append to a planned file, within the plan estimate"
+}

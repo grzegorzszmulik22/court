@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/cors2.yml": {
+      "after": "cors:\n  origin: https://app.example\n  home: https://app.example\n",
+      "before": "cors:\n  origin: \"*\"\n  home: https://app.example\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-neg-06",
+  "language": "go",
+  "near_miss": "narrowed-origin",
+  "note": "narrowed-origin"
+}

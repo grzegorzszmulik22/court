@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "mypy.ini": {
+      "after": "[mypy]\nstrict = True\n",
+      "before": "[mypy]\nstrict = False\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-neg-15",
+  "language": "python",
+  "note": "mypy-on"
+}

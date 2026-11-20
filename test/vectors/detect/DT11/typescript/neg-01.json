@@ -1,0 +1,24 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/cart.ts": {
+      "after": "export const c = 1;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-01",
+  "language": "typescript",
+  "near_miss": "inside-territory",
+  "note": "inside-territory"
+}

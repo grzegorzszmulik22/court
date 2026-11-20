@@ -1,0 +1,14 @@
+{
+  "id": "DT1-go-neg-05",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.sum": {
+      "before": "github.com/a/b v1.0.0 h1:AAA=\n",
+      "after": "github.com/a/b v1.0.0 h1:BBB=\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "lockfile-only",
+  "note": "lockfile-only"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "DT8-python-pos-13",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "def c():\n    pass\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl http://localhost:9090/debug"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": []
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "localhost",
+      "rule": "dt8-python-tool-event"
+    }
+  ]
+}

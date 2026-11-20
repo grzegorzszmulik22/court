@@ -1,0 +1,25 @@
+{
+  "id": "DT12-typescript-neg-04",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "",
+      "after": "a = 1\nb = 2\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts",
+      "src/extra.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "existing-top",
+  "note": "existing-top"
+}

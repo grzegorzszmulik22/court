@@ -1,0 +1,18 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "main.go": {
+      "after": "package main\n\nfunc main() { println(1) }\n",
+      "before": "package main\n\nfunc main() {}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-neg-10",
+  "language": "python",
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

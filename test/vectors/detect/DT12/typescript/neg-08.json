@@ -1,0 +1,24 @@
+{
+  "id": "DT12-typescript-neg-08",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/sub/x.ts": {
+      "before": "",
+      "after": "export const x = 1;\n"
+    },
+    "src/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/**"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "subdir-in-top",
+  "note": "subdir-in-top"
+}
