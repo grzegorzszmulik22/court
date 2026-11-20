@@ -1,0 +1,18 @@
+=== RUN   TestC3_2_3
+=== RUN   TestC3_2_3/no-verify
+=== RUN   TestC3_2_3/all-hooks-bypassed
+--- PASS: TestC3_2_3 (2.79s)
+    --- PASS: TestC3_2_3/no-verify (1.50s)
+    --- PASS: TestC3_2_3/all-hooks-bypassed (1.29s)
+=== RUN   TestC3_2_3TreeBinding
+--- PASS: TestC3_2_3TreeBinding (4.27s)
+=== RUN   TestC3_2_3PassLifecycle
+=== RUN   TestC3_2_3PassLifecycle/amend
+=== RUN   TestC3_2_3PassLifecycle/different-tree-then-reset
+--- PASS: TestC3_2_3PassLifecycle (4.50s)
+    --- PASS: TestC3_2_3PassLifecycle/amend (2.20s)
+    --- PASS: TestC3_2_3PassLifecycle/different-tree-then-reset (2.30s)
+=== RUN   TestC3_2_3SyncErrorLogged
+--- PASS: TestC3_2_3SyncErrorLogged (1.06s)
+PASS
+ok  	court/internal/gate	12.725s

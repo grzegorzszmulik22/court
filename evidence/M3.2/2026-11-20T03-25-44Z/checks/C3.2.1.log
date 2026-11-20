@@ -1,0 +1,24 @@
+=== RUN   TestC3_2_1
+--- PASS: TestC3_2_1 (3.86s)
+=== RUN   TestC3_2_1FailClosed
+=== RUN   TestC3_2_1FailClosed/daemon-stopped
+=== RUN   TestC3_2_1FailClosed/wrong-port-refused
+=== RUN   TestC3_2_1FailClosed/timeout
+=== RUN   TestC3_2_1FailClosed/malformed-answer
+=== RUN   TestC3_2_1FailClosed/server-error
+--- PASS: TestC3_2_1FailClosed (8.14s)
+    --- PASS: TestC3_2_1FailClosed/daemon-stopped (1.22s)
+    --- PASS: TestC3_2_1FailClosed/wrong-port-refused (1.23s)
+    --- PASS: TestC3_2_1FailClosed/timeout (3.19s)
+    --- PASS: TestC3_2_1FailClosed/malformed-answer (1.25s)
+    --- PASS: TestC3_2_1FailClosed/server-error (1.25s)
+=== RUN   TestC3_2_1FailClosedFallback
+=== RUN   TestC3_2_1FailClosedFallback/daemon-stopped
+=== RUN   TestC3_2_1FailClosedFallback/malformed-answer
+=== RUN   TestC3_2_1FailClosedFallback/timeout
+--- PASS: TestC3_2_1FailClosedFallback (8.02s)
+    --- PASS: TestC3_2_1FailClosedFallback/daemon-stopped (3.43s)
+    --- PASS: TestC3_2_1FailClosedFallback/malformed-answer (1.33s)
+    --- PASS: TestC3_2_1FailClosedFallback/timeout (3.26s)
+PASS
+ok  	court/internal/gate	20.115s

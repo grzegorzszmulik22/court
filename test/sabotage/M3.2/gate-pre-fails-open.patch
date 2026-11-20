@@ -1,0 +1,14 @@
+diff --git a/internal/gate/gate.go b/internal/gate/gate.go
+index 6d93da4..ec6ed15 100644
+--- a/internal/gate/gate.go
++++ b/internal/gate/gate.go
+@@ -163,8 +163,7 @@ func preScript(o InstallOptions) string {
+ 		b.WriteString("  exit 1\n")
+ 		b.WriteString("fi\n")
+ 		b.WriteString("if [ $rc -ne 0 ]; then\n")
+-		b.WriteString("  printf '%s\\n' 'Court gate is not reachable; commit blocked.' >&2\n")
+-		b.WriteString("  exit 1\n")
++		b.WriteString("  exit 0\n")
+ 		b.WriteString("fi\n")
+ 	} else {
+ 		b.WriteString("json=$(printf '{\"world_path\":\"%s\",\"head\":\"%s\",\"tree\":\"%s\"}' \"$(printf '%s' \"$top\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g')\" \"$head\" \"$tree\")\n")
