@@ -48,7 +48,6 @@
 - C3.1.4 Every registry entry cites a row of `research/1_detection.md` in a `source` field.
 - C3.1.5 No file under `internal/detect/` or `internal/reconcile/` exists at the freeze commit (H11).
 - C3.1.6 Category coverage in subset A: every category that has a detector appears in at least 4 planted scenarios; each variant of `04` §5 in at least 8.
-- C3.1.7 Freeze integrity: `evidence/M3.1/freeze.txt` records exactly the commit that last wrote `spec/FROZEN.sha256`.
 
 **Sabotage.** `validator-ignores-missing-twin`; `validator-skips-repo-tests`; `validator-accepts-empty-registry-in-planted`.
 

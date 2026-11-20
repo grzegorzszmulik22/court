@@ -559,10 +559,13 @@ func checkEditStep(e *editStep, where string, v *violations) {
 	}
 	// manifests must parse: a written .json file is machine-read by the
 	// done-checks and the detectors, and any write whose content is JSON
-	// must parse whatever the file is named — an unparseable manifest
-	// under another name is the same break.
+	// — object or array, any name, any depth — must parse; an
+	// unparseable manifest under another name is the same break.
 	w := strings.TrimSpace(e.Write)
-	if w != "" && (strings.HasSuffix(e.Path, ".json") || w[0] == '{' || w[0] == '[') {
+	if e.Delete || e.Patch != "" {
+		// a deletion writes nothing; a patch's result needs the base
+		// content, which this step-level check does not have.
+	} else if strings.HasSuffix(e.Path, ".json") || (w != "" && (w[0] == '{' || w[0] == '[')) {
 		var js any
 		if json.Unmarshal([]byte(w), &js) != nil {
 			v.addf("script-edit", where, "edit on %s writes invalid JSON", e.Path)
@@ -2974,10 +2977,11 @@ func checkCoverage(all []*scenario, v *violations) {
 		}
 	}
 	// The cap is judged on the planted edit itself (M3.1 denied), not the
-	// whole script: the writes a scenario makes on its registry evidence
-	// paths, normalised. Two scenarios mutating the same path with the
-	// same normalised change are the same mutation.
-	editGroups := map[string][]string{}
+	// whole script: each registry evidence path's scripted edits,
+	// normalised. Two scenarios mutating the same path with the same
+	// normalised change are the same mutation, whatever other evidence
+	// paths each carries.
+	editGroups := map[string]map[string]bool{}
 	for _, s := range all {
 		if !s.planted() || s.Script == nil || s.Reg == nil {
 			continue
@@ -2993,25 +2997,39 @@ func checkCoverage(all []*scenario, v *violations) {
 		if len(evPaths) == 0 {
 			continue
 		}
-		var blob strings.Builder
+		perPath := map[string]*strings.Builder{}
+		var pathOrder []string
 		for _, ag := range s.Script.Agents {
 			for _, st := range ag.Steps {
 				if st.Kind == "edit" && st.Edit != nil && evPaths[st.Edit.Path] {
-					blob.WriteString(st.Edit.Path)
-					blob.WriteByte(0)
-					blob.WriteString(st.Edit.Write)
-					blob.WriteByte(0)
+					b := perPath[st.Edit.Path]
+					if b == nil {
+						b = &strings.Builder{}
+						perPath[st.Edit.Path] = b
+						pathOrder = append(pathOrder, st.Edit.Path)
+					}
+					b.WriteString(st.Edit.Write)
+					b.WriteByte(0)
 				}
 			}
 		}
-		key := s.Subset + "/" + normaliseScript(blob.String())
-		editGroups[key] = append(editGroups[key], s.ID)
+		for _, p := range pathOrder {
+			key := s.Subset + "/" + p + "\x00" + normaliseScript(perPath[p].String())
+			if editGroups[key] == nil {
+				editGroups[key] = map[string]bool{}
+			}
+			editGroups[key][s.ID] = true
+		}
 	}
 	for _, group := range editGroups {
 		if len(group) > 5 {
-			sort.Strings(group)
-			v.addf("coverage-template", group[0],
-				"%d scenarios plant one normalised edit (> 5): %v", len(group), group)
+			ids := make([]string, 0, len(group))
+			for id := range group {
+				ids = append(ids, id)
+			}
+			sort.Strings(ids)
+			v.addf("coverage-template", ids[0],
+				"%d scenarios plant one normalised edit (> 5): %v", len(ids), ids)
 		}
 	}
 }

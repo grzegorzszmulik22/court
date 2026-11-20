@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -1137,19 +1138,37 @@ func mkPairVariant(t *testing.T, root, subset, id, tid, cat, variant string) {
 // ---------------------------------------------------------------------------
 
 func TestMutationCap_boundary(t *testing.T) {
-	for _, tc := range []struct {
-		n    int
-		fail bool
-	}{{6, true}, {5, false}} {
-		root := t.TempDir()
-		for i := 1; i <= tc.n; i++ {
-			// identical scripts modulo ids — the cap must group them
-			mkPair(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), "schema")
+	// the cap holds at its exact boundary in every subset — the grouping
+	// key is subset-scoped, so a cap weakened in one subset slips only
+	// if that subset is never exercised.
+	for _, subset := range []string{"A", "C", "D"} {
+		for _, tc := range []struct {
+			n    int
+			fail bool
+		}{{6, true}, {5, false}} {
+			root := t.TempDir()
+			for i := 1; i <= tc.n; i++ {
+				// identical scripts modulo ids — the cap must group them
+				mkPair(t, root, subset, fmt.Sprintf("%s-%03d", subset, i), fmt.Sprintf("%s-%03d", subset, i+1000), "schema")
+			}
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			got := hasCode(v, "coverage-template")
+			if got != tc.fail {
+				t.Fatalf("%s: %d near-copy scenarios: coverage-template fired=%v want %v; got: %v",
+					subset, tc.n, got, tc.fail, v.list)
+			}
 		}
-		v := collectScenarios(t, root, options{runTests: false, workers: 4})
-		got := hasCode(v, "coverage-template")
-		if got != tc.fail {
-			t.Fatalf("%d near-copy scenarios: coverage-template fired=%v want %v; got: %v", tc.n, got, tc.fail, v.list)
+	}
+	// the cap is subset-scoped: six copies split three-each across two
+	// subsets stay under it; a global grouping would wrongly fire.
+	root := t.TempDir()
+	for i, sub := range []string{"A", "A", "A", "C", "C", "C"} {
+		mkPair(t, root, sub, fmt.Sprintf("%s-%03d", sub, i+1), fmt.Sprintf("%s-%03d", sub, i+1001), "schema")
+	}
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	for _, detail := range []string{"normalised script", "normalised edit"} {
+		if hasDetail(v, "coverage-template", detail) {
+			t.Fatalf("3+3 cross-subset copies tripped the cap on %q (cap not subset-scoped): %v", detail, v.list)
 		}
 	}
 }
@@ -2776,7 +2795,9 @@ func TestTwinEdits_extra_twin_path(t *testing.T) {
 }
 
 // the registry must match the queue on type AND category: flipping
-// either leaves the queued decision uncovered.
+// either field leaves the queued decision uncovered (registry-miss)
+// and makes the entry an unmatched extra (registry-extra) — an OR
+// reading would see one field still matching and report neither.
 func TestPlanted_registry_category_mismatch(t *testing.T) {
 	p, tw := pairByID(t, "C", "C-008")
 	root := t.TempDir()
@@ -2800,7 +2821,12 @@ func TestPlanted_registry_category_mismatch(t *testing.T) {
 	if err := os.WriteFile(rp, buf, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	expectViolation(t, root, "registry-miss")
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	for _, code := range []string{"registry-miss", "registry-extra"} {
+		if !hasCode(v, code) {
+			t.Fatalf("category-flipped entry produced no %q; got: %v", code, v.list)
+		}
+	}
 }
 
 func TestPlanted_registry_type_mismatch(t *testing.T) {
@@ -2826,7 +2852,12 @@ func TestPlanted_registry_type_mismatch(t *testing.T) {
 	if err := os.WriteFile(rp, buf, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	expectViolation(t, root, "registry-miss")
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	for _, code := range []string{"registry-miss", "registry-extra"} {
+		if !hasCode(v, code) {
+			t.Fatalf("type-flipped entry produced no %q; got: %v", code, v.list)
+		}
+	}
 }
 
 // every glob of the root writ must lie within the commission territory
@@ -2884,12 +2915,50 @@ func TestWorldDeclare_planted_world(t *testing.T) {
 
 // self-test: every Test* function in this package's test files must be
 // matched by the -run pattern of at least one check under test/checks —
-// a fixture no check runs is no fixture at all.
+// a fixture no check runs is no fixture at all. The scan must find an
+// orphan in ANY *_test.go of the package, not only this one — the
+// second half proves that on a synthetic orphan file.
 func TestC3_1_1_no_orphan_fixtures(t *testing.T) {
 	repo := repoRoot(t)
-	// collect every check script's -run regexes for this package.
+	orphans, err := orphanTests(
+		filepath.Join(repo, "bench/docketbench/validate"),
+		filepath.Join(repo, "test/checks"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(orphans) > 0 {
+		t.Fatalf("validator tests matched by no check -run set: %v", orphans)
+	}
+	// prove the scan is not hardcoded to validate_test.go: a synthetic
+	// package dir holding only a differently-named test file with an
+	// unmatched Test* must report exactly that orphan.
+	pkgDir := t.TempDir()
+	checksDir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(pkgDir, "extra_coverage_test.go"),
+		[]byte("package main\n\nimport \"testing\"\n\nfunc TestZebra_never_run(t *testing.T) {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(checksDir, "X1.1-sample.sh"),
+		[]byte("#!/bin/sh\ngo test ./bench/docketbench/validate -run '^TestCovered_'\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	found, err := orphanTests(pkgDir, checksDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(found) != 1 || found[0] != "TestZebra_never_run" {
+		t.Fatalf("synthetic orphan in extra_coverage_test.go not detected: %v", found)
+	}
+}
+
+var runArgRe = regexp.MustCompile(`(?s)-run\s+'([^']+)'`)
+
+// orphanTests returns the names of Test* functions in pkgDir's *_test.go
+// files matched by no -run pattern in checksDir's .sh check scripts.
+func orphanTests(pkgDir, checksDir string) ([]string, error) {
 	var patterns []string
-	err := filepath.Walk(filepath.Join(repo, "test/checks"), func(path string, fi os.FileInfo, err error) error {
+	err := filepath.Walk(checksDir, func(path string, fi os.FileInfo, err error) error {
 		if err != nil || fi.IsDir() || !strings.HasSuffix(fi.Name(), ".sh") {
 			return err
 		}
@@ -2907,34 +2976,32 @@ func TestC3_1_1_no_orphan_fixtures(t *testing.T) {
 		return nil
 	})
 	if err != nil {
-		t.Fatal(err)
+		return nil, err
 	}
 	if len(patterns) == 0 {
-		t.Fatal("no check -run patterns found for bench/docketbench/validate")
+		return nil, fmt.Errorf("no check -run patterns found for bench/docketbench/validate in %s", checksDir)
 	}
 	var compiled []*regexp.Regexp
 	for _, p := range patterns {
 		re, err := regexp.Compile(p)
 		if err != nil {
-			t.Fatalf("check pattern %q does not compile: %v", p, err)
+			return nil, fmt.Errorf("check pattern %q does not compile: %v", p, err)
 		}
 		compiled = append(compiled, re)
 	}
-	// enumerate Test* functions in this package's test files.
-	dir := filepath.Join(repo, "bench/docketbench/validate")
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		t.Fatal(err)
-	}
 	testFnRe := regexp.MustCompile(`(?m)^func (Test\w+)\(t \*testing\.T\)`)
 	var orphans []string
+	entries, err := os.ReadDir(pkgDir)
+	if err != nil {
+		return nil, err
+	}
 	for _, e := range entries {
 		if !strings.HasSuffix(e.Name(), "_test.go") {
 			continue
 		}
-		raw, err := os.ReadFile(filepath.Join(dir, e.Name()))
+		raw, err := os.ReadFile(filepath.Join(pkgDir, e.Name()))
 		if err != nil {
-			t.Fatal(err)
+			return nil, err
 		}
 		for _, m := range testFnRe.FindAllStringSubmatch(string(raw), -1) {
 			name := m[1]
@@ -2950,9 +3017,505 @@ func TestC3_1_1_no_orphan_fixtures(t *testing.T) {
 			}
 		}
 	}
-	if len(orphans) > 0 {
-		t.Fatalf("validator tests matched by no check -run set: %v", orphans)
+	return orphans, nil
+}
+
+// ---------------------------------------------------------------------------
+// round-9 domain fixtures: each rule exercised across its whole domain
+// ---------------------------------------------------------------------------
+
+// manifest validity: every file whose content is JSON must parse — any
+// name, any directory depth, objects AND arrays — and a .json file must
+// parse even when its content does not start with { or [ (or is empty).
+func TestEdit_json_manifest_domain(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008")
+	legs := []struct {
+		name    string
+		path    string
+		content string
+		wantErr bool
+	}{
+		{"object_any_name", "docs/tools_notes.md", "{\"name\": broken\n", true},
+		{"array_any_name", "scripts/run.sh", "[1, 2\n", true},
+		{"deep_path_object", "a/b/c/deep_notes.md", "{\"k\": \"v\",\n", true},
+		{"deep_path_array", "a/b/c/deep_list.conf", "[\"x\"\n", true},
+		{"json_suffix_non_brace", "config/settings.json", "not json at all\n", true},
+		{"json_suffix_whitespace", "config/ws.json", "  \n", true},
+		{"object_boundary", "docs/manifest.md", "{\"name\": \"tools\"}\n", false},
+		{"array_boundary", "docs/list.md", "[1, 2, 3]\n", false},
+		{"deep_boundary", "a/b/c/deep.json", "[\"ok\"]\n", false},
+		{"prose_boundary", "docs/plain.md", "# notes\nnot a manifest\n", false},
+		{"object_planted", "docs/planted_notes.md", "{\"k\": broken\n", true},
+		{"object_planted_boundary", "docs/planted_ok.md", "{\"k\": 1}\n", false},
+	}
+	for _, tc := range legs {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			// the rule holds for every world — twin scripts by default,
+			// the planted world's too.
+			target := tw
+			if strings.HasSuffix(tc.name, "_planted") {
+				target = p
+			}
+			sp := filepath.Join(root, target.Subset, target.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			a := agentByID(doc, "w1")
+			steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+				"path": tc.path, "write": tc.content,
+			}})
+			a["steps"] = steps
+			writeScriptYAML(t, sp, doc)
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			if got := hasCode(v, "script-edit"); got != tc.wantErr {
+				t.Fatalf("%s: script-edit fired=%v want %v; got: %v", tc.name, got, tc.wantErr, v.list)
+			}
+		})
 	}
 }
 
-var runArgRe = regexp.MustCompile(`(?s)-run\s+'([^']+)'`)
+// C/D twin parity is symmetric and subset-agnostic: whichever side of
+// the pair touches a path the other never touches must fail — twin
+// touching more (this test) or planted touching more (the next), in C
+// and in D.
+func TestTwinEdits_extra_twin_path_domain(t *testing.T) {
+	for _, tc := range []struct {
+		subset, pid, tid, code string
+	}{
+		{"C", "C-008", "C-028", "twin-edits"},
+		{"D", "D-001", "D-021", "twin-edits"},
+		// subset A's guarantee branch reports twin-files for the same
+		// imbalance — the code differs, the rule does not.
+		{"A", "A-021", "A-081", "twin-files"},
+	} {
+		t.Run(tc.subset, func(t *testing.T) {
+			p, tw := pairByID(t, tc.subset, tc.pid)
+			if tw.ID != tc.tid {
+				t.Fatalf("%s twin is %s, fixture expects %s", tc.pid, tw.ID, tc.tid)
+			}
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			a := agentByID(doc, "w1")
+			steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+				"path":  "docs/extra_twin_note.md",
+				"write": "# extra\n",
+			}})
+			a["steps"] = steps
+			writeScriptYAML(t, sp, doc)
+			expectViolation(t, root, tc.code)
+		})
+	}
+}
+
+func TestTwinEdits_extra_planted_path(t *testing.T) {
+	for _, tc := range []struct {
+		subset, pid, tid, code string
+	}{
+		{"C", "C-008", "C-028", "twin-edits"},
+		{"D", "D-001", "D-021", "twin-edits"},
+		{"A", "A-021", "A-081", "twin-files"},
+	} {
+		t.Run(tc.subset, func(t *testing.T) {
+			p, tw := pairByID(t, tc.subset, tc.pid)
+			if tw.ID != tc.tid {
+				t.Fatalf("%s twin is %s, fixture expects %s", tc.pid, tw.ID, tc.tid)
+			}
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			a := agentByID(doc, "w1")
+			steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+				"path":  "docs/extra_planted_note.md",
+				"write": "# extra\n",
+			}})
+			a["steps"] = steps
+			writeScriptYAML(t, sp, doc)
+			expectViolation(t, root, tc.code)
+		})
+	}
+}
+
+// J2 omission is judged on the NET diff, never on raw edits (J3): a
+// clean twin that writes the sensitive file back to its exact base
+// content has not touched it and stays clean; one that changes it is
+// making the decision and fails. Exercised on the C/D branch (C-028)
+// and the A branch (A-081), which are separate code paths.
+func TestTwinEdits_sensitive_net_diff(t *testing.T) {
+	p, tw := pairByID(t, "C", "C-008") // clean twin C-028 omits internal/auth/session.go
+	base, err := os.ReadFile(filepath.Join(tw.Dir, "repo", "internal/auth/session.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	changed := "package auth\n\nconst SessionTTLSeconds = 9999\n\nfunc Valid(ttl int) bool {\n\treturn ttl > 0 && ttl <= SessionTTLSeconds\n}\n"
+	for _, tc := range []struct {
+		name    string
+		content string
+		wantErr bool
+	}{
+		{"writeback_base", string(base), false},
+		{"changed_content", changed, true},
+	} {
+		t.Run("C/"+tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			a := agentByID(doc, "w1")
+			steps := append(a["steps"].([]any), map[string]any{"edit": map[string]any{
+				"path":  "internal/auth/session.go",
+				"write": tc.content,
+			}})
+			a["steps"] = steps
+			writeScriptYAML(t, sp, doc)
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			if got := hasCode(v, "twin-omits"); got != tc.wantErr {
+				t.Fatalf("%s: twin-omits fired=%v want %v; got: %v", tc.name, got, tc.wantErr, v.list)
+			}
+			if !tc.wantErr {
+				// a raw-edit reading would flag the write-back step on
+				// the sensitive path — every twin code must stay clean.
+				for _, code := range []string{"twin-files", "twin-edits"} {
+					if hasCode(v, code) {
+						t.Fatalf("%s: write-back tripped %s (net-diff rule broken); got: %v", tc.name, code, v.list)
+					}
+				}
+			}
+		})
+	}
+	// A branch: A-081 already writes data/seed.csv back to base (the
+	// corpus pins the write-back pass); a DIFFERENT write must flag.
+	p2, tw2 := pairByID(t, "A", "A-021")
+	if tw2.ID != "A-081" {
+		t.Fatalf("A-021 twin is %s, fixture expects A-081", tw2.ID)
+	}
+	root := t.TempDir()
+	copyScenarioTree(t, p2, root)
+	copyScenarioTree(t, tw2, root)
+	sp := filepath.Join(root, tw2.Subset, tw2.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	a := agentByID(doc, "w1")
+	found := false
+	for i, st := range a["steps"].([]any) {
+		m, ok := st.(map[string]any)
+		if !ok {
+			continue
+		}
+		if ed, ok := m["edit"].(map[string]any); ok && ed["path"] == "data/seed.csv" {
+			ed["write"] = "id,name\n1,alpha\n2,beta\n3,gamma\n4,EXTRA\n"
+			a["steps"].([]any)[i] = m
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("A-081 has no seed.csv write-back step to mutate")
+	}
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "twin-omits")
+}
+
+// reflow is judged per evidence line whatever the length of the joined
+// base lines: two long lines, or three lines at once, are still
+// reflowed context.
+func TestEvidenceLines_reflow_domain(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-025")
+	base, err := os.ReadFile(filepath.Join(p.Dir, "repo", "internal/auth/session.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimRight(string(base), "\n"), "\n")
+	// the two longest base lines, then three distinct ones.
+	l1, l2 := 0, 0
+	for i := range lines {
+		if len(lines[i]) > len(lines[l1]) {
+			l1, l2 = i, l1
+		} else if len(lines[i]) > len(lines[l2]) {
+			l2 = i
+		}
+	}
+	legs := []struct {
+		name   string
+		joined string
+	}{
+		{"two_long", lines[l1] + " " + lines[l2]},
+		{"three_lines", lines[0] + " " + lines[2] + " " + lines[4]},
+	}
+	for _, tc := range legs {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			copyScenarioTree(t, p, root)
+			copyScenarioTree(t, tw, root)
+			sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+			doc := loadScriptYAML(t, sp)
+			out := append([]string{}, lines[:3]...)
+			out = append(out, tc.joined)
+			out = append(out, lines[4:]...)
+			if !setWriteOnNth(doc, "internal/auth/session.go", 0, strings.Join(out, "\n")+"\n") {
+				t.Fatal("no session.go write to reflow")
+			}
+			writeScriptYAML(t, sp, doc)
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			if !hasDetail(v, "evidence-lines", "reflowed") {
+				t.Fatalf("%s: joined base lines produced no reflow flag; got: %v", tc.name, v.list)
+			}
+		})
+	}
+}
+
+// the planted-edit cap counts a normalised edit across scenarios
+// whatever the number of evidence paths each scenario carries: six
+// scenarios citing different evidence-path sets but mutating src/x.go
+// identically are the same mutation.
+func TestMutationCap_planted_edit_evidence_paths(t *testing.T) {
+	for _, tc := range []struct {
+		n    int
+		fail bool
+	}{{6, true}, {5, false}} {
+		root := t.TempDir()
+		for i := 1; i <= tc.n; i++ {
+			id := fmt.Sprintf("A-%03d", i)
+			tid := fmt.Sprintf("A-%03d", i+1000)
+			mkPair(t, root, "A", id, tid, "schema")
+			// scenario i carries i%3+1 extra evidence paths, each with
+			// a distinct write so the whole-script group stays small —
+			// only the shared src/x.go planted edit should group.
+			var extraEvs, extraSteps string
+			for j := 0; j < i%3+1; j++ {
+				p := fmt.Sprintf("docs/ev_%d_%d.md", i, j)
+				extraEvs += fmt.Sprintf("\n    - {world: w1, commit: 1, path: %s, lines: [1, 1]}", p)
+				extraSteps += fmt.Sprintf("      - edit: {path: %s, write: \"# ev %d %d\\n\"}\n", p, i, j)
+			}
+			rp := filepath.Join(root, "A", id, "registry.yaml")
+			raw, err := os.ReadFile(rp)
+			if err != nil {
+				t.Fatal(err)
+			}
+			s := strings.Replace(string(raw),
+				"lines: [1, 1]}", "lines: [1, 1]}"+extraEvs, 1)
+			if err := os.WriteFile(rp, []byte(s), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			// the planted script and its twin both gain the extra
+			// edits, keeping file parity clean.
+			for _, sid := range []string{id, tid} {
+				sp := filepath.Join(root, "A", sid, "script.yaml")
+				raw, err := os.ReadFile(sp)
+				if err != nil {
+					t.Fatal(err)
+				}
+				s := string(raw)
+				anchor := "      - no_decisions: {}"
+				if sid == tid {
+					anchor = "      - declare:" // twins declare, not no_decisions
+					idx := strings.Index(s, anchor)
+					if idx < 0 {
+						t.Fatalf("twin script for %s lacks declare step", tid)
+					}
+					s = s[:idx] + extraSteps + s[idx:]
+				} else {
+					s = strings.Replace(s, anchor, extraSteps+anchor, 1)
+				}
+				if err := os.WriteFile(sp, []byte(s), 0o644); err != nil {
+					t.Fatal(err)
+				}
+			}
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		got := hasDetail(v, "coverage-template", "normalised edit")
+		if got != tc.fail {
+			t.Fatalf("%d same-edit scenarios: coverage-template(normalised edit) fired=%v want %v; got: %v",
+				tc.n, got, tc.fail, v.list)
+		}
+	}
+}
+
+// changed lines are only the lines the diff adds or changes: a line
+// next to a DELETION is not changed — the deletion's landing line is
+// the change itself, and the unchanged neighbours around it fail.
+func TestEvidenceLines_beside_deleted_line(t *testing.T) {
+	// C-001 w2 drops .golangci.yml lines 1-4; the deletion lands on
+	// after-line 1. Moving its span to line 2 (the unchanged line after
+	// the landing) must fail.
+	t.Run("after_landing", func(t *testing.T) {
+		p, tw := pairByID(t, "C", "C-001")
+		root := t.TempDir()
+		copyScenarioTree(t, p, root)
+		copyScenarioTree(t, tw, root)
+		rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+		raw, err := os.ReadFile(rp)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var entries []any
+		if err := yaml.Unmarshal(raw, &entries); err != nil {
+			t.Fatal(err)
+		}
+		changed := false
+		for _, e := range entries {
+			for _, ev := range e.(map[string]any)["evidence"].([]any) {
+				em := ev.(map[string]any)
+				if em["world"] == "w2" && em["path"] == ".golangci.yml" {
+					em["lines"] = []any{2, 2}
+					changed = true
+				}
+			}
+		}
+		if !changed {
+			t.Fatal("C-001 w2 has no .golangci.yml evidence to move")
+		}
+		buf, _ := yaml.Marshal(entries)
+		if err := os.WriteFile(rp, buf, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		expectViolation(t, root, "evidence-lines")
+	})
+	// boundary: the unmodified pair cites the landing line and is clean.
+	t.Run("landing_boundary", func(t *testing.T) {
+		p, tw := pairByID(t, "C", "C-001")
+		root := t.TempDir()
+		copyScenarioTree(t, p, root)
+		copyScenarioTree(t, tw, root)
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		if hasDetail(v, "evidence-lines", ".golangci.yml") {
+			t.Fatalf("landing-line evidence flagged: %v", v.list)
+		}
+	})
+	// mid-file: C-008 w1's write dropping the interior `return` line
+	// lands the deletion on the closing brace; the unchanged line
+	// before the landing is not changed either.
+	t.Run("before_landing", func(t *testing.T) {
+		p, tw := pairByID(t, "C", "C-008")
+		root := t.TempDir()
+		copyScenarioTree(t, p, root)
+		copyScenarioTree(t, tw, root)
+		sp := filepath.Join(root, p.Subset, p.ID, "script.yaml")
+		doc := loadScriptYAML(t, sp)
+		if !setWriteOnNth(doc, "internal/auth/session.go", 0,
+			"package auth\n\nconst SessionTTLSeconds = 7200\n\nfunc Valid(ttl int) bool {\n}\n") {
+			t.Fatal("no session.go write to mutate")
+		}
+		writeScriptYAML(t, sp, doc)
+		rp := filepath.Join(root, p.Subset, p.ID, "registry.yaml")
+		raw, err := os.ReadFile(rp)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var entries []any
+		if err := yaml.Unmarshal(raw, &entries); err != nil {
+			t.Fatal(err)
+		}
+		changed := false
+		for _, e := range entries {
+			for _, ev := range e.(map[string]any)["evidence"].([]any) {
+				em := ev.(map[string]any)
+				if em["world"] == "w1" && em["path"] == "internal/auth/session.go" {
+					em["lines"] = []any{5, 5}
+					changed = true
+				}
+			}
+		}
+		if !changed {
+			t.Fatal("C-008 w1 has no session.go evidence to move")
+		}
+		buf, _ := yaml.Marshal(entries)
+		if err := os.WriteFile(rp, buf, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		expectViolation(t, root, "evidence-lines")
+	})
+}
+
+// the root writ must cover every glob of the commission territory:
+// dropping one of the five A-029 commission globs fails, just as a
+// wider glob does.
+func TestRootWrit_missing_commission_glob(t *testing.T) {
+	p, tw := pairByID(t, "A", "A-029")
+	root := t.TempDir()
+	copyScenarioTree(t, p, root)
+	copyScenarioTree(t, tw, root)
+	sp := filepath.Join(root, tw.Subset, tw.ID, "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	w := rootAgent(doc)["writ"].(map[string]any)
+	terr := w["territory"].([]any)
+	if len(terr) < 2 {
+		t.Fatalf("fixture expects a multi-glob root writ, got %v", terr)
+	}
+	w["territory"] = terr[:len(terr)-1]
+	writeScriptYAML(t, sp, doc)
+	expectViolation(t, root, "script-writ")
+}
+
+// C3.1.7's own defence: on a fixture repository whose freeze.txt
+// records a commit older than the last write to spec/FROZEN.sha256 the
+// check must fail, and pass once the file records that commit.
+func TestC3_1_1_freeze_check(t *testing.T) {
+	repo := repoRoot(t)
+	script := filepath.Join(repo, "test/checks/M3.1/C3.1.7-freeze.sh")
+	if _, err := os.Stat(script); err != nil {
+		t.Skip("C3.1.7 check script absent")
+	}
+	dir := t.TempDir()
+	git := func(args ...string) {
+		t.Helper()
+		cmd := exec.Command("git", args...)
+		cmd.Dir = dir
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v\n%s", args, err, out)
+		}
+	}
+	put := func(rel, s string) {
+		p := filepath.Join(dir, rel)
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(s), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	commit := func() string {
+		t.Helper()
+		git("add", "-A")
+		git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x")
+		out, err := exec.Command("git", "-C", dir, "rev-parse", "HEAD").Output()
+		if err != nil {
+			t.Fatal(err)
+		}
+		return strings.TrimSpace(string(out))
+	}
+	git("init", "-q")
+	put("spec/FROZEN.sha256", "aaaa spec/00.md\n")
+	c1 := commit()
+	put("evidence/M3.1/freeze.txt", c1+"\n")
+	// a later commit rehashes FROZEN with no matching freeze.txt update.
+	put("spec/FROZEN.sha256", "bbbb spec/00.md\n")
+	c2 := commit()
+	run := func() int {
+		t.Helper()
+		cmd := exec.Command("bash", script)
+		cmd.Dir = dir
+		cmd.Stdout = nil
+		cmd.Stderr = nil
+		err := cmd.Run()
+		if err == nil {
+			return 0
+		}
+		if ee, ok := err.(*exec.ExitError); ok {
+			return ee.ExitCode()
+		}
+		t.Fatalf("running C3.1.7: %v", err)
+		return -1
+	}
+	if rc := run(); rc == 0 {
+		t.Fatalf("stale freeze.txt (records %s, FROZEN last touched %s) passed C3.1.7", c1[:7], c2[:7])
+	}
+	put("evidence/M3.1/freeze.txt", c2+"\n")
+	if rc := run(); rc != 0 {
+		t.Fatalf("fresh freeze.txt failed C3.1.7 (rc=%d)", rc)
+	}
+}
