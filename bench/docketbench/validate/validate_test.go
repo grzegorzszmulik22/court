@@ -3556,8 +3556,13 @@ func TestC3_1_1_freeze_check(t *testing.T) {
 	commit()
 	// both parents changed FROZEN: the merge conflicts and its
 	// resolution ("merged") is treesame-different from either parent.
-	if out, err := exec.Command("git", "-C", dir, "merge", "--no-commit", "side").CombinedOutput(); err == nil {
-		t.Fatalf("expected FROZEN merge conflict, got clean merge:\n%s", out)
+	mout, merr := exec.Command("git", "-C", dir, "-c", "user.email=t@t", "-c", "user.name=t",
+		"merge", "--no-commit", "side").CombinedOutput()
+	if ee, ok := merr.(*exec.ExitError); !ok || ee.ExitCode() != 1 {
+		t.Fatalf("expected a FROZEN merge conflict (exit 1), got %v:\n%s", merr, mout)
+	}
+	if _, err := os.Stat(filepath.Join(dir, ".git", "MERGE_HEAD")); err != nil {
+		t.Fatalf("merge did not stop in a conflict (no MERGE_HEAD): %v\n%s", err, mout)
 	}
 	put("spec/FROZEN.sha256", "merged spec/00.md\n")
 	git("add", "spec/FROZEN.sha256")
@@ -3567,6 +3572,13 @@ func TestC3_1_1_freeze_check(t *testing.T) {
 		t.Fatal(err)
 	}
 	cm := strings.TrimSpace(string(out))
+	pout, err := exec.Command("git", "-C", dir, "rev-list", "--parents", "-n1", cm).Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if n := len(strings.Fields(string(pout))); n != 3 {
+		t.Fatalf("sanity: %s has %d parents, want a two-parent merge", cm[:7], n-1)
+	}
 	lout, err := exec.Command("git", "-C", dir, "log", "-1", "--format=%H", "--", "spec/FROZEN.sha256").Output()
 	if err != nil {
 		t.Fatal(err)
@@ -4273,7 +4285,20 @@ func TestWorldDeclare_sensitive_net_diff(t *testing.T) {
 // whitespace has touched the sensitive path.
 func TestTwinEdits_sensitive_net_diff_sweep_byteexact(t *testing.T) {
 	base := "package auth\n\nconst SessionTTLSeconds = 3600\n"
-	for _, ws := range []string{" ", "\t", "\n", "\r\n", " \t "} {
+	want := `twin-omits C/C-601: twin "C-601" changes the sensitive path internal/auth/session.go`
+	exact := func(v *violations) bool {
+		for _, x := range v.list {
+			if strings.HasPrefix(x, want) {
+				return true
+			}
+		}
+		return false
+	}
+	legs := 0
+	// control: an exact write-back is not a touch, so the same fixture
+	// without the whitespace raises no twin-omits at all.
+	for _, ws := range []string{"", " ", "\t", "\n", "\r\n", " \t "} {
+		legs++
 		root := t.TempDir()
 		genPair(t, root, "C", "C-501", "C-601", pairSpec{
 			cat: "authority", editPath: "internal/auth/session.go",
@@ -4281,9 +4306,18 @@ func TestTwinEdits_sensitive_net_diff_sweep_byteexact(t *testing.T) {
 			evLo: 3, evHi: 3, twinSens: []string{base + ws}, readme: true,
 		})
 		v := collectScenarios(t, root, options{runTests: false, workers: 4})
-		if !hasCode(v, "twin-omits") {
-			t.Fatalf("trailing %q: byte-exact net-diff rule did not flag the touch: %v", ws, v.list)
+		if ws == "" {
+			if hasCode(v, "twin-omits") {
+				t.Fatalf("exact write-back flagged as a touch: %v", v.list)
+			}
+			continue
 		}
+		if !exact(v) {
+			t.Fatalf("trailing %q: byte-exact net-diff rule did not flag the clean twin: %v", ws, v.list)
+		}
+	}
+	if legs != 6 {
+		t.Fatalf("byte-exact sweep ran %d legs, want 6", legs)
 	}
 }
 

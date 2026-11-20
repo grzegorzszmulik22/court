@@ -871,20 +871,6 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 		}
 		return out
 	}
-	netTouched := func(x *scenario, m map[string][]string) map[string]bool {
-		out := map[string]bool{}
-		for p, keys := range m {
-			last := keys[len(keys)-1]
-			base := ""
-			if x.repoFiles != nil {
-				base = string(x.repoFiles[p])
-			}
-			if last != base {
-				out[p] = true
-			}
-		}
-		return out
-	}
 	netA, netB := netTouched(s, a), netTouched(t, b)
 	// The planted evidence paths of guarantee categories: authority and
 	// deletion are decisions made by touching the file (01 §4), so the
