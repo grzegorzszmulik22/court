@@ -1,0 +1,37 @@
+{
+  "commission": {
+    "territory": [
+      "app/**",
+      "cfg/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "c",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "vendor.cfg",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "vendor.cfg": {
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    }
+  },
+  "id": "DT11-typescript-pos-19",
+  "language": "typescript",
+  "note": "modified root file outside"
+}

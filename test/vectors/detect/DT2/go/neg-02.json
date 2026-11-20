@@ -1,0 +1,14 @@
+{
+  "id": "DT2-go-neg-02",
+  "detector": "DT2",
+  "language": "go",
+  "files": {
+    "app/model.go": {
+      "before": "package app\n\n// TODO: ALTER TABLE t\n",
+      "after": "package app\n\n// TODO: ALTER TABLE t ADD COLUMN c\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "ddl-in-source-comment",
+  "note": "ddl-in-source-comment"
+}

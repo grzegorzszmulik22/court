@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "node_modules/pkg/i.js": {
+      "after": "module.exports = 1\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-neg-07",
+  "language": "python",
+  "near_miss": "exempt-node",
+  "note": "exempt-node"
+}

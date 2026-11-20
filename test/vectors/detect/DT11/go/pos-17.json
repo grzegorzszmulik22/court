@@ -1,0 +1,37 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "exec x",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/deploy2.sh",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/deploy2.sh": {
+      "after": "#!/bin/sh\nexec x\n",
+      "before": "#!/bin/sh\n"
+    }
+  },
+  "id": "DT11-go-pos-17",
+  "language": "go",
+  "note": "modified file outside the globs"
+}

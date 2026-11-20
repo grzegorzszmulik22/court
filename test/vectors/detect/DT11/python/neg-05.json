@@ -1,0 +1,27 @@
+{
+ "id": "DT11-python-neg-05",
+ "detector": "DT11",
+ "language": "python",
+ "files": {
+  "src/deep/nest/thing.py": {
+   "before": "",
+   "after": "x = 1\n"
+  },
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
+  },
+  "src/baseline.py": {
+   "before": "# base\n",
+   "after": "# base\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "src/**"
+  ]
+ },
+ "near_miss": "deep-inside-territory",
+ "note": "file added three levels deep under a covered territory glob"
+}

@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n \"allow\": [\"read\"]\n}\n",
+      "before": "{\n \"allow\": [\"*\"]\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-15",
+  "language": "typescript",
+  "note": "policy-narrow"
+}

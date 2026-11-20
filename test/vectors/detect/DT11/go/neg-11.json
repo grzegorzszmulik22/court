@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "src/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "__pycache__/m.pyc": {
+      "after": "P\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-neg-11",
+  "language": "go",
+  "note": "exempt-pycache"
+}

@@ -1,0 +1,18 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "build/out.bin": {
+      "after": "",
+      "before": "x\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-10",
+  "language": "python",
+  "near_miss": "exempt-path-removed",
+  "note": "exempt-path-removed"
+}

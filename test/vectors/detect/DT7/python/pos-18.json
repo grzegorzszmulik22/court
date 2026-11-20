@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-18",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/probe.py": {
+      "before": "def probe():\n    return ping()\n",
+      "after": "def probe():\n    try:\n        return ping()\n    except PingError:\n        # ignore\n        return None\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/probe.py",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "# ignore",
+      "rule": "dt7-python-swallowed"
+    }
+  ]
+}

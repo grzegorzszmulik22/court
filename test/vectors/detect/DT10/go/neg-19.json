@@ -1,0 +1,17 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "reports/summary.txt": {
+      "after": "",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-go-neg-19",
+  "language": "go",
+  "note": "txt-removed"
+}

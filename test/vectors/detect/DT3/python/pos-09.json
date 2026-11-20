@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-09",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def grep(x):\n    return x\n",
+      "after": "def grep(x, **kw):\n    return x\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def grep(x, **kw):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

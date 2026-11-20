@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-15",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def s(x: int) -> int:\n    return x\n",
+      "after": "def s(x: int) -> int:\n    \"\"\"x may be Optional\"\"\"\n    return x\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "optional-doc",
+  "note": "optional-doc"
+}

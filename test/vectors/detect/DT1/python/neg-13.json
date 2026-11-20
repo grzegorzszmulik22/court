@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-13",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "pyproject.toml": {
+      "before": "[project]\nname = \"app\"\nversion = \"1.0.0\"\n",
+      "after": "[project]\nname = \"app\"\nversion = \"1.0.1\"\n"
+    }
+  },
+  "expect": [],
+  "note": "own-version"
+}

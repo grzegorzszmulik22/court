@@ -1,0 +1,13 @@
+{
+  "id": "DT7-python-neg-13",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    with ctx():\n        return get()\n"
+    }
+  },
+  "expect": [],
+  "note": "ctx-manager"
+}

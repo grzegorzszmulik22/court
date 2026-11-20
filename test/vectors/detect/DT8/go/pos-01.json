@@ -1,0 +1,26 @@
+{
+  "id": "DT8-go-pos-01",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst endpoint = \"https://telemetry.acme-example.io/v1\"\n\nfunc c() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "telemetry.acme-example.io",
+      "rule": "dt8-go-host-literal"
+    }
+  ]
+}

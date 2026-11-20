@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-10",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class _C:\n    pass\n",
+      "after": "class _C:\n    x = 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "private-class",
+  "note": "private-class"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "DT12-python-pos-13",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "rootfile.py": {
+      "before": "",
+      "after": "x = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "rootfile.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-new-top-level"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "rootfile.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "x = 1",
+      "rule": "dt12-python-unplanned-file"
+    }
+  ],
+  "note": "a new file at the root is new-top-level and unplanned"
+}

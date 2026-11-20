@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "w = 2",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "tools/x/y.py",
+      "rule": "dt12-typescript-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "import sys",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tools/x/y.py",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "tools/x/y.py": {
+      "after": "import sys\nz = 1\nw = 2\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-typescript-pos-07",
+  "language": "typescript"
+}

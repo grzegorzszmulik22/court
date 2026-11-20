@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "\"*\"",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/cors.yaml",
+      "rule": "dt9-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "config/cors.yaml": {
+      "after": "allow_origins: [\"*\"]\n",
+      "before": "allow_origins: [https://app.example.com]\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-15",
+  "language": "python",
+  "note": "added line widens access: '*' origin"
+}

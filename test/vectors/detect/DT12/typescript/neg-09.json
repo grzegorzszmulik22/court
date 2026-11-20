@@ -1,0 +1,29 @@
+{
+ "id": "DT12-typescript-neg-09",
+ "detector": "DT12",
+ "language": "typescript",
+ "files": {
+  "shop/cart.ts": {
+   "before": "export {};\n",
+   "after": "export {};\na\n"
+  },
+  "shop/list.ts": {
+   "before": "export {};\n",
+   "after": "export {};\nb\n"
+  },
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.ts",
+   "shop/list.ts"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "modified-pair",
+ "note": "two modified files, both named by the plan"
+}

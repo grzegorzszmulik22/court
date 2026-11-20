@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "mypy.ini": {
+      "after": "[mypy]\nstrict = True\n",
+      "before": "[mypy]\nstrict = False\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-neg-15",
+  "language": "typescript",
+  "note": "mypy-on"
+}

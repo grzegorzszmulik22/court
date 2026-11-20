@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-12",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class Cart:\n    pass\n",
+      "after": "class Cart:\n    def total(self):\n        return 0\n"
+    }
+  },
+  "expect": [],
+  "note": "a method added inside an unchanged class is not a hit: the top-level class line is unchanged and no name was removed (03 \u00a72)"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT6-go-neg-10",
+  "detector": "DT6",
+  "language": "go",
+  "files": {
+    "main.go": {
+      "before": "package main\n\nfunc main() {}\n",
+      "after": "package main\n\nfunc main() { println(1) }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unrelated",
+  "note": "unrelated"
+}

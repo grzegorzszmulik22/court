@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "app/calc.py": {
+      "after": "def s(x: int):\n    b: int = 1\n    return b\n",
+      "before": "def s(x: int):\n    b: bool = True\n    return b\n"
+    }
+  },
+  "id": "DT5-python-neg-13",
+  "language": "python",
+  "near_miss": "tuple-type",
+  "note": "tuple-type"
+}

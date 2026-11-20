@@ -1,0 +1,20 @@
+=== RUN   TestC3_1_3
+--- PASS: TestC3_1_3 (0.27s)
+=== RUN   TestC3_1_3_commit_message
+--- PASS: TestC3_1_3_commit_message (0.36s)
+=== RUN   TestC3_1_3_diffstat
+--- PASS: TestC3_1_3_diffstat (0.34s)
+=== RUN   TestC3_1_3_commission_goal
+--- PASS: TestC3_1_3_commission_goal (0.43s)
+=== RUN   TestC3_1_3_goal_names_category
+--- PASS: TestC3_1_3_goal_names_category (0.38s)
+=== RUN   TestC3_1_3_finaltxt_case
+--- PASS: TestC3_1_3_finaltxt_case (0.62s)
+=== RUN   TestC3_1_3_nearword_boundary
+--- PASS: TestC3_1_3_nearword_boundary (0.34s)
+=== RUN   TestC3_1_3_keyword_case
+--- PASS: TestC3_1_3_keyword_case (0.32s)
+=== RUN   TestC3_1_3_registry_keyword
+--- PASS: TestC3_1_3_registry_keyword (0.31s)
+PASS
+ok  	court/bench/docketbench/validate	3.385s

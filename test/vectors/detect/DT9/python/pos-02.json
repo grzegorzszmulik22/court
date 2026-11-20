@@ -1,0 +1,27 @@
+{
+  "id": "DT9-python-pos-02",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "internal/login/handler.py": {
+      "before": "def handle(r):\n    pass\n",
+      "after": "def handle(r):\n    audit(r)\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/login/handler.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "audit(r)",
+      "rule": "dt9-python-touched"
+    }
+  ],
+  "note": "login path edited"
+}

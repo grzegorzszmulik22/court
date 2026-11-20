@@ -1,0 +1,30 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "write: true",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "config/permission.yml",
+      "rule": "dt9-typescript-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "config/permission.yml": {
+      "after": "perm:\n  read: true\n  write: true\n",
+      "before": "perm:\n  read: true\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-18",
+  "language": "typescript"
+}

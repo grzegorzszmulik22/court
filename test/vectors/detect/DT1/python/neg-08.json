@@ -1,0 +1,18 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "README.md": {
+      "after": "# app\n\nMay add pydantic later.\n",
+      "before": "# app\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT1-python-neg-08",
+  "language": "python",
+  "near_miss": "docs-mention",
+  "note": "docs-mention"
+}

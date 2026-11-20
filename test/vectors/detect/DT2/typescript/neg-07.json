@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "docs/schema.md": {
+      "after": "# schema\n\n`CREATE TABLE` planned.\n",
+      "before": "# schema\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-07",
+  "language": "typescript",
+  "near_miss": "ddl-in-docs",
+  "note": "ddl-in-docs"
+}

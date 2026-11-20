@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-09",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_perf():\n    assert ms() < 100\n",
+      "after": "def test_perf():\n    assert ms() < 500\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "tests/test_shop.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "ms() < 500",
+      "rule": "dt4-python-loosened_threshold"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "DT9-go-neg-07",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "svc/calc.go": {
+      "before": "package calc\n\nfunc add() int { return 1 }\n",
+      "after": "package calc\n\nfunc add() int { return 1 }\nvar doc = \"auth flow\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "auth-in-string",
+  "note": "auth-in-string"
+}

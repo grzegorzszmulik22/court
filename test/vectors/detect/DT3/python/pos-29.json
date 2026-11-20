@@ -1,0 +1,43 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "rpc Put(Id) returns (O);",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "api/order.proto",
+      "rule": "dt3-contract-proto",
+      "side": "after",
+      "subkind": "added"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "rpc Put(Id) returns (O);",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "api/order.proto",
+      "rule": "dt2-python-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "api/order.proto": {
+      "after": "syntax = \"proto3\";\nservice S {\n  rpc Get(Id) returns (O);\n  rpc Put(Id) returns (O);\n}\n",
+      "before": "syntax = \"proto3\";\nservice S {\n  rpc Get(Id) returns (O);\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-29",
+  "language": "python"
+}

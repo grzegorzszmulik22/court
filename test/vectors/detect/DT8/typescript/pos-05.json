@@ -1,0 +1,26 @@
+{
+  "id": "DT8-typescript-pos-05",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "const m = { h: \"https://localhost:8080\" };\nexport function c() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "src/client.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "localhost",
+      "rule": "dt8-typescript-host-literal"
+    }
+  ]
+}

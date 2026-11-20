@@ -1,0 +1,57 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP COLUMN legacy_flag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP COLUMN legacy_flag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP COLUMN legacy_flag",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "alembic/versions/0002_q.sql",
+   "rule": "dt10-sql-drop",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "alembic/versions/0002_q.sql": {
+   "after": "ALTER TABLE users DROP COLUMN legacy_flag;\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT2-python-pos-13",
+ "language": "python",
+ "note": "DROP COLUMN is schema DDL and an unguarded delete"
+}

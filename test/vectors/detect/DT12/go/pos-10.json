@@ -1,0 +1,36 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# g",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/gone.md",
+      "rule": "dt12-go-unplanned-file",
+      "side": "before",
+      "subkind": "unplanned-file"
+    }
+  ],
+  "files": {
+    "docs/gone.md": {
+      "after": "",
+      "before": "# g\n\ntext\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT12-go-pos-10",
+  "language": "go"
+}

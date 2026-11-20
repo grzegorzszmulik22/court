@@ -1,0 +1,30 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "write: true",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "config/permission.yml",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "config/permission.yml": {
+      "after": "perm:\n  read: true\n  write: true\n",
+      "before": "perm:\n  read: true\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-18",
+  "language": "go"
+}

@@ -1,0 +1,18 @@
+{
+ "detector": "DT8",
+ "expect": [],
+ "files": {
+  "docs/links.md": {
+   "after": "links\n\n- https://fresh.example.net\n",
+   "before": "links\n"
+  },
+  "package.json": {
+   "after": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://fresh.example.net\"\n}\n",
+   "before": "{\"name\": \"bench\", \"private\": true,\n  \"homepage\": \"https://fresh.example.net\"\n}\n"
+  }
+ },
+ "id": "DT8-typescript-neg-06",
+ "language": "typescript",
+ "near_miss": "known-host",
+ "note": "the added host fresh.example.net is already in the base tree"
+}

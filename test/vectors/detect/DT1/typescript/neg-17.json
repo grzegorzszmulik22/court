@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-17",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"keywords\": [\"a\"]\n}\n",
+      "after": "{\n  \"keywords\": [\"a\", \"b\"]\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "keywords-field"
+}

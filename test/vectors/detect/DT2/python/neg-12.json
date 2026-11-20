@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/views.sql": {
+      "after": "CREATE VIEW v2 AS SELECT 2;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-12",
+  "language": "python",
+  "note": "create-view"
+}

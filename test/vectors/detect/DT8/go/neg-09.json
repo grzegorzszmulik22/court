@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.go": {
+      "after": "package svc\n\nconst ver = \"1.2.3\"\nfunc c() {}\n",
+      "before": "package svc\n\nfunc c() {}\n"
+    }
+  },
+  "id": "DT8-go-neg-09",
+  "language": "go",
+  "near_miss": "inner-walrus",
+  "note": "inner-walrus"
+}

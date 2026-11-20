@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "SQLite",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/state.sqlite",
+      "rule": "dt10-go-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "data/state.sqlite": {
+      "after": "",
+      "before": "SQLite\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-16",
+  "language": "go"
+}

@@ -1,0 +1,100 @@
+{
+  "id": "T-58",
+  "comment": "Declaration late for an early hit but timely for a later hit: earliest hit governs -> late.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
+      },
+      {
+        "id": "h2",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 3,
+        "petition": false,
+        "digests": [
+          "sha256:1cc529884f62de21882db6541bb9c02a2490d787494bf9d13746f1ffdc59e669"
+        ]
+      },
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1",
+        "h2"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1",
+        "h2"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "late",
+      "flags": [
+        "late",
+        "unforeseen"
+      ],
+      "queued": true,
+      "note": "d1 is late for h1 (declared after it) even though timely for h2"
+    }
+  ],
+  "tags": [
+    "timing",
+    "verdict-late"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "svc/client.ts": {
+      "after": "export const ver = \"1.2.3\";\nexport function c() {}\n",
+      "before": "export function c() {}\n"
+    }
+  },
+  "id": "DT8-typescript-neg-09",
+  "language": "typescript",
+  "near_miss": "inner-const",
+  "note": "inner-const"
+}

@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "app/calc.py": {
+      "after": "def s(x: int):\n    d: set = set()\n    return d\n",
+      "before": "def s(x: int):\n    d: dict = {}\n    return d\n"
+    }
+  },
+  "id": "DT5-python-neg-12",
+  "language": "python",
+  "near_miss": "dict-type",
+  "note": "dict-type"
+}

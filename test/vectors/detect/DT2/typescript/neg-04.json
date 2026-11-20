@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "api/order.proto.txt": {
+      "after": "syntax = \"proto3\";\n// order record\nmessage Order {\n  int64 id = 1;\n}\n",
+      "before": "syntax = \"proto3\";\nmessage Order {\n  int64 id = 1;\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-04",
+  "language": "typescript",
+  "near_miss": "proto-lookalike",
+  "note": "proto-lookalike"
+}

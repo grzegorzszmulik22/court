@@ -1,0 +1,13 @@
+{
+  "id": "DT7-python-neg-18",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/f.py": {
+      "before": "def f(x):\n    return x\n",
+      "after": "def f(x):\n    if x == 7:\n        return 7\n    return x\n"
+    }
+  },
+  "expect": [],
+  "note": "nonerror-cond"
+}

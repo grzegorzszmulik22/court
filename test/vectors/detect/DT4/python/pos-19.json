@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-19",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_flag():\n    assert flag() is True\n",
+      "after": "def test_flag():\n    assert flag() is False\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "tests/test_shop.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "flag() is False",
+      "rule": "dt4-python-changed_expectation"
+    }
+  ]
+}

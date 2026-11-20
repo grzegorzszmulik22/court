@@ -1,0 +1,69 @@
+{
+ "detector": "DT10",
+ "expect": [
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP TABLE a;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "db/multi.sql",
+   "rule": "dt10-python-sql",
+   "side": "after",
+   "subkind": "sql"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE a;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "db/multi.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "DROP TABLE b;",
+   "lines": [
+    2,
+    2
+   ],
+   "path": "db/multi.sql",
+   "rule": "dt2-python-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  },
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP TABLE b;",
+   "lines": [
+    2,
+    2
+   ],
+   "path": "db/multi.sql",
+   "rule": "dt10-python-sql",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "db/multi.sql": {
+   "after": "DROP TABLE a;\nDROP TABLE b;\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT10-python-pos-08",
+ "language": "python"
+}

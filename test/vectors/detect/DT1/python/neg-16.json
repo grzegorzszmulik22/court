@@ -1,0 +1,17 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "docs/deps.md": {
+      "after": "# deps\n\n- requests==2.31.0\n",
+      "before": "# deps\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT1-python-neg-16",
+  "language": "python",
+  "note": "dep-in-docstring"
+}

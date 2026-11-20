@@ -1,0 +1,110 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/a.md",
+      "rule": "dt12-go-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "b: 1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/b.yaml",
+      "rule": "dt12-go-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tools/c.txt",
+      "rule": "dt12-go-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/a.md",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "b: 1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/b.yaml",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tools/c.txt",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "config/b.yaml": {
+      "after": "b: 1\n",
+      "before": ""
+    },
+    "docs/a.md": {
+      "after": "a\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "tools/c.txt": {
+      "after": "c\n",
+      "before": ""
+    }
+  },
+  "id": "DT12-go-pos-18",
+  "language": "go",
+  "note": "each unplanned file gets its own hit"
+}

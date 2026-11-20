@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  let m: string = String(x);\n  return m;\n}\n",
+      "before": "function s(x: number) {\n  let m: number = x * 2;\n  return m;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-20",
+  "language": "typescript",
+  "near_miss": "bigint-type",
+  "note": "bigint-type"
+}

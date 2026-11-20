@@ -1,0 +1,36 @@
+{
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "section",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "docs/old.md",
+      "rule": "dt12-typescript-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    }
+  ],
+  "files": {
+    "docs/old.md": {
+      "after": "# o\nsection\n",
+      "before": "# o\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT12-typescript-pos-09",
+  "language": "typescript"
+}

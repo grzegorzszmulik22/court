@@ -1,0 +1,28 @@
+{
+ "id": "DT12-typescript-neg-17",
+ "detector": "DT12",
+ "language": "typescript",
+ "files": {
+  "shop/sub/deep.ts": {
+   "before": "export {};\n",
+   "after": "export {};\nvar d = 1;\n"
+  },
+  "shop/baseline.ts": {
+   "before": "# baseline\n",
+   "after": "# baseline\n"
+  },
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/sub/deep.ts"
+  ],
+  "plan_lines": 20
+ },
+ "near_miss": "deep-planned-modified",
+ "note": "a modified file one level deeper that the plan names"
+}

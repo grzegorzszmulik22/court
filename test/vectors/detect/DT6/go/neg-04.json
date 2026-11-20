@@ -1,0 +1,18 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "tsconfig.json": {
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": false\n  }\n}\n"
+    }
+  },
+  "id": "DT6-go-neg-04",
+  "language": "go",
+  "near_miss": "strict-on",
+  "note": "strict-on"
+}

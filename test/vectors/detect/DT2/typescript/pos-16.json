@@ -1,0 +1,31 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "-- step 1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "prisma/migrations/0001_init/migration.sql",
+      "rule": "dt2-typescript-changed-migration",
+      "side": "before",
+      "subkind": "migration"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "prisma/migrations/0001_init/migration.sql": {
+      "after": "",
+      "before": "-- step 1\n"
+    }
+  },
+  "id": "DT2-typescript-pos-16",
+  "language": "typescript",
+  "note": "a file deleted under a migration directory is a changed migration"
+}

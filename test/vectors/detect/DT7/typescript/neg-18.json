@@ -1,0 +1,13 @@
+{
+  "id": "DT7-typescript-neg-18",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f(xs: number[]) { return xs[0]; }\n",
+      "after": "export function f(xs: number[]) {\n  for (const x of xs) {\n    if (x > 0) return x;\n  }\n  return 0;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "for-of"
+}

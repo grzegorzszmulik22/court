@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "a/**",
+      "b/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "raw",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "topfile",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "raw",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "topfile",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "topfile": {
+      "after": "raw\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-pos-07",
+  "language": "go"
+}

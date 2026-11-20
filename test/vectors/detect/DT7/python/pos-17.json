@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-17",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/guard.py": {
+      "before": "def guard():\n    try:\n        return vault()\n    except KeyError:\n        raise\n",
+      "after": "def guard():\n    try:\n        return vault()\n    except BaseException:\n        raise\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "broadened",
+      "path": "svc/guard.py",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "except BaseException:",
+      "rule": "dt7-python-broadened"
+    }
+  ]
+}

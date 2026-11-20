@@ -1,0 +1,22 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "DELETE FROM users WHERE id = 7;\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-neg-01",
+  "language": "go",
+  "near_miss": "delete-where",
+  "note": "delete-where"
+}

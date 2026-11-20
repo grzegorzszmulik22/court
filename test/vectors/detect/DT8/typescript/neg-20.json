@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-20",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "const u = \"https://a.example/x\";\nexport function c() {}\n",
+      "after": "const u = \"https://a.example/y\";\nexport function c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "same-host-path",
+  "note": "the host was already in the base tree; only the path changed"
+}

@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "SQLite",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/state.sqlite",
+      "rule": "dt10-python-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "data/state.sqlite": {
+      "after": "",
+      "before": "SQLite\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-16",
+  "language": "python"
+}

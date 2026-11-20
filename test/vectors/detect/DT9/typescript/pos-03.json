@@ -1,0 +1,27 @@
+{
+  "id": "DT9-typescript-pos-03",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/acl/rules.ts": {
+      "before": "export const allow = ['a'];\n",
+      "after": "export const allow = ['a', 'b'];\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "src/acl/rules.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "'b'];",
+      "rule": "dt9-typescript-touched"
+    }
+  ],
+  "note": "acl rule list extended"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "T-21",
+  "comment": "Path inside a directory-glob territory, category allowed -> no flag.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "schema",
+        "paths": [
+          "shop/db/x.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "schema"
+        ],
+        "territory": [
+          "shop/**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "inside-writ"
+  ]
+}

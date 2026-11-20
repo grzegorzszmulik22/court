@@ -1,0 +1,14 @@
+{
+  "id": "DT1-python-neg-07",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "pyproject.toml": {
+      "before": "[project]\nname = \"app\"\n",
+      "after": "[project]\nname   = \"app\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "manifest-reformat",
+  "note": "manifest-reformat"
+}

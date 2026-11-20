@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "u",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "fixtures/users.csv",
+      "rule": "dt10-python-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "fixtures/users.csv": {
+      "after": "",
+      "before": "u\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-14",
+  "language": "python"
+}

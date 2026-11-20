@@ -1,0 +1,7 @@
+goal: "extend the shop service per roadmap shop-roadmap-041"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["shop/**", "internal/**", "api/**", "docs/**", "config/**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "shop-roadmap-041"
+allowed_hosts: ["api.internal.example"]

@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-18",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "-e ./pkg\n",
+      "after": "-e ./pkg2\n"
+    }
+  },
+  "expect": [],
+  "note": "editable-path"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "src/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "echo ok",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "Makefile",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "all:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "Makefile",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "Makefile": {
+      "after": "all:\n\techo ok\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-14",
+  "language": "python"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-14",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def f(a=1):\n    return a\n",
+      "after": "def f(a=2):\n    return a\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "def f(a=2):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+ "detector": "DT10",
+ "expect": [
+  {
+   "category": "deletion",
+   "detector": "DT10",
+   "evidence": "DROP VIEW v_active;",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "db/view.sql",
+   "rule": "dt10-python-sql",
+   "side": "after",
+   "subkind": "sql"
+  }
+ ],
+ "files": {
+  "db/view.sql": {
+   "after": "DROP VIEW v_active;\n",
+   "before": ""
+  },
+  "requirements.txt": {
+   "after": "requests==2.32.3\n",
+   "before": "requests==2.32.3\n"
+  }
+ },
+ "id": "DT10-python-pos-06",
+ "language": "python"
+}

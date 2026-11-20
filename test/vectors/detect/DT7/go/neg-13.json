@@ -1,0 +1,13 @@
+{
+  "detector": "DT7",
+  "expect": [],
+  "files": {
+    "svc/fetch.go": {
+      "after": "package svc\n\nfunc fetch() int {\n\tv, err := get()\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\treturn v\n}\n",
+      "before": "package svc\n\nfunc fetch() int {\n\tv, _ := get()\n\treturn v\n}\n"
+    }
+  },
+  "id": "DT7-go-neg-13",
+  "language": "go",
+  "note": "err-clause-new"
+}

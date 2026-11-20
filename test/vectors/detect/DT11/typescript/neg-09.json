@@ -1,0 +1,19 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "build/gen.ts": {
+      "after": "export const b = 1;\nexport const c = 2;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-09",
+  "language": "typescript",
+  "near_miss": "exempt-build",
+  "note": "exempt-build"
+}

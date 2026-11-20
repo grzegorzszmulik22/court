@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP DATABASE staging;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/schema/dropdb.sql",
+      "rule": "dt10-go-sql",
+      "side": "after",
+      "subkind": "sql"
+    }
+  ],
+  "files": {
+    "db/schema/dropdb.sql": {
+      "after": "-- s\nDROP DATABASE staging;\n",
+      "before": "-- s\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-07",
+  "language": "go"
+}

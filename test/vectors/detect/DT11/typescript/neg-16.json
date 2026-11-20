@@ -1,0 +1,27 @@
+{
+ "id": "DT11-typescript-neg-16",
+ "detector": "DT11",
+ "language": "typescript",
+ "files": {
+  "internal/old.ts": {
+   "before": "function gone() { return 1; }\n",
+   "after": ""
+  },
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
+  },
+  "internal/keep.ts": {
+   "before": "# keep\n",
+   "after": "# keep\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "territory": [
+   "internal/**"
+  ]
+ },
+ "near_miss": "removed-inside",
+ "note": "a file removed inside the territory is in-territory, not a violation"
+}

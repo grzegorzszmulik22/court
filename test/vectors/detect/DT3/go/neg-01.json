@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-01",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/impl.go": {
+      "before": "package api\n\nfunc helper(c int) int { return c }\n",
+      "after": "package api\n\nfunc helper(c int, d int) int { return c + d }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "unexported",
+  "note": "unexported"
+}

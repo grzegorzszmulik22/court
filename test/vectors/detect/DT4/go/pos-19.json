@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-19",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestR(t *testing.T) {\n\tif got := R(); got == true { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestR(t *testing.T) {\n\tif got := R(); got == false { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "shop/shop_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "got == false",
+      "rule": "dt4-go-changed_expectation"
+    }
+  ]
+}

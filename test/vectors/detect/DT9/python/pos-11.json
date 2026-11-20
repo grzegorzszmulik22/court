@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "origin: \"*\"",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "config/cors.yml",
+      "rule": "dt9-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "config/cors.yml": {
+      "after": "cors:\n  origin: \"*\"\n",
+      "before": "cors:\n  origin: https://app.example\n  home: https://app.example\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-pos-11",
+  "language": "python",
+  "note": "origin broadened to wildcard"
+}

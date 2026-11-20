@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/grants.sql": {
+      "after": "GRANT SELECT, INSERT ON t TO r;\n",
+      "before": "GRANT SELECT ON t TO r;\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-11",
+  "language": "typescript",
+  "note": "grant-stmt"
+}

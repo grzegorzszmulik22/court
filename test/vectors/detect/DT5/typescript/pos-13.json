@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "Map<string, any>",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/calc.ts",
+      "rule": "dt5-typescript-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "export function l(m: Map<string, any>) {}",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "src/calc.ts",
+      "rule": "dt3-ts-export-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "src/calc.ts": {
+      "after": "export function l(m: Map<string, any>) {}\n",
+      "before": "export function l(m: Map<string, number>) {}\n"
+    }
+  },
+  "id": "DT5-typescript-pos-13",
+  "language": "typescript"
+}

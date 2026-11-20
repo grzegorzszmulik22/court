@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  let w: string | undefined = undefined;\n  return w;\n}\n",
+      "before": "function s(x: number) {\n  let w: number | undefined = x;\n  return w;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-19",
+  "language": "typescript",
+  "near_miss": "literal-type",
+  "note": "literal-type"
+}

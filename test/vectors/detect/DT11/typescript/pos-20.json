@@ -1,0 +1,32 @@
+{
+  "id": "DT11-typescript-pos-20",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "tools/gen2.ts": {
+      "before": "export function f() {}\n",
+      "after": "export function f() {}\nexport function g() {}\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen2.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "export function g() {}",
+      "rule": "dt11-typescript-outside"
+    }
+  ],
+  "note": "modified source file outside a single glob"
+}

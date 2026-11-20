@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "c: 3",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "config/new.yaml",
+      "rule": "dt12-python-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a: 1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/new.yaml",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "config/new.yaml": {
+      "after": "a: 1\nb: 2\nc: 3\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT12-python-pos-08",
+  "language": "python"
+}

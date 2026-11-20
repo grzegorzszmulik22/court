@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "|| true",
+      "lines": [
+        7,
+        7
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt6-go-ci",
+      "side": "after",
+      "subkind": "ci"
+    }
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./... || true\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-pos-03",
+  "language": "go",
+  "note": "a CI step was made to always pass"
+}

@@ -1,0 +1,30 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "type Refund",
+      "lines": [
+        5,
+        5
+      ],
+      "path": "api/schema.graphql",
+      "rule": "dt3-contract-graphql",
+      "side": "after",
+      "subkind": "added"
+    }
+  ],
+  "files": {
+    "api/schema.graphql": {
+      "after": "type Order {\n  id: ID!\n}\n\ntype Refund {\n  id: ID!\n}\n",
+      "before": "type Order {\n  id: ID!\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-pos-24",
+  "language": "python"
+}

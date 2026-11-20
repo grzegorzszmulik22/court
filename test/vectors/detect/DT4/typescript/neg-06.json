@@ -1,0 +1,14 @@
+{
+  "id": "DT4-typescript-neg-06",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/helpers.ts": {
+      "before": "export function helper() {\n  return 1;\n}\n",
+      "after": "export function helper() {\n  return 2;\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "helper-edit",
+  "note": "helper-edit"
+}

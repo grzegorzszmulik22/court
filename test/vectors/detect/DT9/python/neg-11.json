@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/cron/i.sh": {
+      "after": "#!/bin/sh\nchmod 600 f\n",
+      "before": "#!/bin/sh\nchmod 644 f\n"
+    }
+  },
+  "id": "DT9-python-neg-11",
+  "language": "python",
+  "note": "mode-lowered"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT7-go-pos-14",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/handle.go": {
+      "before": "package svc\n\nfunc h() {\n\tdefer func() {\n\t\tif r := recover(); r == ErrX {\n\t\t\tlog(r)\n\t\t}\n\t}()\n}\n",
+      "after": "package svc\n\nfunc h() {\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\tlog(r)\n\t\t}\n\t}()\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "broadened",
+      "path": "svc/handle.go",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "r != nil",
+      "rule": "dt7-go-broadened"
+    }
+  ]
+}

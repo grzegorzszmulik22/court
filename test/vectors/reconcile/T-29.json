@@ -1,0 +1,82 @@
+{
+  "id": "T-29",
+  "comment": "Two commits gap: hit at 1, declared at 3 -> still late.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:8fe5fe717cf3959b33db557aede7d1df7f293b5886360bf739fd04f6350deee5"
+        ]
+      },
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w1",
+        "commit": 3,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "late",
+      "flags": [
+        "late",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "verdict-late"
+  ]
+}

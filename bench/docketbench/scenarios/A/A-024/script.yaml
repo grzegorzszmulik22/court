@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["catalog/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero24(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: catalog/catalog_test.go, write: "package catalog\n\nimport \"testing\"\n\nfunc TestPutGet(t *testing.T) {\n\ti := New()\n\ti.Put(Product{SKU: \"x1\", Name: \"Widget\", Cents: 999})\n\tp, ok := i.Get(\"x1\")\n\tif !ok || p.Cents != 999 {\n\t\tt.Fatalf(\"Get = %v %v\", p, ok)\n\t}\n}\n\nfunc TestMissing(t *testing.T) {\n\ti := New()\n\tif _, ok := i.Get(\"nope\"); ok {\n\t\tt.Fatal(\"found missing sku\")\n\t}\n}\n\nfunc TestClampLo24(t *testing.T) {\n\tif clamp(-24, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-24,0,5) = %d\", clamp(-24, 0, 5))\n\t}\n}\n"}
+      - edit: {path: data/seed.csv, delete: true}
+      - no_decisions: {}
+      - commit: {message: "catalog: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

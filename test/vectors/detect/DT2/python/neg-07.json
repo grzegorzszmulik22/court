@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "docs/schema.md": {
+      "after": "# schema\n\n`CREATE TABLE` planned.\n",
+      "before": "# schema\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-07",
+  "language": "python",
+  "near_miss": "ddl-in-docs",
+  "note": "ddl-in-docs"
+}

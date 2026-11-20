@@ -1,0 +1,43 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "    delete:",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
+      "side": "after",
+      "subkind": "changed"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "openapi: 3.0.0",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "api/openapi.yaml",
+      "rule": "dt2-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    delete:\n      summary: wipe\n",
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT3-typescript-pos-27",
+  "language": "typescript"
+}

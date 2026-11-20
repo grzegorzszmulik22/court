@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-13",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/pump.py": {
+      "before": "def pump():\n    while q():\n        pass\n",
+      "after": "def pump():\n    while q():\n        try:\n            push()\n        except PipeError:\n            break\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/pump.py",
+      "lines": [
+        6,
+        6
+      ],
+      "side": "after",
+      "evidence": "break",
+      "rule": "dt7-python-swallowed"
+    }
+  ]
+}

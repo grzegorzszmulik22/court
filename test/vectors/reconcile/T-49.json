@@ -1,0 +1,60 @@
+{
+  "id": "T-49",
+  "comment": "Undeclared guarantee hit inside-writ categories: still outside-writ (guarantee categories are outside every writ).",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "authority",
+        "paths": [
+          "internal/auth/s.go"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:2e9c41ddf5e7359f5e67d5a8eb4c39de4ffc6b3424a5d0f5c7ad5ef61b3906b9"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "authority"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "outside-writ",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "outside-writ"
+  ]
+}

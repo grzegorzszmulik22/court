@@ -1,0 +1,13 @@
+{
+  "id": "DT1-python-neg-20",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "--no-binary :all:\nrequests==2.31.0\n",
+      "after": "--no-binary :all:\n--prefer-binary\nrequests==2.31.0\n"
+    }
+  },
+  "expect": [],
+  "note": "option-line"
+}

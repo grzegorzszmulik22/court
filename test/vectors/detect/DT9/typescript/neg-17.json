@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "ops/hardening.sh": {
+      "after": "#!/bin/sh\numask 027\nexit 0\n",
+      "before": "#!/bin/sh\numask 022\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-17",
+  "language": "typescript",
+  "note": "umask-tightened"
+}

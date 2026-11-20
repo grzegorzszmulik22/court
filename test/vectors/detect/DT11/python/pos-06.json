@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "x/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "very/deep/path/file.txt": {
+      "after": "a\nb\nc\nd\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-06",
+  "language": "python",
+  "note": "deep path outside"
+}

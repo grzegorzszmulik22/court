@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-17",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "f = lambda x: x\n",
+      "after": "f = lambda x, y: x\n"
+    }
+  },
+  "expect": [],
+  "note": "lambda-assign"
+}

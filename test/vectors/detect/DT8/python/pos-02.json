@@ -1,0 +1,26 @@
+{
+  "id": "DT8-python-pos-02",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "MIRROR: str = \"https://cdn-mirror.example.net/x\"\ndef c():\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "cdn-mirror.example.net",
+      "rule": "dt8-python-host-literal"
+    }
+  ]
+}

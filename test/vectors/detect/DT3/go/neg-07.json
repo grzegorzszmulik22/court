@@ -1,0 +1,14 @@
+{
+  "id": "DT3-go-neg-07",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 1 }\n",
+      "after": "package api\n\ntype C struct{}\n\nfunc (C) M() int { return 2 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "method-body",
+  "note": "method-body"
+}

@@ -1,0 +1,28 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "ops/log.txt": {
+      "after": "b\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-02",
+  "language": "python",
+  "near_miss": "rm-file",
+  "note": "rm-file",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm x.tmp",
+        "cwd": "/repo"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DELETE FROM t;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/purge/mass.sql",
+      "rule": "dt10-python-sql",
+      "side": "after",
+      "subkind": "sql"
+    }
+  ],
+  "files": {
+    "db/purge/mass.sql": {
+      "after": "SELECT 1;\nDELETE FROM t;\n",
+      "before": "SELECT 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-10",
+  "language": "python"
+}

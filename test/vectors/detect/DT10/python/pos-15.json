@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "PAR1",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "data/metrics.parquet",
+      "rule": "dt10-python-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "data/metrics.parquet": {
+      "after": "",
+      "before": "PAR1\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-15",
+  "language": "python"
+}

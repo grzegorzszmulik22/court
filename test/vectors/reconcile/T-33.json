@@ -1,0 +1,97 @@
+{
+  "id": "T-33",
+  "comment": "Disjoint paths same category: declared on a.go does not cover hit on b.go.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "interface",
+        "paths": [
+          "api/a.proto"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "interface",
+        "paths": [
+          "api/b.proto"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:c40fbc63a5a5c07b3889fa028402520df455b320648948aee32d5a8cac67e421"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "disjoint-paths"
+  ]
+}

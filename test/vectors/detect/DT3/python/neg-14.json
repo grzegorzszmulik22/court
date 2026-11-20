@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-14",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/models.py": {
+      "before": "class C:\n    x = 1\n",
+      "after": "class C:\n    x = 1\n    y = 2\n"
+    }
+  },
+  "expect": [],
+  "note": "class-attr-add"
+}

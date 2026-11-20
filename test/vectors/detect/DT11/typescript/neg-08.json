@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "dist/out.js": {
+      "after": "x()\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-neg-08",
+  "language": "typescript",
+  "near_miss": "exempt-dist",
+  "note": "exempt-dist"
+}

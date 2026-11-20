@@ -1,0 +1,26 @@
+{
+  "id": "DT1-typescript-pos-02",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "removed",
+      "path": "package.json",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "before",
+      "evidence": "\"zod\": \"^3.22.0\"",
+      "rule": "dt1-typescript-manifest-removed"
+    }
+  ]
+}

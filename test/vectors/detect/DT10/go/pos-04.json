@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP INDEX idx_old;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt10-go-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "DROP INDEX idx_old;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt2-go-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/drops/idx.sql": {
+      "after": "-- x\nDROP INDEX idx_old;\n",
+      "before": "-- x\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-pos-04",
+  "language": "go"
+}

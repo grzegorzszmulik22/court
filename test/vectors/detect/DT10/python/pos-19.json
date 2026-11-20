@@ -1,0 +1,26 @@
+{
+  "id": "DT10-python-pos-19",
+  "detector": "DT10",
+  "language": "python",
+  "files": {
+    "data/keep.py": {
+      "before": "x = 1\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "file",
+      "path": "data/keep.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "x = 1",
+      "rule": "dt10-python-datafile"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+ "id": "DT10-python-pos-11",
+ "detector": "DT10",
+ "language": "python",
+ "files": {
+  "svc/q.py": {
+   "before": "",
+   "after": "WIPE = \"DELETE FROM audit\"\n"
+  }
+ },
+ "expect": [
+  {
+   "detector": "DT10",
+   "category": "deletion",
+   "subkind": "sql",
+   "path": "svc/q.py",
+   "lines": [
+    1,
+    1
+   ],
+   "side": "after",
+   "evidence": "DELETE FROM audit",
+   "rule": "dt10-python-sql"
+  }
+ ],
+ "note": "destructive SQL inside a code string literal"
+}

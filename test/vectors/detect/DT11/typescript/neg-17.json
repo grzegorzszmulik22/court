@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "pkg/*"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "pkg/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "pkg/x.ts": {
+      "after": "export const p = 1;\nfunction q() { return p; }\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-17",
+  "language": "typescript",
+  "note": "territory-star"
+}

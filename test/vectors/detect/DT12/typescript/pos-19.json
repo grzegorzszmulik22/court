@@ -1,0 +1,49 @@
+{
+  "id": "DT12-typescript-pos-19",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/cart.ts": {
+      "before": "export const x = 1;\n",
+      "after": "export const x = 1;\nz\n"
+    },
+    "tools/note.txt": {
+      "before": "",
+      "after": "note\nmore\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "tools/note.txt",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "more",
+      "rule": "dt12-typescript-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/note.txt",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "note",
+      "rule": "dt12-typescript-new-top-level"
+    }
+  ]
+}

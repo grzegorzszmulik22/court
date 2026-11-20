@@ -1,0 +1,26 @@
+{
+  "id": "DT5-typescript-pos-12",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "export const k: number = 3;\n",
+      "after": "export const k: any = 3;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "src/calc.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k: any",
+      "rule": "dt5-typescript-widened"
+    }
+  ]
+}

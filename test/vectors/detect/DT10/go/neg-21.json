@@ -1,0 +1,21 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/u.sql": {
+      "after": "UPDATE t SET v = 1 WHERE k = 2;\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-neg-21",
+  "language": "go",
+  "note": "update-only"
+}

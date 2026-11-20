@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-19",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('flag', () => {\n  expect(flag()).toBe(true);\n  expect(flag2()).toBe(true);\n});\n",
+      "after": "test('flag', () => {\n  expect(flag()).toBe(false);\n  expect(flag2()).toBe(true);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "changed_expectation",
+      "path": "src/shop.test.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "toBe(false)",
+      "rule": "dt4-typescript-changed_expectation"
+    }
+  ]
+}

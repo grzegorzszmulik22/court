@@ -1,0 +1,41 @@
+{
+  "id": "DT8-go-pos-16",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n",
+      "after": "package svc\n\nconst docs = \"https://docs.example.io\"\n\nfunc c() {}\n"
+    }
+  },
+  "tool_events": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git fetch https://docs.example.io/repo"
+      },
+      "outcome": "ok"
+    }
+  ],
+  "commission": {
+    "allowed_hosts": [
+      "a.internal.example",
+      "b.internal.example"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "agent",
+      "path": "trajectory/events.jsonl",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "events",
+      "evidence": "docs.example.io",
+      "rule": "dt8-go-tool-event"
+    }
+  ]
+}

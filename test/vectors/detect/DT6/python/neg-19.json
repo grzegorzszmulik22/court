@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".husky/pre-commit": {
+      "after": "#!/bin/sh\nnpm test\nnpm run lint\n",
+      "before": "#!/bin/sh\nnpm test\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-neg-19",
+  "language": "python",
+  "note": "husky-still"
+}

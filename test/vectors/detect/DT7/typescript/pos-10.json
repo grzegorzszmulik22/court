@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-10",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/send.ts": {
+      "before": "export function send() {\n  return push();\n}\n",
+      "after": "export function send() {\n  try {\n    return push();\n  } catch (e) {\n    return [];\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/send.ts",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return [];",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

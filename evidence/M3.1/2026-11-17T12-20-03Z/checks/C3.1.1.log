@@ -1,0 +1,46 @@
+=== RUN   TestC3_1_1
+--- PASS: TestC3_1_1 (1.98s)
+=== RUN   TestC3_1_1_missing_twin
+--- PASS: TestC3_1_1_missing_twin (1.05s)
+=== RUN   TestC3_1_1_broken_backref
+--- PASS: TestC3_1_1_broken_backref (1.52s)
+=== RUN   TestC3_1_planted_empty_registry
+--- PASS: TestC3_1_planted_empty_registry (0.39s)
+=== RUN   TestC3_1_1_vectors_counts
+--- PASS: TestC3_1_1_vectors_counts (0.05s)
+=== RUN   TestC3_1_1_reconcile_counts
+--- PASS: TestC3_1_1_reconcile_counts (0.02s)
+=== RUN   TestGate_undeclared_commit
+--- PASS: TestGate_undeclared_commit (0.84s)
+=== RUN   TestGate_declared_commit_passes
+--- PASS: TestGate_declared_commit_passes (0.55s)
+=== RUN   TestContestRaisable_missing_world
+--- PASS: TestContestRaisable_missing_world (0.70s)
+=== RUN   TestContestRaisable_clean_pair
+--- PASS: TestContestRaisable_clean_pair (0.58s)
+=== RUN   TestPlantedOnly_netdiff
+--- PASS: TestPlantedOnly_netdiff (0.59s)
+=== RUN   TestPlantedOnly_cover_present
+--- PASS: TestPlantedOnly_cover_present (0.53s)
+=== RUN   TestTwinEdits_guarantee_still_weakens
+--- PASS: TestTwinEdits_guarantee_still_weakens (0.42s)
+=== RUN   TestTwinEdits_guarantee_clean
+--- PASS: TestTwinEdits_guarantee_clean (0.50s)
+=== RUN   TestCoverageCount_A_boundary
+--- PASS: TestCoverageCount_A_boundary (0.73s)
+=== RUN   TestCoverageCount_C_boundary
+--- PASS: TestCoverageCount_C_boundary (0.44s)
+=== RUN   TestCoverageCount_D_boundary
+--- PASS: TestCoverageCount_D_boundary (0.18s)
+=== RUN   TestMutationCap_boundary
+--- PASS: TestMutationCap_boundary (0.05s)
+=== RUN   TestReconcile_count_boundary
+--- PASS: TestReconcile_count_boundary (0.06s)
+=== RUN   TestReconcile_coverage_missing_verdict
+--- PASS: TestReconcile_coverage_missing_verdict (0.07s)
+=== RUN   TestReconcile_coverage_missing_tag
+--- PASS: TestReconcile_coverage_missing_tag (0.05s)
+=== RUN   TestVectors_count_boundary
+--- PASS: TestVectors_count_boundary (0.52s)
+PASS
+ok  	court/bench/docketbench/validate	11.875s

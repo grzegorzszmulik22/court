@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-03",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tt.Skip(\"flaky\")\n\tif Total() != 1 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "shop/shop_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "t.Skip(\"flaky\")",
+      "rule": "dt4-go-skip_or_focus"
+    }
+  ]
+}

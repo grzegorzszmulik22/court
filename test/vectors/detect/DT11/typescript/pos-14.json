@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "src/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "echo ok",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "Makefile",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "all:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "Makefile",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "Makefile": {
+      "after": "all:\n\techo ok\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-14",
+  "language": "typescript"
+}

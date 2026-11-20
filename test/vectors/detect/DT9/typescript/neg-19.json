@@ -1,0 +1,13 @@
+{
+  "id": "DT9-typescript-neg-19",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/calc.ts": {
+      "before": "x := \"a\"\n",
+      "after": "x := \"b\"\n"
+    }
+  },
+  "expect": [],
+  "note": "secret-in-string"
+}

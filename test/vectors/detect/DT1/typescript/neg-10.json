@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-10",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  },\n  \"devDependencies\": {}\n}\n",
+      "after": "{\n  \"devDependencies\": {},\n  \"dependencies\": {\n    \"react\": \"^18.2.0\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "block-move",
+  "note": "block-move"
+}

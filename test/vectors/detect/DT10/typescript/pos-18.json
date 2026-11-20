@@ -1,0 +1,30 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "k,v",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "warehouse/fact.csv",
+      "rule": "dt10-typescript-datafile",
+      "side": "before",
+      "subkind": "file"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "warehouse/fact.csv": {
+      "after": "",
+      "before": "k,v\n"
+    }
+  },
+  "id": "DT10-typescript-pos-18",
+  "language": "typescript"
+}

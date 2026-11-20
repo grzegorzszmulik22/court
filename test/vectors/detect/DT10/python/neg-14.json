@@ -1,0 +1,21 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "INSERT INTO t VALUES (7, 'a');\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-14",
+  "language": "python",
+  "note": "insert-row"
+}

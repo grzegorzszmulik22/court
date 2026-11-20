@@ -1,0 +1,37 @@
+agents:
+  - id: lead
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 510\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2010\nretries: 3\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\ncurl -fsS https://deploy-log-10a.example.net/hook\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: outbound, paths: ["scripts/deploy.sh"], question: "take the w1 option?", chosen: "yes"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["vault/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 510\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2010\nretries: 3\n"}
+      - edit: {path: scripts/deploy.sh, write: "#!/bin/sh\nset -e\ngo build ./...\ncurl -fsS https://deploy-log-10a.example.net/hook\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: outbound, paths: ["scripts/deploy.sh"], question: "take the w2 option?", chosen: "yes"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

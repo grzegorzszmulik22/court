@@ -1,0 +1,22 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "DELETE FROM t WHERE a = 1;\nUPDATE t SET x = 2;\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-08",
+  "language": "python",
+  "near_miss": "delete-update",
+  "note": "delete-update"
+}

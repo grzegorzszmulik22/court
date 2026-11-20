@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "\"allow\": [\"read\", \"write\", \"*\"]",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "deploy/policy.json",
+      "rule": "dt9-go-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n  \"allow\": [\"read\", \"write\", \"*\"]\n}\n",
+      "before": "{\n  \"allow\": [\"read\"]\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-12",
+  "language": "go",
+  "note": "grant list gains wildcard"
+}

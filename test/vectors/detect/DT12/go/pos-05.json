@@ -1,0 +1,59 @@
+{
+  "id": "DT12-go-pos-05",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "tools/bigdata.go": {
+      "before": "",
+      "after": "row0\nrow1\nrow2\nrow3\nrow4\nrow5\nrow6\nrow7\nrow8\nrow9\nrow10\nrow11\nrow12\nrow13\nrow14\nrow15\nrow16\nrow17\nrow18\nrow19\nrow20\nrow21\nrow22\nrow23\nrow24\nrow25\nrow26\nrow27\nrow28\nrow29\nrow30\nrow31\nrow32\nrow33\nrow34\nrow35\nrow36\nrow37\nrow38\nrow39\nrow40\nrow41\nrow42\nrow43\nrow44\nrow45\nrow46\nrow47\nrow48\nrow49\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 10
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "tools/bigdata.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "row0",
+      "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "oversize",
+      "path": "tools/bigdata.go",
+      "lines": [
+        50,
+        50
+      ],
+      "side": "after",
+      "evidence": "row49",
+      "rule": "dt12-go-oversize"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/bigdata.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "row0",
+      "rule": "dt12-go-new-top-level"
+    }
+  ],
+  "note": "big unplanned file is both unplanned and oversize"
+}

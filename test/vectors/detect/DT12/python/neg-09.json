@@ -1,0 +1,29 @@
+{
+ "id": "DT12-python-neg-09",
+ "detector": "DT12",
+ "language": "python",
+ "files": {
+  "shop/cart.py": {
+   "before": "# shop\n",
+   "after": "# shop\na\n"
+  },
+  "shop/list.py": {
+   "before": "# shop\n",
+   "after": "# shop\nb\n"
+  },
+  "requirements.txt": {
+   "before": "requests==2.32.3\n",
+   "after": "requests==2.32.3\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.py",
+   "shop/list.py"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "modified-pair",
+ "note": "two modified files, both named by the plan"
+}

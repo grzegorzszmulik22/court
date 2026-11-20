@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-19",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct{ x int }\n",
+      "after": "package api\n\ntype Cart struct{ x int }\ntype Basket = Cart\n"
+    }
+  },
+  "expect": [],
+  "note": "type-alias-add"
+}

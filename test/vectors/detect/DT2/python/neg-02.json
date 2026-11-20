@@ -1,0 +1,14 @@
+{
+  "id": "DT2-python-neg-02",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "app/model.py": {
+      "before": "# TODO: ALTER TABLE t\n",
+      "after": "# TODO: ALTER TABLE t ADD COLUMN c\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "ddl-in-source-comment",
+  "note": "ddl-in-source-comment"
+}

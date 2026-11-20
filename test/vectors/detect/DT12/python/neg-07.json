@@ -1,0 +1,20 @@
+{
+  "id": "DT12-python-neg-07",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/cart.py": {
+      "before": "x = 1\n",
+      "after": ""
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "deleted-planned",
+  "note": "deleted-planned"
+}

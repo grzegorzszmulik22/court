@@ -1,0 +1,79 @@
+{
+  "id": "T-61",
+  "comment": "Empty-paths declaration against a detected entry carrying real paths, no competing entry of the category: the empty clause makes the declaration match the hit.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "schema",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "api/schema.json"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:d30fc331b69c2f7b7bfb84ae30e59861e245a2ee73c1ab0537d387b50de42aec"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "empty-paths"
+  ]
+}

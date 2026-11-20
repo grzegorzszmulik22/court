@@ -1,0 +1,14 @@
+{
+  "id": "DT7-typescript-neg-02",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/discount.test.ts": {
+      "before": "test('d', () => {});\n",
+      "after": "test('d', () => { expect(disc(42)).toBe(42); });\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "test-input-in-test",
+  "note": "test-input-in-test"
+}

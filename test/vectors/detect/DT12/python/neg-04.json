@@ -1,0 +1,25 @@
+{
+  "id": "DT12-python-neg-04",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/cart.py": {
+      "before": "",
+      "after": "a = 1\nb = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.py",
+      "shop/extra.py"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "existing-top",
+  "note": "existing-top"
+}

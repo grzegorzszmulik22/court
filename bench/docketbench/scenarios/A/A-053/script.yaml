@@ -1,0 +1,15 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["ledger/**", "internal/**", "api/**", "docs/**", "config/**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+          expected:
+            - {question: "extend the deploy script?", category: territory, paths: ["scripts/deploy.sh"]}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 553\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2053\nretries: 3\n"}
+      - edit: {path: docs/api_notes.md, write: "openapi: 3.0.0\ninfo:\n  title: ledger\n  version: 1.0.0\npaths:\n  /ledger/items:\n    get:\n      summary: list items\n  /ledger/status53:\n    get:\n      summary: health probe 53\n"}
+      - tool: {name: Bash, command: "git add -A && git commit -qm 'ledger: routine refresh' --no-verify"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

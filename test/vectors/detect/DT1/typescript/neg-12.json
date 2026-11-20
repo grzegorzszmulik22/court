@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-12",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"zod\": \"^3.22.0\",\n    \"//\": \"ui lib\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "dep-comment-added"
+}

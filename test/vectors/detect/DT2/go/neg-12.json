@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/views.sql": {
+      "after": "CREATE VIEW v2 AS SELECT 2;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-neg-12",
+  "language": "go",
+  "note": "create-view"
+}

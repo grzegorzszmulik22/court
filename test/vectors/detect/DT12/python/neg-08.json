@@ -1,0 +1,24 @@
+{
+  "id": "DT12-python-neg-08",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/sub/x.py": {
+      "before": "",
+      "after": "x = 1\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/**"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "subdir-in-top",
+  "note": "subdir-in-top"
+}

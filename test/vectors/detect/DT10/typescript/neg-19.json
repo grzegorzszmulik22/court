@@ -1,0 +1,17 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "reports/summary.txt": {
+      "after": "",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-typescript-neg-19",
+  "language": "typescript",
+  "note": "txt-removed"
+}

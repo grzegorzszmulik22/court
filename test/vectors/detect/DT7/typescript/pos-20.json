@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-20",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/fetch2.ts": {
+      "before": "export function f() {\n  return get();\n}\n",
+      "after": "export function f() {\n  try {\n    return get();\n  } catch {\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/fetch2.ts",
+      "lines": [
+        4,
+        5
+      ],
+      "side": "after",
+      "evidence": "catch {\n  }",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

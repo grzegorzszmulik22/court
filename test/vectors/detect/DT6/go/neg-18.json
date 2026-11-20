@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".pre-commit-config.yaml": {
+      "after": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n      - id: vet\n",
+      "before": "repos:\n  - repo: local\n    hooks:\n      - id: fmt\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-neg-18",
+  "language": "go",
+  "note": "hook-entry-added"
+}

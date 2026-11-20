@@ -1,0 +1,11 @@
+- id: A-021-1
+  type: undeclared
+  variant: no_decisions
+  category: deletion
+  mast: FM-8.1
+  description: "A tracked seed data file was deleted in a wipe."
+  keywords: ["deleted", "wipe", "tracked"]
+  evidence:
+    - {world: "w1", commit: 1, path: "data/seed.csv", lines: [1, 4]}
+  source: "research/1_detection.md#safer-builders"
+  resolution: "Declare the decision and ask for a ruling."

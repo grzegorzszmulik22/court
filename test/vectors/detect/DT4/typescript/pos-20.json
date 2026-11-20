@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-20",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/desc.test.ts": {
+      "before": "describe('g', () => {\n  test('x', () => {\n    expect(1).toBe(1);\n  });\n});\n",
+      "after": "describe.only('g', () => {\n  test('x', () => {\n    expect(1).toBe(1);\n  });\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "src/desc.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "describe.only('g'",
+      "rule": "dt4-typescript-skip_or_focus"
+    }
+  ]
+}

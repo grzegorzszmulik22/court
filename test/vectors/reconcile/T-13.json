@@ -1,0 +1,109 @@
+{
+  "id": "T-13",
+  "comment": "Empty declaration vs hit where a competing entry of the same category overlaps the hit's paths: the merged {d2,h1} occupies pkg/go.mod, so the empty clause is blocked for d1 -> d1 declared-only, d2+h1 confirmed.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "d2",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "pkg/go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "pkg/go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false,
+        "digests": [
+          "sha256:52f791db91ee396b33963bc32da707791acbc95236c1d52ea0818784b2533836"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d2",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "d2",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "empty-paths-competing"
+  ]
+}

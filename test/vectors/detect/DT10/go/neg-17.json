@@ -1,0 +1,26 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/log2.txt": {
+      "after": "a\nb\nc\n",
+      "before": "a\nb\n"
+    }
+  },
+  "id": "DT10-go-neg-17",
+  "language": "go",
+  "note": "git-commit",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git commit -m x"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

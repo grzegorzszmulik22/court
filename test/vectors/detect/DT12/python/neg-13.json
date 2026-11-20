@@ -1,0 +1,23 @@
+{
+  "id": "DT12-python-neg-13",
+  "detector": "DT12",
+  "language": "python",
+  "files": {
+    "shop/any/f.py": {
+      "before": "",
+      "after": "f = 1\ng = 2\n"
+    },
+    "shop/baseline.py": {
+      "before": "# baseline\n",
+      "after": "# baseline\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/**"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [],
+  "note": "planned-dir-glob"
+}

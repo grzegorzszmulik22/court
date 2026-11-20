@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-07",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "import { x } from './x';\n",
+      "after": "import { x, y } from './x';\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "import",
+  "note": "import"
+}

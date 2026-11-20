@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/sub/deep.ts": {
+      "after": "export const d = 1;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-04",
+  "language": "typescript",
+  "near_miss": "glob-match",
+  "note": "glob-match"
+}

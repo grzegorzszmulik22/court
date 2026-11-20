@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-17",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/guard.ts": {
+      "before": "export function guard() {\n  try {\n    return vault();\n  } catch (e: LockErr) {\n    throw e;\n  }\n}\n",
+      "after": "export function guard() {\n  try {\n    return vault();\n  } catch {\n    throw new Error('x');\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "broadened",
+      "path": "src/guard.ts",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "catch {",
+      "rule": "dt7-typescript-broadened"
+    }
+  ]
+}

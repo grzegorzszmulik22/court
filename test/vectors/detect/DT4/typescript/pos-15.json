@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-15",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/cart.test.ts": {
+      "before": "test('x', () => {\n  expect(x()).toBe(1);\n  expect(x()).not.toBe(0);\n});\n",
+      "after": "test('x', () => {\n  expect(x()).toBe(1);\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "src/cart.test.ts",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "expect(x()).not.toBe(0);",
+      "rule": "dt4-typescript-fewer_assertions"
+    }
+  ]
+}

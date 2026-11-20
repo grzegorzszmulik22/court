@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "strict = false",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "pyproject.toml",
+      "rule": "dt6-go-strictness",
+      "side": "after",
+      "subkind": "strictness"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "pyproject.toml": {
+      "after": "[tool.mypy]\nstrict = false\n",
+      "before": "[tool.mypy]\nstrict = true\n"
+    }
+  },
+  "id": "DT6-go-pos-17",
+  "language": "go",
+  "note": "mypy strict mode off"
+}

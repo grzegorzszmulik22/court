@@ -1,0 +1,24 @@
+{
+ "id": "DT12-typescript-neg-20",
+ "detector": "DT12",
+ "language": "typescript",
+ "files": {
+  "shop/cart.ts": {
+   "before": "export {};\n",
+   "after": "export {};\nline0\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\n"
+  },
+  "package.json": {
+   "before": "{\"name\": \"bench\", \"private\": true}\n",
+   "after": "{\"name\": \"bench\", \"private\": true}\n"
+  }
+ },
+ "expect": [],
+ "commission": {
+  "plan_files": [
+   "shop/cart.ts"
+  ],
+  "plan_lines": 30
+ },
+ "near_miss": "bulk-planned-edit",
+ "note": "a large append to a planned file, within the plan estimate"
+}

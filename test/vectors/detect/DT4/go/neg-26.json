@@ -1,0 +1,15 @@
+{
+  "id": "DT4-go-neg-26",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestM(t *testing.T) {\n\tif setup(1) != 0 { t.Fatal() }\n\tif got != 3 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestM(t *testing.T) {\n\tif setup(2) != 0 { t.Fatal() }\n\tif got != 3 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "fp-changed_expectation",
+  "fp_kind": "changed_expectation",
+  "note": "fp-changed_expectation"
+}

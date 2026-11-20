@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-19",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v1.0.0\n",
+      "after": "module shop\n\ngo 1.22\n\nrequire github.com/a/b v1.0.0\n\nreplace github.com/a/b => ../local/b\n"
+    }
+  },
+  "expect": [],
+  "note": "replace-local"
+}

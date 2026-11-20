@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt10-python-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "DROP TABLE sessions;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/cleanup.sql",
+      "rule": "dt2-python-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/cleanup.sql": {
+      "after": "-- prep\nDROP TABLE sessions;\n",
+      "before": "-- prep\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-pos-01",
+  "language": "python"
+}

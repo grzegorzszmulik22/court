@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-20",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tBase\n\tsum int\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "embedded-field"
+}

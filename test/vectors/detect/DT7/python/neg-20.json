@@ -1,0 +1,13 @@
+{
+  "id": "DT7-python-neg-20",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        try:\n            return get()\n        except Inner:\n            raise\n    except Outer:\n        raise\n"
+    }
+  },
+  "expect": [],
+  "note": "nested-try"
+}

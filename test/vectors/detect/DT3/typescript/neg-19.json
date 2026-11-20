@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-19",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/types.ts": {
+      "before": "export interface C {\n  x: number;\n}\n",
+      "after": "export interface C {\n  readonly x: number;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "readonly-field"
+}

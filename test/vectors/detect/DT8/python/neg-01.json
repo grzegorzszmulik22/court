@@ -1,0 +1,14 @@
+{
+  "id": "DT8-python-neg-01",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "V = \"1.2.3\"\ndef c():\n    pass\n",
+      "after": "V = \"1.2.4\"\ndef c():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "const-value",
+  "note": "const-value"
+}

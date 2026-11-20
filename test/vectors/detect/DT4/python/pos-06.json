@@ -1,0 +1,27 @@
+{
+  "id": "DT4-python-pos-06",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_shop.py": {
+      "before": "def test_a():\n    assert a() == 1\n\ndef test_b():\n    pass\n",
+      "after": "def test_a():\n    pass\n\ndef test_b():\n    assert a() == 1\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "tests/test_shop.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "before",
+      "evidence": "assert a() == 1",
+      "rule": "dt4-python-fewer_assertions"
+    }
+  ],
+  "note": "assertion moved into another test: the test it left lost an assertion"
+}

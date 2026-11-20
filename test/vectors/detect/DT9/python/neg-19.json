@@ -1,0 +1,13 @@
+{
+  "id": "DT9-python-neg-19",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "svc/calc.py": {
+      "before": "x := \"a\"\n",
+      "after": "x := \"b\"\n"
+    }
+  },
+  "expect": [],
+  "note": "secret-in-string"
+}

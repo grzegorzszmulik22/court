@@ -1,0 +1,84 @@
+{
+  "id": "T-04",
+  "comment": "Hit at commit 1, declaration lands at commit 2 -> late by one commit.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
+      },
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 2,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "late",
+      "flags": [
+        "late",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "verdict-late",
+    "late-one-commit",
+    "unforeseen+late"
+  ]
+}

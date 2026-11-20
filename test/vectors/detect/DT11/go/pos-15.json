@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "ops/jobs/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "schedule: nightly",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "ops/nightly/cron.yaml",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "schedule: nightly",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "ops/nightly/cron.yaml",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/nightly/cron.yaml": {
+      "after": "schedule: nightly\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-pos-15",
+  "language": "go"
+}

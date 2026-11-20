@@ -1,0 +1,26 @@
+{
+  "id": "DT10-go-pos-19",
+  "detector": "DT10",
+  "language": "go",
+  "files": {
+    "data/keep.go": {
+      "before": "package data\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "file",
+      "path": "data/keep.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "package data",
+      "rule": "dt10-go-datafile"
+    }
+  ]
+}

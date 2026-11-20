@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-12",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/bench_test.go": {
+      "before": "package shop\n\nfunc BenchmarkT(b *testing.B) {}\n",
+      "after": "package shop\n\nfunc BenchmarkT(b *testing.B) { b.Skip() }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "shop/bench_test.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "b.Skip()",
+      "rule": "dt4-go-skip_or_focus"
+    }
+  ]
+}

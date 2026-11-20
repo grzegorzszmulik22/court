@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-02",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/fetch.py": {
+      "before": "def fetch():\n    return get()\n",
+      "after": "def fetch():\n    try:\n        return get()\n    except FetchError:\n        return None\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/fetch.py",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return None",
+      "rule": "dt7-python-swallowed"
+    }
+  ]
+}

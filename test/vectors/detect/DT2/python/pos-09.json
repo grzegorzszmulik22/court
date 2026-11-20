@@ -1,0 +1,27 @@
+{
+  "id": "DT2-python-pos-09",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "alembic/versions/0001_init.py": {
+      "before": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (1);\n",
+      "after": "CREATE TABLE orders (id INT);\nINSERT INTO orders VALUES (2);\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "alembic/versions/0001_init.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "INSERT INTO orders VALUES (2);",
+      "rule": "dt2-python-changed-migration"
+    }
+  ],
+  "note": "non-DDL content edit on a file under a migration directory"
+}

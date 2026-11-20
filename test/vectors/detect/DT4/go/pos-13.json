@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-13",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/cart_test.go": {
+      "before": "package shop\n\nfunc TestB(t *testing.T) {\n\tif B() != 1 {\n\t\tt.Fatalf(\"got %d\", B())\n\t}\n}\n",
+      "after": "package shop\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "deleted_test",
+      "path": "shop/cart_test.go",
+      "lines": [
+        3,
+        7
+      ],
+      "side": "before",
+      "evidence": "func TestB(t *testing.T) {\n\tif B() != 1 {\n\t\tt.Fatalf(\"got %d\", B())\n\t}\n}",
+      "rule": "dt4-go-deleted_test"
+    }
+  ]
+}

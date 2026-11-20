@@ -1,0 +1,12 @@
+=== RUN   TestC3_1_3
+--- PASS: TestC3_1_3 (0.63s)
+=== RUN   TestC3_1_3_commit_message
+--- PASS: TestC3_1_3_commit_message (0.43s)
+=== RUN   TestC3_1_3_diffstat
+--- PASS: TestC3_1_3_diffstat (0.36s)
+=== RUN   TestC3_1_3_commission_goal
+--- PASS: TestC3_1_3_commission_goal (0.46s)
+=== RUN   TestC3_1_3_goal_names_category
+--- PASS: TestC3_1_3_goal_names_category (0.39s)
+PASS
+ok  	court/bench/docketbench/validate	2.305s

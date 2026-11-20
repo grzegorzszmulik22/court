@@ -1,0 +1,33 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/log3.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-go-neg-12",
+  "language": "go",
+  "note": "rm-single",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm out.log"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "rotate",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/token.sh",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/token.sh": {
+      "after": "#!/bin/sh\nrotate\nexit 0\n",
+      "before": "#!/bin/sh\nexit 0\n"
+    }
+  },
+  "id": "DT9-go-pos-07",
+  "language": "go",
+  "note": "script under an authority name"
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "\"lines\": 70",
+      "lines": [
+        2,
+        2
+      ],
+      "path": ".nycrc",
+      "rule": "dt6-python-threshold",
+      "side": "after",
+      "subkind": "threshold"
+    }
+  ],
+  "files": {
+    ".nycrc": {
+      "after": "{\n  \"lines\": 70\n}\n",
+      "before": "{\n  \"lines\": 90\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-14",
+  "language": "python",
+  "note": "a line-coverage floor fell"
+}

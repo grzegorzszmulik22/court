@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "set -e",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "#!/bin/sh",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "scripts/deploy.sh",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/deploy.sh": {
+      "after": "#!/bin/sh\nset -e\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-pos-01",
+  "language": "python"
+}

@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "internal/authority_notes.txt": {
+      "after": "note updated\n",
+      "before": "note\n"
+    }
+  },
+  "id": "DT9-go-neg-02",
+  "language": "go",
+  "near_miss": "substring-not-segment",
+  "note": "substring-not-segment"
+}

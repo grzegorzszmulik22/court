@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-12",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export let flag = false;\nexport function go() {}\n",
+      "after": "export function go() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "export let flag",
+      "rule": "dt3-ts-export-removed"
+    }
+  ]
+}

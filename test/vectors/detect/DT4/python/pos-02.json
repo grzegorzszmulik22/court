@@ -1,0 +1,39 @@
+{
+  "detector": "DT4",
+  "expect": [
+    {
+      "category": "test-strength",
+      "detector": "DT4",
+      "evidence": "def test_b():\n    assert b() == 1",
+      "lines": [
+        3,
+        4
+      ],
+      "path": "tests/test_shop.py",
+      "rule": "dt4-python-deleted_test",
+      "side": "before",
+      "subkind": "deleted_test"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def test_b():",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "tests/test_shop.py",
+      "rule": "dt3-python-toplevel-removed",
+      "side": "before",
+      "subkind": "removed"
+    }
+  ],
+  "files": {
+    "tests/test_shop.py": {
+      "after": "def test_a():\n    pass\n",
+      "before": "def test_a():\n    pass\ndef test_b():\n    assert b() == 1\n"
+    }
+  },
+  "id": "DT4-python-pos-02",
+  "language": "python"
+}

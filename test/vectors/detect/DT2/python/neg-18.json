@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "docs/sql.md": {
+      "after": "# notes\n\nALTER TABLE is not yet written.\n",
+      "before": "# notes\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-18",
+  "language": "python",
+  "note": "ddl-in-string-doc"
+}

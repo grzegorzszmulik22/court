@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "internal/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "internal/a/b/c.ts": {
+      "after": "export const c = 1;\nexport const d = 2;\n",
+      "before": ""
+    },
+    "internal/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    }
+  },
+  "id": "DT11-typescript-neg-20",
+  "language": "typescript",
+  "note": "deep-inside"
+}

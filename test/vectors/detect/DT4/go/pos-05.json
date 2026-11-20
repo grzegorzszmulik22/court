@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-05",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Error(1) }\n\tif Total() < 0 { t.Error(2) }\n}\n",
+      "after": "package shop\n\nfunc TestTotal(t *testing.T) {\n\tif Total() != 1 { t.Error(1) }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "shop/shop_test.go",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "before",
+      "evidence": "if Total() < 0 { t.Error(2) }",
+      "rule": "dt4-go-fewer_assertions"
+    }
+  ]
+}

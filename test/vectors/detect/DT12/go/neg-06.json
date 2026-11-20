@@ -1,0 +1,20 @@
+{
+  "id": "DT12-go-neg-06",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "vendor/x/y.go": {
+      "before": "",
+      "after": "package shop\nv = 9\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [],
+  "near_miss": "unplanned-exempt",
+  "note": "unplanned-exempt"
+}

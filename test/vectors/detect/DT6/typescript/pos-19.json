@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "select = E",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "setup.cfg",
+      "rule": "dt6-typescript-lint",
+      "side": "after",
+      "subkind": "lint"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "setup.cfg": {
+      "after": "[flake8]\nselect = E\n",
+      "before": "[flake8]\nselect = E,W,F\n"
+    }
+  },
+  "id": "DT6-typescript-pos-19",
+  "language": "typescript",
+  "note": "flake8 rules were disabled"
+}

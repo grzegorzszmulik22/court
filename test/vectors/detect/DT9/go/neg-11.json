@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "scripts/cron/i.sh": {
+      "after": "#!/bin/sh\nchmod 600 f\n",
+      "before": "#!/bin/sh\nchmod 644 f\n"
+    }
+  },
+  "id": "DT9-go-neg-11",
+  "language": "go",
+  "note": "mode-lowered"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DT3-typescript-pos-32",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export default function main() {}\n",
+      "after": "export default function main(x: number) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export default function main(x: number) {}",
+      "rule": "dt3-ts-export-changed"
+    }
+  ],
+  "note": "parameter list changed on a default-exported function: hit"
+}

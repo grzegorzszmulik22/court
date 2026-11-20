@@ -1,0 +1,13 @@
+{
+  "id": "DT7-typescript-neg-14",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/f.ts": {
+      "before": "export function f() {\n  return get().x;\n}\n",
+      "after": "export function f() {\n  return get()?.x;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "optional-chain"
+}

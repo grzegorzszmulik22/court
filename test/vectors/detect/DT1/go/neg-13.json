@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-13",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\ntoolchain go1.22.1\n",
+      "after": "module shop2\n\ngo 1.22\n\ntoolchain go1.22.1\n"
+    }
+  },
+  "expect": [],
+  "note": "own-version"
+}

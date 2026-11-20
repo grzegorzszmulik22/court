@@ -1,0 +1,30 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "\"name\": \"total\"",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "api/order.avsc",
+      "rule": "dt2-typescript-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "api/order.avsc": {
+      "after": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}, {\"name\": \"total\", \"type\": \"long\"}]\n}\n",
+      "before": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}]\n}\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-pos-14",
+  "language": "typescript"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DT9-go-pos-03",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/acl/rules.go": {
+      "before": "package acl\n\nvar allow = []string{\"a\"}\n",
+      "after": "package acl\n\nvar allow = []string{\"a\", \"b\"}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "pkg/acl/rules.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "\"b\"}",
+      "rule": "dt9-go-touched"
+    }
+  ],
+  "note": "acl rule list extended"
+}

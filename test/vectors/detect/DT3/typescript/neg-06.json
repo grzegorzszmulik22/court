@@ -1,0 +1,14 @@
+{
+  "id": "DT3-typescript-neg-06",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function a() {}\nexport function b() {}\n",
+      "after": "export function b() {}\nexport function a() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "reorder",
+  "note": "reorder"
+}

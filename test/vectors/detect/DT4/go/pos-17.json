@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-17",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/sub/n_test.go": {
+      "before": "package shop\n\nfunc TestN(t *testing.T) {\n\tt.Run(\"n\", func(t *testing.T) {\n\t\tif n > 5 { t.Fatal(n) }\n\t})\n}\n",
+      "after": "package shop\n\nfunc TestN(t *testing.T) {\n\tt.Run(\"n\", func(t *testing.T) {\n\t\tif n > 50 { t.Fatal(n) }\n\t})\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "shop/sub/n_test.go",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "n > 50",
+      "rule": "dt4-go-loosened_threshold"
+    }
+  ]
+}

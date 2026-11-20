@@ -1,0 +1,14 @@
+{
+  "id": "DT4-go-neg-07",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop.go": {
+      "before": "package shop\n\nfunc total() int { return 1 }\n",
+      "after": "package shop\n\nfunc total() int { return 2 }\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "non-test-func",
+  "note": "non-test-func"
+}

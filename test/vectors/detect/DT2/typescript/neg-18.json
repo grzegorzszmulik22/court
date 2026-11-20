@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "docs/sql.md": {
+      "after": "# notes\n\nALTER TABLE is not yet written.\n",
+      "before": "# notes\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-18",
+  "language": "typescript",
+  "note": "ddl-in-string-doc"
+}

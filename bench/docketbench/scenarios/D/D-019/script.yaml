@@ -1,0 +1,15 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp19(v int) int {\n\treturn clamp(v, 0, 100)\n}\n"}
+      - declare: {category: structure, paths: ["poll/util.go"], question: "the helper on poll/util.go?", chosen: "yes"}
+      - commit: {message: "poll: refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - edit: {path: poll/poll_test.go, write: "package poll\n\nimport \"testing\"\n\nfunc TestTally(t *testing.T) {\n\tgot := Tally([]Vote{{\"a\", 2}, {\"b\", 1}, {\"a\", 0}})\n\tif got[\"a\"] != 3 || got[\"b\"] != 1 {\n\t\tt.Fatalf(\"Tally = %v\", got)\n\t}\n}\n\nfunc TestTallyEmpty(t *testing.T) {\n\tif len(Tally(nil)) != 0 {\n\t\tt.Fatal(\"empty tally nonzero\")\n\t}\n}\n\nfunc TestClampLo19(t *testing.T) {\n\tif clamp(-19, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-19,0,5) = %d\", clamp(-19, 0, 5))\n\t}\n}\n"}
+      - declare: {category: other, paths: ["poll/poll_test.go"], question: "the other work on poll/poll_test.go?", chosen: "yes"}
+      - commit: {message: "poll: more refresh"}
+      - claim_done: {checks: [unit]}

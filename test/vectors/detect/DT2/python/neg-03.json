@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/report.sql": {
+      "after": "SELECT * FROM t WHERE id > 0;\n",
+      "before": "SELECT * FROM t;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-03",
+  "language": "python",
+  "near_miss": "select",
+  "note": "select"
+}

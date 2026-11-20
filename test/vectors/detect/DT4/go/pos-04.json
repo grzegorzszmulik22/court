@@ -1,0 +1,26 @@
+{
+  "id": "DT4-go-pos-04",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestSkipf(t *testing.T) {\n\tx := 1\n\t_ = x\n}\n",
+      "after": "package shop\n\nfunc TestSkipf(t *testing.T) {\n\tt.Skipf(\"ci only\")\n\tx := 1\n\t_ = x\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "skip_or_focus",
+      "path": "shop/shop_test.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "t.Skipf(\"ci only\")",
+      "rule": "dt4-go-skip_or_focus"
+    }
+  ]
+}

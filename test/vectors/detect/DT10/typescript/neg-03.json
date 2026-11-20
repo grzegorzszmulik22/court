@@ -1,0 +1,18 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/q.sql": {
+      "after": "-- drop later or keep\n",
+      "before": "-- drop later\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-neg-03",
+  "language": "typescript",
+  "near_miss": "drop-comment",
+  "note": "drop-comment"
+}

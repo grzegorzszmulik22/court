@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "\"noImplicitAny\": false",
+      "lines": [
+        4,
+        4
+      ],
+      "path": "tsconfig.json",
+      "rule": "dt6-python-strictness",
+      "side": "after",
+      "subkind": "strictness"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "tsconfig.json": {
+      "after": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": false\n  }\n}\n",
+      "before": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true\n  }\n}\n"
+    }
+  },
+  "id": "DT6-python-pos-16",
+  "language": "python",
+  "note": "implicit-any re-enabled"
+}

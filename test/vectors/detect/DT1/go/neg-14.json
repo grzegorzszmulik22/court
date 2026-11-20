@@ -1,0 +1,13 @@
+{
+  "id": "DT1-go-neg-14",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.sum": {
+      "before": "github.com/a/b v1.0.0 h1:AAA=\ngithub.com/c/d v2.0.0 h1:CCC=\n",
+      "after": "github.com/a/b v1.0.0 h1:AAA2=\ngithub.com/c/d v2.0.0 h1:CCC2=\n"
+    }
+  },
+  "expect": [],
+  "note": "hash-churn"
+}

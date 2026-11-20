@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "def it(items: list[int] | None) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def it(items: list[int] | None) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def it(items: list[int] | None) -> int:\n    return 0\n",
+      "before": "def it(items: list[int]) -> int:\n    return 0\n"
+    }
+  },
+  "id": "DT5-python-pos-12",
+  "language": "python"
+}

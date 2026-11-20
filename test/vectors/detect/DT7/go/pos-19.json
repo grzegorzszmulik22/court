@@ -1,0 +1,26 @@
+{
+  "id": "DT7-go-pos-19",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/probe.go": {
+      "before": "package svc\n\nfunc probe() error {\n\treturn ping()\n}\n",
+      "after": "package svc\n\nfunc probe() error {\n\terr := ping()\n\tif err != nil {\n\t\t// ignore\n\t}\n\treturn err\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/probe.go",
+      "lines": [
+        6,
+        6
+      ],
+      "side": "after",
+      "evidence": "// ignore",
+      "rule": "dt7-go-swallowed"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT5-typescript-pos-05",
+  "detector": "DT5",
+  "language": "typescript",
+  "files": {
+    "src/calc.test.ts": {
+      "before": "test('x', () => {});\n",
+      "after": "test('x', () => { const v: any = 1; });\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "src/calc.test.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "v: any",
+      "rule": "dt5-typescript-widened"
+    }
+  ]
+}

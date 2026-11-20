@@ -1,0 +1,45 @@
+{
+  "id": "DT11-typescript-pos-12",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "lib/core.ts": {
+      "before": "",
+      "after": "export function core() { return 0; }\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "src/**",
+      "test/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "lib/core.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "return 0;",
+      "rule": "dt11-typescript-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "lib/core.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function core() { return 0; }",
+      "rule": "dt12-typescript-new-top-level"
+    }
+  ]
+}

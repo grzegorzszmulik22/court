@@ -1,0 +1,18 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["ledger/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+          expected:
+            - {question: "version the public contract?", category: interface, paths: ["api/openapi.yaml"]}
+      - edit: {path: ledger/util.go, write: "package ledger\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero33(v, d int) int {\n\tif v == -v {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: ledger/ledger_test.go, write: "package ledger\n\nimport \"testing\"\n\nfunc TestBalance(t *testing.T) {\n\tvar b Book\n\tb.Post(Entry{\"cash\", 100})\n\tb.Post(Entry{\"cash\", -40})\n\tif got := b.Balance(\"cash\"); got != 60 {\n\t\tt.Fatalf(\"Balance = %d, want 60\", got)\n\t}\n}\n\nfunc TestEmpty(t *testing.T) {\n\tvar b Book\n\tif got := b.Balance(\"none\"); got != 0 {\n\t\tt.Fatalf(\"Balance = %d, want 0\", got)\n\t}\n}\n\nfunc TestClampLo33(t *testing.T) {\n\tif clamp(-33, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-33,0,5) = %d\", clamp(-33, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 533\n  write_ms: 2000\nretries: 3\n"}
+      - declare: {category: structure, paths: ["ledger/util.go"], question: "the structure work on ledger/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["ledger/ledger_test.go"], question: "the other work on ledger/ledger_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "ledger: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

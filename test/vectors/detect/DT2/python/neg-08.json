@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/fix.sql": {
+      "after": "UPDATE t SET x = 2;\n",
+      "before": "UPDATE t SET x = 1;\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-neg-08",
+  "language": "python",
+  "near_miss": "update-stmt",
+  "note": "update-stmt"
+}

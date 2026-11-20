@@ -1,0 +1,26 @@
+{
+  "id": "DT5-go-pos-08",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc load(k string) (int, error) { return 0, nil }\n",
+      "after": "package calc\n\nfunc load(k string) (any, error) { return nil, nil }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "pkg/calc.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "(any, error)",
+      "rule": "dt5-go-widened"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "a/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "a/b/c/d.ts": {
+      "after": "package d\n",
+      "before": ""
+    },
+    "a/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    }
+  },
+  "id": "DT11-typescript-neg-15",
+  "language": "typescript",
+  "note": "nested-glob"
+}

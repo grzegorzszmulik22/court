@@ -1,0 +1,14 @@
+{
+  "id": "DT8-python-neg-20",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "U = \"https://a.example/x\"\ndef c():\n    pass\n",
+      "after": "U = \"https://a.example/y\"\ndef c():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "same-host-path",
+  "note": "the host was already in the base tree; only the path changed"
+}

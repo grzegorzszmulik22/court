@@ -1,0 +1,22 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/q.sql": {
+      "after": "DELETE FROM t WHERE a = 1;\nUPDATE t SET x = 2;\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-neg-08",
+  "language": "go",
+  "near_miss": "delete-update",
+  "note": "delete-update"
+}

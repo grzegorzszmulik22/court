@@ -1,0 +1,18 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "data/seed.sql": {
+      "after": "INSERT INTO t VALUES (1);\nINSERT INTO t VALUES (2);\n",
+      "before": "INSERT INTO t VALUES (1);\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-neg-01",
+  "language": "go",
+  "near_miss": "dml-only",
+  "note": "dml-only"
+}

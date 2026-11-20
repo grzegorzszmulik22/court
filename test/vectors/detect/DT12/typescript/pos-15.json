@@ -1,0 +1,45 @@
+{
+  "id": "DT12-typescript-pos-15",
+  "detector": "DT12",
+  "language": "typescript",
+  "files": {
+    "src/sub/deep/x.ts": {
+      "before": "",
+      "after": "k = 1\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 5
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "src/sub/deep/x.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k = 1",
+      "rule": "dt12-typescript-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "src/sub/deep/x.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "k = 1",
+      "rule": "dt12-typescript-new-top-level"
+    }
+  ]
+}

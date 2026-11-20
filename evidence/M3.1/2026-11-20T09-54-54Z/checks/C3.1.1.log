@@ -1,0 +1,224 @@
+=== RUN   TestC3_1_1
+--- PASS: TestC3_1_1 (0.97s)
+=== RUN   TestC3_1_1_missing_twin
+--- PASS: TestC3_1_1_missing_twin (0.01s)
+=== RUN   TestC3_1_1_broken_backref
+--- PASS: TestC3_1_1_broken_backref (0.01s)
+=== RUN   TestC3_1_planted_empty_registry
+--- PASS: TestC3_1_planted_empty_registry (0.01s)
+=== RUN   TestC3_1_1_vectors_counts
+--- PASS: TestC3_1_1_vectors_counts (0.15s)
+=== RUN   TestC3_1_1_reconcile_counts
+--- PASS: TestC3_1_1_reconcile_counts (0.00s)
+=== RUN   TestGate_undeclared_commit
+--- PASS: TestGate_undeclared_commit (0.01s)
+=== RUN   TestGate_declared_commit_passes
+--- PASS: TestGate_declared_commit_passes (0.01s)
+=== RUN   TestGate_one_declaration_two_commits
+--- PASS: TestGate_one_declaration_two_commits (0.01s)
+=== RUN   TestContestRaisable_missing_world
+--- PASS: TestContestRaisable_missing_world (0.01s)
+=== RUN   TestContestRaisable_one_world
+--- PASS: TestContestRaisable_one_world (0.01s)
+=== RUN   TestContestRaisable_no_detection
+--- PASS: TestContestRaisable_no_detection (0.01s)
+=== RUN   TestContestRaisable_clean_pair
+--- PASS: TestContestRaisable_clean_pair (0.01s)
+=== RUN   TestPlantedOnly_netdiff
+--- PASS: TestPlantedOnly_netdiff (0.02s)
+=== RUN   TestPlantedOnly_cover_present
+--- PASS: TestPlantedOnly_cover_present (0.18s)
+=== RUN   TestTwinEdits_guarantee_still_weakens
+--- PASS: TestTwinEdits_guarantee_still_weakens (0.02s)
+=== RUN   TestTwinEdits_guarantee_clean
+--- PASS: TestTwinEdits_guarantee_clean (0.02s)
+=== RUN   TestCoverageCount_A_boundary
+--- PASS: TestCoverageCount_A_boundary (0.49s)
+=== RUN   TestCoverageCount_C_boundary
+--- PASS: TestCoverageCount_C_boundary (0.15s)
+=== RUN   TestCoverageCount_D_boundary
+--- PASS: TestCoverageCount_D_boundary (0.14s)
+=== RUN   TestMutationCap_boundary
+--- PASS: TestMutationCap_boundary (0.10s)
+=== RUN   TestReconcile_count_boundary
+--- PASS: TestReconcile_count_boundary (0.01s)
+=== RUN   TestReconcile_coverage_missing_verdict
+--- PASS: TestReconcile_coverage_missing_verdict (0.02s)
+=== RUN   TestReconcile_coverage_missing_tag
+--- PASS: TestReconcile_coverage_missing_tag (0.02s)
+=== RUN   TestVectors_count_boundary
+--- PASS: TestVectors_count_boundary (0.71s)
+=== RUN   TestVectors_duplicate_normalized
+--- PASS: TestVectors_duplicate_normalized (0.46s)
+=== RUN   TestTwinEdits_missing_file
+--- PASS: TestTwinEdits_missing_file (0.02s)
+=== RUN   TestReconcile_detected_paths
+--- PASS: TestReconcile_detected_paths (0.05s)
+=== RUN   TestReconcile_tag_truth
+--- PASS: TestReconcile_tag_truth (0.01s)
+=== RUN   TestTwinEdits_omits_sensitive
+--- PASS: TestTwinEdits_omits_sensitive (0.25s)
+=== RUN   TestTwinEdits_readme_note
+--- PASS: TestTwinEdits_readme_note (0.30s)
+=== RUN   TestTwinEdits_twin_declare
+--- PASS: TestTwinEdits_twin_declare (0.02s)
+=== RUN   TestTwinEdits_declare_untouched
+--- PASS: TestTwinEdits_declare_untouched (0.02s)
+=== RUN   TestTwinEdits_net_diff
+--- PASS: TestTwinEdits_net_diff (0.02s)
+=== RUN   TestTwinEdits_unregistered_hit
+--- PASS: TestTwinEdits_unregistered_hit (0.02s)
+=== RUN   TestPlanted_unregistered_hit
+--- PASS: TestPlanted_unregistered_hit (0.01s)
+=== RUN   TestContestRaisable_no_detected_decision
+--- PASS: TestContestRaisable_no_detected_decision (0.02s)
+=== RUN   TestVectors_dt12_without_commission
+--- PASS: TestVectors_dt12_without_commission (1.47s)
+=== RUN   TestVectors_doc_host_no_exemption
+--- PASS: TestVectors_doc_host_no_exemption (0.91s)
+=== RUN   TestVectors_special_case_literal
+--- PASS: TestVectors_special_case_literal (0.28s)
+=== RUN   TestTwinEdits_outside_plan
+--- PASS: TestTwinEdits_outside_plan (0.02s)
+=== RUN   TestPlanted_registry_extra
+--- PASS: TestPlanted_registry_extra (0.01s)
+=== RUN   TestRootWrit_required
+--- PASS: TestRootWrit_required (0.01s)
+=== RUN   TestEvidenceLines_unchanged_line
+--- PASS: TestEvidenceLines_unchanged_line (0.01s)
+=== RUN   TestEdit_invalid_json
+--- PASS: TestEdit_invalid_json (0.02s)
+=== RUN   TestPlanted_registry_extra_nonempty_queue
+--- PASS: TestPlanted_registry_extra_nonempty_queue (0.01s)
+=== RUN   TestPlanted_registry_extra_boundary
+--- PASS: TestPlanted_registry_extra_boundary (0.01s)
+=== RUN   TestRootWrit_wider_than_commission
+--- PASS: TestRootWrit_wider_than_commission (0.01s)
+=== RUN   TestRootWrit_exact_boundary
+--- PASS: TestRootWrit_exact_boundary (0.01s)
+=== RUN   TestEvidenceLines_after_added_line
+--- PASS: TestEvidenceLines_after_added_line (0.03s)
+=== RUN   TestEvidenceLines_added_line_boundary
+--- PASS: TestEvidenceLines_added_line_boundary (0.01s)
+=== RUN   TestEdit_valid_json_boundary
+--- PASS: TestEdit_valid_json_boundary (0.01s)
+=== RUN   TestTwinEdits_omit_inside_territory
+--- PASS: TestTwinEdits_omit_inside_territory (0.02s)
+=== RUN   TestTwinEdits_omit_sensitive_boundary
+--- PASS: TestTwinEdits_omit_sensitive_boundary (0.01s)
+=== RUN   TestEdit_invalid_json_anyname
+--- PASS: TestEdit_invalid_json_anyname (0.01s)
+=== RUN   TestEdit_valid_json_anyname_boundary
+--- PASS: TestEdit_valid_json_anyname_boundary (0.01s)
+=== RUN   TestSpawnBudget_cumulative_children
+=== RUN   TestSpawnBudget_cumulative_children/minutes
+=== RUN   TestSpawnBudget_cumulative_children/tokens
+=== RUN   TestSpawnBudget_cumulative_children/speculation
+=== RUN   TestSpawnBudget_cumulative_children/third_child
+=== RUN   TestSpawnBudget_cumulative_children/exact_sum
+--- PASS: TestSpawnBudget_cumulative_children (0.09s)
+    --- PASS: TestSpawnBudget_cumulative_children/minutes (0.02s)
+    --- PASS: TestSpawnBudget_cumulative_children/tokens (0.02s)
+    --- PASS: TestSpawnBudget_cumulative_children/speculation (0.02s)
+    --- PASS: TestSpawnBudget_cumulative_children/third_child (0.03s)
+    --- PASS: TestSpawnBudget_cumulative_children/exact_sum (0.01s)
+=== RUN   TestEvidenceLines_reflow
+--- PASS: TestEvidenceLines_reflow (0.01s)
+=== RUN   TestEvidenceLines_reflow_boundary
+--- PASS: TestEvidenceLines_reflow_boundary (0.01s)
+=== RUN   TestEvidenceLines_before_added_line
+--- PASS: TestEvidenceLines_before_added_line (0.01s)
+=== RUN   TestMutationCap_planted_edit
+--- PASS: TestMutationCap_planted_edit (0.02s)
+=== RUN   TestTwinEdits_extra_twin_path
+--- PASS: TestTwinEdits_extra_twin_path (0.02s)
+=== RUN   TestPlanted_registry_category_mismatch
+--- PASS: TestPlanted_registry_category_mismatch (0.01s)
+=== RUN   TestPlanted_registry_type_mismatch
+--- PASS: TestPlanted_registry_type_mismatch (0.01s)
+=== RUN   TestRootWrit_later_glob_wider
+--- PASS: TestRootWrit_later_glob_wider (0.01s)
+=== RUN   TestWorldDeclare_planted_world
+--- PASS: TestWorldDeclare_planted_world (0.03s)
+=== RUN   TestC3_1_1_no_orphan_fixtures
+--- PASS: TestC3_1_1_no_orphan_fixtures (0.01s)
+=== RUN   TestEdit_json_manifest_domain
+=== RUN   TestEdit_json_manifest_domain/object_any_name
+=== RUN   TestEdit_json_manifest_domain/array_any_name
+=== RUN   TestEdit_json_manifest_domain/deep_path_object
+=== RUN   TestEdit_json_manifest_domain/deep_path_array
+=== RUN   TestEdit_json_manifest_domain/json_suffix_non_brace
+=== RUN   TestEdit_json_manifest_domain/json_suffix_whitespace
+=== RUN   TestEdit_json_manifest_domain/object_boundary
+=== RUN   TestEdit_json_manifest_domain/array_boundary
+=== RUN   TestEdit_json_manifest_domain/deep_boundary
+=== RUN   TestEdit_json_manifest_domain/prose_boundary
+=== RUN   TestEdit_json_manifest_domain/object_planted
+=== RUN   TestEdit_json_manifest_domain/object_planted_boundary
+--- PASS: TestEdit_json_manifest_domain (0.17s)
+    --- PASS: TestEdit_json_manifest_domain/object_any_name (0.02s)
+    --- PASS: TestEdit_json_manifest_domain/array_any_name (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/deep_path_object (0.02s)
+    --- PASS: TestEdit_json_manifest_domain/deep_path_array (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/json_suffix_non_brace (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/json_suffix_whitespace (0.02s)
+    --- PASS: TestEdit_json_manifest_domain/object_boundary (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/array_boundary (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/deep_boundary (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/prose_boundary (0.02s)
+    --- PASS: TestEdit_json_manifest_domain/object_planted (0.01s)
+    --- PASS: TestEdit_json_manifest_domain/object_planted_boundary (0.01s)
+=== RUN   TestTwinEdits_extra_twin_path_domain
+=== RUN   TestTwinEdits_extra_twin_path_domain/C
+=== RUN   TestTwinEdits_extra_twin_path_domain/D
+=== RUN   TestTwinEdits_extra_twin_path_domain/A
+--- PASS: TestTwinEdits_extra_twin_path_domain (0.04s)
+    --- PASS: TestTwinEdits_extra_twin_path_domain/C (0.01s)
+    --- PASS: TestTwinEdits_extra_twin_path_domain/D (0.02s)
+    --- PASS: TestTwinEdits_extra_twin_path_domain/A (0.01s)
+=== RUN   TestTwinEdits_extra_planted_path
+=== RUN   TestTwinEdits_extra_planted_path/C
+=== RUN   TestTwinEdits_extra_planted_path/D
+=== RUN   TestTwinEdits_extra_planted_path/A
+--- PASS: TestTwinEdits_extra_planted_path (0.03s)
+    --- PASS: TestTwinEdits_extra_planted_path/C (0.01s)
+    --- PASS: TestTwinEdits_extra_planted_path/D (0.01s)
+    --- PASS: TestTwinEdits_extra_planted_path/A (0.01s)
+=== RUN   TestTwinEdits_sensitive_net_diff
+=== RUN   TestTwinEdits_sensitive_net_diff/C/writeback_base
+=== RUN   TestTwinEdits_sensitive_net_diff/C/changed_content
+--- PASS: TestTwinEdits_sensitive_net_diff (0.04s)
+    --- PASS: TestTwinEdits_sensitive_net_diff/C/writeback_base (0.02s)
+    --- PASS: TestTwinEdits_sensitive_net_diff/C/changed_content (0.01s)
+=== RUN   TestEvidenceLines_reflow_domain
+=== RUN   TestEvidenceLines_reflow_domain/two_long
+=== RUN   TestEvidenceLines_reflow_domain/three_lines
+--- PASS: TestEvidenceLines_reflow_domain (0.03s)
+    --- PASS: TestEvidenceLines_reflow_domain/two_long (0.02s)
+    --- PASS: TestEvidenceLines_reflow_domain/three_lines (0.01s)
+=== RUN   TestMutationCap_planted_edit_evidence_paths
+--- PASS: TestMutationCap_planted_edit_evidence_paths (0.03s)
+=== RUN   TestEvidenceLines_beside_deleted_line
+=== RUN   TestEvidenceLines_beside_deleted_line/after_landing
+=== RUN   TestEvidenceLines_beside_deleted_line/landing_boundary
+=== RUN   TestEvidenceLines_beside_deleted_line/before_landing
+--- PASS: TestEvidenceLines_beside_deleted_line (0.05s)
+    --- PASS: TestEvidenceLines_beside_deleted_line/after_landing (0.01s)
+    --- PASS: TestEvidenceLines_beside_deleted_line/landing_boundary (0.02s)
+    --- PASS: TestEvidenceLines_beside_deleted_line/before_landing (0.02s)
+=== RUN   TestRootWrit_missing_commission_glob
+--- PASS: TestRootWrit_missing_commission_glob (0.01s)
+=== RUN   TestC3_1_1_freeze_check
+--- PASS: TestC3_1_1_freeze_check (0.98s)
+=== RUN   TestTwinEdits_sensitive_net_diff_sweep
+--- PASS: TestTwinEdits_sensitive_net_diff_sweep (0.21s)
+=== RUN   TestEdit_json_manifest_sweep
+--- PASS: TestEdit_json_manifest_sweep (8.36s)
+=== RUN   TestEvidenceLines_reflow_sweep
+--- PASS: TestEvidenceLines_reflow_sweep (0.09s)
+=== RUN   TestRootWrit_glob_sweep
+--- PASS: TestRootWrit_glob_sweep (0.01s)
+=== RUN   TestMutationCap_sweep
+--- PASS: TestMutationCap_sweep (0.22s)
+PASS
+ok  	court/bench/docketbench/validate	17.722s

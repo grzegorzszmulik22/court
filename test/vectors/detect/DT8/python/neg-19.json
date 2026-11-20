@@ -1,0 +1,39 @@
+{
+  "commission": {
+    "allowed_hosts": [
+      "h.internal.example"
+    ]
+  },
+  "detector": "DT8",
+  "expect": [],
+  "files": {
+    "ops/run.txt": {
+      "after": "a\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT8-python-neg-19",
+  "language": "python",
+  "near_miss": "event-two-safe",
+  "note": "event-two-safe",
+  "tool_events": [
+    {
+      "input": {
+        "command": "git status"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls -la"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "migrations/0001_init.sql": {
+      "after": "CREATE TABLE a (id INT);\n",
+      "before": "CREATE TABLE a (id INT);\n"
+    },
+    "other.go": {
+      "after": "package x // c\n",
+      "before": "package x\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT2-typescript-neg-10",
+  "language": "typescript",
+  "near_miss": "no-change",
+  "note": "no-change"
+}

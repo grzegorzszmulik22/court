@@ -1,0 +1,26 @@
+{
+  "id": "DT8-typescript-pos-01",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "const endpoint = \"https://telemetry.acme-example.io/v1\";\nexport function c() {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "src/client.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "telemetry.acme-example.io",
+      "rule": "dt8-typescript-host-literal"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.py"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "section",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "docs/old.md",
+      "rule": "dt12-python-unplanned-file",
+      "side": "after",
+      "subkind": "unplanned-file"
+    }
+  ],
+  "files": {
+    "docs/old.md": {
+      "after": "# o\nsection\n",
+      "before": "# o\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT12-python-pos-09",
+  "language": "python"
+}

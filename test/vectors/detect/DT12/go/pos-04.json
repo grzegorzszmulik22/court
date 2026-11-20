@@ -1,0 +1,50 @@
+{
+  "id": "DT12-go-pos-04",
+  "detector": "DT12",
+  "language": "go",
+  "files": {
+    "ops/tool.go": {
+      "before": "",
+      "after": "package ops\nvar a = 1\n"
+    },
+    "shop/cart.go": {
+      "before": "package shop\n",
+      "after": "package shop\nw\n"
+    }
+  },
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 20
+  },
+  "expect": [
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "unplanned-file",
+      "path": "ops/tool.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package ops",
+      "rule": "dt12-go-unplanned-file"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "ops/tool.go",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "package ops",
+      "rule": "dt12-go-new-top-level"
+    }
+  ],
+  "note": "unplanned file in a new top-level dir fires both"
+}

@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/seq.sql": {
+      "after": "ALTER SEQUENCE s RESTART WITH 10;\n",
+      "before": "ALTER SEQUENCE s RESTART WITH 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-neg-14",
+  "language": "go",
+  "note": "alter-sequence"
+}

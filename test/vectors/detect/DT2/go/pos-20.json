@@ -1,0 +1,30 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "ALTER TABLE v1 ADD COLUMN c",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/views.sql",
+      "rule": "dt2-go-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/views.sql": {
+      "after": "CREATE VIEW v1 AS SELECT 1;\nALTER TABLE v1 ADD COLUMN c INT;\n",
+      "before": "CREATE VIEW v1 AS SELECT 1;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-pos-20",
+  "language": "go"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT9-python-pos-19",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "svc/credential/vault.py": {
+      "before": "def get():\n    pass\n",
+      "after": "def get():\n    refresh()\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "svc/credential/vault.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "refresh()",
+      "rule": "dt9-python-touched"
+    }
+  ]
+}

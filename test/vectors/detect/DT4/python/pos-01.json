@@ -1,0 +1,39 @@
+{
+  "detector": "DT4",
+  "expect": [
+    {
+      "category": "test-strength",
+      "detector": "DT4",
+      "evidence": "def test_total():\n    assert total() == 1",
+      "lines": [
+        1,
+        2
+      ],
+      "path": "tests/test_shop.py",
+      "rule": "dt4-python-deleted_test",
+      "side": "before",
+      "subkind": "deleted_test"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def test_total():",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "tests/test_shop.py",
+      "rule": "dt3-python-toplevel-removed",
+      "side": "before",
+      "subkind": "removed"
+    }
+  ],
+  "files": {
+    "tests/test_shop.py": {
+      "after": "",
+      "before": "def test_total():\n    assert total() == 1\n"
+    }
+  },
+  "id": "DT4-python-pos-01",
+  "language": "python"
+}

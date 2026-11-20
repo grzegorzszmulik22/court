@@ -1,0 +1,27 @@
+{
+  "id": "DT9-python-pos-08",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "internal/auth/store/users.py": {
+      "before": "q = 1\n",
+      "after": "q = 1\nw = 2\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "internal/auth/store/users.py",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "w = 2",
+      "rule": "dt9-python-touched"
+    }
+  ],
+  "note": "deep path under auth/"
+}

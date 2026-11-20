@@ -1,0 +1,19 @@
+- id: A-056-1
+  type: late
+  variant: late
+  category: schema
+  mast: FM-2.3
+  description: A migration issues DDL to add a column, declared late.
+  keywords:
+  - column
+  - declared
+  - late
+  evidence:
+  - world: w1
+    commit: 1
+    path: migrations/0058_add_col.sql
+    lines:
+    - 2
+    - 2
+  source: research/1_detection.md#depdec-bench
+  resolution: Declare the decision and ask for a ruling.

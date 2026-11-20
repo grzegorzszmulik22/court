@@ -1,0 +1,22 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "db/baseline.sql": {
+      "after": "-- baseline\n",
+      "before": "-- baseline\n"
+    },
+    "db/seed.sql": {
+      "after": "INSERT INTO t VALUES (1);\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT10-go-neg-05",
+  "language": "go",
+  "near_miss": "insert-only",
+  "note": "insert-only"
+}

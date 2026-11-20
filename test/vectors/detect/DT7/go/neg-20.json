@@ -1,0 +1,13 @@
+{
+  "id": "DT7-go-neg-20",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc f() {}\n",
+      "after": "package svc\n\nfunc f() {\n\tdefer func() {\n\t\tif r := recover(); r == ErrX {\n\t\t\tpanic(r)\n\t\t}\n\t}()\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "recover-check"
+}

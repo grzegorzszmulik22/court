@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "strict = False",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "mypy.ini",
+      "rule": "dt6-typescript-strictness",
+      "side": "after",
+      "subkind": "strictness"
+    }
+  ],
+  "files": {
+    "mypy.ini": {
+      "after": "[mypy]\nstrict = False\n",
+      "before": "[mypy]\nstrict = True\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT6-typescript-pos-15",
+  "language": "typescript",
+  "note": "mypy strict mode off"
+}

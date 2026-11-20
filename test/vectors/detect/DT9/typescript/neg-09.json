@@ -1,0 +1,14 @@
+{
+  "id": "DT9-typescript-neg-09",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/hash.test.ts": {
+      "before": "test('x', () => {});\n",
+      "after": "test('x', () => {});\n//c\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
+}

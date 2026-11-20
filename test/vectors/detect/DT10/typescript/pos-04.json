@@ -1,0 +1,43 @@
+{
+  "detector": "DT10",
+  "expect": [
+    {
+      "category": "deletion",
+      "detector": "DT10",
+      "evidence": "DROP INDEX idx_old;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt10-typescript-sql",
+      "side": "after",
+      "subkind": "sql"
+    },
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "DROP INDEX idx_old;",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "db/drops/idx.sql",
+      "rule": "dt2-typescript-ddl",
+      "side": "after",
+      "subkind": "ddl"
+    }
+  ],
+  "files": {
+    "db/drops/idx.sql": {
+      "after": "-- x\nDROP INDEX idx_old;\n",
+      "before": "-- x\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-pos-04",
+  "language": "typescript"
+}

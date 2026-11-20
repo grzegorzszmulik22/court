@@ -1,0 +1,26 @@
+{
+  "id": "DT4-typescript-pos-17",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/n/n.test.ts": {
+      "before": "describe('n', () => {\n  test('n', () => {\n    expect(n()).toBeLessThanOrEqual(5);\n  });\n});\n",
+      "after": "describe('n', () => {\n  test('n', () => {\n    expect(n()).toBeLessThanOrEqual(50);\n  });\n});\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "loosened_threshold",
+      "path": "src/n/n.test.ts",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "toBeLessThanOrEqual(50)",
+      "rule": "dt4-typescript-loosened_threshold"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "on: push",
+      "lines": [
+        1,
+        1
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt11-go-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "on: push",
+      "lines": [
+        1,
+        1
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt12-go-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "on: push\njobs: {}\n",
+      "before": ""
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT11-go-pos-04",
+  "language": "go"
+}

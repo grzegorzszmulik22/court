@@ -1,0 +1,37 @@
+agents:
+  - id: lead
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2019\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n23,delta19\n"}
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick(a, b any) any {\n\treturn a\n}\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: type-strength, paths: ["poll/util.go"], question: "take the w1 option?", chosen: "yes"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["poll/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2019\nretries: 3\n"}
+      - edit: {path: data/seed.csv, write: "id,name\n1,alpha\n2,beta\n3,gamma\n23,delta19\n"}
+      - edit: {path: poll/util.go, write: "package poll\n\nfunc clamp(v, lo, hi int) any {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc pick(a, b int) int {\n\treturn a\n}\n"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: scope, paths: ["data/seed.csv"], question: "the scope work on data/seed.csv?", chosen: "yes"}
+      - declare: {category: type-strength, paths: ["poll/util.go"], question: "take the w2 option?", chosen: "yes"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "codecov.yml": {
+      "after": "coverage:\n  range: 70..100\n",
+      "before": "coverage:\n  range: 60..100\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-neg-13",
+  "language": "go",
+  "note": "coverage-band-raised"
+}

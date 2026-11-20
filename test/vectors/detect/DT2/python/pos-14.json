@@ -1,0 +1,30 @@
+{
+  "detector": "DT2",
+  "expect": [
+    {
+      "category": "schema",
+      "detector": "DT2",
+      "evidence": "\"name\": \"total\"",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "api/order.avsc",
+      "rule": "dt2-python-format",
+      "side": "after",
+      "subkind": "format"
+    }
+  ],
+  "files": {
+    "api/order.avsc": {
+      "after": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}, {\"name\": \"total\", \"type\": \"long\"}]\n}\n",
+      "before": "{\n  \"type\": \"record\",\n  \"fields\": [{\"name\": \"id\", \"type\": \"long\"}]\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT2-python-pos-14",
+  "language": "python"
+}

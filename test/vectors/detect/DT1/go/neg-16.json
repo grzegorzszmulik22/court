@@ -1,0 +1,17 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "docs/deps.md": {
+      "after": "# deps\n\n- github.com/a/b v1.0.0\n",
+      "before": "# deps\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT1-go-neg-16",
+  "language": "go",
+  "note": "dep-in-docstring"
+}

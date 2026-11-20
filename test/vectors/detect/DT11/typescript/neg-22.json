@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "app/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "app/x.ts": {
+      "after": "export const a = 1;\nconsole.log(a);\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-22",
+  "language": "typescript",
+  "note": "plan-dir"
+}

@@ -1,0 +1,23 @@
+{
+  "commission": {
+    "territory": [
+      "a/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "target/r.o": {
+      "after": "BIN\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-go-neg-10",
+  "language": "go",
+  "near_miss": "exempt-target",
+  "note": "exempt-target"
+}

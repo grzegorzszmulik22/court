@@ -1,0 +1,31 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "  orders: [Order]",
+      "lines": [
+        3,
+        3
+      ],
+      "path": "api/svc.graphql",
+      "rule": "dt3-contract-graphql",
+      "side": "before",
+      "subkind": "removed"
+    }
+  ],
+  "files": {
+    "api/svc.graphql": {
+      "after": "type Query {\n  order(id: ID!): Order\n  user: User\n}\n",
+      "before": "type Query {\n  order(id: ID!): Order\n  orders: [Order]\n  user: User\n}\n"
+    },
+    "src/resolver.ts": {
+      "after": "export function orders() { return q();\n}\n",
+      "before": "export function orders() { return q();\n}\n"
+    }
+  },
+  "id": "DT3-typescript-pos-19",
+  "language": "typescript",
+  "note": "method change on an existing path"
+}

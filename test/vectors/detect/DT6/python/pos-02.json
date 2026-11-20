@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "continue-on-error: true",
+      "lines": [
+        7,
+        7
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt6-python-ci",
+      "side": "after",
+      "subkind": "ci"
+    }
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n        continue-on-error: true\n      - run: go vet ./...\n",
+      "before": "name: ci\non: [push]\njobs:\n  test:\n    steps:\n      - run: go test ./...\n      - run: go vet ./...\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-pos-02",
+  "language": "python",
+  "note": "a CI step became non-blocking"
+}

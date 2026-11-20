@@ -1,0 +1,28 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    },
+    "ops/log.txt": {
+      "after": "b\n",
+      "before": "a\n"
+    }
+  },
+  "id": "DT10-go-neg-02",
+  "language": "go",
+  "near_miss": "rm-file",
+  "note": "rm-file",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm x.tmp",
+        "cwd": "/repo"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

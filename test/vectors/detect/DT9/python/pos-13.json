@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "chmod 777",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "scripts/setup.sh",
+      "rule": "dt9-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    },
+    "scripts/setup.sh": {
+      "after": "#!/bin/sh\nchmod 777 bin/run\n",
+      "before": "#!/bin/sh\nchmod 755 bin/run\n"
+    }
+  },
+  "id": "DT9-python-pos-13",
+  "language": "python",
+  "note": "world-writable mode"
+}

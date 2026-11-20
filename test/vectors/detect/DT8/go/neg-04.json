@@ -1,0 +1,14 @@
+{
+  "id": "DT8-go-neg-04",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\n// c\nfunc c() {}\n",
+      "after": "package svc\n\n// c v2\nfunc c() {}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-edited",
+  "note": "comment-edited"
+}

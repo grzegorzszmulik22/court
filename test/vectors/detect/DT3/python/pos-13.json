@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-13",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "async def fetch(u):\n    pass\n",
+      "after": "async def fetch(u, timeout):\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "async def fetch(u, timeout):",
+      "rule": "dt3-python-toplevel-changed"
+    }
+  ]
+}

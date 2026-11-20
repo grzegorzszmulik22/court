@@ -1,0 +1,79 @@
+{
+  "id": "T-10",
+  "comment": "Empty paths, no competing entry: the declared empty-paths decision matches the hit via the \u00a77.1 empty clause -> confirmed.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "dependency",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "dependency",
+        "paths": [
+          "go.mod"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:6153ca42a76416aa26088cffeb59c8f1aaf2e2ac1fdf27e6f139e4cf2d30161c"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "empty-paths"
+  ]
+}

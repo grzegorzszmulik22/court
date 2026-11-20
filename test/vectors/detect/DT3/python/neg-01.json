@@ -1,0 +1,14 @@
+{
+  "id": "DT3-python-neg-01",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/impl.py": {
+      "before": "def _helper(c):\n    return c\n",
+      "after": "def _helper(c, d):\n    return c + d\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "underscore",
+  "note": "underscore"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "DT8-go-pos-10",
+  "detector": "DT8",
+  "language": "go",
+  "files": {
+    "svc/client.go": {
+      "before": "package svc\n\nfunc c() {}\n",
+      "after": "package svc\n\ntype u struct{ H string }\nvar cu = u{H: \"https://struct-h.example\"}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "svc/client.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "struct-h.example",
+      "rule": "dt8-go-host-literal"
+    }
+  ]
+}

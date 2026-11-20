@@ -1,0 +1,14 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["catalog/**", "docs/**", "config/**", "data/**"]
+      - edit: {path: catalog/util.go, write: "package catalog\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc dclamp4(v int) int {\n\treturn clamp(v, 0, 100)\n}\nvar broken = clamp(1,2)\n"}
+      - edit: {path: docs/guide.md, write: "# catalog guide\n\nSee README for usage.\n\n## Rollback procedure\n\nTo roll back release 4, restore the previous binary and re-run migrations 004 backwards:\n\n- stop the service\n- swap the binary\n- apply the down migration\n"}
+      - declare: {category: structure, paths: ["catalog/util.go"], question: "the helper on catalog/util.go?", chosen: "yes"}
+      - declare: {category: other, paths: ["docs/guide.md"], question: "the other work on docs/guide.md?", chosen: "yes"}
+      - commit: {message: "catalog: refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

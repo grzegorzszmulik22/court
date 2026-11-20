@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-13",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/types.ts": {
+      "before": "export interface Cart {\n  sum: number;\n  tax: number;\n}\n",
+      "after": "export interface Cart {\n  sum: number;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "interface-field-drop"
+}

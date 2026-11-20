@@ -1,0 +1,18 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "docs/db.md": {
+      "after": "# db\n\nTRUNCATE planned\n",
+      "before": "# db\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT10-typescript-neg-04",
+  "language": "typescript",
+  "near_miss": "truncate-in-doc",
+  "note": "truncate-in-doc"
+}

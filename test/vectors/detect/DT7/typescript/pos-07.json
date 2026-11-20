@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-07",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/io.ts": {
+      "before": "export function rd() {\n  return open();\n}\n",
+      "after": "export function rd() {\n  try {\n    return open();\n  } catch (e) {\n    return '';\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/io.ts",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return '';",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT6",
+  "expect": [
+    {
+      "category": "guardrail",
+      "detector": "DT6",
+      "evidence": "\"no-console\": \"off\"",
+      "lines": [
+        3,
+        3
+      ],
+      "path": ".eslintrc.json",
+      "rule": "dt6-go-lint",
+      "side": "after",
+      "subkind": "lint"
+    }
+  ],
+  "files": {
+    ".eslintrc.json": {
+      "after": "{\n  \"rules\": {\n    \"no-console\": \"off\"\n  }\n}\n",
+      "before": "{\n  \"rules\": {\n    \"no-console\": \"error\"\n  }\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-pos-18",
+  "language": "go",
+  "note": "an eslint rule was turned off"
+}

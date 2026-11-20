@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "app/baseline.py": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "app/x.py": {
+      "after": "a = 1\nprint(a)\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-22",
+  "language": "python",
+  "note": "plan-dir"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "app/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "on: push",
+      "lines": [
+        1,
+        1
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "on: push",
+      "lines": [
+        1,
+        1
+      ],
+      "path": ".github/workflows/ci.yml",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    ".github/workflows/ci.yml": {
+      "after": "on: push\njobs: {}\n",
+      "before": ""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT11-typescript-pos-04",
+  "language": "typescript"
+}

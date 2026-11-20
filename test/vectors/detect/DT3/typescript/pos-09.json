@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-09",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function grep(x: number) {}\n",
+      "after": "export function grep(x: string) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function grep(x: string)",
+      "rule": "dt3-ts-export-changed"
+    }
+  ]
+}

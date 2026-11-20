@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-14",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function m(a: number | string) {}\n",
+      "after": "export function m(a: number | string | null) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function m(a: number | string | null)",
+      "rule": "dt3-ts-export-changed"
+    }
+  ]
+}

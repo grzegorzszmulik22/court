@@ -1,0 +1,24 @@
+{
+  "commission": {
+    "plan_files": [
+      "shop/cart.go"
+    ],
+    "plan_lines": 10
+  },
+  "detector": "DT12",
+  "expect": [],
+  "files": {
+    "shop/baseline.go": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop/cart.go": {
+      "after": "",
+      "before": "package cart\n\nfunc a() {}\n"
+    }
+  },
+  "id": "DT12-go-neg-03",
+  "language": "go",
+  "near_miss": "exact-budget",
+  "note": "exact-budget"
+}

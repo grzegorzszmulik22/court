@@ -1,0 +1,14 @@
+{
+  "id": "DT1-go-neg-17",
+  "detector": "DT1",
+  "language": "go",
+  "files": {
+    "go.mod": {
+      "before": "module shop\n\ngo 1.22\n\nretract (\n\tv1.0.0\n)\n",
+      "after": "module shop\n\ngo 1.22\n\nretract (\n\tv1.0.1\n)\n"
+    }
+  },
+  "expect": [],
+  "note": "retract-removed",
+  "near_miss": "retract-block"
+}

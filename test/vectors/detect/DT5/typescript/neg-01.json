@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  let y: string = x;\n  return y;\n}\n",
+      "before": "function s(x: number) {\n  let y: number = x;\n  return y;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-01",
+  "language": "typescript",
+  "near_miss": "concrete-kept",
+  "note": "concrete-kept"
+}

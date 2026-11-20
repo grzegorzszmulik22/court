@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-14",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export class Orders {\n}\n",
+      "after": "export class Orders {\n  total() { return 0; }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "class-method-add"
+}

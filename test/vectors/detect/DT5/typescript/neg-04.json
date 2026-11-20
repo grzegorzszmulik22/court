@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "src/calc.ts": {
+      "after": "function s(x: number) {\n  let z: boolean = true;\n  return z;\n}\n",
+      "before": "function s(x: number) {\n  let z: number = 0;\n  return z;\n}\n"
+    }
+  },
+  "id": "DT5-typescript-neg-04",
+  "language": "typescript",
+  "near_miss": "narrowed",
+  "note": "narrowed"
+}

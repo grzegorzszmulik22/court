@@ -1,0 +1,26 @@
+{
+  "id": "DT3-python-pos-02",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def discount(cart):\n    return 0\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "api/service.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "def discount(cart):",
+      "rule": "dt3-python-toplevel-removed"
+    }
+  ]
+}

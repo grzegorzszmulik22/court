@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-13",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def f(a):\n    return a\n",
+      "after": "def f(a) -> int:\n    return a\n"
+    }
+  },
+  "expect": [],
+  "note": "return-annot"
+}

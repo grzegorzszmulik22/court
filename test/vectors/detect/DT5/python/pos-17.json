@@ -1,0 +1,26 @@
+{
+  "id": "DT5-python-pos-17",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def q(v: int, w: int) -> int:\n    return v\n",
+      "after": "def q(v: int, w: int) -> Optional[int]:\n    return v\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "app/calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "-> Optional[int]:",
+      "rule": "dt5-python-widened"
+    }
+  ]
+}

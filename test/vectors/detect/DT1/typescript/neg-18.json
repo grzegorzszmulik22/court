@@ -1,0 +1,14 @@
+{
+  "id": "DT1-typescript-neg-18",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"resolutions\": {\n    \"minimist\": \"^1.2.8\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n",
+      "after": "{\n  \"resolutions\": {\n    \"minimist\": \">=1.2.8\",\n    \"lodash\": \"^4.0.0\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "resolutions",
+  "near_miss": "override-range"
+}

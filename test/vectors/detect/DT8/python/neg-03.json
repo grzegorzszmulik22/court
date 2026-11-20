@@ -1,0 +1,14 @@
+{
+  "id": "DT8-python-neg-03",
+  "detector": "DT8",
+  "language": "python",
+  "files": {
+    "svc/client.py": {
+      "before": "def c():\n    pass\n",
+      "after": "# about c\ndef c():\n    pass\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-added",
+  "note": "comment-added"
+}

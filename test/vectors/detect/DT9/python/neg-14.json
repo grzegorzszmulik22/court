@@ -1,0 +1,13 @@
+{
+  "id": "DT9-python-neg-14",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "pkg/myauth/x.py": {
+      "before": "v=1\n",
+      "after": "v=1\n#e\n"
+    }
+  },
+  "expect": [],
+  "note": "authsuffix"
+}

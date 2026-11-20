@@ -1,0 +1,16 @@
+agents:
+  - id: w1
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "docs/**", "config/**", "data/**", "internal/**", "tools/**", "scripts/**", "api/**", "migrations/**", "README.md", ".github/**"]
+      - edit: {path: chat/chat_test.go, write: "package chat\n\nimport \"testing\"\n\nfunc TestSay(t *testing.T) {\n\tvar r Room\n\tr.Say(\"ada\", \"hi\")\n\tr.Say(\"bo\", \"yo\")\n\tif r.Count() != 2 {\n\t\tt.Fatalf(\"Count = %d\", r.Count())\n\t}\n}\n\nfunc TestSeq(t *testing.T) {\n\tvar r Room\n\tr.Say(\"a\", \"1\")\n\tr.Say(\"a\", \"2\")\n\tif r.msgs[1].Seq != 2 {\n\t\tt.Fatalf(\"Seq = %d\", r.msgs[1].Seq)\n\t}\n}\n\nfunc TestClampLo17(t *testing.T) {\n\tif clamp(-17, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-17,0,5) = %d\", clamp(-17, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 517\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 500\n  write_ms: 2017\nretries: 3\n"}
+      - declare: {category: other, paths: ["chat/chat_test.go"], question: "the other work on chat/chat_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - commit: {message: "chat: routine refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

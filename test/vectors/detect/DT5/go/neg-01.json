@@ -1,0 +1,14 @@
+{
+  "detector": "DT5",
+  "expect": [],
+  "files": {
+    "pkg/calc.go": {
+      "after": "package calc\n\nvar count int = 2\n",
+      "before": "package calc\n\nvar count int = 1\n"
+    }
+  },
+  "id": "DT5-go-neg-01",
+  "language": "go",
+  "near_miss": "concrete-kept",
+  "note": "concrete-kept"
+}

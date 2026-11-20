@@ -1,0 +1,26 @@
+{
+  "id": "DT8-typescript-pos-09",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c() {\n  return fetch(\"https://tri.example\", { method: \"GET\" });\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT8",
+      "category": "outbound",
+      "subkind": "code",
+      "path": "src/client.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "tri.example",
+      "rule": "dt8-typescript-host-literal"
+    }
+  ]
+}

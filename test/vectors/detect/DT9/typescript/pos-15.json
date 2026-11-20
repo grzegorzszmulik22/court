@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "allow_origins: [\"*\"]",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "config/cors.yaml",
+      "rule": "dt9-typescript-widened",
+      "side": "after",
+      "subkind": "widened"
+    }
+  ],
+  "files": {
+    "config/cors.yaml": {
+      "after": "allow_origins: [\"*\"]\n",
+      "before": "allow_origins: [https://app.example.com]\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-pos-15",
+  "language": "typescript",
+  "note": "scope list gains admin"
+}

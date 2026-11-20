@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "deploy/policy.json": {
+      "after": "{\n \"allow\": [\"read\"]\n}\n",
+      "before": "{\n \"allow\": [\"*\"]\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-neg-15",
+  "language": "go",
+  "note": "policy-narrow"
+}

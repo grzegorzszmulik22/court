@@ -1,0 +1,13 @@
+{
+  "id": "DT3-python-neg-11",
+  "detector": "DT3",
+  "language": "python",
+  "files": {
+    "api/service.py": {
+      "before": "def t():\n    \"\"\"d\"\"\"\n    pass\n",
+      "after": "def t():\n    \"\"\"longer doc\"\"\"\n    pass\n"
+    }
+  },
+  "expect": [],
+  "note": "indent-doc"
+}

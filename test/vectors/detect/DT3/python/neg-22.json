@@ -1,0 +1,17 @@
+{
+  "detector": "DT3",
+  "expect": [],
+  "files": {
+    "api/order.proto.md": {
+      "after": "# proto notes\n\nfields: id, total\n",
+      "before": "# proto notes\n\nfields: id\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT3-python-neg-22",
+  "language": "python",
+  "note": "proto-lookalike"
+}

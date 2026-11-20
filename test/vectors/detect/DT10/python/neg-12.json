@@ -1,0 +1,33 @@
+{
+  "detector": "DT10",
+  "expect": [],
+  "files": {
+    "ops/log3.txt": {
+      "after": "a\nb\n",
+      "before": "a\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT10-python-neg-12",
+  "language": "python",
+  "note": "rm-single",
+  "tool_events": [
+    {
+      "input": {
+        "command": "rm out.log"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    },
+    {
+      "input": {
+        "command": "ls"
+      },
+      "name": "Bash",
+      "outcome": "ok"
+    }
+  ]
+}

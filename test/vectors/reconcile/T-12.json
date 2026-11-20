@@ -1,0 +1,79 @@
+{
+  "id": "T-12",
+  "comment": "Empty-paths declaration with no competing entry matches the detected entry's category in the world (03 \u00a71.5: a hit always carries paths, so only the declared side is empty).",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "schema",
+        "paths": [],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/002.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:6d49bbe60b00d1314206bd5716542d29ea3f8562c3ba9d685508319b126323a0"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1",
+        "h1"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1",
+        "h1"
+      ],
+      "sources": [
+        "declared",
+        "detected"
+      ],
+      "verdict": "confirmed",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "empty-paths"
+  ]
+}

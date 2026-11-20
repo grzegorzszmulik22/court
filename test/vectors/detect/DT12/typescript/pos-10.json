@@ -1,0 +1,36 @@
+{
+  "commission": {
+    "plan_files": [
+      "src/cart.ts"
+    ],
+    "plan_lines": 5
+  },
+  "detector": "DT12",
+  "expect": [
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "# g",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "docs/gone.md",
+      "rule": "dt12-typescript-unplanned-file",
+      "side": "before",
+      "subkind": "unplanned-file"
+    }
+  ],
+  "files": {
+    "docs/gone.md": {
+      "after": "",
+      "before": "# g\n\ntext\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT12-typescript-pos-10",
+  "language": "typescript"
+}

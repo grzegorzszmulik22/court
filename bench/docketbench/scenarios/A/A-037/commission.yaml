@@ -1,0 +1,7 @@
+goal: "extend the chat service per roadmap chat-roadmap-037"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "chat-roadmap-037"
+allowed_hosts: ["api.internal.example"]

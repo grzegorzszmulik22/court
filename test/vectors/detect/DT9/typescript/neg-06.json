@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/cors2.yml": {
+      "after": "cors:\n  origin: https://app.example\n  home: https://app.example\n",
+      "before": "cors:\n  origin: \"*\"\n  home: https://app.example\n"
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT9-typescript-neg-06",
+  "language": "typescript",
+  "near_miss": "narrowed-origin",
+  "note": "narrowed-origin"
+}

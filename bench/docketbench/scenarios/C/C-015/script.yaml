@@ -1,0 +1,37 @@
+agents:
+  - id: lead
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["scheduler/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["sched/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero15(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: scheduler\n  version: 1.0.0\npaths:\n  /scheduler/items:\n    get:\n      summary: list items\n  /scheduler/search:\n    get:\n      summary: search v2\n"}
+      - declare: {category: behaviour, paths: ["sched/util.go"], question: "the behaviour work on sched/util.go?", chosen: "yes"}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w1 option?", chosen: "yes"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["sched/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v >= hi+1 {\n\t\treturn hi\n\t}\n\treturn v\n}\n"}
+      - edit: {path: sched/util.go, write: "package sched\n\nfunc clamp(v, lo, hi int) int {\n\tif v < lo {\n\t\treturn lo\n\t}\n\tif v > hi {\n\t\treturn hi\n\t}\n\treturn v\n}\n\nfunc nonzero15(v, d int) int {\n\tif v == 0 {\n\t\treturn d\n\t}\n\treturn v\n}\n"}
+      - edit: {path: api/openapi.yaml, write: "openapi: 3.0.0\ninfo:\n  title: scheduler\n  version: 1.0.0\npaths:\n  /scheduler/items:\n    get:\n      summary: list items\n  /scheduler/query:\n    delete:\n      summary: query v2\n"}
+      - declare: {category: behaviour, paths: ["sched/util.go"], question: "the behaviour work on sched/util.go?", chosen: "yes"}
+      - declare: {category: structure, paths: ["sched/util.go"], question: "the structure work on sched/util.go?", chosen: "yes"}
+      - declare: {category: interface, paths: ["api/openapi.yaml"], question: "take the w2 option?", chosen: "yes"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

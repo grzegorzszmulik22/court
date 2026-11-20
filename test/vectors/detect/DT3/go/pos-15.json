@@ -1,0 +1,31 @@
+{
+  "detector": "DT3",
+  "expect": [
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "/orders/{id}:",
+      "lines": [
+        6,
+        6
+      ],
+      "path": "api/openapi.yaml",
+      "rule": "dt3-contract-openapi",
+      "side": "after",
+      "subkind": "added"
+    }
+  ],
+  "files": {
+    "api/openapi.yaml": {
+      "after": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n  /orders/{id}:\n    get:\n      summary: fetch\n",
+      "before": "openapi: 3.0.0\npaths:\n  /orders:\n    get:\n      summary: list\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT3-go-pos-15",
+  "language": "go",
+  "note": "new endpoint added to the contract"
+}

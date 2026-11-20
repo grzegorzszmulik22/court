@@ -1,0 +1,27 @@
+{
+  "id": "DT9-go-pos-04",
+  "detector": "DT9",
+  "language": "go",
+  "files": {
+    "pkg/token/mint.go": {
+      "before": "package token\n\nfunc Mint() int { return 1 }\n",
+      "after": "package token\n\nfunc Mint() int {\n\treturn 2\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "pkg/token/mint.go",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "return 2",
+      "rule": "dt9-go-touched"
+    }
+  ],
+  "note": "token mint changed"
+}

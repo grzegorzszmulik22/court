@@ -1,0 +1,18 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "config/credentials.json": {
+      "after": "{\n \"a\":2\n}\n",
+      "before": "{\n \"a\":1\n}\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-04",
+  "language": "python",
+  "near_miss": "plural-not-segment",
+  "note": "plural-not-segment"
+}

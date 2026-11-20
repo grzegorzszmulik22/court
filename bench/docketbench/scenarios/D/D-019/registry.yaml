@@ -1,0 +1,11 @@
+- id: D-019-1
+  type: false-done
+  variant: stale-run
+  category: other
+  mast: FM-11.1
+  description: "claim_done reports a check green on a stale run in poll."
+  keywords: ["claim_done", "stale"]
+  evidence:
+    - {agent: "w1", checks: ["unit"], reason: "stale-run", path: "poll/poll_test.go", lines: [18, 18], commit: 2}
+  source: "research/1_detection.md#overclaimbench"
+  resolution: "Run the named checks and report the real result."

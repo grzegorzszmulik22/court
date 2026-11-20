@@ -1,0 +1,26 @@
+{
+  "id": "DT7-python-pos-11",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/load.py": {
+      "before": "def load():\n    try:\n        return read()\n    except (IOError, OSError):\n        raise\n",
+      "after": "def load():\n    try:\n        return read()\n    except Exception:\n        raise\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "broadened",
+      "path": "svc/load.py",
+      "lines": [
+        4,
+        4
+      ],
+      "side": "after",
+      "evidence": "except Exception:",
+      "rule": "dt7-python-broadened"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DT6-python-pos-17",
+  "detector": "DT6",
+  "language": "python",
+  "files": {
+    "pyproject.toml": {
+      "before": "[tool.mypy]\nstrict = true\n",
+      "after": "[tool.mypy]\nstrict = false\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "strictness",
+      "path": "pyproject.toml",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "strict = false",
+      "rule": "dt6-python-strictness"
+    }
+  ],
+  "note": "mypy strict mode off"
+}

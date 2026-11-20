@@ -1,0 +1,13 @@
+{
+  "id": "DT1-typescript-neg-16",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"engines\": {\n    \"node\": \">=18\",\n    \"npm\": \">=9\",\n    \"pnpm\": \">=8\"\n  }\n}\n",
+      "after": "{\n  \"engines\": {\n    \"node\": \">=20\",\n    \"npm\": \">=9\",\n    \"pnpm\": \">=8\"\n  }\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "engines-field"
+}

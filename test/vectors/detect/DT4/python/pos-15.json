@@ -1,0 +1,26 @@
+{
+  "id": "DT4-python-pos-15",
+  "detector": "DT4",
+  "language": "python",
+  "files": {
+    "tests/test_cart.py": {
+      "before": "def test_x():\n    assert x() == 1\n    assert x() != 0\n",
+      "after": "def test_x():\n    assert x() == 1\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT4",
+      "category": "test-strength",
+      "subkind": "fewer_assertions",
+      "path": "tests/test_cart.py",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "before",
+      "evidence": "assert x() != 0",
+      "rule": "dt4-python-fewer_assertions"
+    }
+  ]
+}

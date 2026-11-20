@@ -1,0 +1,18 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    "docs/ci.md": {
+      "after": "# ci notes\n",
+      "before": "# ci\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT6-python-neg-06",
+  "language": "python",
+  "near_miss": "non-ci-yml",
+  "note": "non-ci-yml"
+}

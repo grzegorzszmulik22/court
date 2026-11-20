@@ -1,0 +1,44 @@
+{
+ "detector": "DT2",
+ "expect": [
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE orders",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-new-migration",
+   "side": "after",
+   "subkind": "migration"
+  },
+  {
+   "category": "schema",
+   "detector": "DT2",
+   "evidence": "CREATE TABLE orders",
+   "lines": [
+    1,
+    1
+   ],
+   "path": "migrations/0002_add_index.sql",
+   "rule": "dt2-go-ddl",
+   "side": "after",
+   "subkind": "ddl"
+  }
+ ],
+ "files": {
+  "go.mod": {
+   "after": "module bench\n\ngo 1.22\n",
+   "before": "module bench\n\ngo 1.22\n"
+  },
+  "migrations/0002_add_index.sql": {
+   "after": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    total_cents INTEGER NOT NULL\n);\n",
+   "before": ""
+  }
+ },
+ "id": "DT2-go-pos-01",
+ "language": "go",
+ "note": "a .sql migration with DDL fires migration and ddl"
+}

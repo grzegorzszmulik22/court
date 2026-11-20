@@ -1,0 +1,110 @@
+{
+  "id": "T-41",
+  "comment": "Two declaration-only worlds are NOT contested: \u00a77.5 defines differing evidence through detector hits ('the detector hits do not have identical text digests, or one has a hit and the other only a declaration'). Two declarations carry no hits to compare \u2014 neither entry has digests \u2014 so no contest is recorded.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "d1",
+        "source": "declared",
+        "category": "interface",
+        "paths": [
+          "cfg/limits.yml"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false
+      },
+      {
+        "id": "d2",
+        "source": "declared",
+        "category": "interface",
+        "paths": [
+          "cfg/limits.yml"
+        ],
+        "world": "w2",
+        "commit": 1,
+        "petition": false
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      },
+      "w2": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "d1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "d2"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "d1"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    },
+    {
+      "ids": [
+        "d2"
+      ],
+      "sources": [
+        "declared"
+      ],
+      "verdict": "declared-only",
+      "flags": [
+        "unforeseen"
+      ],
+      "queued": false
+    }
+  ],
+  "tags": [
+    "no-contest"
+  ]
+}

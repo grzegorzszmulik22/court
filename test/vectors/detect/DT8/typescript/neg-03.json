@@ -1,0 +1,14 @@
+{
+  "id": "DT8-typescript-neg-03",
+  "detector": "DT8",
+  "language": "typescript",
+  "files": {
+    "src/client.ts": {
+      "before": "export function c() {}\n",
+      "after": "export function c() {}\n// c does the call\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-added",
+  "note": "comment-added"
+}

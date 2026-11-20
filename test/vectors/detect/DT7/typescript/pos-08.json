@@ -1,0 +1,26 @@
+{
+  "id": "DT7-typescript-pos-08",
+  "detector": "DT7",
+  "language": "typescript",
+  "files": {
+    "src/job.ts": {
+      "before": "export function job() {\n  run();\n}\n",
+      "after": "export function job() {\n  try {\n    run();\n  } catch (e) {\n    // skip\n  }\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "src/job.ts",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "// skip",
+      "rule": "dt7-typescript-swallowed"
+    }
+  ]
+}

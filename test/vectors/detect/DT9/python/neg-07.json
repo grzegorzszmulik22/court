@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-07",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "svc/calc.py": {
+      "before": "def add():\n    return 1\n",
+      "after": "def add():\n    return 1\nDOC = \"auth flow\"\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "auth-in-string",
+  "note": "auth-in-string"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "DT11-typescript-neg-02",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "internal/util.ts": {
+      "before": "",
+      "after": "export function f() {}\n"
+    },
+    "internal/baseline.ts": {
+      "before": "// baseline\n",
+      "after": "// baseline\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**"
+    ]
+  },
+  "expect": [],
+  "near_miss": "inside-second-glob",
+  "note": "inside-second-glob"
+}

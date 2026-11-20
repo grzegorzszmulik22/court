@@ -1,0 +1,17 @@
+{
+  "detector": "DT2",
+  "expect": [],
+  "files": {
+    "db/grants.sql": {
+      "after": "GRANT SELECT, INSERT ON t TO r;\n",
+      "before": "GRANT SELECT ON t TO r;\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT2-go-neg-11",
+  "language": "go",
+  "note": "grant-stmt"
+}

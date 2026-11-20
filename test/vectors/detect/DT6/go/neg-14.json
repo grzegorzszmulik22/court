@@ -1,0 +1,17 @@
+{
+  "detector": "DT6",
+  "expect": [],
+  "files": {
+    ".nycrc": {
+      "after": "{\n  \"lines\": 80\n}\n",
+      "before": "{\n  \"lines\": 70\n}\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT6-go-neg-14",
+  "language": "go",
+  "note": "nycrc-raised"
+}

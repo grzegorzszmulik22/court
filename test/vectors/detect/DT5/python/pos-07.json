@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "s: Optional[str]",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def deep(s: Optional[str]) -> Optional[str]:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def deep(s: Optional[str]) -> Optional[str]:\n    return s\n",
+      "before": "def deep(s: str) -> str:\n    return s\n"
+    }
+  },
+  "id": "DT5-python-pos-07",
+  "language": "python"
+}

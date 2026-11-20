@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "shop2/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "shop2/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "shop2/x.ts": {
+      "after": "export const s2 = 1;\ntype T = number;\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-21",
+  "language": "typescript",
+  "note": "sibling"
+}

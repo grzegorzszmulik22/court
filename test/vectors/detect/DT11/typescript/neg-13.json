@@ -1,0 +1,22 @@
+{
+  "commission": {
+    "territory": [
+      "**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "anywhere/baseline.ts": {
+      "after": "package baseline\n",
+      "before": "package baseline\n"
+    },
+    "anywhere/x.ts": {
+      "after": "export function z() {}\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-neg-13",
+  "language": "typescript",
+  "note": "root-glob"
+}

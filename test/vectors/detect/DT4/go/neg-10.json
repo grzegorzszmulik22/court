@@ -1,0 +1,14 @@
+{
+  "id": "DT4-go-neg-10",
+  "detector": "DT4",
+  "language": "go",
+  "files": {
+    "shop/shop_test.go": {
+      "before": "package shop\n\nfunc TestT(t *testing.T) {\n\tx := setup(1)\n\tif x != 1 { t.Fatal() }\n}\n",
+      "after": "package shop\n\nfunc TestT(t *testing.T) {\n\tx := setup(2)\n\tif x != 1 { t.Fatal() }\n}\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "setup-edit",
+  "note": "setup-edit"
+}

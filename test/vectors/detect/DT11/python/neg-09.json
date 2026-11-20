@@ -1,0 +1,19 @@
+{
+  "commission": {
+    "territory": [
+      "shop/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [],
+  "files": {
+    "build/gen.py": {
+      "after": "b = 1\nc = 2\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-python-neg-09",
+  "language": "python",
+  "near_miss": "exempt-build",
+  "note": "exempt-build"
+}

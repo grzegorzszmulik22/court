@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-07",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "# no note\nx = 1\n",
+      "after": "# not a type note\nx = 1\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-shape",
+  "note": "comment-shape"
+}

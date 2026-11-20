@@ -1,0 +1,47 @@
+{
+  "id": "DT11-typescript-pos-03",
+  "detector": "DT11",
+  "language": "typescript",
+  "files": {
+    "tools/gen.ts": {
+      "before": "",
+      "after": "export function f() {}\n"
+    }
+  },
+  "commission": {
+    "territory": [
+      "shop/**",
+      "internal/**",
+      "api/**"
+    ]
+  },
+  "expect": [
+    {
+      "detector": "DT11",
+      "category": "territory",
+      "subkind": "",
+      "path": "tools/gen.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function f() {}",
+      "rule": "dt11-typescript-outside"
+    },
+    {
+      "detector": "DT12",
+      "category": "scope",
+      "subkind": "new-top-level",
+      "path": "tools/gen.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function f() {}",
+      "rule": "dt12-typescript-new-top-level"
+    }
+  ],
+  "note": "outside a three-glob territory"
+}

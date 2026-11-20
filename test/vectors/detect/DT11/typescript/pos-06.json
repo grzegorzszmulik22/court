@@ -1,0 +1,49 @@
+{
+  "commission": {
+    "territory": [
+      "x/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt11-typescript-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "a",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "very/deep/path/file.txt",
+      "rule": "dt12-typescript-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    },
+    "very/deep/path/file.txt": {
+      "after": "a\nb\nc\nd\n",
+      "before": ""
+    }
+  },
+  "id": "DT11-typescript-pos-06",
+  "language": "typescript",
+  "note": "deep path outside"
+}

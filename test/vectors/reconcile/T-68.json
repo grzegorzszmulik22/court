@@ -1,0 +1,119 @@
+{
+  "id": "T-68",
+  "comment": "Two detected entries, same category and overlapping paths in two worlds, whose hit digests DIFFER: \u00a77.5 derives the contest from the digests; both decisions carry the contested flag and queue.",
+  "inputs": {
+    "expected": [],
+    "decisions": [
+      {
+        "id": "h1",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w1",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:c67b036d58803f271d9eadd8d0b9dab633d7d8dc7430b1ff8641e98e9ebe5f93"
+        ]
+      },
+      {
+        "id": "h2",
+        "source": "detected",
+        "category": "schema",
+        "paths": [
+          "migrations/2.sql"
+        ],
+        "world": "w2",
+        "commit": 1,
+        "petition": false,
+        "digests": [
+          "sha256:2286ed8aa67404b2d17d17455be90f75d29b384d3bf2f9c1c645ec632623aa84"
+        ]
+      }
+    ],
+    "writs": {
+      "w1": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      },
+      "w2": {
+        "categories": [
+          "dependency",
+          "schema",
+          "interface",
+          "outbound",
+          "territory",
+          "scope",
+          "behaviour",
+          "structure",
+          "other"
+        ],
+        "territory": [
+          "**"
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "decision_ids": [
+        "h1"
+      ]
+    },
+    {
+      "seq": 2,
+      "decision_ids": [
+        "h2"
+      ]
+    }
+  ],
+  "expect": [
+    {
+      "ids": [
+        "h1"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "contested",
+        "unforeseen"
+      ],
+      "queued": true
+    },
+    {
+      "ids": [
+        "h2"
+      ],
+      "sources": [
+        "detected"
+      ],
+      "verdict": "undeclared",
+      "flags": [
+        "contested",
+        "unforeseen"
+      ],
+      "queued": true
+    }
+  ],
+  "tags": [
+    "contested",
+    "per-world"
+  ]
+}

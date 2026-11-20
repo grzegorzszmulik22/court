@@ -1,0 +1,39 @@
+{
+  "id": "DT5-python-pos-05",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "tests/test_calc.py": {
+      "before": "def test_x():\n    pass\n",
+      "after": "def test_x():  # type: ignore\n    pass\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "suppressed",
+      "path": "tests/test_calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "# type: ignore",
+      "rule": "dt5-python-suppressed"
+    },
+    {
+      "detector": "DT6",
+      "category": "guardrail",
+      "subkind": "suppressed",
+      "path": "tests/test_calc.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "# type: ignore",
+      "rule": "dt6-python-suppressed"
+    }
+  ]
+}

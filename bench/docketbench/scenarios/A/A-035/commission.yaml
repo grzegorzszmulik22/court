@@ -1,0 +1,7 @@
+goal: "extend the scheduler service per roadmap scheduler-roadmap-035"
+done_checks:
+  - {id: unit, cmd: "go test ./..."}
+territory: ["sched/**", "internal/**", "api/**", "docs/**", "config/**"]
+budgets: {tokens: 40000, minutes: 45, speculation: 400}
+template: "scheduler-roadmap-035"
+allowed_hosts: ["api.internal.example"]

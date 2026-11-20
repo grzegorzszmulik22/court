@@ -1,0 +1,18 @@
+{
+  "detector": "DT1",
+  "expect": [],
+  "files": {
+    "package-lock.json": {
+      "after": "\"lockfileVersion\": 3,\n  \"resolved\": \"r2\"",
+      "before": "\"lockfileVersion\": 3,\n  \"resolved\": \"r1\""
+    },
+    "package.json": {
+      "after": "{\"name\": \"bench\", \"private\": true}\n",
+      "before": "{\"name\": \"bench\", \"private\": true}\n"
+    }
+  },
+  "id": "DT1-typescript-neg-05",
+  "language": "typescript",
+  "near_miss": "lockfile-only",
+  "note": "lockfile-only"
+}

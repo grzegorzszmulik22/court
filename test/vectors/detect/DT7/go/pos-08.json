@@ -1,0 +1,26 @@
+{
+  "id": "DT7-go-pos-08",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/job.go": {
+      "before": "package svc\n\nfunc job() error {\n\treturn run()\n}\n",
+      "after": "package svc\n\nfunc job() error {\n\tif err := run(); err != nil {\n\t\treturn nil\n\t}\n\treturn nil\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT7",
+      "category": "failure-handling",
+      "subkind": "swallowed",
+      "path": "svc/job.go",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "after",
+      "evidence": "return nil",
+      "rule": "dt7-go-swallowed"
+    }
+  ]
+}

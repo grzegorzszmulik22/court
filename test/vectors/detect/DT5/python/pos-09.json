@@ -1,0 +1,39 @@
+{
+  "detector": "DT5",
+  "expect": [
+    {
+      "category": "type-strength",
+      "detector": "DT5",
+      "evidence": "x: int | None",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt5-python-widened",
+      "side": "after",
+      "subkind": "widened"
+    },
+    {
+      "category": "interface",
+      "detector": "DT3",
+      "evidence": "def f(x: int | None) -> int:",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "app/calc.py",
+      "rule": "dt3-python-toplevel-changed",
+      "side": "after",
+      "subkind": "changed"
+    }
+  ],
+  "files": {
+    "app/calc.py": {
+      "after": "def f(x: int | None) -> int:\n    return x\n",
+      "before": "def f(x: int) -> int:\n    return x\n"
+    }
+  },
+  "id": "DT5-python-pos-09",
+  "language": "python"
+}

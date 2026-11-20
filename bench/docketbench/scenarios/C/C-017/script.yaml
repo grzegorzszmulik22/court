@@ -1,0 +1,37 @@
+agents:
+  - id: lead
+    parent: human
+    writ: {categories: ["behaviour", "dependency", "interface", "other", "outbound", "schema", "scope", "structure", "territory"], territory: ["**"], budgets: {"tokens": 40000, "minutes": 45, "speculation": 400}}
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**"]
+      - spawn: {id: w1, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+      - spawn: {id: w2, writ: {categories: ["dependency", "schema", "interface", "outbound", "territory", "scope", "behaviour", "structure", "other"], territory: ["**"], budgets: {tokens: 18000, minutes: 20, speculation: 190}}}
+  - id: w1
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: chat/chat_test.go, write: "package chat\n\nimport \"testing\"\n\nfunc TestSay(t *testing.T) {\n\tvar r Room\n\tr.Say(\"ada\", \"hi\")\n\tr.Say(\"bo\", \"yo\")\n\tif r.Count() != 2 {\n\t\tt.Fatalf(\"Count = %d\", r.Count())\n\t}\n}\n\nfunc TestSeq(t *testing.T) {\n\tvar r Room\n\tr.Say(\"a\", \"1\")\n\tr.Say(\"a\", \"2\")\n\tif r.msgs[1].Seq != 2 {\n\t\tt.Fatalf(\"Seq = %d\", r.msgs[1].Seq)\n\t}\n}\n\nfunc TestClampLo17(t *testing.T) {\n\tif clamp(-17, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-17,0,5) = %d\", clamp(-17, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 517\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX chat_items_name_a ON chat_items (name);\n"}
+      - declare: {category: other, paths: ["chat/chat_test.go"], question: "the other work on chat/chat_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: schema, paths: ["migrations/002_tune.sql"], question: "take the w1 option?", chosen: "yes"}
+      - commit: {message: "w1: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}
+  - id: w2
+    parent: lead
+    steps:
+      - backbrief:
+          plan_files: ["chat/**", "config/**", "api/**", "migrations/**", "internal/**", "scripts/**", "tools/**", ".github/**", ".golangci.yml", "docs/**"]
+      - edit: {path: chat/chat_test.go, write: "package chat\n\nimport \"testing\"\n\nfunc TestSay(t *testing.T) {\n\tvar r Room\n\tr.Say(\"ada\", \"hi\")\n\tr.Say(\"bo\", \"yo\")\n\tif r.Count() != 2 {\n\t\tt.Fatalf(\"Count = %d\", r.Count())\n\t}\n}\n\nfunc TestSeq(t *testing.T) {\n\tvar r Room\n\tr.Say(\"a\", \"1\")\n\tr.Say(\"a\", \"2\")\n\tif r.msgs[1].Seq != 2 {\n\t\tt.Fatalf(\"Seq = %d\", r.msgs[1].Seq)\n\t}\n}\n\nfunc TestClampLo17(t *testing.T) {\n\tif clamp(-17, 0, 5) != 0 {\n\t\tt.Fatalf(\"clamp(-17,0,5) = %d\", clamp(-17, 0, 5))\n\t}\n}\n"}
+      - edit: {path: config/limits.yml, write: "timeouts:\n  read_ms: 517\n  write_ms: 2000\nretries: 3\n"}
+      - edit: {path: migrations/002_tune.sql, write: "CREATE INDEX chat_items_name_b ON chat_items (id, name);\n"}
+      - declare: {category: other, paths: ["chat/chat_test.go"], question: "the other work on chat/chat_test.go?", chosen: "yes"}
+      - declare: {category: behaviour, paths: ["config/limits.yml"], question: "the behaviour work on config/limits.yml?", chosen: "yes"}
+      - declare: {category: schema, paths: ["migrations/002_tune.sql"], question: "take the w2 option?", chosen: "yes"}
+      - commit: {message: "w2: worker refresh"}
+      - tool: {name: Bash, command: "go test ./..."}
+      - claim_done: {checks: [unit]}

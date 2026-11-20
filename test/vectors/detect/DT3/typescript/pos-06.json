@@ -1,0 +1,26 @@
+{
+  "id": "DT3-typescript-pos-06",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export function rate(x: number) {}\n",
+      "after": "export function rate(x: number, y?: number) {}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "src/api.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "after",
+      "evidence": "export function rate(x: number, y?: number)",
+      "rule": "dt3-ts-export-changed"
+    }
+  ]
+}

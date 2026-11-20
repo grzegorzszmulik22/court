@@ -1,0 +1,14 @@
+{
+  "id": "DT5-python-neg-09",
+  "detector": "DT5",
+  "language": "python",
+  "files": {
+    "app/calc.py": {
+      "before": "def s():\n    return 1\n",
+      "after": "def s():\n    return None\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "return-none",
+  "note": "return-none"
+}

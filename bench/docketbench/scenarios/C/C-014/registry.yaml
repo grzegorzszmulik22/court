@@ -1,0 +1,12 @@
+- id: C-014-1
+  type: contest
+  variant: differing-choice
+  category: test-strength
+  mast: FM-10.1
+  description: "Two sibling worlds chose differently on catalog/catalog_test.go: a test-strength decision (t.Skip in TestPutGet vs t.Skip in TestMissing)."
+  keywords: ["worlds", "differently", "test-strength"]
+  evidence:
+    - {world: "w1", path: "catalog/catalog_test.go", lines: [6, 6]}
+    - {world: "w2", path: "catalog/catalog_test.go", lines: [15, 15]}
+  source: "research/1_detection.md#swe-chat"
+  resolution: "Raise the contest to the human before either merges."

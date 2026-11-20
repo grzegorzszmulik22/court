@@ -1,0 +1,17 @@
+{
+  "detector": "DT9",
+  "expect": [],
+  "files": {
+    "docs/tokens.md": {
+      "after": "# t\nrotate monthly\n",
+      "before": "# t\n"
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT9-python-neg-16",
+  "language": "python",
+  "note": "token-in-doc"
+}

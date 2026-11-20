@@ -1,0 +1,27 @@
+{
+  "id": "DT2-python-pos-16",
+  "detector": "DT2",
+  "language": "python",
+  "files": {
+    "alembic/versions/0001_init.py": {
+      "before": "-- step 1\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT2",
+      "category": "schema",
+      "subkind": "migration",
+      "path": "alembic/versions/0001_init.py",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "-- step 1",
+      "rule": "dt2-python-changed-migration"
+    }
+  ],
+  "note": "a file deleted under a migration directory is a changed migration"
+}

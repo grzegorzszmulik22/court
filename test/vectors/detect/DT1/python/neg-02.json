@@ -1,0 +1,14 @@
+{
+  "id": "DT1-python-neg-02",
+  "detector": "DT1",
+  "language": "python",
+  "files": {
+    "requirements.txt": {
+      "before": "# requests needed for api\nrequests==2.31.0\n",
+      "after": "# requests needed for batch api\nrequests==2.31.0\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "comment-edit",
+  "note": "comment-edit"
+}

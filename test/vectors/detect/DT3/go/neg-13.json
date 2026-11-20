@@ -1,0 +1,13 @@
+{
+  "id": "DT3-go-neg-13",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/types.go": {
+      "before": "package api\n\ntype Cart struct {\n\tsum int\n\ttax int\n}\n",
+      "after": "package api\n\ntype Cart struct {\n\tsum int\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "same ruling as struct-field-add: the declared name and its kind are unchanged"
+}

@@ -1,0 +1,48 @@
+{
+  "commission": {
+    "territory": [
+      "svc/**"
+    ]
+  },
+  "detector": "DT11",
+  "expect": [
+    {
+      "category": "territory",
+      "detector": "DT11",
+      "evidence": "name: c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt11-python-outside",
+      "side": "after",
+      "subkind": ""
+    },
+    {
+      "category": "scope",
+      "detector": "DT12",
+      "evidence": "name: c",
+      "lines": [
+        1,
+        1
+      ],
+      "path": "deploy/helm/chart.yaml",
+      "rule": "dt12-python-new-top-level",
+      "side": "after",
+      "subkind": "new-top-level"
+    }
+  ],
+  "files": {
+    "deploy/helm/chart.yaml": {
+      "after": "name: c\nversion: 1\n",
+      "before": ""
+    },
+    "requirements.txt": {
+      "after": "requests==2.32.3\n",
+      "before": "requests==2.32.3\n"
+    }
+  },
+  "id": "DT11-python-pos-05",
+  "language": "python"
+}

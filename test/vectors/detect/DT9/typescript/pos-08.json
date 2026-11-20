@@ -1,0 +1,27 @@
+{
+  "id": "DT9-typescript-pos-08",
+  "detector": "DT9",
+  "language": "typescript",
+  "files": {
+    "src/auth/store/users.ts": {
+      "before": "export const q = 1;\n",
+      "after": "export const q = 1;\nexport const w = 2;\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT9",
+      "category": "authority",
+      "subkind": "touched",
+      "path": "src/auth/store/users.ts",
+      "lines": [
+        2,
+        2
+      ],
+      "side": "after",
+      "evidence": "export const w = 2;",
+      "rule": "dt9-typescript-touched"
+    }
+  ],
+  "note": "deep path under auth/"
+}

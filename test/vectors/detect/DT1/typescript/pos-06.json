@@ -1,0 +1,44 @@
+{
+  "id": "DT1-typescript-pos-06",
+  "detector": "DT1",
+  "language": "typescript",
+  "files": {
+    "package.json": {
+      "before": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"axios\": \"^1.6.0\",\n    \"zod\": \"^3.22.0\"\n  }\n}\n",
+      "after": "{\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"axios\": \"^1.6.0\"\n  }\n}\n"
+    },
+    "package-lock.json": {
+      "before": "\"lockfileVersion\": 3\n",
+      "after": "\"lockfileVersion\": 3\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "removed",
+      "path": "package.json",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "before",
+      "evidence": "\"zod\": \"^3.22.0\"",
+      "rule": "dt1-typescript-manifest-removed"
+    },
+    {
+      "detector": "DT1",
+      "category": "dependency",
+      "subkind": "lock-mismatch",
+      "path": "package.json",
+      "lines": [
+        5,
+        5
+      ],
+      "side": "before",
+      "evidence": "\"zod\": \"^3.22.0\"",
+      "rule": "dt1-typescript-lock-unchanged"
+    }
+  ],
+  "note": "manifest changed while the lockfile stayed identical"
+}

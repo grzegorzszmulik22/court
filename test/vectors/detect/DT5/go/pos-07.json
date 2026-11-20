@@ -1,0 +1,26 @@
+{
+  "id": "DT5-go-pos-07",
+  "detector": "DT5",
+  "language": "go",
+  "files": {
+    "pkg/calc.go": {
+      "before": "package calc\n\nfunc total(x int64) int64 { return x }\n",
+      "after": "package calc\n\nfunc total(x any) int64 { return int64(x.(int64)) }\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT5",
+      "category": "type-strength",
+      "subkind": "widened",
+      "path": "pkg/calc.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func total(x any) int64",
+      "rule": "dt5-go-widened"
+    }
+  ]
+}

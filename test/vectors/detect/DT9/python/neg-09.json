@@ -1,0 +1,14 @@
+{
+  "id": "DT9-python-neg-09",
+  "detector": "DT9",
+  "language": "python",
+  "files": {
+    "tests/test_crypto.py": {
+      "before": "x=1\n",
+      "after": "x=1\n#c\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "crypto-in-test",
+  "note": "crypto-in-test"
+}

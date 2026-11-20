@@ -1,0 +1,14 @@
+{
+  "id": "DT7-python-neg-21",
+  "detector": "DT7",
+  "language": "python",
+  "files": {
+    "svc/step.py": {
+      "before": "def step():\n    return do()\n",
+      "after": "def step():\n    try:\n        return do()\n    except StepError as e:\n        _ = e\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "explicit-discard",
+  "note": "near miss: 'except E as e: _ = e' discards the error explicitly; not empty/pass/continue/constant-return"
+}

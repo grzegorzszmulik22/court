@@ -1,0 +1,13 @@
+{
+  "id": "DT3-typescript-neg-20",
+  "detector": "DT3",
+  "language": "typescript",
+  "files": {
+    "src/api.ts": {
+      "before": "export abstract class A {\n}\n",
+      "after": "export abstract class A {\n  abstract m(): void;\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "abstract-method"
+}

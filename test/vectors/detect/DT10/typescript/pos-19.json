@@ -1,0 +1,39 @@
+{
+  "id": "DT10-typescript-pos-19",
+  "detector": "DT10",
+  "language": "typescript",
+  "files": {
+    "data/keep.ts": {
+      "before": "export const x = 1;\n",
+      "after": ""
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT10",
+      "category": "deletion",
+      "subkind": "file",
+      "path": "data/keep.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "export const x = 1;",
+      "rule": "dt10-typescript-datafile"
+    },
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "removed",
+      "path": "data/keep.ts",
+      "lines": [
+        1,
+        1
+      ],
+      "side": "before",
+      "evidence": "export const x = 1;",
+      "rule": "dt3-ts-export-removed"
+    }
+  ]
+}

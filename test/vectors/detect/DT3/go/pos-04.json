@@ -1,0 +1,26 @@
+{
+  "id": "DT3-go-pos-04",
+  "detector": "DT3",
+  "language": "go",
+  "files": {
+    "api/service.go": {
+      "before": "package api\n\nfunc Bill(c Cart) int {\n\treturn c.sum\n}\n",
+      "after": "package api\n\nfunc Bill(c Cart) int64 {\n\treturn int64(c.sum)\n}\n"
+    }
+  },
+  "expect": [
+    {
+      "detector": "DT3",
+      "category": "interface",
+      "subkind": "changed",
+      "path": "api/service.go",
+      "lines": [
+        3,
+        3
+      ],
+      "side": "after",
+      "evidence": "func Bill(c Cart) int64",
+      "rule": "dt3-go-exported-changed"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "detector": "DT9",
+  "expect": [
+    {
+      "category": "authority",
+      "detector": "DT9",
+      "evidence": "more",
+      "lines": [
+        2,
+        2
+      ],
+      "path": "docs/auth/notes.md",
+      "rule": "dt9-go-touched",
+      "side": "after",
+      "subkind": "touched"
+    }
+  ],
+  "files": {
+    "docs/auth/notes.md": {
+      "after": "# a\nmore\n",
+      "before": "# a\n"
+    },
+    "go.mod": {
+      "after": "module bench\n\ngo 1.22\n",
+      "before": "module bench\n\ngo 1.22\n"
+    }
+  },
+  "id": "DT9-go-pos-09",
+  "language": "go",
+  "note": "doc under an auth dir is still an authority path"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "DT7-go-neg-16",
+  "detector": "DT7",
+  "language": "go",
+  "files": {
+    "svc/fetch.go": {
+      "before": "package svc\n\nfunc fetch() int {\n\treturn get()\n}\n",
+      "after": "package svc\n\nfunc fetch() int {\n\tselect {\n\tcase v := <-ch:\n\t\treturn v\n\tdefault:\n\t\treturn 0\n\t}\n}\n"
+    }
+  },
+  "expect": [],
+  "note": "select-case"
+}

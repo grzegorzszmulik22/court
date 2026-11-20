@@ -1,0 +1,15 @@
+{
+  "id": "DT4-typescript-neg-04",
+  "detector": "DT4",
+  "language": "typescript",
+  "files": {
+    "src/shop.test.ts": {
+      "before": "test('total', () => {\n  expect(total()).toBe(1);\n});\n",
+      "after": "test('total', () => {\n  expect(total()).toBe(1);\n  expect(total()).toBeGreaterThan(0);\n});\n"
+    }
+  },
+  "expect": [],
+  "near_miss": "assertion-added",
+  "fp_kind": "fewer_assertions",
+  "note": "assertion-added"
+}
