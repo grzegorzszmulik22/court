@@ -68,6 +68,19 @@ for p in "$sabdir"/*.patch; do
         report "SABOTAGE $name ERROR scratch copy failed"
         errors=$((errors+1)); rm -rf "$tmp"; continue
     fi
+    # checks that read git history (a check asserting freeze.txt records
+    # the commit that last wrote FROZEN.sha256) need the real objects and
+    # refs, not a single-commit repo — copy .git so the initialisation
+    # below adds its "scratch" commit on top of the true history, and
+    # restore the small tracked pointer files evidence/ keeps out.
+    if ! cp -a .git "$scratch/.git" 2>>"$plog"; then
+        report "SABOTAGE $name ERROR scratch git copy failed"
+        errors=$((errors+1)); rm -rf "$tmp"; continue
+    fi
+    git ls-files | grep -E '^evidence/[^/]+/freeze\.txt$' | while IFS= read -r f; do
+        mkdir -p "$scratch/$(dirname "$f")"
+        cp "$f" "$scratch/$f"
+    done
     (
         cd "$scratch" || exit 1
         git init -q && git add -A \
