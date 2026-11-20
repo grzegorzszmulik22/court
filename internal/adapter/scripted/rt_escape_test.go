@@ -243,6 +243,23 @@ func TestC1_5_7_DeniedRecorded(t *testing.T) {
 	}
 	rel := filepath.Join("..", "..", "..", "..", "..", "..", "escape-target", "x.txt")
 	victim := filepath.Join(c.Worktree, rel)
+	// The target lies outside t.TempDir() by design, so a canary left by an
+	// earlier run (a sabotaged build that did escape) would fail this run
+	// on correct code. Clear our own canary before and after; never touch
+	// a file there that this test did not write.
+	clearCanary := func() {
+		if b, err := os.ReadFile(victim); err == nil && string(b) == "CANARY\n" {
+			if err := os.Remove(victim); err != nil {
+				t.Fatalf("remove stale canary %s: %v", victim, err)
+			}
+			_ = os.Remove(filepath.Dir(victim)) // only succeeds when empty
+		}
+	}
+	clearCanary()
+	if _, err := os.Stat(victim); err == nil {
+		t.Fatalf("%s exists and is not this test's canary; remove it", victim)
+	}
+	t.Cleanup(clearCanary)
 	err = c.RunStep(&scripted.Step{Edit: &scripted.EditStep{
 		Path: rel, Write: "CANARY\n"}})
 	if err != nil {
