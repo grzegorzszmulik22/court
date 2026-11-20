@@ -1,0 +1,6 @@
+=== RUN   TestC3_1_4
+--- PASS: TestC3_1_4 (0.60s)
+=== RUN   TestC3_1_4_row_text
+--- PASS: TestC3_1_4_row_text (0.07s)
+PASS
+ok  	court/bench/docketbench/validate	0.693s
