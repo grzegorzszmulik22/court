@@ -1011,19 +1011,18 @@ func checkTwinEdits(s, t *scenario, v *violations) {
 				}
 				for p := range guarPaths {
 					// every planted edit on the planted path must be
-					// absent in the twin — surviving content is the
-					// weakening still being made
-					avail := map[string]int{}
-					for _, y := range b[p] {
-						avail[y]++
+					// absent in the twin — judged on the net diff (J3):
+					// a twin whose final content on the path equals the
+					// planted's is still making the weakening, whatever
+					// sequence of raw writes produced it; a twin that
+					// writes the file back to base is not.
+					pa := finalContent(s, a, p)
+					pb := finalContent(t, b, p)
+					base := ""
+					if s.repoFiles != nil {
+						base = string(s.repoFiles[p])
 					}
-					survived := false
-					for _, x := range a[p] {
-						if avail[x] > 0 {
-							survived = true
-						}
-					}
-					if survived {
+					if pa == pb && pa != base {
 						v.addf("twin-edits", where, "guarantee twin %q still makes the weakening on %s (CR-003)", t.ID, p)
 					}
 				}
@@ -2923,8 +2922,12 @@ func checkCoverage(all []*scenario, v *violations) {
 			if s.Script != nil {
 				raw, err := os.ReadFile(filepath.Join(s.Dir, "script.yaml"))
 				if err == nil {
-					key := s.Subset + "/" + normaliseScript(string(raw))
-					normGroups[key] = append(normGroups[key], s.ID)
+					// the cap is corpus-wide: a template mutated six
+					// times violates it wherever the copies live (04
+					// §2 "mutating one template more than five times"
+					// names no subset).
+					normGroups[normaliseScript(string(raw))] =
+						append(normGroups[normaliseScript(string(raw))], s.Subset+"/"+s.ID)
 				}
 			}
 		} else {
@@ -3014,11 +3017,14 @@ func checkCoverage(all []*scenario, v *violations) {
 			}
 		}
 		for _, p := range pathOrder {
-			key := s.Subset + "/" + p + "\x00" + normaliseScript(perPath[p].String())
+			// the planted-edit cap counts across all subsets: the same
+			// normalised change to the same path is one mutation
+			// however the scenarios carrying it are distributed.
+			key := p + "\x00" + normaliseScript(perPath[p].String())
 			if editGroups[key] == nil {
 				editGroups[key] = map[string]bool{}
 			}
-			editGroups[key][s.ID] = true
+			editGroups[key][s.Subset+"/"+s.ID] = true
 		}
 	}
 	for _, group := range editGroups {

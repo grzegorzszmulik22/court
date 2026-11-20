@@ -1159,16 +1159,16 @@ func TestMutationCap_boundary(t *testing.T) {
 			}
 		}
 	}
-	// the cap is subset-scoped: six copies split three-each across two
-	// subsets stay under it; a global grouping would wrongly fire.
+	// the cap is corpus-wide (04 §2 names no subset): six copies split
+	// three-each across two subsets still mutate one template six times.
 	root := t.TempDir()
 	for i, sub := range []string{"A", "A", "A", "C", "C", "C"} {
 		mkPair(t, root, sub, fmt.Sprintf("%s-%03d", sub, i+1), fmt.Sprintf("%s-%03d", sub, i+1001), "schema")
 	}
 	v := collectScenarios(t, root, options{runTests: false, workers: 4})
 	for _, detail := range []string{"normalised script", "normalised edit"} {
-		if hasDetail(v, "coverage-template", detail) {
-			t.Fatalf("3+3 cross-subset copies tripped the cap on %q (cap not subset-scoped): %v", detail, v.list)
+		if !hasDetail(v, "coverage-template", detail) {
+			t.Fatalf("3+3 cross-subset copies did not trip the cap on %q (cap must be corpus-wide): %v", detail, v.list)
 		}
 	}
 }
@@ -3517,5 +3517,480 @@ func TestC3_1_1_freeze_check(t *testing.T) {
 	put("evidence/M3.1/freeze.txt", c2+"\n")
 	if rc := run(); rc != 0 {
 		t.Fatalf("fresh freeze.txt failed C3.1.7 (rc=%d)", rc)
+	}
+	// an uncommitted change to FROZEN.sha256 after the recorded freeze
+	// must fail — the metadata is only honest when the file matches the
+	// recorded commit exactly.
+	put("spec/FROZEN.sha256", "cccc spec/00.md\n")
+	if rc := run(); rc == 0 {
+		t.Fatal("uncommitted spec/FROZEN.sha256 change passed C3.1.7")
+	}
+	git("checkout", "--", "spec/FROZEN.sha256")
+	if rc := run(); rc != 0 {
+		t.Fatalf("restored FROZEN.sha256 failed C3.1.7 (rc=%d)", rc)
+	}
+	// a STAGED-but-uncommitted change fails the same way.
+	put("spec/FROZEN.sha256", "dddd spec/00.md\n")
+	git("add", "spec/FROZEN.sha256")
+	if rc := run(); rc == 0 {
+		t.Fatal("staged spec/FROZEN.sha256 change passed C3.1.7")
+	}
+}
+
+// ===========================================================================
+// Round 10: generated domain sweeps. Each sweep enumerates a rule's
+// dimensions — every subset, the boundary and one past it, every input
+// shape — and asserts the validator's verdict against an expectation the
+// TEST computes from the rule statement (never from validator internals):
+// cap verdicts from the sizes of the groups the test itself built, JSON
+// verdicts from encoding/json, writ verdicts from a restated segment
+// rule, net-diff verdicts from the writes the test scripted.
+// ===========================================================================
+
+// pairSpec describes one generated planted+twin pair.
+type pairSpec struct {
+	cat        string   // registry + evidence category (planted)
+	editPath   string   // planted evidence path
+	base       string   // repo base content of editPath
+	write      string   // planted's write to editPath
+	evLo, evHi int      // evidence span [lo,hi] on editPath (after file)
+	twinSens   []string // twin write contents to editPath; nil = omit the edit
+	readme     bool     // twin carries the known-limit README naming editPath
+	extraEdit  bool     // planted and twin add one extra shared edit step
+}
+
+// genPair writes a planted+twin pair shaped entirely by the spec. The
+// twin replays the planted edits (same docs/note.md change for parity)
+// except on editPath, where twinSens decides each write step in order —
+// several entries mean several raw edits on the path, which the net diff
+// must collapse.
+func genPair(t *testing.T, root, subset, id, tid string, ps pairSpec) {
+	t.Helper()
+	cat := ps.cat
+	if cat == "" {
+		cat = "schema"
+	}
+	yamlDQ := func(s string) string {
+		r := strings.NewReplacer(
+			"\\", "\\\\", "\"", "\\\"",
+			"\n", "\\n", "\t", "\\t", "\r", "\\r",
+		)
+		return r.Replace(s)
+	}
+	comm := "goal: \"routine work\"\n" +
+		"done_checks:\n  - {id: unit, cmd: \"true\"}\n" +
+		"territory: [\"**\"]\n" +
+		"budgets: {tokens: 100, minutes: 5, speculation: 10}\n" +
+		"template: \"tpl-" + id + "\"\n"
+	mkSteps := func(edits [][2]string, tail string) string {
+		var b strings.Builder
+		b.WriteString("agents:\n  - id: w1\n    parent: human\n    steps:\n")
+		b.WriteString("      - backbrief: {plan_files: [\"**\"]}\n")
+		for _, e := range edits {
+			b.WriteString("      - edit: {path: " + e[0] + ", write: \"" + yamlDQ(e[1]) + "\"}\n")
+		}
+		if ps.extraEdit {
+			b.WriteString("      - edit: {path: docs/extra.md, write: \"# extra\\n\"}\n")
+		}
+		b.WriteString(tail)
+		return b.String()
+	}
+	plantedEdits := [][2]string{{ps.editPath, ps.write}, {"docs/note.md", "# note\n"}}
+	script := mkSteps(plantedEdits,
+		"      - no_decisions: {}\n      - commit: {message: \"w\"}\n")
+	reg := "- id: " + id + "-1\n" +
+		"  type: undeclared\n  variant: no_decisions\n  category: " + cat + "\n" +
+		"  mast: FM-1.1\n  description: \"planted\"\n" +
+		"  keywords: [\"kw-" + id + "\"]\n" +
+		"  evidence:\n    - {world: w1, commit: 1, path: " + ps.editPath +
+		", lines: [" + fmt.Sprint(ps.evLo) + ", " + fmt.Sprint(ps.evHi) + "]}\n" +
+		"  source: \"research/1_detection.md#anchor\"\n  resolution: \"ask\"\n"
+	dir := filepath.Join(root, subset, id)
+	for _, f := range [][2]string{
+		{"repo/" + ps.editPath, ps.base},
+		{"repo/docs/note.md", "# note\n"},
+		{"commission.yaml", comm},
+		{"script.yaml", script},
+		{"registry.yaml", reg},
+		{"twin", tid + "\n"},
+		{"final.txt", "done\n"},
+	} {
+		p := filepath.Join(dir, f[0])
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(f[1]), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// twin: replays the same non-sensitive edits; on editPath each
+	// twinSens entry becomes one write step (empty list omits it).
+	var twinEdits [][2]string
+	for _, w := range ps.twinSens {
+		twinEdits = append(twinEdits, [2]string{ps.editPath, w})
+	}
+	twinEdits = append(twinEdits, [2]string{"docs/note.md", "# note\n"})
+	tscript := mkSteps(twinEdits,
+		"      - declare: {category: schema, paths: [\"docs/note.md\"], question: \"ok?\", chosen: \"yes\"}\n"+
+			"      - commit: {message: \"w\"}\n")
+	tdir := filepath.Join(root, subset, tid)
+	tfiles := [][2]string{
+		{"repo/" + ps.editPath, ps.base},
+		{"repo/docs/note.md", "# note\n"},
+		{"commission.yaml", comm},
+		{"script.yaml", tscript},
+		{"registry.yaml", "[]\n"},
+		{"twin", id + "\n"},
+		{"final.txt", "done\n"},
+	}
+	if ps.readme {
+		tfiles = append(tfiles, [2]string{"README.md",
+			"known limit: the clean run omits " + ps.editPath + " (file-name tell)\n"})
+	}
+	for _, f := range tfiles {
+		p := filepath.Join(tdir, f[0])
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(f[1]), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func twinCodes(v *violations) []string {
+	var out []string
+	for _, x := range v.list {
+		if strings.HasPrefix(x, "twin-") {
+			out = append(out, x)
+		}
+	}
+	return out
+}
+
+// R10-2: authority/deletion is judged on the NET diff, never raw edits
+// (J3). For every subset x every sensitive category x every twin edit
+// plan, the verdict depends only on the final content the twin leaves.
+func TestTwinEdits_sensitive_net_diff_sweep(t *testing.T) {
+	base := "package auth\n\nconst SessionTTLSeconds = 3600\n"
+	changed := "package auth\n\nconst SessionTTLSeconds = 9999\n"
+	plans := []struct {
+		name string
+		sens []string
+		want bool // twin-omits fires
+	}{
+		{"omits_edit", nil, false},
+		{"writeback_base", []string{base}, false},
+		{"two_raw_edits_back_to_base", []string{changed, base}, false}, // raw writes, net untouched
+		{"changed", []string{changed}, true},
+		{"base_then_changed", []string{base, changed}, true}, // last write wins the net diff
+	}
+	for _, subset := range []string{"A", "C", "D"} {
+		for _, cat := range []string{"authority", "deletion"} {
+			for _, pl := range plans {
+				root := t.TempDir()
+				genPair(t, root, subset, subset+"-501", subset+"-601", pairSpec{
+					cat: cat, editPath: "internal/auth/session.go",
+					base: base, write: changed,
+					evLo: 3, evHi: 3, twinSens: pl.sens, readme: true,
+				})
+				v := collectScenarios(t, root, options{runTests: false, workers: 4})
+				got := hasCode(v, "twin-omits")
+				if got != pl.want {
+					t.Fatalf("%s %s %s: twin-omits=%v want %v; got: %v",
+						subset, cat, pl.name, got, pl.want, v.list)
+				}
+				if !pl.want {
+					if tc := twinCodes(v); len(tc) > 0 {
+						t.Fatalf("%s %s %s: net-untouched twin flagged: %v (all: %v)",
+							subset, cat, pl.name, tc, v.list)
+					}
+				}
+			}
+		}
+	}
+}
+
+// R10-3: every file a scenario writes whose content is JSON must parse —
+// any name, any depth, objects and arrays, any leading whitespace.
+// Expectation is recomputed here from the rule: a write is in the rule's
+// domain when its trimmed content starts { or [ or the name ends .json;
+// it then fails iff encoding/json cannot parse it.
+func TestEdit_json_manifest_sweep(t *testing.T) {
+	prefixes := []string{"", " ", "\t", "\n", " \n\t ", "\r\n  "}
+	payloads := []struct {
+		name    string
+		body    string
+		jsonish bool // trimmed content presents as JSON (starts { or [)
+		valid   bool  // encoding/json parses it
+	}{
+		{"object", `{"a":1}`, true, true},
+		{"array", `[1,2,{}]`, true, true},
+		{"nested", `{"a":{"b":[{},{"c":2}]}}`, true, true},
+		{"bad_object", `{"a":`, true, false},
+		{"bad_array", `[1,`, true, false},
+		{"scalar_num", `7`, false, true},
+		{"scalar_str", `"s"`, false, true},
+		{"prose", `not json at all`, false, false},
+	}
+	names := []string{
+		"package.json", "deep/a/b/cfg.json", "x.json",
+		"docs/note.md", "Makefile", "x.JSON", "noext",
+	}
+	for _, pre := range prefixes {
+		for _, pay := range payloads {
+			for _, name := range names {
+				content := pre + pay.body
+				trimmed := strings.TrimSpace(content)
+				inDomain := strings.HasSuffix(name, ".json") ||
+					(trimmed != "" && (trimmed[0] == '{' || trimmed[0] == '['))
+				want := inDomain && !json.Valid([]byte(trimmed))
+				// a .json write whose content is not JSON is in the
+				// domain by name and must parse; the verdict is the
+				// same formula either way.
+				root := t.TempDir()
+				genPair(t, root, "C", "C-501", "C-601", pairSpec{
+					editPath: "src/x.go", base: "package src\n",
+					write: "package src2\n", evLo: 1, evHi: 1,
+					twinSens: []string{"package src2\n"},
+				})
+				sp := filepath.Join(root, "C", "C-501", "script.yaml")
+				doc := loadScriptYAML(t, sp)
+				a := agentByID(doc, "w1")
+				a["steps"] = append(a["steps"].([]any), map[string]any{
+					"edit": map[string]any{"path": name, "write": content},
+				})
+				writeScriptYAML(t, sp, doc)
+				v := collectScenarios(t, root, options{runTests: false, workers: 4})
+				got := hasDetail(v, "script-edit", "invalid JSON")
+				if got != want {
+					t.Fatalf("pre=%q name=%s payload=%s: script-edit invalid JSON=%v want %v; got: %v",
+						pre, name, pay.name, got, want, v.list)
+				}
+			}
+		}
+	}
+	// a delete step writes nothing — out of the rule's domain on any name.
+	root := t.TempDir()
+	genPair(t, root, "C", "C-501", "C-601", pairSpec{
+		editPath: "src/x.go", base: "package src\n",
+		write: "package src2\n", evLo: 1, evHi: 1,
+		twinSens: []string{"package src2\n"},
+	})
+	sp := filepath.Join(root, "C", "C-501", "script.yaml")
+	doc := loadScriptYAML(t, sp)
+	a := agentByID(doc, "w1")
+	a["steps"] = append(a["steps"].([]any), map[string]any{
+		"edit": map[string]any{"path": "x.json", "delete": true},
+	})
+	writeScriptYAML(t, sp, doc)
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasDetail(v, "script-edit", "invalid JSON") {
+		t.Fatalf("delete step on x.json flagged as invalid JSON: %v", v.list)
+	}
+}
+
+// R10-4: an evidence line that joins two or more complete base lines is
+// reflowed context — whatever the base lines' length and wherever the
+// reflowed line sits inside the evidence span.
+func TestEvidenceLines_reflow_sweep(t *testing.T) {
+	mkBase := func(lineLen, n int) string {
+		var b strings.Builder
+		for i := 1; i <= n; i++ {
+			ln := fmt.Sprintf("x%d := call(arg%da, arg%db)", i, i, i)
+			for len(ln) < lineLen {
+				ln += " /*pad*/"
+			}
+			b.WriteString(ln + "\n")
+		}
+		return b.String()
+	}
+	baseLines := func(base string) []string {
+		return strings.Split(strings.TrimSuffix(base, "\n"), "\n")
+	}
+	for _, lineLen := range []int{8, 40, 130} {
+		for _, joined := range []int{1, 2, 3} {
+			for _, off := range []int{0, 1, 2} {
+				base := mkBase(lineLen, 12)
+				bl := baseLines(base)
+				at := 4 // 0-based index of the reflowed line
+				// build the joined line: the content of base lines
+				// at..at+joined-1 folded into one physical line.
+				joinedLine := strings.TrimSuffix(strings.Join(bl[at:at+joined], " "), " ")
+				if joined == 1 {
+					joinedLine = "prefix " + bl[at] + " suffix"
+				}
+				var after []string
+				after = append(after, bl[:at]...)
+				after = append(after, joinedLine)
+				after = append(after, bl[at+joined:]...)
+				write := strings.Join(after, "\n") + "\n"
+				// evidence span covers the reflowed line at offset off
+				// inside a three-line span.
+				lo := at + 1 - off
+				hi := lo + 2
+				root := t.TempDir()
+				genPair(t, root, "A", "A-901", "A-951", pairSpec{
+					editPath: "src/x.go", base: base, write: write,
+					evLo: lo, evHi: hi,
+				})
+				v := collectScenarios(t, root, options{runTests: false, workers: 4})
+				want := joined >= 2
+				got := hasDetail(v, "evidence-lines", "reflowed base text")
+				if got != want {
+					t.Fatalf("lineLen=%d joined=%d off=%d: reflow fired=%v want %v; got: %v",
+						lineLen, joined, off, got, want, v.list)
+				}
+			}
+		}
+	}
+}
+
+// R10-6: every writ glob must lie inside the commission territory with
+// path-SEGMENT semantics: `src/**` contains `src` and `src/...` and
+// nothing else — not `srcx`, not `srcdeep`, not `sr`. The expectation
+// column restates the rule per case rather than calling the validator.
+func TestRootWrit_glob_sweep(t *testing.T) {
+	cases := []struct {
+		territory []string
+		glob      string
+		want      bool
+	}{
+		{[]string{"**"}, "srcx/**", true},
+		{[]string{"**"}, "anything", true},
+		{[]string{"src/**"}, "src", true},
+		{[]string{"src/**"}, "src/x", true},
+		{[]string{"src/**"}, "src/x/**", true},
+		{[]string{"src/**"}, "srcx", false},
+		{[]string{"src/**"}, "srcx/**", false},
+		{[]string{"src/**"}, "srcx/y", false},
+		{[]string{"src/**"}, "srcdeep", false},
+		{[]string{"src/**"}, "sr", false},
+		{[]string{"src/**"}, "src/**", true},
+		{[]string{"src/**"}, "srcX/x", false},
+		{[]string{"src/**"}, "other/**", false},
+		{[]string{"src"}, "src", true},
+		{[]string{"src"}, "src/x", false},
+		{[]string{"src"}, "srcx", false},
+		{[]string{"a/b/**", "c"}, "a/b", true},
+		{[]string{"a/b/**", "c"}, "a/b/c", true},
+		{[]string{"a/b/**", "c"}, "a/bc", false},
+		{[]string{"a/b/**", "c"}, "a/bc/d", false},
+		{[]string{"a/b/**", "c"}, "c", true},
+		{[]string{"a/b/**", "c"}, "c/d", false},
+		{[]string{"src/**", "internal/**"}, "internal/x", true},
+		{[]string{"src/**", "internal/**"}, "internals/x", false},
+	}
+	for _, tc := range cases {
+		if got := writTerritoryCovers(tc.territory, tc.glob); got != tc.want {
+			t.Errorf("territory %v vs glob %q: covers=%v want %v",
+				tc.territory, tc.glob, got, tc.want)
+		}
+	}
+	// scenario level: a root writ glob one segment-boundary wider than
+	// the territory fails end to end.
+	root := t.TempDir()
+	genPair(t, root, "A", "A-901", "A-951", pairSpec{
+		editPath: "src/x.go", base: "package src\n",
+		write: "package src2\n", evLo: 1, evHi: 1,
+	})
+	cp := filepath.Join(root, "A", "A-901", "commission.yaml")
+	cb, err := os.ReadFile(cp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cb = []byte(strings.Replace(string(cb), `territory: ["**"]`, `territory: ["src/**"]`, 1))
+	if err := os.WriteFile(cp, cb, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	// root writ for a root agent carrying srcx/** — one segment off.
+	p, tw := filepath.Join(root, "A", "A-901", "script.yaml"),
+		filepath.Join(root, "A", "A-951", "script.yaml")
+	for _, sp := range []string{p, tw} {
+		doc := loadScriptYAML(t, sp)
+		doc["agents"].([]any)[0].(map[string]any)["writ"] =
+			map[string]any{"categories": []string{"schema", "territory"}, "territory": []string{"srcx/**"}}
+		writeScriptYAML(t, sp, doc)
+	}
+	expectViolation(t, root, "script-writ")
+}
+
+// R10-1 + R10-5: both caps hold at their exact boundary corpus-wide and
+// in every subset, for every script group; normalisation masks whatever
+// the spec treats as variable (digits and names) before counting. The
+// test knows which scenarios share a template because it built them;
+// the verdict is group-size > 5.
+func TestMutationCap_sweep(t *testing.T) {
+	// per subset x {cap-1, cap, cap+1}: identical normalised scripts.
+	for _, subset := range []string{"A", "C", "D"} {
+		for _, n := range []int{4, 5, 6} {
+			root := t.TempDir()
+			for i := 1; i <= n; i++ {
+				mkPair(t, root, subset, fmt.Sprintf("%s-%03d", subset, i),
+					fmt.Sprintf("%s-%03d", subset, i+1000), "schema")
+			}
+			v := collectScenarios(t, root, options{runTests: false, workers: 4})
+			want := n > 5
+			if got := hasDetail(v, "coverage-template", "normalised script"); got != want {
+				t.Fatalf("%s n=%d: template cap=%v want %v; got: %v", subset, n, got, want, v.list)
+			}
+		}
+	}
+	// every script group counts separately: five of one shape plus five
+	// of another stays under; six of either trips.
+	for _, n := range []int{5, 6} {
+		root := t.TempDir()
+		for i := 1; i <= n; i++ {
+			genPair(t, root, "A", fmt.Sprintf("A-%03d", i), fmt.Sprintf("A-%03d", i+1000), pairSpec{
+				editPath: "src/x.go", base: "package src\n",
+				write: "package src2\n", evLo: 1, evHi: 1,
+				extraEdit: i%2 == 0, // two script shapes interleaved
+			})
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		// n copies split across two shapes: each group is ceil(n/2) or
+		// floor(n/2) — at n<=10 no group reaches six.
+		if hasDetail(v, "coverage-template", "normalised script") {
+			t.Fatalf("n=%d interleaved shapes wrongly grouped into the cap: %v", n, v.list)
+		}
+	}
+	// normalisation masks digits: copies whose write differs only in
+	// digits are one planted edit; six of them across subsets fail.
+	for _, subs := range [][]string{
+		{"A", "A", "A", "C", "C", "C"},
+		{"A", "A", "C", "C", "D", "D"},
+		{"A", "A", "A", "A", "A"},
+		{"A", "A", "A", "A"},
+	} {
+		root := t.TempDir()
+		for i, sub := range subs {
+			genPair(t, root, sub, fmt.Sprintf("%s-%03d", sub, i+1),
+				fmt.Sprintf("%s-%03d", sub, i+1001), pairSpec{
+					cat: "schema", editPath: "internal/ttl.go",
+					base:  "package ttl\n",
+					write: fmt.Sprintf("package ttl\n\nconst TTL = %d\n", 3600+i),
+					evLo:  3, evHi: 3,
+				})
+		}
+		v := collectScenarios(t, root, options{runTests: false, workers: 4})
+		want := len(subs) > 5
+		if got := hasDetail(v, "coverage-template", "normalised edit"); got != want {
+			t.Fatalf("subs=%v: planted-edit cap=%v want %v (digit-masked identical edit across subsets); got: %v",
+				subs, got, want, v.list)
+		}
+	}
+	// one normalised edit on DIFFERENT paths is not one mutation.
+	root := t.TempDir()
+	for i, sub := range []string{"A", "A", "A", "C", "C", "C"} {
+		genPair(t, root, sub, fmt.Sprintf("%s-%03d", sub, i+1),
+			fmt.Sprintf("%s-%03d", sub, i+1001), pairSpec{
+				cat: "schema", editPath: fmt.Sprintf("internal/ttl%d.go", i),
+				base: "package ttl\n", write: "package ttl\n\nconst TTL = 3600\n",
+				evLo: 3, evHi: 3,
+			})
+	}
+	v := collectScenarios(t, root, options{runTests: false, workers: 4})
+	if hasDetail(v, "coverage-template", "normalised edit") {
+		t.Fatalf("same normalised edit on distinct paths wrongly counted as one mutation: %v", v.list)
 	}
 }
