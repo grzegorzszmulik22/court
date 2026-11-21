@@ -1,0 +1,17 @@
+diff --git a/internal/daemon/gate.go b/internal/daemon/gate.go
+index 77e3e62..32518cd 100644
+--- a/internal/daemon/gate.go
++++ b/internal/daemon/gate.go
+@@ -468,11 +468,8 @@ func (d *Daemon) syncWorlds() error {
+ 		}
+ 		wl := d.worldMuFor(sess.World)
+ 		wl.Lock()
+-		err = d.recordCommits(sess, head, "")
++		_ = d.recordCommits(sess, head, "")
+ 		wl.Unlock()
+-		if err != nil {
+-			note(fmt.Errorf("world %s: %w", sess.World, err))
+-		}
+ 	}
+ 	return first
+ }

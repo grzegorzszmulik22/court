@@ -1,0 +1,14 @@
+diff --git a/internal/daemon/gate.go b/internal/daemon/gate.go
+index 77e3e62..0deb048 100644
+--- a/internal/daemon/gate.go
++++ b/internal/daemon/gate.go
+@@ -316,9 +316,6 @@ func (d *Daemon) takeGatePass(sess *Session, parent, commit string) (bool, error
+ 	key := gate.WorldKey(sess.Commission, sess.World)
+ 	d.mu.Lock()
+ 	p, ok := d.gatePasses[key]
+-	if ok {
+-		delete(d.gatePasses, key)
+-	}
+ 	var saveErr error
+ 	if ok {
+ 		saveErr = d.saveGatePassesLocked()

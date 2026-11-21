@@ -1,0 +1,17 @@
+diff --git a/internal/daemon/gate.go b/internal/daemon/gate.go
+index 77e3e62..3c61622 100644
+--- a/internal/daemon/gate.go
++++ b/internal/daemon/gate.go
+@@ -286,10 +286,8 @@ func (d *Daemon) recordOne(sess *Session, commit, key string) error {
+ 		}
+ 		changes = append(changes, pc)
+ 	}
+-	gated, err := d.takeGatePass(sess, parent, commit)
+-	if err != nil {
+-		return err
+-	}
++	d.takeGatePass(sess, parent, commit)
++	gated := true
+ 	ev, _, err := d.emit(sess.Commission, "agent:"+sess.Agent, "world.commit",
+ 		&ledger.WorldCommit{
+ 			World: sess.World, Commit: commit, Parents: parents,

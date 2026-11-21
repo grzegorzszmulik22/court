@@ -1,0 +1,45 @@
+=== RUN   TestC3_2_1
+--- PASS: TestC3_2_1 (5.20s)
+PASS
+ok  	court/internal/gate	5.326s
+CHECK C3.2.1 PASS
+=== RUN   TestC3_2_2
+=== RUN   TestC3_2_2/record_decision
+=== RUN   TestC3_2_2/survives-restart
+=== RUN   TestC3_2_2/no_decisions
+--- PASS: TestC3_2_2 (14.95s)
+    --- PASS: TestC3_2_2/record_decision (4.89s)
+    --- PASS: TestC3_2_2/survives-restart (4.03s)
+    --- PASS: TestC3_2_2/no_decisions (6.03s)
+PASS
+ok  	court/internal/gate	15.124s
+CHECK C3.2.2 PASS
+=== RUN   TestC3_2_3
+=== RUN   TestC3_2_3/no-verify
+=== RUN   TestC3_2_3/all-hooks-bypassed
+--- PASS: TestC3_2_3 (5.79s)
+    --- PASS: TestC3_2_3/no-verify (3.23s)
+    --- PASS: TestC3_2_3/all-hooks-bypassed (2.56s)
+PASS
+ok  	court/internal/gate	5.961s
+CHECK C3.2.3 PASS
+=== RUN   TestC3_2_4
+--- PASS: TestC3_2_4 (9.25s)
+=== RUN   TestC3_2_4MergeAttribution
+--- PASS: TestC3_2_4MergeAttribution (16.64s)
+PASS
+ok  	court/internal/gate	26.066s
+CHECK C3.2.4 PASS
+=== RUN   TestC3_2_5
+--- PASS: TestC3_2_5 (2.66s)
+PASS
+ok  	court/internal/gate	2.838s
+CHECK C3.2.5 PASS
+=== RUN   TestC3_2_6
+--- PASS: TestC3_2_6 (6.19s)
+=== RUN   TestC3_2_6ConfiguredHooksPath
+--- PASS: TestC3_2_6ConfiguredHooksPath (4.11s)
+PASS
+ok  	court/internal/gate	10.460s
+CHECK C3.2.6 PASS
+check.sh: evidence: evidence/M3.2/2026-11-17T20-58-01Z

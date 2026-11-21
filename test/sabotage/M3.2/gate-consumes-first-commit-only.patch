@@ -1,0 +1,13 @@
+diff --git a/internal/gate/gate.go b/internal/gate/gate.go
+index 43d9d78..2257f6a 100644
+--- a/internal/gate/gate.go
++++ b/internal/gate/gate.go
+@@ -59,7 +59,7 @@ func (s *State) Declared(key string, seq int64) {
+ func (s *State) Committed(key string, seq int64) {
+ 	s.mu.Lock()
+ 	defer s.mu.Unlock()
+-	if seq > s.commit[key] {
++	if s.commit[key] == 0 {
+ 		s.commit[key] = seq
+ 	}
+ }

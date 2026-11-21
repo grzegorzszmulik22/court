@@ -1,0 +1,20 @@
+diff --git a/internal/gate/gate.go b/internal/gate/gate.go
+index 6d93da4..d9a2e39 100644
+--- a/internal/gate/gate.go
++++ b/internal/gate/gate.go
+@@ -198,7 +198,6 @@ func preScript(o InstallOptions) string {
+ 		b.WriteString("fi\n")
+ 	}
+ 	b.WriteString(repoHookSnippet)
+-	b.WriteString("repo_hook pre-commit || exit $?\n")
+ 	b.WriteString("exit 0\n")
+ 	return b.String()
+ }
+@@ -231,7 +230,6 @@ func postScript(o InstallOptions) string {
+ 		b.WriteString("fi\n")
+ 	}
+ 	b.WriteString(repoHookSnippet)
+-	b.WriteString("repo_hook post-commit || true\n")
+ 	b.WriteString("exit 0\n")
+ 	return b.String()
+ }

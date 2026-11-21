@@ -10,6 +10,8 @@ package commission_test
 // that never exits fails the test instead of being papered over.
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -19,16 +21,25 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+// openProcess is a seam for the self-test: the real process probe is
+// windows.OpenProcess, and the test replaces it with an access-denied
+// answer to prove an unopenable-but-live process is not called gone.
+var openProcess = windows.OpenProcess
+
 // processAlive reports whether pid is a live process. OpenProcess fails
-// for a pid whose process object is gone; an exited process that still
-// has open handles is signalled immediately.
+// for a pid whose process object is gone; a failure for any other reason
+// (access denied) does not prove the process is gone.
 func processAlive(pid int) bool {
 	if pid <= 0 {
 		return false
 	}
-	h, err := windows.OpenProcess(windows.SYNCHRONIZE, false, uint32(pid))
+	h, err := openProcess(windows.SYNCHRONIZE, false, uint32(pid))
 	if err != nil {
-		return false
+		// A process object that is gone fails with an invalid parameter;
+		// any other failure (access denied under security software) does
+		// not prove the process is gone, so err on the side of alive.
+		return !errors.Is(err, windows.ERROR_INVALID_PARAMETER) &&
+			!errors.Is(err, windows.ERROR_NOT_FOUND)
 	}
 	defer windows.CloseHandle(h)
 	event, err := windows.WaitForSingleObject(h, 0)
@@ -40,20 +51,42 @@ func processAlive(pid int) bool {
 
 // waitProcessGone blocks until pid has exited, and fails the test when it
 // is still running after timeout.
-func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
-	t.Helper()
+// processGoneWithin waits up to timeout for pid to exit and reports
+// whether it is gone. It never clears the registry: a record is removed
+// only after the process is proven dead, and a live daemon must stay
+// reported.
+func processGoneWithin(pid int, timeout time.Duration) bool {
 	if pid <= 0 {
-		return
+		return true
 	}
 	deadline := time.Now().Add(timeout)
 	for processAlive(pid) {
 		if time.Now().After(deadline) {
-			t.Fatalf("court daemon pid %d is still running after %s; "+
-				"a process the test started was not shut down", pid, timeout)
+			return false
 		}
 		time.Sleep(20 * time.Millisecond)
 	}
+	return true
+}
+
+// waitProcessGoneErr is the barrier's decision: it waits for the process
+// and clears the pid only when it is gone. A process that does not exit is
+// reported and its record is kept.
+func waitProcessGoneErr(pid int, timeout time.Duration) error {
+	if !processGoneWithin(pid, timeout) {
+		return fmt.Errorf("court daemon pid %d is still running after %s; "+
+			"a process the test started was not shut down", pid, timeout)
+	}
 	clearDaemonPID(pid)
+	return nil
+}
+
+// waitProcessGone fails the test when the process does not exit.
+func waitProcessGone(t *testing.T, pid int, timeout time.Duration) {
+	t.Helper()
+	if err := waitProcessGoneErr(pid, timeout); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // waitFileReleased waits until path can be opened exclusively, i.e. no

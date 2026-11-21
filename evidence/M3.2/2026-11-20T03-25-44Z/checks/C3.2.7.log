@@ -1,0 +1,11 @@
+=== RUN   TestLeakBarrierReportsLiveDaemon
+commission_test: 1 court daemon process(es) from this run are still alive: 26248
+--- PASS: TestLeakBarrierReportsLiveDaemon (0.13s)
+PASS
+ok  	court/internal/commission	0.228s
+=== RUN   TestDetachClearsStandardHandleInheritance
+--- PASS: TestDetachClearsStandardHandleInheritance (0.01s)
+=== RUN   TestProcessAliveAccessDeniedIsAlive
+--- PASS: TestProcessAliveAccessDeniedIsAlive (0.00s)
+PASS
+ok  	court/internal/commission	0.098s

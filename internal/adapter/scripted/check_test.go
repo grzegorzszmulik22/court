@@ -101,6 +101,9 @@ func TestC1_5_1(t *testing.T) {
 			&scripted.Step{Tool: &scripted.ToolStep{
 				Name: "Grep", Input: map[string]any{
 					"pattern": "line", "path": "src"}}},
+			// M3.2's declaration gate: a commit needs a declaration since
+			// the previous commit in its world.
+			&scripted.Step{NoDecisions: &scripted.EmptyStep{}},
 			&scripted.Step{Commit: &scripted.CommitStep{
 				Message: fmt.Sprintf("commit %d", i)}})
 	}
@@ -125,7 +128,15 @@ func TestC1_5_1(t *testing.T) {
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
-	exp := scripted.Expected(sc)
+	var exp []scripted.ExpectedEvent
+	for _, e := range scripted.Expected(sc) {
+		// The check's contract is the tool events and commits in order
+		// (decision.none events from the gate's required declarations are
+		// referenced by their tool events below).
+		if e.Type == "tool.event" || e.Type == "world.commit" {
+			exp = append(exp, e)
+		}
+	}
 	var got []scripted.ExpectedEvent
 	for _, e := range evs {
 		if e.Type != "tool.event" && e.Type != "world.commit" {

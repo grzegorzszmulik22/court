@@ -449,7 +449,22 @@ func (c *Client) runBash(command string) (int, error) {
 	}
 	cmd := exec.Command(shell, flag, command)
 	cmd.Dir = c.Worktree
-	cmd.Env = append(os.Environ(), c.GitEnv...)
+	// A scripted Bash step may run `git commit` (DocketBench scenarios do).
+	// Give every such command its own identity so the suite does not depend
+	// on the host's global git config.
+	env := make([]string, 0, len(os.Environ())+len(c.GitEnv)+4)
+	for _, e := range os.Environ() {
+		k := e[:strings.IndexByte(e, '=')]
+		if strings.HasPrefix(k, "GIT_AUTHOR_") || strings.HasPrefix(k, "GIT_COMMITTER_") {
+			continue
+		}
+		env = append(env, e)
+	}
+	env = append(env, c.GitEnv...)
+	env = append(env,
+		"GIT_AUTHOR_NAME=scripted", "GIT_AUTHOR_EMAIL=scripted@court.local",
+		"GIT_COMMITTER_NAME=scripted", "GIT_COMMITTER_EMAIL=scripted@court.local")
+	cmd.Env = env
 	out, err := cmd.CombinedOutput()
 	c.logf("bash %q -> %v (%d bytes)", command, err, len(out))
 	if err == nil {

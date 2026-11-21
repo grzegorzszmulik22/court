@@ -264,7 +264,10 @@ func Run(o *Options) error {
 	cmd := exec.Command(bin, "agent", "--session", sessPath)
 	cmd.Dir = gw.Path()
 	cmd.Stdout, cmd.Stderr = logf, logf
-	detach(cmd)
+	if err := detach(cmd); err != nil {
+		logf.Close()
+		return fmt.Errorf("agent detach: %w", err)
+	}
 	if err := cmd.Start(); err != nil {
 		logf.Close()
 		return fmt.Errorf("agent start: %w", err)

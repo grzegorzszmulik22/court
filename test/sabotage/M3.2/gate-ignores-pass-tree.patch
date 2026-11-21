@@ -1,0 +1,20 @@
+diff --git a/internal/daemon/gate.go b/internal/daemon/gate.go
+index 77e3e62..40d377a 100644
+--- a/internal/daemon/gate.go
++++ b/internal/daemon/gate.go
+@@ -327,14 +327,7 @@ func (d *Daemon) takeGatePass(sess *Session, parent, commit string) (bool, error
+ 	if saveErr != nil {
+ 		return false, fmt.Errorf("gate: consume pass: %w", saveErr)
+ 	}
+-	if !ok || p.Parent != parent || p.Tree == "" {
+-		return false, nil
+-	}
+-	tree, err := gitOut(sess.Worktree, "rev-parse", commit+"^{tree}")
+-	if err != nil {
+-		return false, fmt.Errorf("gate: tree of %s: %w", commit, err)
+-	}
+-	return strings.TrimSpace(tree) == p.Tree, nil
++	return ok && p.Parent == parent, nil
+ }
+ 
+ // --------------------------------------------------------------------------
